@@ -1,3 +1,4 @@
+{% load static %}
 <div id="kt_header" class="header align-items-stretch">
     <!--begin::Container-->
     <div class="container-fluid d-flex align-items-stretch justify-content-between">
@@ -5,7 +6,7 @@
         <!--begin::Mobile logo-->
         <div class="d-flex align-items-center flex-grow-1 flex-lg-grow-0">
             <a class="mb-0" href="{% url 'homepage' %}">
-                Ranquiz
+                <img alt="Logo" src="{% static 'assets/media/logo/ranquiz.svg' %}" class="h-125px" />
             </a>
         </div>
         <!--end::Mobile logo-->
