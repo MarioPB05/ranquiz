@@ -1,7 +1,9 @@
 from django.db import models
 
+from api.models.model_template import ModelTemplate
 
-class TimeStamped(models.Model):
+
+class TimeStamped(ModelTemplate):
     """Modelo abstracto que añade campos de fecha de creación y edición, y un campo de borrado lógico"""
 
     creation_date = models.DateTimeField(auto_now_add=True)
