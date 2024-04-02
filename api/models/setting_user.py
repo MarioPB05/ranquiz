@@ -8,7 +8,7 @@ class SettingUser(ModelTemplate):
 
     setting = models.ForeignKey('Setting', on_delete=models.DO_NOTHING)
     user = models.ForeignKey('User', on_delete=models.DO_NOTHING)
-    value = models.CharField()
+    value = models.CharField(max_length=800)
 
     def __str__(self):
         return self.user.username + ' - ' + self.setting.name

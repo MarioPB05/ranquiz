@@ -8,7 +8,7 @@ class UserGoal(ModelTemplate):
 
     user = models.ForeignKey('User', on_delete=models.DO_NOTHING, related_name='goals')
     goal = models.ForeignKey('Goal', on_delete=models.DO_NOTHING)
-    transaction = models.ForeignKey('Transaction', on_delete=models.DO_NOTHING, null=True, blank=True)
+    transaction = models.ForeignKey('UserTransaction', on_delete=models.DO_NOTHING, null=True, blank=True)
     progress = models.IntegerField(default=0)
     claimed = models.BooleanField(default=False)
     start_date = models.DateTimeField(auto_now_add=True)
