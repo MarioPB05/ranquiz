@@ -1,7 +1,9 @@
 from django.db import models
 
+from api.models.model_template import ModelTemplate
 
-class ItemIframe(models.Model):
+
+class ItemIframe(ModelTemplate):
     """Modelo que representa un iframe de un item"""
 
     url = models.URLField()

@@ -1,7 +1,9 @@
 from django.db import models
 
+from api.models.model_template import ModelTemplate
 
-class Avatar(models.Model):
+
+class Avatar(ModelTemplate):
     """Modelo que representa un avatar para un usuario"""
 
     title = models.CharField(max_length=250)

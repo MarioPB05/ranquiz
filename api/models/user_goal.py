@@ -1,7 +1,9 @@
 from django.db import models
 
+from api.models.model_template import ModelTemplate
 
-class UserGoal(models.Model):
+
+class UserGoal(ModelTemplate):
     """Modelo que representa el progreso de un usuario en una misión"""
 
     user = models.ForeignKey('User', on_delete=models.DO_NOTHING, related_name='goals')

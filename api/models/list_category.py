@@ -1,7 +1,9 @@
 from django.db import models
 
+from api.models.model_template import ModelTemplate
 
-class ListCategory(models.Model):
+
+class ListCategory(ModelTemplate):
     """Modelo que representa una categoría de una lista"""
 
     list = models.ForeignKey('List', on_delete=models.DO_NOTHING)

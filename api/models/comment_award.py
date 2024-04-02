@@ -1,7 +1,9 @@
 from django.db import models
 
+from api.models.model_template import ModelTemplate
 
-class CommentAward(models.Model):
+
+class CommentAward(ModelTemplate):
     """Modelo que representa un premio otorgado a un comentario"""
 
     comment = models.ForeignKey('ListComment', on_delete=models.DO_NOTHING)

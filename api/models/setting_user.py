@@ -1,7 +1,9 @@
 from django.db import models
 
+from api.models.model_template import ModelTemplate
 
-class SettingUser(models.Model):
+
+class SettingUser(ModelTemplate):
     """Modelo que representa el valor de un ajuste para un usuario específico"""
 
     setting = models.ForeignKey('Setting', on_delete=models.DO_NOTHING)
