@@ -5,7 +5,6 @@ class List(TimeStamped):
     """
     Modelo que representa una lista jugable
     """
-
     TYPE_CHOICES = (
         (0, 'Normal'),
         (1, 'Spotify'),

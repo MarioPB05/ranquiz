@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Award(models.Model):
     """
     Modelo que representa un award (premio).
