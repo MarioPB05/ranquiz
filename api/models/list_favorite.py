@@ -1,7 +1,9 @@
 from django.db import models
 
+from api.models.model_template import ModelTemplate
 
-class ListFavorite(models.Model):
+
+class ListFavorite(ModelTemplate):
     """Modelo que representa un favorito en una lista"""
 
     user = models.ForeignKey('User', on_delete=models.DO_NOTHING)

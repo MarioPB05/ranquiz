@@ -1,7 +1,9 @@
 from django.db import models
 
+from api.models.model_template import ModelTemplate
 
-class Category(models.Model):
+
+class Category(ModelTemplate):
     """Modelo que representa una categoría."""
 
     name = models.CharField(max_length=100, unique=True)

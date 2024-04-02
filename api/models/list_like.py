@@ -1,7 +1,9 @@
 from django.db import models
 
+from api.models.model_template import ModelTemplate
 
-class ListLike(models.Model):
+
+class ListLike(ModelTemplate):
     """Modelo que representa un "me gusta" en una lista"""
 
     user = models.ForeignKey('User', on_delete=models.DO_NOTHING)

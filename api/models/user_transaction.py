@@ -1,7 +1,9 @@
 from django.db import models
 
+from api.models.model_template import ModelTemplate
 
-class UserTransaction(models.Model):
+
+class UserTransaction(ModelTemplate):
     """Modelo que representa una transacción de un usuario con monedas"""
 
     user = models.ForeignKey('User', on_delete=models.DO_NOTHING)

@@ -1,7 +1,9 @@
 from django.db import models
 
+from api.models.model_template import ModelTemplate
 
-class ListComment(models.Model):
+
+class ListComment(ModelTemplate):
     """Modelo que representa a que lista pertenece cada comentario y quien es el autor"""
 
     list = models.ForeignKey('List', on_delete=models.DO_NOTHING)

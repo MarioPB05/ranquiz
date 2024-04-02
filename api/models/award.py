@@ -1,7 +1,9 @@
 from django.db import models
 
+from api.models.model_template import ModelTemplate
 
-class Award(models.Model):
+
+class Award(ModelTemplate):
     """Modelo que representa un award (premio)."""
 
     icon = models.CharField(max_length=50)

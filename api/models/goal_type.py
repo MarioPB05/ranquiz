@@ -1,7 +1,9 @@
 from django.db import models
 
+from api.models.model_template import ModelTemplate
 
-class GoalType(models.Model):
+
+class GoalType(ModelTemplate):
     """Modelo que representa los tipos de las misiones"""
 
     TARGET_CHOICES = (

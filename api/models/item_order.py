@@ -1,7 +1,9 @@
 from django.db import models
 
+from api.models.model_template import ModelTemplate
 
-class ItemOrder(models.Model):
+
+class ItemOrder(ModelTemplate):
     """Modelo que representa el orden de los items en una lista de una determinada jugada"""
 
     item = models.ForeignKey('Item', on_delete=models.DO_NOTHING)

@@ -1,7 +1,9 @@
 from django.db import models
 
+from api.models.model_template import ModelTemplate
 
-class Notification(models.Model):
+
+class Notification(ModelTemplate):
     """Modelo que representa una notificación que se puede enviar a los usuarios"""
 
     TARGET_CHOICES = (

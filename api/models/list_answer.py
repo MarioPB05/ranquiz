@@ -1,7 +1,9 @@
 from django.db import models
 
+from api.models.model_template import ModelTemplate
 
-class ListAnswer(models.Model):
+
+class ListAnswer(ModelTemplate):
     """Modelo que representa una jugada de un usuario a una lista"""
 
     list = models.ForeignKey('List', on_delete=models.DO_NOTHING)

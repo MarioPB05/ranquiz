@@ -1,7 +1,9 @@
 from django.db import models
 
+from api.models.model_template import ModelTemplate
 
-class CategorySubscription(models.Model):
+
+class CategorySubscription(ModelTemplate):
     """Modelo que representa una suscripción de usuario a una categoría."""
 
     user = models.ForeignKey('User', on_delete=models.DO_NOTHING)

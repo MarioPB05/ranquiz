@@ -1,7 +1,9 @@
 from django.db import models
 
+from api.models.model_template import ModelTemplate
 
-class HighlightedList(models.Model):
+
+class HighlightedList(ModelTemplate):
     """Modelo que representa una lista destacada"""
 
     list = models.ForeignKey('List', on_delete=models.DO_NOTHING)
