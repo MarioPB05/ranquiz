@@ -4,7 +4,6 @@ class UserFollow(models.Model):
     """
     Modelo que representa un seguimiento de un usuario a otro.
     """
-
     follower = models.ForeignKey('User', on_delete=models.DO_NOTHING)
     id_user_followed = models.ForeignKey('User', on_delete=models.DO_NOTHING)
     date = models.DateTimeField(auto_now_add=True)
