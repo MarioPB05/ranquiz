@@ -5,6 +5,7 @@ class CategorySubscription(models.Model):
     """
     Modelo que representa una suscripción de usuario a una categoría.
     """
+
     user = models.ForeignKey('User', on_delete=models.DO_NOTHING)
     category = models.ForeignKey('Category', on_delete=models.DO_NOTHING)
     notification = models.BooleanField(default=True)

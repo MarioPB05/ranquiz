@@ -5,6 +5,7 @@ class GoalType(models.Model):
     """
     Modelo que representa los tipos de las misiones
     """
+
     TARGET_CHOICES = (
         (1, 'Para todos'),
         (2, 'Solo para creadores'),

@@ -8,6 +8,7 @@ class User(AbstractBaseUser, PermissionsMixin, TimeStamped):
     """
     Modelo que representa a un usuario
     """
+
     username = models.CharField(max_length=50, unique=True)
     share_code = models.CharField(max_length=20, unique=True)
     avatar = models.ForeignKey('Avatar', on_delete=models.DO_NOTHING)
