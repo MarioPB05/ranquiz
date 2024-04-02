@@ -1,7 +1,8 @@
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
-from api.models.time_stamp import TimeStamped
 from django.db import models
+
+from api.models.time_stamp import TimeStamped
 
 
 class User(AbstractBaseUser, PermissionsMixin, TimeStamped):
