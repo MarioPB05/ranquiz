@@ -7,6 +7,7 @@ class UserFollow(models.Model):
 
     follower = models.ForeignKey('User', on_delete=models.DO_NOTHING)
     id_user_followed = models.ForeignKey('User', on_delete=models.DO_NOTHING)
+    date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.follower + ' ha seguido a ' + self.id_user_followed
