@@ -2,9 +2,7 @@ from django.db import models
 
 
 class CommentAward(models.Model):
-    """
-    Modelo que representa un premio otorgado a un comentario
-    """
+    """Modelo que representa un premio otorgado a un comentario"""
 
     comment = models.ForeignKey('ListComment', on_delete=models.DO_NOTHING)
     award = models.ForeignKey('Award', on_delete=models.DO_NOTHING)

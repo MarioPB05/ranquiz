@@ -2,9 +2,7 @@ from django.db import models
 
 
 class Notification(models.Model):
-    """
-    Modelo que representa una notificación que se puede enviar a los usuarios.
-    """
+    """Modelo que representa una notificación que se puede enviar a los usuarios"""
 
     TARGET_CHOICES = (
         (1, 'Dueño'),

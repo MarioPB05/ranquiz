@@ -2,9 +2,7 @@ from django.db import models
 
 
 class HighlightedList(models.Model):
-    """
-    Modelo que representa una lista destacada.
-    """
+    """Modelo que representa una lista destacada"""
 
     list = models.ForeignKey('List', on_delete=models.DO_NOTHING)
     start_date = models.DateTimeField(auto_now_add=True)

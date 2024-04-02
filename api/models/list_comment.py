@@ -2,9 +2,7 @@ from django.db import models
 
 
 class ListComment(models.Model):
-    """
-    Modelo que representa a que lista pertenece cada comentario y quien es el autor.
-    """
+    """Modelo que representa a que lista pertenece cada comentario y quien es el autor"""
 
     list = models.ForeignKey('List', on_delete=models.DO_NOTHING)
     user = models.ForeignKey('User', on_delete=models.DO_NOTHING)

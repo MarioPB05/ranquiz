@@ -2,9 +2,7 @@ from django.db import models
 
 
 class UserGoal(models.Model):
-    """
-    Modelo que representa el progreso de un usuario en una misión
-    """
+    """Modelo que representa el progreso de un usuario en una misión"""
 
     user = models.ForeignKey('User', on_delete=models.DO_NOTHING, related_name='goals')
     goal = models.ForeignKey('Goal', on_delete=models.DO_NOTHING)

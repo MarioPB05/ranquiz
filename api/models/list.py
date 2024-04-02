@@ -2,9 +2,7 @@ from api.models.time_stamp import *
 
 
 class List(TimeStamped):
-    """
-    Modelo que representa una lista jugable
-    """
+    """Modelo que representa una lista jugable"""
 
     TYPE_CHOICES = (
         (0, 'Normal'),

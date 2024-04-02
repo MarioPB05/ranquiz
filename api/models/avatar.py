@@ -2,9 +2,7 @@ from django.db import models
 
 
 class Avatar(models.Model):
-    """
-    Modelo que representa un avatar para un usuario
-    """
+    """Modelo que representa un avatar para un usuario"""
 
     title = models.CharField(max_length=250)
     image = models.ImageField(upload_to='avatars/')

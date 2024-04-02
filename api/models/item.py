@@ -2,9 +2,7 @@ from django.db import models
 
 
 class Item(models.Model):
-    """
-    Modelo que representa un item de una lista
-    """
+    """Modelo que representa un item de una lista"""
 
     list = models.ForeignKey('List', on_delete=models.DO_NOTHING)
     name = models.CharField(max_length=255)

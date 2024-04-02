@@ -2,9 +2,7 @@ from django.db import models
 
 
 class GoalType(models.Model):
-    """
-    Modelo que representa los tipos de las misiones
-    """
+    """Modelo que representa los tipos de las misiones"""
 
     TARGET_CHOICES = (
         (1, 'Para todos'),
