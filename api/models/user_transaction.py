@@ -1,6 +1,6 @@
 from django.db import models
 
-class UserTranscation(models.Model):
+class UserTransaction(models.Model):
     """
     Modelo que representa una transacción de un usuario con monedas.
     """
