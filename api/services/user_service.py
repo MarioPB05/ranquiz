@@ -6,7 +6,6 @@ from api.forms.user_form import UserForm
 
 def user_login(request):
     """Función que permite a un usuario iniciar sesión en la aplicación"""
-
     if request.method == 'POST':
         form = UserForm(request.POST)
 
