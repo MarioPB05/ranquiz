@@ -1,5 +1,6 @@
-from django.http import JsonResponse
 from django.shortcuts import render
+
+from api.services.user_service import user_login
 
 
 def homepage(request):
@@ -7,4 +8,7 @@ def homepage(request):
 
 
 def login(request):
-    return render(request, 'pages/login.html')
+    """Vista que permite a un usuario iniciar sesión en la aplicación"""
+
+    form = user_login(request)
+    return render(request, 'pages/login.html', {'form': form})
