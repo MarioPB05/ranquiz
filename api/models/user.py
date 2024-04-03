@@ -13,7 +13,7 @@ class User(AbstractBaseUser, TimeStamped):
     client = models.ForeignKey('Client', on_delete=models.DO_NOTHING)
 
     USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['username', 'share_code', 'avatar', 'client']
+    REQUIRED_FIELDS = ['share_code', 'avatar', 'client']
 
     def __str__(self):
         return self.username + ' (' + self.share_code + ')'
