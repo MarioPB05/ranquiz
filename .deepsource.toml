@@ -2,6 +2,9 @@ version = 1
 
 exclude_patterns = [
   "api/migrations/**",
+  "static/assets/css/**",
+  "static/assets/media/**",
+  "static/assets/plugins/**",
 ]
 
 [[analyzers]]
