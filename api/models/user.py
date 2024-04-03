@@ -12,5 +12,8 @@ class User(AbstractBaseUser, TimeStamped):
     avatar = models.ForeignKey('Avatar', on_delete=models.DO_NOTHING)
     client = models.ForeignKey('Client', on_delete=models.DO_NOTHING)
 
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['share_code', 'avatar', 'client']
+
     def __str__(self):
         return self.username + ' (' + self.share_code + ')'
