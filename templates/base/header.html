@@ -94,7 +94,7 @@
                                 <!--end::Username-->
                             {% else %}
                                 <div class="d-flex flex-column gap-2 w-100">
-                                    <a href="#" class="btn btn-primary fw-bolder w-100">Iniciar Sesión</a>
+                                    <a href="{% url 'login' %}" class="btn btn-primary fw-bolder w-100">Iniciar Sesión</a>
                                     <a href="#" class="btn btn-outline btn-outline-primary btn-active-primary fw-bolder w-100">Registrarse</a>
                                 </div>
                             {% endif %}
