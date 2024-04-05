@@ -1,0 +1,137 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="stepper stepper-pills" id="kt_stepper_example_basic">
+        <div class="stepper-nav flex-center flex-wrap mb-10">
+            <div class="stepper-item mx-8 my-4 current" data-kt-stepper-element="nav">
+                <div class="stepper-wrapper d-flex align-items-center">
+                    <div class="stepper-icon w-40px h-40px">
+                        <i class=" stepper-check bi bi-check-lg"></i>
+                        <span class="stepper-number">1</span>
+                    </div>
+                    <div class="stepper-label">
+                        <h3 class="stepper-title">
+                            Crear usuario
+                        </h3>
+                    </div>
+                </div>
+                <div class="stepper-line h-40px"></div>
+            </div>
+            <div class="stepper-item mx-8 my-4" data-kt-stepper-element="nav">
+                <div class="stepper-wrapper d-flex align-items-center">
+                    <div class="stepper-icon w-40px h-40px">
+                        <i class=" stepper-check bi bi-check-lg"></i>
+                        <span class="stepper-number">2</span>
+                    </div>
+                    <div class="stepper-label">
+                        <h3 class="stepper-title">
+                            Rellenar datos
+                        </h3>
+                    </div>
+                </div>
+                <div class="stepper-line h-40px"></div>
+            </div>
+        </div>
+        <form class="form mx-auto mw-500px bg-white primary-shadow p-8 rounded" novalidate="novalidate"
+              id="kt_stepper_example_basic_form">
+            <div class="mb-5">
+                <div class="flex-column current align-items-center" data-kt-stepper-element="content">
+                    <div class=" w-100">
+                        <div class="text-center mb-12">
+                            <h1 class="text-center fw-boldest">Crear usuario</h1>
+                            <p class="text-muted">¿Ya tienes cuenta?,<a href="#" class="text-primary fw-bolder">Inicia
+                                sesión</a>
+                            </p>
+                        </div>
+                        <div class="fv-row mb-10">
+                            <label class="form-label">Nombre de usuario</label>
+                            <input type="text" class="form-control " name="username"
+                                   placeholder="Nombre"
+                                   value=""/>
+                        </div>
+                        <div class="fv-row mb-10">
+                            <label class="form-label">Contraseña</label>
+                            <input type="password" class="form-control " name="password"
+                                   placeholder=""
+                                   value=""/>
+                        </div>
+                        <div class="fv-row mb-10">
+                            <label class="form-label">Repita la contraseña</label>
+                            <input type="password" class="form-control " name="password"
+                                   placeholder=""
+                                   value=""/>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex-column align-items-center" data-kt-stepper-element="content">
+                    <div class=" mw-600px ">
+                        <div class="text-center mb-12">
+                            <h1 class="text-center fw-boldest">Datos</h1>
+                            <p class="text-muted">¿Ya tienes cuenta?,<a href="#" class="text-primary fw-bolder">Inicia
+                                sesión</a>
+                            </p>
+                        </div>
+                        <div class="d-flex gap-8">
+                            <div class="fv-row w-100 mb-10">
+                                <label class="form-label">Nombre</label>
+                                <input type="text" class="form-control " name="client-name"
+                                       placeholder="Nombre" required/>
+                            </div>
+                            <div class="fv-row w-100 mb-10">
+                                <label class="form-label">Apellidos</label>
+                                <input type="text" class="form-control " name="client-lastname"
+                                       placeholder="" required/>
+                            </div>
+                        </div>
+                        <div class="fv-row mb-10">
+                            <label class="form-label">Correo</label>
+                            <input type="email" class="form-control " name="mail"
+                                   placeholder="ejemplo@mail.com" required/>
+                        </div>
+                        <div class="fv-row mb-10">
+                            <label class="form-label">País</label>
+                            <select class="form-select " data-control="select2"
+                                    data-placeholder="Selecciona un país" required>
+                                <option></option>
+                                <option value="1">España</option>
+                                <option value="2">Francia</option>
+                            </select>
+                        </div>
+                        <div class="fv-row mb-10">
+                            <label class="form-label">Fecha de nacimiento</label>
+                            <input type="date" class="form-control " name="birth-date"
+                                   placeholder="dd/mm/YYYY" required/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex flex-stack">
+                <div class="me-2">
+                    <button type="button" class="btn btn-light btn-active-light-primary"
+                            data-kt-stepper-action="previous">
+                        Volver
+                    </button>
+                </div>
+                <div>
+                    <button type="button" class="btn btn-primary" data-kt-stepper-action="submit">
+                    <span class="indicator-label">
+                        Enviar
+                    </span>
+                        <span class="indicator-progress">
+                        Confirmando... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                    </span>
+                    </button>
+
+                    <button type="button" class="btn btn-primary" data-kt-stepper-action="next">
+                        Siguiente
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block custom_scripts %}
+    <script src="{% static 'scripts/pages/register.js' %}" type="module"></script>
+{% endblock %}
