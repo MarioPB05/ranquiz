@@ -1,24 +1,27 @@
-import { removePageLoader } from "/static/assets/js/ranquiz/utils.js";
+import { removePageLoader, initializeFlatpickr, promiseAjax } from "/static/assets/js/ranquiz/utils.js";
 
 $(document).ready(function() {
-    removePageLoader();
-    $("#range_date_highlight").daterangepicker({
-        minDate: moment(),
-        locale: {
-            format: 'DD/MM/YYYY',
-        }
+
+    initializeFlatpickr("#range_date_highlight", 'range', moment().format('DD-MM-YYYY'));
+
+    $('#name').maxlength({
+        warningClass: "badge badge-primary",
+        limitReachedClass: "badge badge-danger"
     });
 
-    // $("#visibility").select2({
-    //     hide_search: true,
-    // });
-
+    removePageLoader();
 });
 
+$("#range_date_highlight").on("change", function() {
+    let dates = $(this).val().split(" hasta ");
 
-$('#name').maxlength({
-    warningClass: "badge badge-primary",
-    limitReachedClass: "badge badge-danger"
+    if (dates.length === 2) {
+        promiseAjax(`/api/shop/highlight/calculator?start_date=${dates[0]}&end_date=${dates[1]}`)
+        .then(response => {
+            $('#highlight_price').text(response.price);
+        })
+        .catch(error => {
+            console.error(error);
+        });
+    }
 });
-
-
