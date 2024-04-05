@@ -58,4 +58,4 @@ function promiseAjax(url, method = 'GET', data = null) {
     });
 }
 
-export {removePageLoader, initializeFlatpickr};
+export {removePageLoader, initializeFlatpickr, promiseAjax};
