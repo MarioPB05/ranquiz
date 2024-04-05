@@ -41,6 +41,7 @@ class CreateUserForm(ModelForm):
             raise forms.ValidationError("Las contraseñas no coinciden.")
 
     def save(self, commit=True):
+        """Guarda el usuario en la base de datos"""
         user = super().save(commit=False)
         user.set_password(self.cleaned_data["password"])
         if commit:

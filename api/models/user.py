@@ -5,7 +5,10 @@ from api.models.time_stamp import TimeStamped
 
 
 class UserManager(BaseUserManager):
+    """Manager del modelo User"""
+
     def create_user(self, username, share_code, avatar, client):
+        """Crea un usuario"""
         if not username:
             raise ValueError('El nombre de usuario es obligatorio')
         user = self.model(
@@ -18,6 +21,7 @@ class UserManager(BaseUserManager):
         return user
 
     def create_superuser(self, username, share_code, avatar, client):
+        """Crea un usuario administrador"""
         user = self.create_user(
             username=username,
             share_code=share_code,
@@ -29,6 +33,7 @@ class UserManager(BaseUserManager):
         return user
 
     def get_by_natural_key(self, username):
+        """Devuelve un usuario por su nombre de usuario"""
         return self.get(username=username)
 
 

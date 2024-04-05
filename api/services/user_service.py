@@ -47,7 +47,7 @@ def create_user(user_form, avatar, client):
 
 
 def user_register(request):
-    """"Función que permite a un usuario crear una cuenta en la aplicación"""
+    """Función que permite a un usuario crear una cuenta en la aplicación"""
     client_form = get_client_form(request)
     user_form = get_user_form(request)
 
