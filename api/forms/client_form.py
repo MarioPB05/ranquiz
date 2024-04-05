@@ -7,10 +7,13 @@ from api.models import Client
 class CreateClientForm(ModelForm):
     """Formulario para la creación de un cliente"""
 
-    name = forms.CharField(max_length=100)
-    surnames = forms.CharField(max_length=250)
-    email = forms.EmailField()
-    birthdate = forms.DateField()
+    name = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class': 'form-control form-control-solid'}))
+    surnames = forms.CharField(max_length=250, widget=forms.TextInput(attrs={'class': 'form-control form-control-solid'}))
+    email = forms.EmailField(widget=forms.EmailInput(attrs={
+        'placeholder': 'ranquiz@email.com',
+        'class': 'form-control form-control-solid'
+    }))
+    birthdate = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control form-control-solid'}))
     country = forms.CharField(max_length=200)
 
     def clean_email(self):
