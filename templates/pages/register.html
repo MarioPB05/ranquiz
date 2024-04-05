@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block content %}
-    <div class="stepper stepper-pills" id="kt_stepper_example_basic">
+    <div class="stepper stepper-pills" id="register_stepper">
         <div class="stepper-nav flex-center flex-wrap mb-10">
             <div class="stepper-item mx-8 my-4 current" data-kt-stepper-element="nav">
                 <div class="stepper-wrapper d-flex align-items-center">
@@ -33,8 +33,13 @@
                 <div class="stepper-line h-40px"></div>
             </div>
         </div>
-        <form class="form mx-auto mw-500px bg-white primary-shadow p-8 rounded" novalidate="novalidate"
-              id="kt_stepper_example_basic_form">
+        <form method="post" class="form mx-auto mw-500px bg-white primary-shadow p-8 rounded" novalidate="novalidate"
+              id="register_stepper_form">
+            {% csrf_token %}
+
+            {{ forms.user_form.errors }}
+            {{ forms.client_form.errors }}
+
             <div class="mb-5">
                 <div class="flex-column current align-items-center" data-kt-stepper-element="content">
                     <div class=" w-100">
@@ -44,26 +49,28 @@
                                 sesión</a>
                             </p>
                         </div>
+
                         <div class="fv-row mb-10">
                             <label class="form-label">Nombre de usuario</label>
-                            <input type="text" class="form-control " name="username"
-                                   placeholder="Nombre"
-                                   value=""/>
+                            {{ forms.user_form.username }}
                         </div>
                         <div class="fv-row mb-10">
                             <label class="form-label">Contraseña</label>
-                            <input type="password" class="form-control " name="password"
-                                   placeholder=""
-                                   value=""/>
+                            {{ forms.user_form.password }}
                         </div>
                         <div class="fv-row mb-10">
                             <label class="form-label">Repita la contraseña</label>
-                            <input type="password" class="form-control " name="password"
-                                   placeholder=""
-                                   value=""/>
+                            {{ forms.user_form.confirm_password }}
                         </div>
+
+                        {% if forms.user_form.errors %}
+                            {% for error in form.non_field_errors %}
+                                <p class="mb-10 text-danger">{{ error }}</p>
+                            {% endfor %}
+                        {% endif %}
                     </div>
                 </div>
+
                 <div class="flex-column align-items-center" data-kt-stepper-element="content">
                     <div class=" mw-600px ">
                         <div class="text-center mb-12">
@@ -72,37 +79,38 @@
                                 sesión</a>
                             </p>
                         </div>
+
                         <div class="d-flex gap-8">
                             <div class="fv-row w-100 mb-10">
                                 <label class="form-label">Nombre</label>
-                                <input type="text" class="form-control " name="client-name"
-                                       placeholder="Nombre" required/>
+                                {{ forms.client_form.name }}
                             </div>
                             <div class="fv-row w-100 mb-10">
                                 <label class="form-label">Apellidos</label>
-                                <input type="text" class="form-control " name="client-lastname"
-                                       placeholder="" required/>
+                                {{ forms.client_form.surnames }}
                             </div>
                         </div>
                         <div class="fv-row mb-10">
                             <label class="form-label">Correo</label>
-                            <input type="email" class="form-control " name="mail"
-                                   placeholder="ejemplo@mail.com" required/>
+                            {{ forms.client_form.email }}
                         </div>
                         <div class="fv-row mb-10">
-                            <label class="form-label">País</label>
-                            <select class="form-select " data-control="select2"
+                            <label for="id_country" class="form-label d-block">País</label>
+                            <select id="id_country" name="country" class="form-select form-select-solid" data-control="select2"
                                     data-placeholder="Selecciona un país" required>
                                 <option></option>
-                                <option value="1">España</option>
-                                <option value="2">Francia</option>
                             </select>
                         </div>
                         <div class="fv-row mb-10">
-                            <label class="form-label">Fecha de nacimiento</label>
-                            <input type="date" class="form-control " name="birth-date"
-                                   placeholder="dd/mm/YYYY" required/>
+                            <label for="id_birthdate" class="form-label">Fecha de nacimiento</label>
+                            <input class="form-control form-control-solid" id="id_birthdate" name="birthdate" placeholder="21/01/2000"/>
                         </div>
+
+                        {% if forms.client_form.errors %}
+                            {% for error in form.non_field_errors %}
+                                <p class="mb-10 text-danger">{{ error }}</p>
+                            {% endfor %}
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -114,13 +122,8 @@
                     </button>
                 </div>
                 <div>
-                    <button type="button" class="btn btn-primary" data-kt-stepper-action="submit">
-                    <span class="indicator-label">
+                    <button type="submit" class="btn btn-primary" data-kt-stepper-action="submit">
                         Enviar
-                    </span>
-                        <span class="indicator-progress">
-                        Confirmando... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
-                    </span>
                     </button>
 
                     <button type="button" class="btn btn-primary" data-kt-stepper-action="next">
