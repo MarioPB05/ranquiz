@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 
-from api.forms.shop_service import get_avatar
+from api.services.shop_service import get_avatar
 from api.forms.user_form import LoginUserForm, CreateUserForm
 from api.services.client_service import create_client, get_client_form
 
