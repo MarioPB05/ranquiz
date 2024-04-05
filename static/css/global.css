@@ -1,14 +1,14 @@
 :root {
-    --primary-50--: #FDF3FF;
-    --primary-100--: #F8E6FF;
-    --primary-200--: #F2CCFF;
-    --primary-300--: #EBA4FF;
-    --primary-400--: #E06DFF;
-    --primary-500--: #CE37FE;
-    --primary-600--: #BD20E9;
-    --primary-700--: #9A0FBC;
-    --primary-800--: #800E9A;
-    --primary-900--: #6B127D;
+    --primary-50: #FDF3FF;
+    --primary-100: #F8E6FF;
+    --primary-200: #F2CCFF;
+    --primary-300: #EBA4FF;
+    --primary-400: #E06DFF;
+    --primary-500: #CE37FE;
+    --primary-600: #BD20E9;
+    --primary-700: #9A0FBC;
+    --primary-800: #800E9A;
+    --primary-900: #6B127D;
 }
 
 
