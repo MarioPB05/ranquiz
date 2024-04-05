@@ -72,8 +72,8 @@ def user_register(request):
                 return redirect('login')
 
             user_form.add_error(None, 'Error al crear el usuario')
-        else:
-            user_form.add_error(None, 'Error al crear el cliente')
+
+        user_form.add_error(None, 'Error al crear el cliente')
 
     return render(request, 'pages/register.html', {'forms': {
         'client_form': client_form,
