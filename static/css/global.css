@@ -1,4 +1,50 @@
+:root {
+    --primary-50: #FDF3FF;
+    --primary-100: #F8E6FF;
+    --primary-200: #F2CCFF;
+    --primary-300: #EBA4FF;
+    --primary-400: #E06DFF;
+    --primary-500: #CE37FE;
+    --primary-600: #BD20E9;
+    --primary-700: #9A0FBC;
+    --primary-800: #800E9A;
+    --primary-900: #6B127D;
+}
+
 
 .primary-shadow {
-    box-shadow: 0 0 40px 0 rgba(189, 32, 233, 0.25);
+    box-shadow: 0 0 40px 0 var(--primary-600);
 }
+
+.bg-primary-300 {
+    background-color: var(--primary-300);
+}
+
+.text-primary-800 {
+    color: var(--primary-800);
+}
+
+.category {
+    cursor: pointer;
+}
+
+.category>i {
+    margin-left: 7px;
+    color: grey;
+}
+
+.category:hover i {
+    color: red;
+}
+
+.hover-text-danger:hover {
+    transition-duration: 0.3s;
+    color: var(--bs-danger)!important;
+}
+
+
+.hover-text-white:hover {
+    transition-duration: 0.3s;
+    color: white!important;
+}
+

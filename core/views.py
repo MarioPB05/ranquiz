@@ -15,3 +15,8 @@ def login(request):
 def register(request):
     """Vista que permite a un usuario registrarse en la aplicación"""
     return user_register(request)
+
+
+def create_list(request):
+    """Vista que permite a un usuario crear una lista"""
+    return render(request, 'pages/manage_list.html')
