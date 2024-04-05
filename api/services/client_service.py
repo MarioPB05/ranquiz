@@ -11,5 +11,5 @@ def create_client(client_form):
     if client_form.is_valid():
         # Guardamos el cliente y lo devolvemos
         return client_form.save(commit=False)
-    else:
-        return None
+
+    return None

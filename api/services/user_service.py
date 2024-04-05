@@ -42,8 +42,8 @@ def create_user(user_form, avatar, client):
         user.avatar = avatar
 
         return user
-    else:
-        return None
+
+    return None
 
 
 def user_register(request):
@@ -70,8 +70,8 @@ def user_register(request):
 
                 # Redirigimos al usuario a la página de inicio de sesión
                 return redirect('login')
-            else:
-                user_form.add_error(None, 'Error al crear el usuario')
+
+            user_form.add_error(None, 'Error al crear el usuario')
         else:
             user_form.add_error(None, 'Error al crear el cliente')
 
