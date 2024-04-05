@@ -34,7 +34,7 @@
             </div>
         </div>
         <form method="post" class="form mx-auto mw-500px bg-white primary-shadow p-8 rounded" novalidate="novalidate"
-              id="register_stepper_form">
+              id="register_stepper_form" onkeydown="return event.key !== 'Enter';">
             {% csrf_token %}
 
             {{ forms.user_form.errors }}
