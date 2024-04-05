@@ -16,7 +16,9 @@ class LoginUserForm(forms.Form):
 class CreateUserForm(ModelForm):
     """Formulario para crear un usuario en la aplicación"""
 
-    username = forms.CharField(max_length=50, widget=forms.TextInput(attrs={'class': 'form-control form-control-solid'}))
+    username = forms.CharField(max_length=50, widget=forms.TextInput(attrs={
+        'class': 'form-control form-control-solid'
+    }))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control form-control-solid'}))
     confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control form-control-solid'}))
 
