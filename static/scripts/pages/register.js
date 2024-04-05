@@ -16,10 +16,6 @@ function loadCountries() {
                 })),
                 dropdownAutoWidth: true
             });
-        },
-        error: function () {
-        },
-        complete: function () {
         }
     });
 }
