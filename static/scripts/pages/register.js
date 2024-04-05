@@ -25,13 +25,9 @@ $(document).ready(() => {
     const element = document.querySelector("#register_stepper");
     const stepper = new KTStepper(element);
 
-    stepper.on("kt.stepper.next", function (stepper) {
-        stepper.goNext();
-    });
+    stepper.on("kt.stepper.next", (stepper) => stepper.goNext());
 
-    stepper.on("kt.stepper.previous", function (stepper) {
-        stepper.goPrevious();
-    });
+    stepper.on("kt.stepper.previous", (stepper) => stepper.goPrevious());
 
     initializeFlatpickr('#id_birthdate');
     loadCountries();
