@@ -34,4 +34,28 @@ function initializeFlatpickr(elementSelector, mode = 'single', minDate = '1920-0
     });
 }
 
+
+/***
+* Esta función se encarga de realizar una petición AJAX
+* @param url
+* @param data
+* @param method
+* @returns {Promise<unknown>}
+ */
+function promiseAjax(url, method = 'GET', data = null) {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: url,
+            method: method,
+            data: data,
+            success: function (response) {
+                resolve(response);
+            },
+            error: function (error) {
+                reject(error);
+            }
+        });
+    });
+}
+
 export {removePageLoader, initializeFlatpickr};
