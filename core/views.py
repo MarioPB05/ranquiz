@@ -1,6 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
-from api.services.user_service import user_login
+from api.services.user_service import user_login, user_register
 
 
 def homepage(request):
@@ -9,12 +9,11 @@ def homepage(request):
 
 def login(request):
     """Vista que permite a un usuario iniciar sesión en la aplicación"""
-    form = user_login(request)
-    return render(request, 'pages/login.html', {'form': form})
+    return user_login(request)
 
 
 def register(request):
     """Vista que permite a un usuario registrarse en la aplicación"""
-    return render(request, 'pages/register.html')
+    return user_register(request)
 
 
