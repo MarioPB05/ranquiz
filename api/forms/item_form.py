@@ -11,6 +11,6 @@ class CreateItemForm(ModelForm):
     image = forms.ImageField(required=False)
 
 
-class Meta:
-    model = List
-    fields = '__all__'
+    class Meta:
+        model = List
+        fields = '__all__'
