@@ -20,8 +20,8 @@ def user_login(request):
                 login(request, user)
 
                 return redirect('homepage')
-            else:
-                form.add_error(None, 'Email o contraseña incorrectos')
+
+            form.add_error(None, 'Email o contraseña incorrectos')
     else:
         form = LoginUserForm()
 
