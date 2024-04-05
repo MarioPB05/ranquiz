@@ -1,7 +1,10 @@
 from django import forms
+from django.forms import ModelForm
+
+from api.models import Client
 
 
-class ClientForm(forms.Form):
+class CreateClientForm(ModelForm):
     """Formulario para la creación de un cliente"""
 
     name = forms.CharField(max_length=100)
@@ -9,3 +12,16 @@ class ClientForm(forms.Form):
     email = forms.EmailField()
     birthdate = forms.DateField()
     country = forms.CharField(max_length=200)
+
+    def clean_email(self):
+        """Comprueba que el email no esté en uso"""
+        email = self.cleaned_data['email']
+
+        if Client.objects.filter(email=email).exists():
+            raise forms.ValidationError('El email ya está en uso')
+
+        return email
+
+    class Meta:
+        model = Client
+        fields = '__all__'
