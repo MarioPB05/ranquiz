@@ -1,5 +1,5 @@
 from django.contrib.auth import authenticate, login
-from django.shortcuts import redirect
+from django.shortcuts import render, redirect
 
 from api.forms.shop_service import get_avatar
 from api.forms.user_form import LoginUserForm, CreateUserForm
@@ -12,20 +12,20 @@ def user_login(request):
         form = LoginUserForm(request.POST)
 
         if form.is_valid():
-            email = form.cleaned_data['email']
+            username = form.cleaned_data['username']
             password = form.cleaned_data['password']
-            user = authenticate(email=email, password=password)
+            user = authenticate(request, username=username, password=password)
 
             if user is not None:
                 login(request, user)
 
-                redirect('homepage')
+                return redirect('homepage')
             else:
                 form.add_error(None, 'Email o contraseña incorrectos')
     else:
         form = LoginUserForm()
 
-    return form
+    return render(request, 'pages/login.html', {'form': form})
 
 
 def get_user_form(request):
@@ -35,14 +35,11 @@ def get_user_form(request):
 
 def create_user(user_form, avatar, client):
     """Función que crea un usuario en la aplicación"""
-    if user_form.is_valid():
+    if user_form.is_valid() and avatar is not None and client is not None:
         # Establecemos las propiedades del usuario
         user = user_form.save(commit=False)
         user.client = client
         user.avatar = avatar
-
-        # Guardamos el usuario
-        user.save(commit=False)
 
         return user
     else:
@@ -59,10 +56,10 @@ def user_register(request):
 
         if client is not None:
             # Obtenemos el avatar
-            avatar = get_avatar(request.POST['avatar_id'])
+            avatar = get_avatar(1)
 
             # Creamos el usuario
-            user = create_user(request, avatar, client)
+            user = create_user(user_form, avatar, client)
 
             if user is not None:
                 # Guardamos el cliente
@@ -72,13 +69,13 @@ def user_register(request):
                 user.save()
 
                 # Redirigimos al usuario a la página de inicio de sesión
-                redirect('login')
+                return redirect('login')
             else:
                 user_form.add_error(None, 'Error al crear el usuario')
         else:
             user_form.add_error(None, 'Error al crear el cliente')
 
-    return {
+    return render(request, 'pages/register.html', {'forms': {
         'client_form': client_form,
         'user_form': user_form
-    }
+    }})
