@@ -8,7 +8,7 @@ function loadCountries() {
         type: 'GET',
         url: 'https://cdn.jsdelivr.net/npm/world_countries_lists@latest/data/es/countries.json',
         dataType: 'json',
-        success: function (response) {
+        success: (response) => {
             $('#id_country').select2({
                 data: response.map(e => ({
                     id: e.name,
@@ -25,9 +25,9 @@ $(document).ready(() => {
     const element = document.querySelector("#register_stepper");
     const stepper = new KTStepper(element);
 
-    stepper.on("kt.stepper.next", (stepper) => stepper.goNext());
+    stepper.on("kt.stepper.next", (s) => s.goNext());
 
-    stepper.on("kt.stepper.previous", (stepper) => stepper.goPrevious());
+    stepper.on("kt.stepper.previous", (s) => s.goPrevious());
 
     initializeFlatpickr('#id_birthdate');
     loadCountries();
