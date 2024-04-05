@@ -9,6 +9,21 @@ $(document).ready(function() {
         limitReachedClass: "badge badge-danger"
     });
 
+    $('#type').select2({
+        placeholder: 'Selecciona una opción',
+        minimumResultsForSearch: -1,
+        ajax: {
+          url: '/api/list/types', // La URL de tu endpoint de búsqueda
+          dataType: 'json',
+          delay: 0,
+          processResults: function (data) {
+            return {
+              results: data.types
+            };
+          }
+        }
+    });
+
     removePageLoader();
 });
 

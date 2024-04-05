@@ -7,10 +7,52 @@
 <form class="w-100 d-flex justify-content-center flex-column align-items-center gap-15" method="post">
     <main class="bg-primary-300 p-10 w-100 rounded">
         <div class="row">
-            <div class="col-lg-6 position-relative min-h-250px">
-                <div class="w-100 h-100 bg-white border rounded border-secondary border-1"></div>
-                <input id="image" type="file" class="d-none">
-                <label for="image" class="btn btn-primary position-absolute top-50 start-50 translate-middle">Elegir imagen</label>
+            <div class="col-lg-6 min-h-250px">
+{#                <div class="w-100 h-100 bg-white border rounded border-secondary border-1"></div>#}
+{#                <input id="image" type="file" class="d-none" accept="image/*">#}
+{#                <label for="image" class="btn btn-primary position-absolute top-50 start-50 translate-middle">Elegir imagen</label>#}
+                <!--begin::Image input-->
+                <div class="image-input image-input-empty w-100 h-100" data-kt-image-input="true">
+                    <!--begin::Image preview wrapper-->
+                    <div class="image-input-wrapper w-100 h-100 bg-white border rounded border-secondary border-1" style="background-position: center"></div>
+                    <!--end::Image preview wrapper-->
+
+                    <!--begin::Edit button-->
+                    <label class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
+                    data-kt-image-input-action="change"
+                    data-bs-toggle="tooltip"
+                    data-bs-dismiss="click"
+                    title="Change avatar">
+                        <i class="bi bi-pencil fs-6"></i>
+
+                        <!--begin::Inputs-->
+                        <input type="file" name="avatar" accept=".png, .jpg, .jpeg" />
+                        <input type="hidden" name="avatar_remove" />
+                        <!--end::Inputs-->
+                    </label>
+                    <!--end::Edit button-->
+
+                    <!--begin::Cancel button-->
+                    <span class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
+                    data-kt-image-input-action="cancel"
+                    data-bs-toggle="tooltip"
+                    data-bs-dismiss="click"
+                    title="Cancel avatar">
+                        <i class="bi bi-x-lg fs-3"></i>
+                    </span>
+                    <!--end::Cancel button-->
+
+                    <!--begin::Remove button-->
+                    <span class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
+                    data-kt-image-input-action="remove"
+                    data-bs-toggle="tooltip"
+                    data-bs-dismiss="click"
+                    title="Remove avatar">
+                        <i class="ki-outline ki-cross fs-3"></i>
+                    </span>
+                    <!--end::Remove button-->
+                </div>
+                <!--end::Image input-->
             </div>
 
             <div class="col-lg-6 d-flex align-items-center flex-column justify-content-center p-15">
@@ -21,7 +63,7 @@
 
                 <div class="mb-8 w-100">
                     <label for="type" class="form-label fw-boldest text-primary-800 required">Tipo</label>
-                    <select class="form-select text-black" id="type" required></select>
+                    <select class="form-select text-black" id="type" required data-hide-search="true"></select>
                 </div>
             </div>
         </div>
