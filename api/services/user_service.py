@@ -1,13 +1,13 @@
 from django.contrib.auth import authenticate, login
 from django.shortcuts import redirect
 
-from api.forms.user_form import UserForm
+from api.forms.user_form import LoginUserForm
 
 
 def user_login(request):
     """Función que permite a un usuario iniciar sesión en la aplicación"""
     if request.method == 'POST':
-        form = UserForm(request.POST)
+        form = LoginUserForm(request.POST)
 
         if form.is_valid():
             email = form.cleaned_data['email']
@@ -21,6 +21,6 @@ def user_login(request):
             else:
                 form.add_error(None, 'Email o contraseña incorrectos')
     else:
-        form = UserForm()
+        form = LoginUserForm()
 
     return form

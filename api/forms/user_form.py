@@ -1,7 +1,7 @@
 from django import forms
 
 
-class UserForm(forms.Form):
+class LoginUserForm(forms.Form):
     """Formulario para iniciar sesión en la aplicación"""
 
     email = forms.EmailField(widget=forms.EmailInput(attrs={
