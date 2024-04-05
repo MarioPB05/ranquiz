@@ -9,7 +9,7 @@ class UserTransaction(ModelTemplate):
     user = models.ForeignKey('User', on_delete=models.DO_NOTHING)
     value = models.IntegerField()
     date = models.DateTimeField(auto_now_add=True)
-    details = models.CharField(max_length=200)
+    details = models.CharField(max_length=200, blank=True, null=True)
 
     def __str__(self):
         return self.user.username + ' - ' + str(self.value) + ' - ' + self.details
