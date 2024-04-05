@@ -15,5 +15,3 @@ def login(request):
 def register(request):
     """Vista que permite a un usuario registrarse en la aplicación"""
     return user_register(request)
-
-
