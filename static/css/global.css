@@ -13,6 +13,38 @@
 
 
 .primary-shadow {
-    box-shadow: 0 0 40px 0 rgba(189, 32, 233, 0.25);
+    box-shadow: 0 0 40px 0 var(--primary-600);
+}
+
+.bg-primary-300 {
+    background-color: var(--primary-300);
+}
+
+.text-primary-800 {
+    color: var(--primary-800);
+}
+
+.category {
+    cursor: pointer;
+}
+
+.category>i {
+    margin-left: 7px;
+    color: grey;
+}
+
+.category:hover i {
+    color: red;
+}
+
+.hover-text-danger:hover {
+    transition-duration: 0.3s;
+    color: var(--bs-danger)!important;
+}
+
+
+.hover-text-white:hover {
+    transition-duration: 0.3s;
+    color: white!important;
 }
 
