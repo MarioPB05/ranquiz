@@ -1,4 +1,3 @@
-
 /**
  * Esta función se encarga de remover el loader de la página
  */
@@ -10,23 +9,29 @@ function removePageLoader() {
 /**
  * Esta función se encarga de inicializar el componente Flatpickr
  * @param elementSelector
+ * @param mode
+ * @param minDate
  * @returns {*|[]}
  */
-function initializeFlatpickr(elementSelector) {
+function initializeFlatpickr(elementSelector, mode = 'single', minDate = '1920-01-01') {
     return flatpickr(elementSelector, {
-      minDate: '1920-01-01',
-      locale: {
-        firstDayOfWeek: 1,
-        weekdays: {
-          shorthand: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
-          longhand: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+        mode: mode,
+        dateFormat: 'd-m-Y',
+        minDate: minDate,
+        locale: {
+            firstDayOfWeek: 1,
+            weekdays: {
+                shorthand: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+                longhand: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+            },
+            months: {
+                shorthand: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                longhand: ['Enero', 'Febrero', 'Мarzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+            },
+
+            rangeSeparator: ' hasta ',
         },
-        months: {
-          shorthand: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-          longhand: ['Enero', 'Febrero', 'Мarzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-        },
-      },
     });
 }
 
-export { removePageLoader, initializeFlatpickr };
+export {removePageLoader, initializeFlatpickr};
