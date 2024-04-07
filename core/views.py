@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
 from api.services.item_service import create_item_form
-from api.services.list_service import create_list_view, create_list_form
+from api.services.list_service import create_list_form
 from api.services.user_service import user_login, user_register
 
 
