@@ -3,7 +3,7 @@ from django.forms import ModelForm
 from api.models import Category
 
 
-def CreateCategoryForm(ModelForm):
+class CreateCategoryForm(ModelForm):
     """Formulario para crear una categoría."""
 
     name = forms.CharField(max_length=100)
