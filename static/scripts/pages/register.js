@@ -23,7 +23,7 @@ function loadCountries() {
 $(document).ready(() => {
 
     const element = document.querySelector("#register_stepper");
-    const stepper = new KTStepper(element);
+    const stepper = new KTStepper(element);  // skipcq: JS-0125
 
     stepper.on("kt.stepper.next", (s) => s.goNext());
 

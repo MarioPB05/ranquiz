@@ -1,7 +1,8 @@
+from django.db import models
 from shortuuid.django_fields import ShortUUIDField
 
 from api.models.model_template import IMAGE_VALIDATORS
-from api.models.time_stamp import *
+from api.models.time_stamp import TimeStamped
 
 
 class List(TimeStamped):
