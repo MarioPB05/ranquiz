@@ -1,5 +1,6 @@
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.db import models
+from shortuuid.django_fields import ShortUUIDField
 
 from api.models.time_stamp import TimeStamped
 
@@ -41,7 +42,11 @@ class User(AbstractBaseUser, TimeStamped):
     """Modelo que representa a un usuario"""
 
     username = models.CharField(max_length=50, unique=True)
-    share_code = models.CharField(max_length=20, unique=True)
+    share_code = ShortUUIDField(
+        length=18,
+        max_length=20,
+        prefix="US",
+    )
     avatar = models.ForeignKey('Avatar', on_delete=models.DO_NOTHING)
     client = models.ForeignKey('Client', on_delete=models.DO_NOTHING)
 
