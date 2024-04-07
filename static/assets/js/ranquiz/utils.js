@@ -13,7 +13,7 @@ function removePageLoader() {
  * @returns {*|[]}
  */
 function initializeFlatpickr(elementSelector) {
-    return flatpickr(elementSelector, {
+    return flatpickr(elementSelector, {  // skipcq: JS-0125
       minDate: '1920-01-01',
       locale: {
         firstDayOfWeek: 1,
