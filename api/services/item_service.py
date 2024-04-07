@@ -1,5 +1,11 @@
+from api.forms.item_form import CreateItemForm
 from api.models import Item
 from api.services.list_service import get_list
+
+
+def create_item_form(request, prefix=None):
+    """Función para obtener el formulario de un item"""
+    return CreateItemForm(request.POST, prefix=prefix) if request.method == 'POST' else CreateItemForm(prefix=prefix)
 
 
 def create_item(item_form):
