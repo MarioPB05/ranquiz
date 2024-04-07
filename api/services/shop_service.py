@@ -1,6 +1,7 @@
 from datetime import datetime
 
-from api.models import Avatar
+from api.models import Avatar, UserTransaction, HighlightedList
+from api.services.list_service import get_list
 
 
 def get_avatar(avatar_id):
@@ -28,3 +29,39 @@ def calculate_highlight_price(start_date, end_date):
         days -= 1
 
     return total_price
+
+
+def do_transaction(user, value, date, details):
+    """Realiza una transacción"""
+    if user is not None:
+        transaction = UserTransaction()
+        transaction.user = user
+        transaction.value = value
+        transaction.date = date
+        transaction.details = details
+        transaction.save()
+        return transaction
+    else:
+        return None
+
+
+def highlight_list(share_code, start_date, end_date):
+    """Destaca una lista"""
+
+    # Obtenemos la lista
+    required_list = get_list(share_code)
+
+    price = calculate_highlight_price(start_date, end_date)
+
+    if required_list is not None:
+        transaction = do_transaction(required_list.user, -price, datetime.now(), 'Destacar lista')
+        if transaction is not None:
+            highlighted_list = HighlightedList()
+            highlighted_list.list = required_list
+            highlighted_list.start_date = start_date
+            highlighted_list.end_date = end_date
+            highlighted_list.save()
+            return highlighted_list
+        else:
+            # TODO: Administrar errores
+            return None
