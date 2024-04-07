@@ -28,7 +28,6 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 
     async def disconnect(self, close_code):
         """Función que se ejecuta cuando se desconecta el cliente"""
-        pass
 
     async def receive(self, text_data=None, bytes_data=None):
         """Función que se ejecuta cuando se recibe un mensaje del cliente"""
