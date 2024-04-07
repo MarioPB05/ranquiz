@@ -47,14 +47,11 @@ def do_transaction(user, value, date, details):
 
 def highlight_list(share_code, start_date, end_date):
     """Destaca una lista"""
-
     # Obtenemos la lista
     required_list = get_list(share_code)
 
-    price = calculate_highlight_price(start_date, end_date)
-
     if required_list is not None:
-        transaction = do_transaction(required_list.user, -price, datetime.now(), 'Destacar lista')
+        transaction = do_transaction(required_list.user, -(calculate_highlight_price(start_date, end_date)), datetime.now(), 'Destacar lista')
         if transaction is not None:
             highlighted_list = HighlightedList()
             highlighted_list.list = required_list
