@@ -166,14 +166,14 @@ $(document).ready(function () {
         placeholder: 'Selecciona una opción',
         minimumResultsForSearch: -1,
         ajax: {
-          url: '/api/list/types', // La URL de tu endpoint de búsqueda
-          dataType: 'json',
-          delay: 0,
-          processResults: function (data) {
-            return {
-              results: data.types
-            };
-          }
+            url: '/api/list/types', // La URL de tu endpoint de búsqueda
+            dataType: 'json',
+            delay: 0,
+            processResults: function (data) {
+                return {
+                    results: data.types
+                };
+            }
         }
     });
 
@@ -201,16 +201,16 @@ $(document).ready(function () {
     removePageLoader();
 });
 
-$("#range_date_highlight").on("change", function() {
+$("#range_date_highlight").on("change", function () {
     let dates = $(this).val().split(" hasta ");
 
     if (dates.length === 2) {
         promiseAjax(`/api/shop/highlight/calculator?start_date=${dates[0]}&end_date=${dates[1]}`)
-        .then(response => {
-            $('#highlight_price').text(response.price);
-        })
-        .catch(error => {
-            console.error(error);
-        });
+            .then(response => {
+                $('#highlight_price').text(response.price);
+            })
+            .catch(error => {
+                console.error(error);
+            });
     }
 });
