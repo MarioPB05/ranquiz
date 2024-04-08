@@ -34,11 +34,8 @@
             </div>
         </div>
         <form method="post" class="form mx-auto mw-500px bg-white primary-shadow p-8 rounded" novalidate="novalidate"
-              id="register_stepper_form">
+              id="register_stepper_form" onkeydown="return event.key !== 'Enter';">
             {% csrf_token %}
-
-            {{ forms.user_form.errors }}
-            {{ forms.client_form.errors }}
 
             <div class="mb-5">
                 <div class="flex-column current align-items-center" data-kt-stepper-element="content">
@@ -53,21 +50,36 @@
                         <div class="fv-row mb-10">
                             <label class="form-label">Nombre de usuario</label>
                             {{ forms.user_form.username }}
+                            {% if forms.user_form.username.errors %}
+                                <ul class="errorlist">
+                                    {% for error in forms.user_form.username.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
                         </div>
                         <div class="fv-row mb-10">
                             <label class="form-label">Contraseña</label>
                             {{ forms.user_form.password }}
+                            {% if forms.user_form.password.errors %}
+                                <ul class="errorlist">
+                                    {% for error in forms.user_form.password.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
                         </div>
                         <div class="fv-row mb-10">
                             <label class="form-label">Repita la contraseña</label>
                             {{ forms.user_form.confirm_password }}
+                            {% if forms.user_form.confirm_password.errors %}
+                                <ul class="errorlist">
+                                    {% for error in forms.user_form.confirm_password.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
                         </div>
-
-                        {% if forms.user_form.errors %}
-                            {% for error in form.non_field_errors %}
-                                <p class="mb-10 text-danger">{{ error }}</p>
-                            {% endfor %}
-                        {% endif %}
                     </div>
                 </div>
 
@@ -84,15 +96,36 @@
                             <div class="fv-row w-100 mb-10">
                                 <label class="form-label">Nombre</label>
                                 {{ forms.client_form.name }}
+                                {% if forms.client_form.name.errors %}
+                                    <ul class="errorlist">
+                                        {% for error in forms.client_form.name.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
                             </div>
                             <div class="fv-row w-100 mb-10">
                                 <label class="form-label">Apellidos</label>
                                 {{ forms.client_form.surnames }}
+                                {% if forms.client_form.surnames.errors %}
+                                    <ul class="errorlist">
+                                        {% for error in forms.client_form.surnames.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
                             </div>
                         </div>
                         <div class="fv-row mb-10">
                             <label class="form-label">Correo</label>
                             {{ forms.client_form.email }}
+                            {% if forms.client_form.email.errors %}
+                                <ul class="errorlist">
+                                    {% for error in forms.client_form.email.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
                         </div>
                         <div class="fv-row mb-10">
                             <label for="id_country" class="form-label d-block">País</label>
@@ -105,12 +138,6 @@
                             <label for="id_birthdate" class="form-label">Fecha de nacimiento</label>
                             <input class="form-control form-control-solid" id="id_birthdate" name="birthdate" placeholder="21/01/2000"/>
                         </div>
-
-                        {% if forms.client_form.errors %}
-                            {% for error in form.non_field_errors %}
-                                <p class="mb-10 text-danger">{{ error }}</p>
-                            {% endfor %}
-                        {% endif %}
                     </div>
                 </div>
             </div>
