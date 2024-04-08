@@ -7,6 +7,7 @@ from api.services.user_service import user_login, user_register
 
 
 def homepage(request):
+    """Vista que renderiza la página de inicio de la aplicación"""
     return render(request, 'pages/index.html')
 
 
