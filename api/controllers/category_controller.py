@@ -30,8 +30,17 @@ def validate_category(request, category_name):
 
 def get_categories(request):
     """Función para obtener todas las categorías"""
-    serialized_categories = serialize('json', get_all_categories())
-    return JsonResponse({'categories': json.loads(serialized_categories)})
+    categories = get_all_categories()
+    json_categories = []
+
+    for category in categories:
+        json_categories.append({
+            'id': category.id,
+            'name': category.name,
+            'share_code': category.share_code
+        })
+
+    return JsonResponse({'categories': json_categories})
 
 
 def add_category(request):
