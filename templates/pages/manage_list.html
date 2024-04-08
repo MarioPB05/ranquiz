@@ -74,13 +74,13 @@
         </main>
 
         <div class="row w-100 g-10">
-            <div class="col-md-6 pe-18">
+            <div class="col-lg-6 pe-18 order-lg-1 order-2">
                 <h1 class="fw-boldest">Elementos:</h1>
 
                 <div id="items_container" class="d-flex gap-5 flex-column w-100 mh-300px scroll mt-5">
                     <div id="item_template" class="d-none w-100 flex-stack">
                         <label for="id_template-image"
-                               class="w-60px h-60px col-3 cursor-pointer bg-primary p-2 d-flex justify-content-center align-items-center rounded"><i
+                               class="itemImageLabel w-60px h-60px col-3 cursor-pointer bg-primary p-2 d-flex justify-content-center align-items-center rounded"><i
                                 class="bi bi-card-image text-primary-800 fs-1"></i></label>
                         {{ item_form.image }}
 
@@ -101,7 +101,7 @@
                 </button>
             </div>
 
-            <div class="col-md-6 position-sticky top-50 border-primary border border-1 rounded p-10">
+            <div class="col-lg-6  order-lg-2 order-1 border-primary border border-1 rounded p-10">
                 <div class="mb-8">
                     <label for="visibility" class="required fw-boldest text-primary-800">Visibilidad</label>
                     <select class="form-select text-black" id="visibility" required data-hide-search="true"
