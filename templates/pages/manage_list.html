@@ -5,6 +5,8 @@
 
 {% block content %}
     <form class="w-100 d-flex justify-content-center flex-column align-items-center gap-15" method="post">
+        {% csrf_token %}
+
         <main class="bg-primary-300 p-10 w-100 rounded">
             <div class="row">
                 <div class="col-lg-6 min-h-250px">

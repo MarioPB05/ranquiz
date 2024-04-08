@@ -6,6 +6,7 @@ let item_last_prefix = 0;
 let categories = [];
 const maxCategories = 5;
 const maxCategoryLength = 25;
+let allCategories = [];
 
 
 function changedListImage() {
@@ -247,10 +248,21 @@ function actualizeItemNumber() {
     $("#item_number").text(i);
 }
 
-function addCategory(event) {
-    // Guardar el nombre de la categoría
-    const name = $('#add_category').val();
+function addCategory(name) {
+    // Añadir la categoría a la lista
+    categories.push(name);
 
+    // Añadir la categoría a la base de datos si no existía
+    if (allCategories.indexOf(name) === -1) {
+        getSimilarCategory(name);
+        return;
+    }
+
+    addCategoryToPage(name);
+    $('#add_category').val('');
+}
+
+function validateCategory(name) {
     // Verificar que no esté vacío, si existe, que no haya más de 5 categorías y que no sea mayor a 50 caracteres
     if (!name) {
         toastMessage('error', 'El campo de categoría no puede estar vacío.');
@@ -265,9 +277,7 @@ function addCategory(event) {
         toastMessage('error', 'El nombre de la categoría no puede ser mayor a ' + maxCategoryLength + ' caracteres.');
 
     } else {
-        categories.push(name);
-        addCategoryToPage(name);
-        $('#add_category').val('');
+        addCategory(name);
     }
 
 }
@@ -291,7 +301,59 @@ function removeCategory(event) {
     categories.splice(categories.indexOf(event.target.text), 1);
 }
 
+function getCategories() {
 
+    promiseAjax('/api/category/').then(response => {
+        allCategories = response.categories.map(function(category) {
+            return category.name;
+        });
+
+        console.log(allCategories);
+
+        $("#actual_categories").html('');
+        allCategories.forEach(category => {
+            $("#actual_categories").append(`<option value="${category}">`);
+        });
+    });
+}
+
+function getSimilarCategory(name) {
+
+    promiseAjax(`/api/category/validate/${name}`).then(response => {
+
+        if (!response.validate) {
+            Swal.fire({
+              title: "¿Quieres decir" + response.similar_category.name + "?",
+              showCancelButton: true,
+                icon: "question",
+              confirmButtonClass: "btn btn-primary",
+              cancelButtonClass: "btn btn-outline-primary",
+              confirmButtonText: "Sí",
+                cancelButtonText: "No"
+
+            }).then((result) => {
+
+              if (result.isConfirmed) {
+                  validateCategory(response.similar_category.name);
+
+              }else {
+                  addCategoryToDatabase(name);
+              }
+
+            });
+
+        }else {
+            addCategoryToDatabase(name);
+        }
+    });
+}
+
+function addCategoryToDatabase(name) {
+    promiseAjax('/api/category/create/', 'POST', {name: name, csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()}).then(response => {
+        allCategories.push(name);
+        addCategory(name);
+    });
+}
 
 $(document).ready(function () {
 
@@ -337,8 +399,10 @@ $(document).ready(function () {
 
     $("#range_date_highlight").on("change", updateHighlightPrice);
 
-    $('#add_category_button').on('click', addCategory);
-
+    getCategories();
+    $('#add_category_button').on('click', function () {
+        validateCategory($('#add_category').val());
+    });
     $("#categories_container").on('click', removeCategory);
 
     // Añadir los items mínimos
