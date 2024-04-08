@@ -11,13 +11,20 @@ def validate_category(request, category_name):
     """Función para validar una categoría"""
     categories = get_all_categories()
     found_similar = False
+    similar_categories = []
     similar_category = None
 
     for c in categories:
         if similarity(c.name, category_name) > 0.7:
             found_similar = True
-            similar_category = c
-            break
+            similar_categories.append({
+                'percentage': similarity(c.name, category_name),
+                'category': c
+            })
+
+    if similar_categories:
+        # Obtenemos la categoría más similar
+        similar_category = max(similar_categories, key=lambda x: x['percentage'])['category']
 
     return JsonResponse({
         'validate': not found_similar,
