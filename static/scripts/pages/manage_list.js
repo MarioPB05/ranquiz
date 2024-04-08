@@ -7,6 +7,7 @@ let categories = [];
 const maxCategories = 5;
 const maxCategoryLength = 25;
 
+
 function changedListImage() {
     $('label[for="id_image"]').hide();
 }
@@ -282,6 +283,18 @@ function addCategoryToPage(name) {
     $('#categories_container').append(category);
 }
 
+function removeCategory(event) {
+    // Eliminar el item
+    $(event.target).remove();
+
+    // Eliminar la categoría de la lista
+    categories.splice(categories.indexOf(event.target.text), 1);
+
+    console.log(categories);
+}
+
+
+
 $(document).ready(function () {
 
     initializeFlatpickr("#range_date_highlight", 'range', moment().format('DD-MM-YYYY'));
@@ -328,6 +341,8 @@ $(document).ready(function () {
 
     $('#add_category_button').on('click', addCategory);
 
+    $("#categories_container").on('click', removeCategory);
+
     // Añadir los items mínimos
     for (let i = 0; i < minItems; i++) {
         createItem();
@@ -335,3 +350,4 @@ $(document).ready(function () {
 
     removePageLoader();
 });
+
