@@ -13,6 +13,9 @@ name = "javascript"
   [analyzers.meta]
   environment = ["jquery"]
 
+  [analyzers.options]
+  disable = ["import/no-unresolved", "no-undef"]
+
 [[analyzers]]
 name = "python"
 

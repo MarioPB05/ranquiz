@@ -1,4 +1,8 @@
-from api.models.time_stamp import *
+from django.db import models
+from shortuuid.django_fields import ShortUUIDField
+
+from api.models.model_template import IMAGE_VALIDATORS
+from api.models.time_stamp import TimeStamped
 
 
 class List(TimeStamped):
@@ -11,10 +15,14 @@ class List(TimeStamped):
     )
 
     owner = models.ForeignKey('User', on_delete=models.DO_NOTHING)
-    share_code = models.CharField(max_length=20, unique=True)
-    name = models.CharField(max_length=100)
+    share_code = ShortUUIDField(
+        length=18,
+        max_length=20,
+        prefix="LS",
+    )
+    name = models.CharField(max_length=70)
     public = models.BooleanField(default=False)
-    image = models.ImageField(upload_to='lists/', null=True, blank=True)
+    image = models.ImageField(upload_to='lists/', validators=IMAGE_VALIDATORS, null=True, blank=True)
     type = models.IntegerField(choices=TYPE_CHOICES, default=0)
 
     def __str__(self):

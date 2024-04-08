@@ -1,6 +1,6 @@
 from django.db import models
 
-from api.models.model_template import ModelTemplate
+from api.models.model_template import ModelTemplate, IMAGE_VALIDATORS
 
 
 class Item(ModelTemplate):
@@ -8,7 +8,7 @@ class Item(ModelTemplate):
 
     list = models.ForeignKey('List', on_delete=models.DO_NOTHING)
     name = models.CharField(max_length=255)
-    image = models.ImageField(upload_to='items/', null=True, blank=True)
+    image = models.ImageField(upload_to='items/', validators=IMAGE_VALIDATORS, null=True, blank=True)
 
     def __str__(self):
         return self.name
