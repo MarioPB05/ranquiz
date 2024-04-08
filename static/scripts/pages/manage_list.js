@@ -289,8 +289,6 @@ function removeCategory(event) {
 
     // Eliminar la categoría de la lista
     categories.splice(categories.indexOf(event.target.text), 1);
-
-    console.log(categories);
 }
 
 
