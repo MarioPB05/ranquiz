@@ -1,3 +1,16 @@
+const Toast = Swal.mixin({
+  toast: true,
+  position: "top-end",
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+  didOpen: (toast) => {
+    toast.onmouseenter = Swal.stopTimer;
+    toast.onmouseleave = Swal.resumeTimer;
+  }
+});
+
+
 /**
  * Esta función se encarga de remover el loader de la página
  */
@@ -58,4 +71,16 @@ function promiseAjax(url, method = 'GET', data = null) {
     });
 }
 
-export {removePageLoader, initializeFlatpickr, promiseAjax};
+/**
+ * Esta función se encarga de mostrar un mensaje de tipo toast
+ * @param icon
+ * @param message
+ */
+function toastMessage(icon, message) {
+    Toast.fire({
+        icon: icon,
+        title: message
+    });
+}
+
+export {removePageLoader, initializeFlatpickr, promiseAjax, toastMessage};

@@ -1,4 +1,4 @@
-import {removePageLoader, initializeFlatpickr, promiseAjax} from "/static/assets/js/ranquiz/utils.js";
+import {removePageLoader, initializeFlatpickr, promiseAjax, toastMessage} from "/static/assets/js/ranquiz/utils.js";
 
 const minItems = 5;
 let items_prefix = [];
@@ -13,6 +13,13 @@ function removeListImage() {
 }
 
 function createItem() {
+    // Verificar que no haya ningun item vacio
+    if (anyItemInputEmpty() && items_prefix.length > minItems - 1) {
+        focusOnFirstEmptyItem();
+        toastMessage('error', 'Hay elementos vacíos, rellénelos todos antes de añadir uno nuevo.');
+        return;
+    }
+
     // Clonar la plantilla de un item
     const item = $('#item_template').clone();
 
@@ -50,12 +57,18 @@ function createItem() {
 
     // Añadir el item al contenedor
     $('#items_container').append(item);
+
+    // Actualizar el número de items
+    actualizeItemNumber();
+
+    // Enfocar en el input del nombre
+    focusOnFirstEmptyItem();
 }
 
 function removeItem(event) {
-    // Comprobar que haya más de 4 items
+    // Comprobar que haya más de 5 items
     if (items_prefix.length <= minItems) {
-        // TODO: Mostrar un mensaje de error (Como mínimo minItems items)
+        toastMessage('error', 'El minimo de elementos es ' + minItems + '.');
         return;
     }
 
@@ -70,6 +83,9 @@ function removeItem(event) {
 
     // Eliminar el item
     parent.remove();
+
+    // Actualizar el número de items
+    actualizeItemNumber();
 }
 
 function showItemPreviewModal(target) {
@@ -183,6 +199,48 @@ function itemHasImage(event) {
         event.preventDefault();
         showItemPreviewModal(input[0]);
     }
+}
+
+function anyItemInputEmpty() {
+    // Comprueba si hay algún input de item vacío
+    let empty = false;
+
+    $('#items_container .list_item:not(#item_template)').find('input[type="text"]').each(function () {
+
+        if ($(this).val() === '') {
+            empty = true;
+            return false;
+        }
+
+    });
+
+    return empty;
+}
+
+function focusOnFirstEmptyItem() {
+    // Enfoca en el primer item vacío
+    $('#items_container .list_item:not(#item_template)').find('input[type="text"]').each(function () {
+
+        if ($(this).val() === '') {
+            $(this).focus();
+            return false;
+        }
+
+    });
+
+}
+
+
+function actualizeItemNumber() {
+    // Actualiza el número de items
+
+    let i = 0;
+
+    $('#items_container').find('.list_item:not(#item_template)').each(function () {
+        i++;
+    });
+
+    $("#item_number").text(i);
 }
 
 $(document).ready(function () {

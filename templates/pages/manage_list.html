@@ -59,7 +59,7 @@
                     <!--end::Image input-->
                 </div>
 
-                <div class="col-lg-6 d-flex align-items-center flex-column justify-content-center p-15">
+                <div class="col-lg-6 d-flex align-items-center flex-column justify-content-center p-10">
                     <div class="mb-8 w-100">
                         <label for="name" class="form-label fw-boldest text-primary-800 required ">Nombre</label>
                         <input type="text" class="form-control text-black" id="name" maxlength="70" required/>
@@ -69,16 +69,25 @@
                         <label for="type" class="form-label fw-boldest text-primary-800 required">Tipo</label>
                         <select class="form-select text-black" id="type" required data-hide-search="true"></select>
                     </div>
+
+                    <div class="mb-4 w-100">
+                        <label for="question" class="form-label fw-boldest text-primary-800 required ">Pregunta de enfrentamiento</label>
+                        <input type="text" class="form-control text-black" id="question" maxlength="70" value="¿Cual prefieres?" required/>
+                        <span class="text-primary fs-8">Es la pregunta que verá el jugador cuando se enfrentan los elementos</span>
+                    </div>
                 </div>
             </div>
         </main>
 
-        <div class="row w-100 g-10">
+        <div class="row w-100 g-10 mb-15">
             <div class="col-lg-6 pe-18 order-lg-1 order-2">
-                <h1 class="fw-boldest">Elementos:</h1>
+                <div class="d-flex w-100 justify-content-between">
+                    <h1 class="fw-boldest">Elementos:</h1>
+                    <h1 class="text-muted" id="item_number">0</h1>
+                </div>
 
-                <div id="items_container" class="d-flex gap-5 flex-column w-100 mh-300px scroll mt-5">
-                    <div id="item_template" class="d-none w-100 flex-stack">
+                <div id="items_container" class="d-flex gap-5 flex-column w-100 mt-5">
+                    <div id="item_template" class="d-none w-100 list_item">
                         <label for="id_template-image"
                                class="itemImageLabel w-60px h-60px col-3 cursor-pointer bg-primary p-2 d-flex justify-content-center align-items-center rounded"><i
                                 class="bi bi-card-image text-primary-800 fs-1"></i></label>
@@ -101,7 +110,7 @@
                 </button>
             </div>
 
-            <div class="col-lg-6  order-lg-2 order-1 border-primary border border-1 rounded p-10">
+            <div class="col-lg-6  order-lg-2 order-1 border-primary border border-1 rounded p-10 position-lg-sticky top-25 h-400px">
                 <div class="mb-8">
                     <label for="visibility" class="required fw-boldest text-primary-800">Visibilidad</label>
                     <select class="form-select text-black" id="visibility" required data-hide-search="true"
@@ -153,7 +162,7 @@
             </div>
         </div>
 
-        <div class="d-flex justify-content-center mt-10">
+        <div class="d-flex justify-content-center mt-10 position-fixed bottom-0 w-100 start-0 z-index-3 p-5 bg-white shadow">
             <button type="submit" class="btn btn-primary btn-lg fs-3">Crear lista</button>
         </div>
     </form>
