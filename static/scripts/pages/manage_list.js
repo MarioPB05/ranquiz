@@ -4,6 +4,8 @@ const minItems = 5;
 let items_prefix = [];
 let item_last_prefix = 0;
 let categories = [];
+const maxCategories = 5;
+const maxCategoryLength = 25;
 
 function changedListImage() {
     $('label[for="id_image"]').hide();
@@ -248,15 +250,25 @@ function addCategory(event) {
     // Guardar el nombre de la categoría
     const name = $('#add_category').val();
 
-    // Verificar que no esté vacío o ya exista
-    if (name && !categories.includes(name)) {
+    // Verificar que no esté vacío, si existe, que no haya más de 5 categorías y que no sea mayor a 50 caracteres
+    if (!name) {
+        toastMessage('error', 'El campo de categoría no puede estar vacío.');
+
+    } else if (categories.includes(name)) {
+        toastMessage('error', 'La categoría ya existe.');
+
+    } else if (categories.length >= maxCategories) {
+        toastMessage('error', 'El máximo de categorías es ' + maxCategories + '.');
+
+    } else if (name.length >= maxCategoryLength) {
+        toastMessage('error', 'El nombre de la categoría no puede ser mayor a ' + maxCategoryLength + ' caracteres.');
+
+    } else {
         categories.push(name);
         addCategoryToPage(name);
         $('#add_category').val('');
-
-    }else {
-        toastMessage('error', 'La categoría está vacía o ya está añadida.');
     }
+
 }
 
 function addCategoryToPage(name) {
