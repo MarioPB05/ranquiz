@@ -1,12 +1,14 @@
+from api.forms.category_form import CreateCategoryForm
 from api.models import Category
 
 
-def create_category(category_form):
+def create_category(data):
     """Función para crear una categoría"""
+    category_form = CreateCategoryForm(data)
 
     if category_form.is_valid():
         # Guardamos la categoría y la devolvemos
-        return category_form.save(commit=False)
+        return category_form.save()
     else:
         return None
 

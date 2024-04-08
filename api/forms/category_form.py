@@ -7,8 +7,7 @@ class CreateCategoryForm(ModelForm):
     """Formulario para crear una categoría."""
 
     name = forms.CharField(max_length=100)
-    share_code = forms.CharField(max_length=20)
 
     class Meta:
         model = Category
-        fields = '__all__'
+        fields = ['name']
