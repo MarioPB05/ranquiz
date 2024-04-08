@@ -1,6 +1,6 @@
 import {removePageLoader, initializeFlatpickr, promiseAjax} from "/static/assets/js/ranquiz/utils.js";
 
-const minItems = 5;
+const minItems = 4;
 let items_prefix = [];
 let item_last_prefix = 0;
 
@@ -72,29 +72,6 @@ function removeItem(event) {
     parent.remove();
 }
 
-function showItemPreviewModal(target) {
-
-    // Obtenemos el padre
-    const parent = $(target).parent();
-
-    // Obtenemos el nombre del item
-    const name = parent.find('.item-name').val();
-
-    // Si el nombre no está vacío
-    if (name) {
-        // Mostrar el nombre en el modal
-        $('#temp_item_name').text(name).show();
-    }
-
-    console.log(target);
-
-    // Configurar el target para posterior uso
-    $('#change_item_img').parent().attr('data-target', '#' + target.id);
-
-    // Mostrar el modal
-    $('#image_previewer').modal('show');
-}
-
 function itemImageChanged(event) {
     // Obtener el archivo seleccionado
     const file = event.target.files[0];
@@ -114,7 +91,23 @@ function itemImageChanged(event) {
         reader.readAsDataURL(file);
     }
 
-    showItemPreviewModal(event.target);
+    // Obtenemos el padre
+    const parent = $(event.target).parent();
+
+    // Obtenemos el nombre del item
+    const name = parent.find('.item-name').val();
+
+    // Si el nombre no está vacío
+    if (name) {
+        // Mostrar el nombre en el modal
+        $('#temp_item_name').text(name).show();
+    }
+
+    // Configurar el target para posterior uso
+    $('#change_item_img').parent().attr('data-target', '#' + event.target.id);
+
+    // Mostrar el modal
+    $('#image_previewer').modal('show');
 }
 
 function getModalInputTarget(event) {
@@ -160,31 +153,6 @@ function cancelItemImage(event) {
     input.val('');
 }
 
-function updateHighlightPrice() {
-    let dates = $("#range_date_highlight").val().split(" hasta ");
-
-    if (dates.length === 2) {
-        promiseAjax(`/api/shop/highlight/calculator?start_date=${dates[0]}&end_date=${dates[1]}`)
-            .then(response => {
-                $('#highlight_price').text(response.price);
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    }
-}
-
-function itemHasImage(event) {
-    // Obtener el target (Input)
-    const input = $("#" + $(this).attr('for'));
-
-    // Comprobar si ya se ha seleccionado una imagen para mosrar el modal directamente
-    if (input[0] && input[0].files.length > 0) {
-        event.preventDefault();
-        showItemPreviewModal(input[0]);
-    }
-}
-
 $(document).ready(function () {
 
     initializeFlatpickr("#range_date_highlight", 'range', moment().format('DD-MM-YYYY'));
@@ -221,13 +189,9 @@ $(document).ready(function () {
     itemsContainer.on('click', '.remove_item', removeItem);
     itemsContainer.on('change', '.item-image', itemImageChanged);
 
-    $("#items_container").on('click', 'label.itemImageLabel', itemHasImage);
-
     $('#change_item_img').on('click', changeItemImage);
     $('#set_item_img').on('click', setItemImage);
     $('#cancel_item_img').on('click', cancelItemImage);
-
-    $("#range_date_highlight").on("change", updateHighlightPrice);
 
     // Añadir los items mínimos
     for (let i = 0; i < minItems; i++) {
@@ -235,4 +199,18 @@ $(document).ready(function () {
     }
 
     removePageLoader();
+});
+
+$("#range_date_highlight").on("change", function () {
+    let dates = $(this).val().split(" hasta ");
+
+    if (dates.length === 2) {
+        promiseAjax(`/api/shop/highlight/calculator?start_date=${dates[0]}&end_date=${dates[1]}`)
+            .then(response => {
+                $('#highlight_price').text(response.price);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }
 });
