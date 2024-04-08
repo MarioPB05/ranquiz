@@ -27,6 +27,17 @@ class CreateClientForm(ModelForm):
 
         return email
 
+    def clean(self):
+        """Comprueba que el nombre y apellidos no sean iguales"""
+        cleaned_data = super().clean()
+        name = cleaned_data.get('name')
+        surnames = cleaned_data.get('surnames')
+
+        if name == surnames:
+            raise forms.ValidationError('El nombre y apellidos no pueden ser iguales')
+
+        return cleaned_data
+
     class Meta:
         model = Client
         fields = '__all__'
