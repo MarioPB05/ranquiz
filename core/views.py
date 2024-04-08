@@ -1,6 +1,8 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
+from api.services.item_service import create_item_form
+from api.services.list_service import create_list_form
 from api.services.user_service import user_login, user_register
 
 
@@ -21,4 +23,10 @@ def register(request):
 @login_required
 def create_list(request):
     """Vista que permite a un usuario crear una lista"""
-    return render(request, 'pages/manage_list.html')
+    list_form = create_list_form(request)
+    item_form = create_item_form(request, prefix='template')
+
+    return render(request, 'pages/manage_list.html', {
+        'list_form': list_form,
+        'item_form': item_form
+    })
