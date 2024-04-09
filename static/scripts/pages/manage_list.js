@@ -191,7 +191,7 @@ function updateHighlightPrice() {
     }
 }
 
-function cancelHighlight(event) {
+function cancelHighlight() {
     $('#range_date_highlight').flatpickr().clear();
     $('#highlight_price').text('0');
 }
