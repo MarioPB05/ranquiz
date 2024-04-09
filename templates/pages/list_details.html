@@ -2,43 +2,75 @@
 {% load static %}
 
 {% block content %}
-    <div class="row">
-        <div class="col-md-8 h-100 h-md-auto p-3 bg-primary-600 rounded">
-            <div class="d-flex flex-column p-8 gap-5">
-                <div class="d-flex flex-row justify-content-between align-items-center">
-                    <h2 class="text-white">Brawl Stars personajes</h2>
-                    <div class="d-flex gap-3 align-items-center">
-                        <i class="text-white fs-2tx bi bi-person-circle"></i>
-                        <label class="text-white fw-bolder">David Pérez Fernández</label>
-                    </div>
-                </div>
-                <div class="bg-gray-500 w-100 h-250px rounded">
-                     <img alt="" src="" style="object-fit: cover">
-                </div>
-                <div class="d-flex align-center justify-content-center gap-20">
-                    <div class="d-flex flex-column gap-3 align-items-center">
-                        <div class="bg-white p-5 rounded-circle">
-                            <i class="fs-3x text-info bi bi-controller"></i>
+    <div class="row h-100">
+        <div class="pe-6 col-md-8 h-auto h-md-100">
+            <div class="w-100 h-auto h-md-100 p-3 bg-primary-600 rounded ">
+                <div class="d-flex flex-column p-8 gap-10">
+                    <div class="d-flex flex-row justify-content-between align-items-center">
+                        <h2 class="text-white m-0">Brawl Stars personajes</h2>
+                        <div class="d-flex gap-3 align-items-center">
+                            <i class="text-white fs-2tx bi bi-person-circle"></i>
+                            <label class="text-white fw-bolder">David Pérez Fernández</label>
                         </div>
-                        <label class="text-white fw-bolder fs-3">2351</label>
                     </div>
-                    <div class="d-flex flex-column gap-3 align-items-center">
-                        <div class="bg-white p-5 rounded-circle">
-                            <i class="fs-3x text-danger bi bi-heart-fill"></i>
-                        </div>
-                        <label class="text-white fw-bolder fs-3">1500</label>
+                    <div class="bg-gray-500 w-100 h-250px rounded">
+                        <img alt="" src="" style="object-fit: cover">
                     </div>
-                    <div class="d-flex flex-column gap-3 align-items-center">
-                        <div class="bg-white p-5 rounded-circle">
-                            <i class="fs-3x text-warning bi bi-star-fill"></i>
+                    <div class="d-flex align-center justify-content-center gap-20">
+                        <div class="d-flex flex-column gap-3 align-items-center">
+                            <div class="bg-white p-5 rounded-circle">
+                                <i class="fs-3x text-info bi bi-controller"></i>
+                            </div>
+                            <label class="text-white fw-bolder fs-3">2351</label>
                         </div>
-                        <label class="text-white fw-bolder fs-3">203</label>
+                        <div class="d-flex flex-column gap-3 align-items-center">
+                            <div class="bg-white p-5 rounded-circle">
+                                <i class="fs-3x text-danger bi bi-heart-fill"></i>
+                            </div>
+                            <label class="text-white fw-bolder fs-3">1500</label>
+                        </div>
+                        <div class="d-flex flex-column gap-3 align-items-center">
+                            <div class="bg-white p-5 rounded-circle">
+                                <i class="fs-3x text-warning bi bi-star-fill"></i>
+                            </div>
+                            <label class="text-white fw-bolder fs-3">203</label>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-row justify-content-between ps-10 pe-10 w-100">
+                        <div class="d-flex flex-column gap-6 w-60">
+                            <div class="d-flex flex-row text-white gap-3 fs-3">
+                                <label class="fw-bolder">Elementos :</label>
+                                <label>77</label>
+                            </div>
+                            <div class="d-flex flex-row text-white gap-3 fs-3">
+                                <label class="fw-bolder">Creación :</label>
+                                <label>Hace 27 días</label>
+                            </div>
+                            <div class="d-flex flex-row text-white gap-3 fs-3">
+                                <label class="fw-bolder">Ultima edición :</label>
+                                <label>77</label>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-column gap-3 text-white">
+                            <label class="fw-bolder fs-3">Categorías:</label>
+                            <div class="d-flex gap-3 flex-wrap mw-200px">
+                                <span class="badge bg-white text-primary-800 fs-6">Brawlers</span>
+                                <span class="badge bg-white text-primary-800 fs-6">Skins</span>
+                                <span class="badge bg-white text-primary-800 fs-6">Mapas</span>
+                                <span class="badge bg-white text-primary-800 fs-6">Mapas</span>
+                                <span class="badge bg-white text-primary-800 fs-6">Mapas</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <i class="fs-2x text-primary bi bi-share-fill bg-white p-4 rounded-circle"></i>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="d-flex flex-column gap-3 col-md-4 p-6 primary-border rounded overflow-hidden full-height ">
+
+        <div class="d-flex flex-column gap-3 col-md-4 p-6 primary-border rounded overflow-hidden">
             <div class="d-flex justify-content-between align-items-center">
                 <h3>Comentarios</h3>
                 <p class="fs-2 text-muted">1340</p>
@@ -46,7 +78,8 @@
 
             <div class="d-flex gap-8 flex-column scrolleable" id="comments_container">
                 <!-- Begin template comment -->
-                <div class="d-none flex-column border border-1 border-gray-400 rounded p-5 gap-4 comment" id="template_comment">
+                <div class="d-none flex-column border border-1 border-gray-400 rounded p-5 gap-4 comment"
+                     id="template_comment">
                     <div class="d-flex flex-row align-items-center justify-content-between">
                         <div class="d-flex flex-row gap-3 align-items-center justify-content-center author_group">
                             <div class="author_avatar">
@@ -65,7 +98,8 @@
 
                     <div class="d-flex flex-row gap-3 mt-2 award_container">
 
-                        <div class="d-none gap-2 bg-info rounded-pill text-white p-1 ps-3 pe-3 align-items-center" id="template_award">
+                        <div class="d-none gap-2 bg-info rounded-pill text-white p-1 ps-3 pe-3 align-items-center"
+                             id="template_award">
                             <i class="fs-5 text-white bi award_icon"></i>
                             <label class="award_text">Útil</label>
                             <label class="ms-2 award_amount">3</label>
@@ -86,10 +120,10 @@
                     <label class="w-100">
                         <div class="borderless-textarea">
                             <textarea rows="1" class="w-100 border-0 fs-5" placeholder="Añadir comentario..."
-                            data-kt-autosize="true"></textarea>
+                                      data-kt-autosize="true"></textarea>
                         </div>
                     </label>
-                    <i class="fs-2 text-primary bi bi-send"></i>
+                    <i class="fs-2 bg-hover-secondary rounded-circle cursor-pointer text-primary bi bi-send p-2"></i>
                 </div>
             </form>
         </div>
