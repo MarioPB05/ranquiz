@@ -1,0 +1,222 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+
+
+{% block content %}
+    <form class="w-100 d-flex justify-content-center flex-column align-items-center gap-15" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <input id="items_prefix" type="hidden" name="items_prefix">
+        <input id="categories" type="hidden" name="categories">
+
+        <main class="bg-primary-300 p-10 w-100 rounded">
+            <div class="row">
+                <div class="col-lg-6 min-h-250px">
+                    <!--begin::Image input-->
+                    <div id="kt_image_input"
+                         class="image-input image-input-empty w-100 h-100 bg-white border rounded border-secondary border-1"
+                         data-kt-image-input="true">
+                        <label for="id_image"
+                               class="btn btn-primary position-absolute top-50 start-50 translate-middle">Elegir
+                            imagen</label>
+
+                        <!--begin::Image preview wrapper-->
+                        <div class="image-input-wrapper w-100 h-100"
+                             style="background-position: center"></div>
+                        <!--end::Image preview wrapper-->
+
+                        <!--begin::Edit button-->
+                        <label class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
+                               data-kt-image-input-action="change"
+                               data-bs-toggle="tooltip"
+                               data-bs-dismiss="click"
+                               title="Cambiar Foto">
+                            <i class="bi bi-pencil fs-6"></i>
+
+                            <!--begin::Inputs-->
+                            {{ list_form.image }}
+                            <input type="hidden" name="avatar_remove"/>
+                            <!--end::Inputs-->
+                        </label>
+                        <!--end::Edit button-->
+
+                        <!--begin::Cancel button-->
+                        <span class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
+                              data-kt-image-input-action="cancel"
+                              data-bs-toggle="tooltip"
+                              data-bs-dismiss="click"
+                              title="Borrar Foto">
+                        <i class="bi bi-x-lg fs-3"></i>
+                    </span>
+                        <!--end::Cancel button-->
+
+                        <!--begin::Remove button-->
+                        <span class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
+                              data-kt-image-input-action="remove"
+                              data-bs-toggle="tooltip"
+                              data-bs-dismiss="click"
+                              title="Borrar Foto">
+                        <i class="bi bi-x-lg fs-3"></i>
+                    </span>
+                        <!--end::Remove button-->
+                    </div>
+                    <!--end::Image input-->
+                </div>
+
+                <div class="col-lg-6 d-flex align-items-center flex-column justify-content-center p-10">
+                    <div class="mb-8 w-100">
+                        <label for="id_name" class="form-label fw-boldest text-primary-800 required">Nombre</label>
+                        <input type="text" class="form-control text-black" name="name" id="id_name" maxlength="70" required/>
+                    </div>
+
+{#                    <div class="mb-8 w-100">#}
+{#                        <label for="type" class="form-label fw-boldest text-primary-800 required">Tipo</label>#}
+{#                        <select class="form-select text-black" id="type" required data-hide-search="true">#}
+{#                            <option value="0">Normal</option>#}
+{#                        </select>#}
+{#                    </div>#}
+
+                    <div class="mb-4 w-100">
+                        <label for="question" class="form-label fw-boldest text-primary-800 required ">Pregunta de enfrentamiento</label>
+                        <input type="text" class="form-control text-black" id="question" maxlength="70" value="¿Cual prefieres?" required/>
+                        <span class="text-primary fs-8">Es la pregunta que verá el jugador cuando se enfrentan los elementos</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <div class="row w-100 g-10 mb-15">
+            <div class="col-lg-6 pe-18 order-lg-1 order-2">
+                <div class="d-flex w-100 justify-content-between">
+                    <h1 class="fw-boldest">Elementos:</h1>
+                    <h1 class="text-muted" id="item_number">0</h1>
+                </div>
+
+                <div id="items_container" class="d-flex gap-5 flex-column w-100 mt-5">
+                    <div id="item_template" class="d-none w-100 list_item flex-stack">
+                        <label for="id_template-image"
+                               class="itemImageLabel w-60px h-60px col-3 cursor-pointer bg-primary p-2 d-flex justify-content-center align-items-center rounded"><i
+                                class="bi bi-card-image text-primary-800 fs-1"></i></label>
+                        {{ item_form.image }}
+
+                        <div class="col-9 pe-10 ps-10">
+                            <label for="id_template-name" class="form-label fw-bolder fs-8 mb-0">Nombre</label>
+                            {{ item_form.name }}
+                        </div>
+
+                        <div class="col-1 d-flex justify-content-center align-items-end h-40px">
+                            <i class="bi bi-trash text-gray-400 fs-1 cursor-pointer hover-text-danger remove_item"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="create_element"
+                        class="btn btn-outline-primary border border-primary hover-text-white w-200px mt-5"
+                        type="button">Crear elemento
+                </button>
+            </div>
+
+            <div class="col-lg-6  order-lg-2 order-1 border-primary border border-1 rounded p-10 position-lg-sticky top-25 h-lg-400px">
+                <div class="mb-8">
+                    <label for="visibility" class="required fw-boldest text-primary-800">Visibilidad</label>
+                    <select class="form-select text-black" id="visibility" required data-hide-search="true"
+                            data-control="select2" name="visibility">
+                        <option value="public">Público</option>
+                        <option value="private">Privado</option>
+                    </select>
+                </div>
+
+                <div class="mb-12">
+                    <label for="add_category" class="required fw-boldest text-primary-800">Seleccionar
+                        categorías</label>
+
+                    <div class="row g-5">
+                        <div class="col-sm-9">
+                            <input list="actual_categories" class="form-control text-black" id="add_category"/>
+
+                            <datalist id="actual_categories">
+                                <option value="Categoría 1">
+                            </datalist>
+
+                        </div>
+
+                        <button type="button" class="btn btn-primary col-sm-3" id="add_category_button">Añadir</button>
+                    </div>
+
+                    <span class="text-muted fs-8">Máximo 5 categorías</span>
+
+                    <div class="d-flex gap-4 mt-5 flex-wrap" id="categories_container">
+                        <div class="badge badge-light-primary category d-none" id="category_template">{NAME}<i class="bi bi-x-lg ms-2"></i></div>
+                    </div>
+
+                </div>
+
+                <div class="mb-3 row">
+                    <div class="col-10">
+                        <div class="d-flex align-items-center">
+                            <label for="range_date_highlight" class="fw-boldest text-primary-800">Destacar</label>
+                            <i class="bi bi-x-lg ms-2 hover-text-danger cursor-pointer" id="cancel_highlight"></i>
+                        </div>
+
+                        <input class="form-control position-relative" placeholder="Selecciona un rango de fechas"
+                               id="range_date_highlight">
+
+                    </div>
+
+                    <div class="col-2 d-flex align-items-center justify-content-center flex-column">
+                        <span class="text-muted fs-7">Precio</span>
+                        <span class="fw-boldest fs-2" id="highlight_price">0</span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center mt-10 position-fixed bottom-0 w-100 start-0 z-index-3 p-5 bg-white shadow">
+            <button type="submit" class="btn btn-primary btn-lg fs-3">Crear lista</button>
+        </div>
+    </form>
+
+    <div id="image_previewer" class="modal fade" tabindex="-1" aria-modal="true" role="dialog" data-bs-backdrop="static"
+         data-bs-keyboard="false">
+        <div class="modal-dialog  modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Previsualizar Imagen</h3>
+
+                    <!--begin::Close-->
+                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
+                         aria-label="Close">
+                        <i class="bi bi-x-lg fs-3"></i>
+                    </div>
+                    <!--end::Close-->
+                </div>
+
+                <div class="modal-body">
+                    <div class="d-flex flex-column p-10 m-auto shadow rounded" style="width: max-content">
+                        <img id="temp_image_preview" src="" alt="Imagen"
+                             class="min-w-200px min-h-200px mh-200px mw-200px" style="object-fit: contain"/>
+
+                        <h1 id="temp_item_name" class="mt-10 text-center fw-boldest" style="display: none;"></h1>
+                    </div>
+
+                    <p class="text-center text-muted mt-10">Tamaño recomendado 200 x 200 píxeles</p>
+                </div>
+
+                <div class="modal-footer flex-stack">
+                    <button type="button" class="btn btn-light" id="cancel_item_img" data-bs-dismiss="modal">Cancelar
+                    </button>
+                    <button type="button" class="btn btn-light-primary fw-bolder" id="change_item_img">Cambiar Imagen
+                    </button>
+                    <button type="button" class="btn btn-primary" id="set_item_img" data-bs-dismiss="modal">Aceptar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block custom_scripts %}
+    <script src="{% static 'scripts/pages/manage_list.js' %}" type="module"></script>
+{% endblock %}
