@@ -1,13 +1,15 @@
 # from django.shortcuts import render
 
 from api.forms.list_form import CreateListForm
-from api.models import List
+from api.models import List, ListCategory
+
+
 # from api.services.item_service import create_item_form
 
 
 def create_list_form(request):
     """Obtiene el formulario para crear una lista"""
-    return CreateListForm(request.POST) if request.method == 'POST' else CreateListForm()
+    return CreateListForm(request.POST, request.FILES) if request.method == 'POST' else CreateListForm()
 
 
 def create_list(list_form):
@@ -26,5 +28,9 @@ def get_list(share_code):
         return None
 
 
-def create_list_view(request):
-    pass
+def set_category(list_obj, category):
+    """Función que añade una categoría a una lista"""
+    list_category = ListCategory(list=list_obj, category=category)
+    list_category.save()
+
+    return list_category

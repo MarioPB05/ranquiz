@@ -5,12 +5,11 @@ from api.services.list_service import get_list
 
 def create_item_form(request, prefix=None):
     """Función para obtener el formulario de un item"""
-    return CreateItemForm(request.POST, prefix=prefix) if request.method == 'POST' else CreateItemForm(prefix=prefix)
+    return CreateItemForm(request.POST, request.FILES, prefix=prefix) if request.method == 'POST' else CreateItemForm(prefix=prefix)
 
 
 def create_item(item_form):
     """Función para crear un item"""
-
     if item_form.is_valid():
         # Guardamos el item y lo devolvemos
         return item_form.save(commit=False)
