@@ -361,6 +361,17 @@ function uploadCategory(name) {
     });
 }
 
+function beforeSendForm() {
+    // Eliminar el template
+    $('#item_template').remove();
+
+    // Agregar los prefijos de los items
+    $('#items_prefix').val(items_prefix);
+
+    // Agregar las categorías seleccionadas
+    $('#categories').val(categories);
+}
+
 $(document).ready(function () {
 
     initializeFlatpickr("#range_date_highlight", 'range', moment().format('DD-MM-YYYY'));
@@ -416,6 +427,8 @@ $(document).ready(function () {
     for (let i = 0; i < minItems; i++) {
         createItem();
     }
+
+    $('button[type=submit]').on('click', beforeSendForm);
 
     removePageLoader();
 });
