@@ -16,3 +16,8 @@ def login(request):
 def register(request):
     """Vista que permite a un usuario registrarse en la aplicación"""
     return user_register(request)
+
+
+def profile(request, share_code):
+    """Vista que renderiza el perfil de un usuario"""
+    return render(request, 'pages/profile.html', {'share_code': share_code})
