@@ -7,7 +7,7 @@ from api.models import List
 
 def create_list_form(request):
     """Obtiene el formulario para crear una lista"""
-    return CreateListForm(request.POST) if request.method == 'POST' else CreateListForm()
+    return CreateListForm(request.POST, request.FILES) if request.method == 'POST' else CreateListForm()
 
 
 def create_list(list_form):
