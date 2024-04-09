@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 
-from api.forms.shop_service import get_avatar
+from api.services.shop_service import get_avatar
 from api.forms.user_form import LoginUserForm, CreateUserForm
 from api.services.client_service import create_client, get_client_form
 
@@ -10,6 +10,7 @@ def user_login(request):
     """Función que permite a un usuario iniciar sesión en la aplicación"""
     if request.method == 'POST':
         form = LoginUserForm(request.POST)
+        next_url = request.POST.get('next', None)
 
         if form.is_valid():
             username = form.cleaned_data['username']
@@ -19,13 +20,17 @@ def user_login(request):
             if user is not None:
                 login(request, user)
 
+                if next_url:
+                    return redirect(next_url)
+
                 return redirect('homepage')
 
             form.add_error(None, 'Email o contraseña incorrectos')
     else:
         form = LoginUserForm()
+        next_url = request.GET.get('next', None)
 
-    return render(request, 'pages/login.html', {'form': form})
+    return render(request, 'pages/login.html', {'form': form, 'next': next_url})
 
 
 def get_user_form(request):

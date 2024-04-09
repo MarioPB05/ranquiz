@@ -10,8 +10,10 @@
                 <p class="text-muted">¿No tienes cuenta?, <a href="#" class="text-primary fw-bolder">Registrate ahora</a></p>
             </div>
 
-            <form method="post">
+            <form method="post" action="{% url 'login' %}">
                 {% csrf_token %}
+
+                <input type="hidden" name="next" value="{{ next }}">
 
                 <div class="mb-8">
                     <label for="email" class="form-label fw-bolder">Nombre de Usuario</label>

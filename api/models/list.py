@@ -1,7 +1,7 @@
+from cloudinary.models import CloudinaryField
 from django.db import models
 from shortuuid.django_fields import ShortUUIDField
 
-from api.models.model_template import IMAGE_VALIDATORS
 from api.models.time_stamp import TimeStamped
 
 
@@ -22,7 +22,7 @@ class List(TimeStamped):
     )
     name = models.CharField(max_length=70)
     public = models.BooleanField(default=False)
-    image = models.ImageField(upload_to='lists/', validators=IMAGE_VALIDATORS, null=True, blank=True)
+    image = CloudinaryField('image', null=True, blank=True)
     type = models.IntegerField(choices=TYPE_CHOICES, default=0)
 
     def __str__(self):
