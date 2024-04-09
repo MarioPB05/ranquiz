@@ -27,7 +27,7 @@ class CreateUserForm(ModelForm):
         username = self.cleaned_data['username']
 
         if User.objects.filter(username=username).exists():
-            raise forms.ValidationError('El nombre de usuario ya está en uso')
+            self.add_error('username', 'El nombre de usuario ya está en uso')
 
         return username
 
