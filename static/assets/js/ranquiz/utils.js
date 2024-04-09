@@ -29,4 +29,34 @@ function initializeFlatpickr(elementSelector) {
     });
 }
 
-export { removePageLoader, initializeFlatpickr };
+function formatElapsedTime(dateTime) {
+    let currentDate = new Date();
+    let elapsedTime = currentDate - dateTime;
+    let elapsedSeconds = Math.floor(elapsedTime / 1000);
+
+    if (elapsedSeconds < 60) {
+        return "Hace " + elapsedSeconds + " s";
+    }
+
+    let elapsedMinutes = Math.floor(elapsedSeconds / 60);
+    if (elapsedMinutes < 60) {
+        return "Hace " + elapsedMinutes + " min";
+    }
+
+    let elapsedHours = Math.floor(elapsedMinutes / 60);
+    if (elapsedHours < 24) {
+        return "Hace " + elapsedHours + " h";
+    }
+
+    let elapsedDays = Math.floor(elapsedHours / 24);
+    if (elapsedDays < 30) {
+        return "Hace " + elapsedDays + " d";
+    }
+
+    // If it has been more than a month, return the original date
+    return dateTime.toLocaleDateString();
+}
+
+
+
+export { removePageLoader, initializeFlatpickr, formatElapsedTime };
