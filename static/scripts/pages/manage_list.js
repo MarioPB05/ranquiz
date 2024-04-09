@@ -6,6 +6,7 @@ let item_last_prefix = 0;
 let categories = [];
 const maxCategories = 5;
 const maxCategoryLength = 25;
+let allCategories = [];
 
 
 function changedListImage() {
@@ -234,7 +235,6 @@ function focusOnFirstEmptyItem() {
 
 }
 
-
 function actualizeItemNumber() {
     // Actualiza el número de items
 
@@ -247,32 +247,29 @@ function actualizeItemNumber() {
     $("#item_number").text(i);
 }
 
-function addCategory(event) {
-    // Guardar el nombre de la categoría
-    const name = $('#add_category').val();
+async function addCategory(name) {
 
-    // Verificar que no esté vacío, si existe, que no haya más de 5 categorías y que no sea mayor a 50 caracteres
-    if (!name) {
-        toastMessage('error', 'El campo de categoría no puede estar vacío.');
-
-    } else if (categories.includes(name)) {
-        toastMessage('error', 'La categoría ya existe.');
-
-    } else if (categories.length >= maxCategories) {
-        toastMessage('error', 'El máximo de categorías es ' + maxCategories + '.');
-
-    } else if (name.length >= maxCategoryLength) {
-        toastMessage('error', 'El nombre de la categoría no puede ser mayor a ' + maxCategoryLength + ' caracteres.');
-
-    } else {
-        categories.push(name);
-        addCategoryToPage(name);
-        $('#add_category').val('');
+    // Verificar que la categoría sea válida
+    if (!validateCategory(name)) {
+        return;
     }
 
-}
+    // Verificar si la categoría no existe y si es similar a alguna
+    if (allCategories.indexOf(name) === -1) {
+        if (await acceptSimilarCategory(name)) {
+            console.log('Acepto');
+            return;
+        }else {
+            console.log('Rechazo');
+            uploadCategory(name);
+        }
+    }
 
-function addCategoryToPage(name) {
+    // Añadir la categoría a la lista
+    categories.push(name);
+    $('#add_category').val('');
+
+    // Añaadir la categoría al contenedor
     const category = $('#category_template').clone();
 
     category.removeAttr('id');
@@ -283,6 +280,30 @@ function addCategoryToPage(name) {
     $('#categories_container').append(category);
 }
 
+function validateCategory(name) {
+    // Verificar que no esté vacío, si existe, que no haya más de 5 categorías y que no sea mayor a 50 caracteres
+    if (!name) {
+        toastMessage('error', 'El campo de categoría no puede estar vacío');
+        return false;
+
+    } else if (categories.includes(name)) {
+        toastMessage('error', 'La categoría ya está añadida');
+        return false;
+
+    } else if (categories.length >= maxCategories) {
+        toastMessage('error', 'El máximo de categorías es ' + maxCategories);
+        return false;
+
+    } else if (name.length >= maxCategoryLength) {
+        toastMessage('error', 'El nombre de la categoría no puede ser mayor a ' + maxCategoryLength + ' caracteres');
+        return false;
+
+    } else {
+        return true;
+    }
+
+}
+
 function removeCategory(event) {
     // Eliminar el item
     $(event.target).remove();
@@ -291,7 +312,56 @@ function removeCategory(event) {
     categories.splice(categories.indexOf(event.target.text), 1);
 }
 
+function getCategories() {
 
+    promiseAjax('/api/category/').then(response => {
+        allCategories = response.categories.map(function(category) {
+            return category.name;
+        });
+
+        console.log(allCategories);
+
+        $("#actual_categories").html('');
+        allCategories.forEach(category => {
+            $("#actual_categories").append(`<option value="${category}">`);
+        });
+    });
+}
+
+async function acceptSimilarCategory(name) {
+    try {
+        const response = await promiseAjax(`/api/category/validate/${name}`);
+
+        if (!response.validate) {
+            const result = await Swal.fire({
+                title: "¿Quieres decir " + response.similar_category.name + "?",
+                showCancelButton: true,
+                icon: "question",
+                confirmButtonClass: "btn btn-primary",
+                cancelButtonClass: "btn btn-outline-primary",
+                confirmButtonText: "Sí",
+                cancelButtonText: "No"
+            });
+
+            if (result.isConfirmed) {
+                addCategory(response.similar_category.name);
+            }
+
+            return result.isConfirmed;
+        } else {
+            return false;
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        return false;
+    }
+}
+
+function uploadCategory(name) {
+    promiseAjax('/api/category/create/', 'POST', {name: name, csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()}).then(response => {
+        allCategories.push(name);
+    });
+}
 
 $(document).ready(function () {
 
@@ -337,9 +407,12 @@ $(document).ready(function () {
 
     $("#range_date_highlight").on("change", updateHighlightPrice);
 
-    $('#add_category_button').on('click', addCategory);
+    getCategories();
+    $('#add_category_button').on('click', function () {
+        addCategory($('#add_category').val());
+    });
 
-    $("#categories_container").on('click', removeCategory);
+    $("#categories_container").on('click', '.category' ,removeCategory);
 
     // Añadir los items mínimos
     for (let i = 0; i < minItems; i++) {
@@ -348,4 +421,3 @@ $(document).ready(function () {
 
     removePageLoader();
 });
-
