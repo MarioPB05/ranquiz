@@ -58,5 +58,5 @@ def add_category(request):
 
         if category is not None:
             return JsonResponse({'id': category.id})
-        else:
-            return JsonResponse({'id': None})
+
+        return JsonResponse({'id': None})

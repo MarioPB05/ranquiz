@@ -13,8 +13,8 @@ def create_item(item_form):
     if item_form.is_valid():
         # Guardamos el item y lo devolvemos
         return item_form.save(commit=False)
-    else:
-        return None
+
+    return None
 
 
 def get_items(share_code):

@@ -41,8 +41,8 @@ def do_transaction(user, value, date, details):
         transaction.details = details
         transaction.save()
         return transaction
-    else:
-        return None
+
+    return None
 
 
 def highlight_list(share_code, start_date, end_date):
@@ -64,6 +64,6 @@ def highlight_list(share_code, start_date, end_date):
             highlighted_list.end_date = end_date
             highlighted_list.save()
             return highlighted_list
-        else:
-            # TODO: Administrar errores
-            return None
+
+        # TODO: Administrar errores
+        return None

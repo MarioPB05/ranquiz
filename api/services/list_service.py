@@ -16,8 +16,8 @@ def create_list(list_form):
     """Función que crea una lista"""
     if list_form.is_valid():
         return list_form.save(commit=False)
-    else:
-        return None
+
+    return None
 
 
 def get_list(share_code):

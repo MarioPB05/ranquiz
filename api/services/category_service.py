@@ -9,18 +9,19 @@ def create_category(data):
     if category_form.is_valid():
         # Guardamos la categoría y la devolvemos
         return category_form.save()
-    else:
-        return None
+
+    return None
 
 
 def get_category(category_id=None, category_name=None):
     """Función para obtener una categoría"""
     if category_id is not None:
         return Category.objects.get(id=category_id)
-    elif category_name is not None:
+
+    if category_name is not None:
         return Category.objects.get(name=category_name)
-    else:
-        return None
+
+    return None
 
 
 def get_all_categories():

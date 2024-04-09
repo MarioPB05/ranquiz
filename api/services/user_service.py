@@ -22,8 +22,8 @@ def user_login(request):
 
                 if next_url:
                     return redirect(next_url)
-                else:
-                    return redirect('homepage')
+
+                return redirect('homepage')
 
             form.add_error(None, 'Email o contraseña incorrectos')
     else:
