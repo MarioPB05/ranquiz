@@ -76,9 +76,6 @@ function formatElapsedTime(dateTime) {
 }
 
 
-
-export { removePageLoader, initializeFlatpickr, formatElapsedTime };
-
 /***
 * Esta función se encarga de realizar una petición AJAX
 * @param url
@@ -114,4 +111,4 @@ function toastMessage(icon, message) {
     });
 }
 
-export {removePageLoader, initializeFlatpickr, promiseAjax, toastMessage};
+export {removePageLoader, initializeFlatpickr, promiseAjax, toastMessage, formatElapsedTime};
