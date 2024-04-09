@@ -107,8 +107,6 @@ function showItemPreviewModal(target) {
         $('#temp_item_name').text(name).show();
     }
 
-    console.log(target);
-
     // Configurar el target para posterior uso
     $('#change_item_img').parent().attr('data-target', '#' + target.id);
 
@@ -171,8 +169,6 @@ function cancelItemImage(event) {
     // Obtener el target (Input)
     const input = getModalInputTarget(event);
 
-    console.log(input)
-
     // Cambiar la clase para indicarle al usuario que la imagen no se ha seleccionado
     input.parent().find('label>i')
         .removeClass('text-white').addClass('text-primary-800');
@@ -190,7 +186,7 @@ function updateHighlightPrice() {
                 $('#highlight_price').text(response.price);
             })
             .catch(error => {
-                console.error(error);
+                toastMessage('error', 'Ha ocurrido un error al calcular el precio del destacado')
             });
     }
 }
@@ -262,10 +258,8 @@ async function addCategory(name) {
     // Verificar si la categoría no existe y si es similar a alguna
     if (allCategories.indexOf(name) === -1) {
         if (await acceptSimilarCategory(name)) {
-            console.log('Acepto');
             return;
         }else {
-            console.log('Rechazo');
             uploadCategory(name);
         }
     }
@@ -355,7 +349,6 @@ async function acceptSimilarCategory(name) {
             return false;
         }
     } catch (error) {
-        console.error("Error:", error);
         return false;
     }
 }
