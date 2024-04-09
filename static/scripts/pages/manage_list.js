@@ -100,7 +100,6 @@ function removeItem(event) {
 }
 
 function showItemPreviewModal(target) {
-
     // Obtenemos el padre
     const parent = $(target).parent();
 
@@ -229,12 +228,10 @@ function anyItemInputEmpty() {
     let empty = false;
 
     $('#items_container .list_item:not(#item_template)').find('input[type="text"]').each(function () {
-
         if ($(this).val() === '') {
             empty = true;
             return false;
         }
-
     });
 
     return empty;
@@ -250,12 +247,10 @@ function focusOnFirstEmptyItem() {
         }
 
     });
-
 }
 
 function actualizeItemNumber() {
     // Actualiza el número de items
-
     let i = 0;
 
     $('#items_container').find('.list_item:not(#item_template)').each(function () {
@@ -266,7 +261,6 @@ function actualizeItemNumber() {
 }
 
 async function addCategory(name) {
-
     // Verificar que la categoría sea válida
     if (!validateCategory(name)) {
         return;
@@ -332,7 +326,6 @@ function removeCategory(event) {
  * Obtener las categorías del servidor y añadirlas al select
  */
 function getCategories() {
-
     promiseAjax('/api/category/').then(response => {
         allCategories = response.categories.map(function(category) {
             return category.name;
@@ -404,7 +397,6 @@ function beforeSendForm() {
 }
 
 $(document).ready(function () {
-
     initializeFlatpickr("#range_date_highlight", 'range', moment().format('DD-MM-YYYY')); // skipcq: JS-0125
 
     $('#name').maxlength({
