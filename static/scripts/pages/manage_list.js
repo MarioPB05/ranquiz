@@ -354,7 +354,10 @@ async function acceptSimilarCategory(name) {
 }
 
 function uploadCategory(name) {
-    promiseAjax('/api/category/create/', 'POST', {name: name, csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()}).then(response => {
+    promiseAjax('/api/category/create/', 'POST', {
+        name: name,
+        csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+    }).then(() => {
         allCategories.push(name);
     });
 }
