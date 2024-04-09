@@ -13,26 +13,28 @@
                 <p class="fs-2 text-muted">1340</p>
             </div>
 
-            <div class="d-flex gap-8 flex-column scrolleable">
+            <div class="d-flex gap-8 flex-column scrolleable" id="comments_container">
                 <!-- Begin template comment -->
                 <div class="d-none flex-column border border-1 border-gray-400 rounded p-5 gap-4 comment" id="template_comment">
                     <div class="d-flex flex-row align-items-center justify-content-between">
                         <div class="d-flex flex-row gap-3 align-items-center justify-content-center author_group">
-                            <i class="text-muted fs-1 bi bi-person-circle"></i>
-                            <label class="text-muted">David Pérez Fernández</label>
+                            <div class="author_avatar">
+                                <i class="text-muted fs-1 bi bi-person-circle"></i>
+                            </div>
+                            <label class="text-muted author_name">David Pérez Fernández</label>
                         </div>
                         <div>
                             <label class="comment_date">Hace 3 m</label>
                         </div>
                     </div>
 
-                    <label class="fs-5 comment_body">
+                    <label class="fs-5 comment_content">
                         Esta lista no está actualizada, faltan los brawlers de la nueva temporada.
                     </label>
 
                     <div class="d-flex flex-row gap-3 mt-2 award_container">
 
-                        <div class="d-none gap-2 bg-info rounded-pill text-white p-1 ps-3 pe-3 align-items-center" id="award_template">
+                        <div class="d-none gap-2 bg-info rounded-pill text-white p-1 ps-3 pe-3 align-items-center" id="template_award">
                             <i class="fs-5 text-white bi award_icon"></i>
                             <label class="award_text">Útil</label>
                             <label class="ms-2 award_amount">3</label>
