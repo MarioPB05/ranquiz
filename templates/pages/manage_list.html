@@ -4,8 +4,11 @@
 
 
 {% block content %}
-    <form class="w-100 d-flex justify-content-center flex-column align-items-center gap-15" method="post">
+    <form class="w-100 d-flex justify-content-center flex-column align-items-center gap-15" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
+
+        <input id="items_prefix" type="hidden" name="items_prefix">
+        <input id="categories" type="hidden" name="categories">
 
         <main class="bg-primary-300 p-10 w-100 rounded">
             <div class="row">
@@ -63,8 +66,8 @@
 
                 <div class="col-lg-6 d-flex align-items-center flex-column justify-content-center p-10">
                     <div class="mb-8 w-100">
-                        <label for="name" class="form-label fw-boldest text-primary-800 required ">Nombre</label>
-                        <input type="text" class="form-control text-black" id="name" maxlength="70" required/>
+                        <label for="id_name" class="form-label fw-boldest text-primary-800 required">Nombre</label>
+                        <input type="text" class="form-control text-black" name="name" id="id_name" maxlength="70" required/>
                     </div>
 
 {#                    <div class="mb-8 w-100">#}
@@ -118,7 +121,7 @@
                 <div class="mb-8">
                     <label for="visibility" class="required fw-boldest text-primary-800">Visibilidad</label>
                     <select class="form-select text-black" id="visibility" required data-hide-search="true"
-                            data-control="select2">
+                            data-control="select2" name="visibility">
                         <option value="public">Público</option>
                         <option value="private">Privado</option>
                     </select>
