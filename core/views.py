@@ -31,7 +31,7 @@ def create_list_view(request):
     if request.method == 'POST' and list_form.is_valid():
         list_obj = create_list(list_form)
         list_obj.owner = request.user
-        list_obj.public = True if request.POST.get('visibility') == 'public' else False
+        list_obj.public = bool(request.POST.get('visibility') == 'public')
 
         items_prefix = request.POST.get('items_prefix').split(',')
         categories_names = request.POST.get('categories').split(',')
