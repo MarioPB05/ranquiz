@@ -12,32 +12,41 @@
                 <h3>Comentarios</h3>
                 <p class="fs-2 text-muted">1340</p>
             </div>
+
             <div class="d-flex gap-8 flex-column scrolleable">
-                <div class="d-flex flex-column border border-1 border-gray-400 rounded p-5 gap-4">
+                <!-- Begin template comment -->
+                <div class="d-none flex-column border border-1 border-gray-400 rounded p-5 gap-4 comment" id="template_comment">
                     <div class="d-flex flex-row align-items-center justify-content-between">
-                        <div class="d-flex flex-row gap-3 align-items-center justify-content-center">
-                            <i class="text-muted fs-1    bi bi-person-circle"></i>
+                        <div class="d-flex flex-row gap-3 align-items-center justify-content-center author_group">
+                            <i class="text-muted fs-1 bi bi-person-circle"></i>
                             <label class="text-muted">David Pérez Fernández</label>
                         </div>
                         <div>
-                            <label>Hace 3 m</label>
+                            <label class="comment_date">Hace 3 m</label>
                         </div>
                     </div>
-                    <label class="fs-5">
+
+                    <label class="fs-5 comment_body">
                         Esta lista no está actualizada, faltan los brawlers de la nueva temporada.
                     </label>
-                    <div class="d-flex flex-row gap-3 mt-2">
-                        <div class="d-flex gap-2 bg-info rounded-pill text-white p-1 ps-3 pe-3 align-items-center">
-                            <i class="fs-5 text-white bi bi-hand-thumbs-up-fill"></i>
-                            <label>Útil</label>
-                            <label class="ms-2">3</label>
+
+                    <div class="d-flex flex-row gap-3 mt-2 award_container">
+
+                        <div class="d-none gap-2 bg-info rounded-pill text-white p-1 ps-3 pe-3 align-items-center" id="award_template">
+                            <i class="fs-5 text-white bi award_icon"></i>
+                            <label class="award_text">Útil</label>
+                            <label class="ms-2 award_amount">3</label>
                         </div>
-                        <div class="d-flex gap-3 bg-primary-500 rounded-pill text-white p-1 ps-3 pe-3 align-items-center cursor-pointer bg-hover-primary">
+
+                        <button class="d-flex gap-3 bg-primary-500 rounded-pill text-white p-1 ps-3 pe-3 align-items-center cursor-pointer bg-hover-primary border-0">
                             <i class="text-white fs-5 bi bi-award cursor-pointer"></i>
-                            <label class="cursor-pointer">Premiar</label>
-                        </div>
+                            Premiar
+                        </button>
+
                     </div>
+
                 </div>
+                <!-- End template comment -->
             </div>
             <form>
                 <div class="d-flex flex-row border border-1 border-gray-400 rounded p-3 gap-4 align-items-center mt-3 bo">
