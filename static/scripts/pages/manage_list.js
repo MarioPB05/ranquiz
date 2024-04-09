@@ -195,6 +195,11 @@ function updateHighlightPrice() {
     }
 }
 
+function cancelHighlight(event) {
+    $('#range_date_highlight').flatpickr().clear();
+    $('#highlight_price').text('0');
+}
+
 function itemHasImage(event) {
     // Obtener el target (Input)
     const input = $("#" + $(this).attr('for'));
@@ -406,6 +411,7 @@ $(document).ready(function () {
     $('#cancel_item_img').on('click', cancelItemImage);
 
     $("#range_date_highlight").on("change", updateHighlightPrice);
+    $("#cancel_highlight").on("click", cancelHighlight);
 
     getCategories();
     $('#add_category_button').on('click', function () {
