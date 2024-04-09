@@ -13,6 +13,16 @@ def create_category(data):
         return None
 
 
+def get_category(category_id=None, category_name=None):
+    """Función para obtener una categoría"""
+    if category_id is not None:
+        return Category.objects.get(id=category_id)
+    elif category_name is not None:
+        return Category.objects.get(name=category_name)
+    else:
+        return None
+
+
 def get_all_categories():
     """Función para obtener todas las categorías"""
 
