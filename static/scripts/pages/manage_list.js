@@ -319,8 +319,6 @@ function getCategories() {
             return category.name;
         });
 
-        console.log(allCategories);
-
         $("#actual_categories").html('');
         allCategories.forEach(category => {
             $("#actual_categories").append(`<option value="${category}">`);
