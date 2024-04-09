@@ -311,7 +311,7 @@ function validateCategory(name) {
 
 function removeCategory(event) {
     // Eliminar el item
-    $(event.target).remove();
+    $(this).remove();
 
     // Eliminar la categoría de la lista
     categories.splice(categories.indexOf(event.target.text), 1);
