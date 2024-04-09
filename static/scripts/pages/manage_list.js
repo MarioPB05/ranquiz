@@ -185,7 +185,7 @@ function updateHighlightPrice() {
             .then(response => {
                 $('#highlight_price').text(response.price);
             })
-            .catch(error => {
+            .catch(() => {
                 toastMessage('error', 'Ha ocurrido un error al calcular el precio del destacado')
             });
     }
