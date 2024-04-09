@@ -9,10 +9,16 @@ const maxCategoryLength = 25;
 let allCategories = [];
 
 
+/**
+ * Cambiar la imagen de la lista
+ */
 function changedListImage() {
     $('label[for="id_image"]').hide();
 }
 
+/**
+ * Eliminar el label para subir la imagen de la lista
+ */
 function removeListImage() {
     $('label[for="id_image"]').show();
 }
@@ -136,6 +142,11 @@ function itemImageChanged(event) {
     showItemPreviewModal(event.target);
 }
 
+/**
+ * Obtener el target del input del modal
+ * @param event
+ * @returns {jQuery|HTMLElement|*}
+ */
 function getModalInputTarget(event) {
     return $($(event.target).parent().attr('data-target'));
 }
@@ -177,6 +188,9 @@ function cancelItemImage(event) {
     input.val('');
 }
 
+/**
+ * Actualizar el precio del destacado en base a las fechas seleccionadas
+ */
 function updateHighlightPrice() {
     let dates = $("#range_date_highlight").val().split(" hasta ");
 
@@ -191,6 +205,9 @@ function updateHighlightPrice() {
     }
 }
 
+/**
+ * Cancelar el destacado
+ */
 function cancelHighlight() {
     $('#range_date_highlight').flatpickr().clear();
     $('#highlight_price').text('0');
@@ -311,6 +328,9 @@ function removeCategory(event) {
     categories.splice(categories.indexOf(event.target.text), 1);
 }
 
+/**
+ * Obtener las categorías del servidor y añadirlas al select
+ */
 function getCategories() {
 
     promiseAjax('/api/category/').then(response => {
@@ -325,6 +345,11 @@ function getCategories() {
     });
 }
 
+/**
+ * Aceptar una categoría similar
+ * @param name
+ * @returns {Promise<*|boolean>}
+ */
 async function acceptSimilarCategory(name) {
     try {
         const response = await promiseAjax(`/api/category/validate/${name}`);
@@ -353,6 +378,11 @@ async function acceptSimilarCategory(name) {
     }
 }
 
+/**
+ * Subir una categoría al servidor
+ * @param name
+ * @returns {Promise<void>}
+ */
 function uploadCategory(name) {
     promiseAjax('/api/category/create/', 'POST', {
         name: name,
