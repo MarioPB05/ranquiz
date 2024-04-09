@@ -17,6 +17,7 @@ def register(request):
     """Vista que permite a un usuario registrarse en la aplicación"""
     return user_register(request)
 
+
 def list_details(request, share_code):
     """Vista que permite a un usuario ver los detalles de una lista"""
     return render(request, 'pages/list_details.html', {'share_code': share_code})
