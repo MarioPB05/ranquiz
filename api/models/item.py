@@ -1,7 +1,7 @@
 from cloudinary.models import CloudinaryField
 from django.db import models
 
-from api.models.model_template import ModelTemplate, IMAGE_VALIDATORS
+from api.models.model_template import ModelTemplate
 
 
 class Item(ModelTemplate):

@@ -1,7 +1,6 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 
-from api.models import List
 from api.services.category_service import get_category
 from api.services.item_service import create_item_form, create_item
 from api.services.list_service import create_list_form, set_category, create_list

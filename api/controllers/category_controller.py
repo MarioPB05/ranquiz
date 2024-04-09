@@ -1,9 +1,5 @@
-import json
-
-from django.core.serializers import serialize
 from django.http import JsonResponse
 
-from api.forms.category_form import CreateCategoryForm
 from api.services.category_service import get_all_categories, similarity, create_category
 
 
