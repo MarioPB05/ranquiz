@@ -32,7 +32,7 @@ function createItem() {
     item.removeAttr('id');
 
     // Obtener el prefijo del item
-    const prefix = (item_last_prefix + 1) + '-';
+    const prefix = `${item_last_prefix + 1}-`;
 
     // Actualizar los datos del prefijo
     item_last_prefix++;
@@ -43,19 +43,19 @@ function createItem() {
 
     // Cambiar el ID y name del input de la imagen
     const imageInput = item.find('#id_template-image');
-    imageInput.attr('id', 'id_' + prefix + 'image');
-    imageInput.attr('name', prefix + 'image');
+    imageInput.attr('id', `id_${prefix}image`);
+    imageInput.attr('name', `${prefix}image`);
 
     // Actualizar el atributo for del label
-    item.find('label[for="id_template-image"]').attr('for', 'id_' + prefix + 'image');
+    item.find('label[for="id_template-image"]').attr('for', `id_${prefix}image`);
 
     // Cambiar el ID y name del input del nombre
     const nameInput = item.find('#id_template-name');
-    nameInput.attr('id', 'id_' +  prefix + 'name');
-    nameInput.attr('name', prefix + 'name');
+    nameInput.attr('id', `id_${prefix}name`);
+    nameInput.attr('name', `${prefix}name`);
 
     // Actualizar el atributo for del label
-    item.find('label[for="id_template-name"]').attr('for', 'id_' + prefix + 'name');
+    item.find('label[for="id_template-name"]').attr('for', `id_${prefix}name`);
 
     // Mostrar el item
     item.removeClass('d-none').addClass('d-flex');
@@ -73,7 +73,7 @@ function createItem() {
 function removeItem(event) {
     // Comprobar que haya más de 5 items
     if (items_prefix.length <= minItems) {
-        toastMessage('error', 'El minimo de elementos es ' + minItems + '.');
+        toastMessage('error', `El minimo de elementos es ${minItems}.`);
         return;
     }
 
@@ -108,7 +108,7 @@ function showItemPreviewModal(target) {
     }
 
     // Configurar el target para posterior uso
-    $('#change_item_img').parent().attr('data-target', '#' + target.id);
+    $('#change_item_img').parent().attr('data-target', `#${target.id}`);
 
     // Mostrar el modal
     $('#image_previewer').modal('show');
@@ -198,7 +198,7 @@ function cancelHighlight() {
 
 function itemHasImage(event) {
     // Obtener el target (Input)
-    const input = $("#" + $(this).attr('for'));
+    const input = $(`#${$(this).attr('for')}`);
 
     // Comprobar si ya se ha seleccionado una imagen para mosrar el modal directamente
     if (input[0] && input[0].files.length > 0) {
@@ -290,11 +290,11 @@ function validateCategory(name) {
         return false;
 
     } else if (categories.length >= maxCategories) {
-        toastMessage('error', 'El máximo de categorías es ' + maxCategories);
+        toastMessage('error', `El máximo de categorías es ${maxCategories}`);
         return false;
 
     } else if (name.length >= maxCategoryLength) {
-        toastMessage('error', 'El nombre de la categoría no puede ser mayor a ' + maxCategoryLength + ' caracteres');
+        toastMessage('error', `El nombre de la categoría no puede ser mayor a ${maxCategoryLength} caracteres`);
         return false;
 
     } else {
@@ -331,7 +331,7 @@ async function acceptSimilarCategory(name) {
 
         if (!response.validate) {
             const result = await Swal.fire({ // skipcq: JS-0125
-                title: "¿Quieres decir " + response.similar_category.name + "?",
+                title: `¿Quieres decir ${response.similar_category.name} ?`,
                 showCancelButton: true,
                 icon: "question",
                 confirmButtonClass: "btn btn-primary",
