@@ -67,3 +67,5 @@ def highlight_list(share_code, start_date, end_date):
 
         # TODO: Administrar errores
         return None
+
+    return None

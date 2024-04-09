@@ -56,3 +56,5 @@ def add_category(request):
             return JsonResponse({'id': category.id})
 
         return JsonResponse({'id': None})
+
+    return JsonResponse({'id': None})
