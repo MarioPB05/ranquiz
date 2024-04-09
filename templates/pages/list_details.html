@@ -1,0 +1,233 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-8 h-100 h-md-auto p-3">
+            {% block main %}
+                <p>Hola</p>
+            {% endblock %}
+        </div>
+
+        <div class="d-flex flex-column gap-3 col-md-4 p-6 primary-border rounded overflow-hidden full-height">
+            <div class="d-flex justify-content-between align-items-center">
+                <h3>Comentarios</h3>
+                <p class="fs-2 text-muted">1340</p>
+            </div>
+            <div class="d-flex gap-8 flex-column scrolleable">
+                <div class="d-flex flex-column border border-1 border-gray-400 rounded p-5 gap-4">
+                    <div class="d-flex flex-row align-items-center justify-content-between">
+                        <div class="d-flex flex-row gap-3 align-items-center justify-content-center">
+                            <i class="text-muted fs-1    bi bi-person-circle"></i>
+                            <label class="text-muted">David Pérez Fernández</label>
+                        </div>
+                        <div>
+                            <label>Hace 3 m</label>
+                        </div>
+                    </div>
+                    <label class="fs-5">
+                        Esta lista no está actualizada, faltan los brawlers de la nueva temporada.
+                    </label>
+                    <div class="d-flex flex-row gap-3 mt-2">
+                        <div class="d-flex gap-2 bg-info rounded-pill text-white p-1 ps-3 pe-3 align-items-center">
+                            <i class="fs-5 text-white bi bi-hand-thumbs-up-fill"></i>
+                            <label>Útil</label>
+                            <label class="ms-2">3</label>
+                        </div>
+                        <div class="d-flex gap-3 bg-primary-500 rounded-pill text-white p-1 ps-3 pe-3 align-items-center">
+                            <i class="text-white fs-5 bi bi-award"></i>
+                            <label>Premiar</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex flex-column border border-1 border-gray-400 rounded p-5 gap-4">
+                    <div class="d-flex flex-row align-items-center justify-content-between">
+                        <div class="d-flex flex-row gap-3 align-items-center justify-content-center">
+                            <i class="text-muted fs-1    bi bi-person-circle"></i>
+                            <label class="text-muted">Anuel Doble AA</label>
+                        </div>
+                        <div>
+                            <label>Hace 1 m</label>
+                        </div>
+                    </div>
+                    <label class="fs-5">
+                        Guapardo es el mejor brawler de la temporada, es muy fuerte.
+                    </label>
+                    <div class="d-flex flex-row gap-3 mt-2">
+                        <div class="d-flex gap-2 bg-info rounded-pill text-white p-1 ps-3 pe-3 align-items-center">
+                            <i class="fs-5 text-white bi bi-hand-thumbs-up-fill"></i>
+                            <label>Útil</label>
+                            <label class="ms-2">12</label>
+                        </div>
+                        <div class="d-flex gap-3 bg-primary-500 rounded-pill text-white p-1 ps-3 pe-3 align-items-center">
+                            <i class="text-white fs-5 bi bi-award"></i>
+                            <label>Premiar</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex flex-column border border-1 border-gray-400 rounded p-5 gap-4">
+                    <div class="d-flex flex-row align-items-center justify-content-between">
+                        <div class="d-flex flex-row gap-3 align-items-center justify-content-center">
+                            <i class="text-muted fs-1    bi bi-person-circle"></i>
+                            <label class="text-muted">David Pérez Fernández</label>
+                        </div>
+                        <div>
+                            <label>Hace 3 m</label>
+                        </div>
+                    </div>
+                    <label class="fs-5">
+                        Esta lista no está actualizada, faltan los brawlers de la nueva temporada.
+                    </label>
+                    <div class="d-flex flex-row gap-3 mt-2">
+                        <div class="d-flex gap-2 bg-info rounded-pill text-white p-1 ps-3 pe-3 align-items-center">
+                            <i class="fs-5 text-white bi bi-hand-thumbs-up-fill"></i>
+                            <label>Útil</label>
+                            <label class="ms-2">3</label>
+                        </div>
+                        <div class="d-flex gap-3 bg-primary-500 rounded-pill text-white p-1 ps-3 pe-3 align-items-center">
+                            <i class="text-white fs-5 bi bi-award"></i>
+                            <label>Premiar</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex flex-column border border-1 border-gray-400 rounded p-5 gap-4">
+                    <div class="d-flex flex-row align-items-center justify-content-between">
+                        <div class="d-flex flex-row gap-3 align-items-center justify-content-center">
+                            <i class="text-muted fs-1    bi bi-person-circle"></i>
+                            <label class="text-muted">David Pérez Fernández</label>
+                        </div>
+                        <div>
+                            <label>Hace 3 m</label>
+                        </div>
+                    </div>
+                    <label class="fs-5">
+                        Esta lista no está actualizada, faltan los brawlers de la nueva temporada.
+                    </label>
+                    <div class="d-flex flex-row gap-3 mt-2">
+                        <div class="d-flex gap-2 bg-info rounded-pill text-white p-1 ps-3 pe-3 align-items-center">
+                            <i class="fs-5 text-white bi bi-hand-thumbs-up-fill"></i>
+                            <label>Útil</label>
+                            <label class="ms-2">3</label>
+                        </div>
+                        <div class="d-flex gap-3 bg-primary-500 rounded-pill text-white p-1 ps-3 pe-3 align-items-center">
+                            <i class="text-white fs-5 bi bi-award"></i>
+                            <label>Premiar</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex flex-column border border-1 border-gray-400 rounded p-5 gap-4">
+                    <div class="d-flex flex-row align-items-center justify-content-between">
+                        <div class="d-flex flex-row gap-3 align-items-center justify-content-center">
+                            <i class="text-muted fs-1    bi bi-person-circle"></i>
+                            <label class="text-muted">David Pérez Fernández</label>
+                        </div>
+                        <div>
+                            <label>Hace 3 m</label>
+                        </div>
+                    </div>
+                    <label class="fs-5">
+                        Esta lista no está actualizada, faltan los brawlers de la nueva temporada.
+                    </label>
+                    <div class="d-flex flex-row gap-3 mt-2">
+                        <div class="d-flex gap-2 bg-info rounded-pill text-white p-1 ps-3 pe-3 align-items-center">
+                            <i class="fs-5 text-white bi bi-hand-thumbs-up-fill"></i>
+                            <label>Útil</label>
+                            <label class="ms-2">3</label>
+                        </div>
+                        <div class="d-flex gap-3 bg-primary-500 rounded-pill text-white p-1 ps-3 pe-3 align-items-center">
+                            <i class="text-white fs-5 bi bi-award"></i>
+                            <label>Premiar</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex flex-column border border-1 border-gray-400 rounded p-5 gap-4">
+                    <div class="d-flex flex-row align-items-center justify-content-between">
+                        <div class="d-flex flex-row gap-3 align-items-center justify-content-center">
+                            <i class="text-muted fs-1    bi bi-person-circle"></i>
+                            <label class="text-muted">David Pérez Fernández</label>
+                        </div>
+                        <div>
+                            <label>Hace 3 m</label>
+                        </div>
+                    </div>
+                    <label class="fs-5">
+                        Esta lista no está actualizada, faltan los brawlers de la nueva temporada.
+                    </label>
+                    <div class="d-flex flex-row gap-3 mt-2">
+                        <div class="d-flex gap-2 bg-info rounded-pill text-white p-1 ps-3 pe-3 align-items-center">
+                            <i class="fs-5 text-white bi bi-hand-thumbs-up-fill"></i>
+                            <label>Útil</label>
+                            <label class="ms-2">3</label>
+                        </div>
+                        <div class="d-flex gap-3 bg-primary-500 rounded-pill text-white p-1 ps-3 pe-3 align-items-center">
+                            <i class="text-white fs-5 bi bi-award"></i>
+                            <label>Premiar</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex flex-column border border-1 border-gray-400 rounded p-5 gap-4">
+                    <div class="d-flex flex-row align-items-center justify-content-between">
+                        <div class="d-flex flex-row gap-3 align-items-center justify-content-center">
+                            <i class="text-muted fs-1    bi bi-person-circle"></i>
+                            <label class="text-muted">David Pérez Fernández</label>
+                        </div>
+                        <div>
+                            <label>Hace 3 m</label>
+                        </div>
+                    </div>
+                    <label class="fs-5">
+                        Esta lista no está actualizada, faltan los brawlers de la nueva temporada.
+                    </label>
+                    <div class="d-flex flex-row gap-3 mt-2">
+                        <div class="d-flex gap-2 bg-info rounded-pill text-white p-1 ps-3 pe-3 align-items-center">
+                            <i class="fs-5 text-white bi bi-hand-thumbs-up-fill"></i>
+                            <label>Útil</label>
+                            <label class="ms-2">3</label>
+                        </div>
+                        <div class="d-flex gap-3 bg-primary-500 rounded-pill text-white p-1 ps-3 pe-3 align-items-center">
+                            <i class="text-white fs-5 bi bi-award"></i>
+                            <label>Premiar</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex flex-column border border-1 border-gray-400 rounded p-5 gap-4">
+                    <div class="d-flex flex-row align-items-center justify-content-between">
+                        <div class="d-flex flex-row gap-3 align-items-center justify-content-center">
+                            <i class="text-muted fs-1    bi bi-person-circle"></i>
+                            <label class="text-muted">David Pérez Fernández</label>
+                        </div>
+                        <div>
+                            <label>Hace 3 m</label>
+                        </div>
+                    </div>
+                    <label class="fs-5">
+                        Esta lista no está actualizada, faltan los brawlers de la nueva temporada.
+                    </label>
+                    <div class="d-flex flex-row gap-3 mt-2">
+                        <div class="d-flex gap-2 bg-info rounded-pill text-white p-1 ps-3 pe-3 align-items-center">
+                            <i class="fs-5 text-white bi bi-hand-thumbs-up-fill"></i>
+                            <label>Útil</label>
+                            <label class="ms-2">3</label>
+                        </div>
+                        <div class="d-flex gap-3 bg-primary-500 rounded-pill text-white p-1 ps-3 pe-3 align-items-center">
+                            <i class="text-white fs-5 bi bi-award"></i>
+                            <label>Premiar</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <form>
+                <div class="d-flex flex-row border border-1 border-gray-400 rounded p-3 gap-4 align-items-center mt-3 bo">
+                    <label class="w-100">
+                        <textarea rows="1" class="w-100 border-0" placeholder="Añadir comentario..."  data-kt-autosize="true"></textarea>
+                    </label>
+                    <i class="fs-2 text-primary bi bi-send"></i>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block custom_scripts %}
+    <script src="{% static 'scripts/pages/list_details.js' %}" type="module"></script>
+{% endblock %}

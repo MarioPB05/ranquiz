@@ -2,3 +2,24 @@
 .primary-shadow {
     box-shadow: 0 0 40px 0 rgba(189, 32, 233, 0.25);
 }
+
+.primary-border {
+    border: 2px solid #bd20e9;
+}
+
+.gray-border {
+    border: 2px solid #f0f0f0;
+}
+
+.bg-primary-500 {
+    background-color: #CE37FE;
+}
+
+.scrolleable {
+    overflow-y: auto;
+}
+
+.full-height {
+    height: 80vh; /* Establece la altura del contenedor al 100% de la altura de la ventana */
+    overflow: hidden; /* Oculta el contenido que excede la altura del contenedor */
+}
