@@ -23,3 +23,7 @@
     height: 75vh; /* Establece la altura del contenedor al 100% de la altura de la ventana */
     overflow: hidden; /* Oculta el contenido que excede la altura del contenedor */
 }
+
+.borderless-textarea textarea:focus {
+        outline: none;
+    }
