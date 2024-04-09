@@ -15,6 +15,10 @@
     background-color: #CE37FE;
 }
 
+.bg-primary-600 {
+    background-color: #BD20E9;
+}
+
 .scrolleable {
     overflow-y: auto;
 }
