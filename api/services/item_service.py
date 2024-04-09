@@ -20,7 +20,6 @@ def create_item(item_form):
 
 def get_items(share_code):
     """Función para obtener los items de una lista"""
-
     # Obtenemos la lista
     required_list = get_list(share_code)
 

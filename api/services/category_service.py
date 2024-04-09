@@ -26,7 +26,6 @@ def get_category(category_id=None, category_name=None):
 
 def get_all_categories():
     """Función para obtener todas las categorías"""
-
     # Obtenemos todas las categorías
     categories = Category.objects.all()
 
