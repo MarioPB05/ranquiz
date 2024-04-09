@@ -26,10 +26,12 @@ function removePageLoader() {
  * @param minDate
  * @returns {*|[]}
  */
-function initializeFlatpickr(elementSelector, mode = 'single', minDate = '1920-01-01') {
+function initializeFlatpickr(elementSelector, mode = 'single', minDate = '01-01-1900') {
     return flatpickr(elementSelector, { // skipcq: JS-0125
         mode: mode,
-        dateFormat: 'd-m-Y',
+        dateFormat: 'Y-m-d',
+        altFormat: 'd/m/Y',    // Formato de fecha alternativo que se enviará al backend
+        altInput: true,
         minDate: minDate,
         locale: {
             firstDayOfWeek: 1,
