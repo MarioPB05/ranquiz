@@ -235,7 +235,6 @@ function focusOnFirstEmptyItem() {
 
 }
 
-
 function actualizeItemNumber() {
     // Actualiza el número de items
 
@@ -305,7 +304,6 @@ function validateCategory(name) {
 
 }
 
-
 function removeCategory(event) {
     // Eliminar el item
     $(event.target).remove();
@@ -358,8 +356,6 @@ async function acceptSimilarCategory(name) {
         return false;
     }
 }
-
-
 
 function uploadCategory(name) {
     promiseAjax('/api/category/create/', 'POST', {name: name, csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()}).then(response => {
@@ -425,4 +421,3 @@ $(document).ready(function () {
 
     removePageLoader();
 });
-
