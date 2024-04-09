@@ -32,7 +32,7 @@ function createItem() {
     item.removeAttr('id');
 
     // Obtener el prefijo del item
-    const prefix = 'id_' + (item_last_prefix + 1) + '-';
+    const prefix = (item_last_prefix + 1) + '-';
 
     // Actualizar los datos del prefijo
     item_last_prefix++;
@@ -43,19 +43,19 @@ function createItem() {
 
     // Cambiar el ID y name del input de la imagen
     const imageInput = item.find('#id_template-image');
-    imageInput.attr('id', prefix + 'image');
+    imageInput.attr('id', 'id_' + prefix + 'image');
     imageInput.attr('name', prefix + 'image');
 
     // Actualizar el atributo for del label
-    item.find('label[for="id_template-image"]').attr('for', prefix + 'image');
+    item.find('label[for="id_template-image"]').attr('for', 'id_' + prefix + 'image');
 
     // Cambiar el ID y name del input del nombre
     const nameInput = item.find('#id_template-name');
-    nameInput.attr('id', prefix + 'name');
+    nameInput.attr('id', 'id_' +  prefix + 'name');
     nameInput.attr('name', prefix + 'name');
 
     // Actualizar el atributo for del label
-    item.find('label[for="id_template-name"]').attr('for', prefix + 'name');
+    item.find('label[for="id_template-name"]').attr('for', 'id_' + prefix + 'name');
 
     // Mostrar el item
     item.removeClass('d-none').addClass('d-flex');
