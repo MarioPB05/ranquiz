@@ -1,10 +1,5 @@
-# from django.shortcuts import render
-
 from api.forms.list_form import CreateListForm
 from api.models import List, ListCategory
-
-
-# from api.services.item_service import create_item_form
 
 
 def create_list_form(request):
