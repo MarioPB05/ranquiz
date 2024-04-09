@@ -22,6 +22,10 @@ def register(request):
     return user_register(request)
 
 
+def play_list(request, share_code):
+    return render(request, 'pages/play_list.html', {'share_code': share_code})
+
+
 @login_required
 def create_list_view(request):
     """Vista que permite a un usuario crear una lista"""
