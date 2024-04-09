@@ -5,6 +5,8 @@ removePageLoader();
 const templateComment = $("#template_comment");
 const templateAward = $("#template_award");
 
+const commentsOnPage = [];
+
 let exampleComment = {
     "id": 1,
     "author": {
@@ -31,12 +33,17 @@ let exampleComment = {
 };
 
 
+/**
+ * Añade un comentario a la lista de comentarios
+ * @param comment
+ */
 function addComment(comment) {
     let content = comment.content;
     let author_name = comment.author.name;
     let author_avatar = comment.author.avatar;
     let date = new Date(comment.date);
     let awards = comment.awards;
+    let comment_temp_id = "award_comment_" + commentsOnPage.length;
 
     let element = templateComment.clone();
 
@@ -48,9 +55,43 @@ function addComment(comment) {
     // TODO: Add author avatar
     element.find(".comment_date").text(formatElapsedTime(date));
 
+    element.find("#award_comment_first").attr("id", comment_temp_id);
+    element.find('[data-kt-menu]').each(function () {
+        const menu = new KTMenu($(this)[0]);
+    });
+
+    commentsOnPage.push(comment);
     element.appendTo("#comments_container");
+}
+
+/**
+ * Sube un comentario a la base de datos
+ * @param comment
+ * @returns {*}
+ */
+function uploadComment(comment) {
+    return exampleComment;
+}
+
+/**
+ * Añade el comentario que se ha escrito en la base de datos y a los comentarios
+ */
+function writeComment() {
+    let content = $("#comment_input").val();
+    let date = new Date();
+
+    let comment = {
+        "content": content,
+        "date": date,
+    };
+
+    $("#comment_input").val("");
+
+    addComment(uploadComment(comment));
 }
 
 $(document).ready(function () {
     addComment(exampleComment);
+
+    $("#write_comment").click(writeComment);
 });
