@@ -336,7 +336,7 @@ async function acceptSimilarCategory(name) {
         const response = await promiseAjax(`/api/category/validate/${name}`);
 
         if (!response.validate) {
-            const result = await Swal.fire({
+            const result = await Swal.fire({ // skipcq: JS-0125
                 title: "¿Quieres decir " + response.similar_category.name + "?",
                 showCancelButton: true,
                 icon: "question",
@@ -379,7 +379,7 @@ function beforeSendForm() {
 
 $(document).ready(function () {
 
-    initializeFlatpickr("#range_date_highlight", 'range', moment().format('DD-MM-YYYY'));
+    initializeFlatpickr("#range_date_highlight", 'range', moment().format('DD-MM-YYYY')); // skipcq: JS-0125
 
     $('#name').maxlength({
         warningClass: "badge badge-primary",
@@ -401,7 +401,7 @@ $(document).ready(function () {
         }
     });
 
-    const imageInput = KTImageInput.getInstance($('#kt_image_input')[0]);
+    const imageInput = KTImageInput.getInstance($('#kt_image_input')[0]); // skipcq: JS-0125
     const itemsContainer = $('#items_container');
 
     imageInput.on('kt.imageinput.changed', changedListImage);

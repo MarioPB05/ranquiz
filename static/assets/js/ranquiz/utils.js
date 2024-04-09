@@ -1,12 +1,12 @@
-const Toast = Swal.mixin({
+const Toast = Swal.mixin({ // skipcq: JS-0125
   toast: true,
   position: "top-end",
   showConfirmButton: false,
   timer: 3000,
   timerProgressBar: true,
   didOpen: (toast) => {
-    toast.onmouseenter = Swal.stopTimer;
-    toast.onmouseleave = Swal.resumeTimer;
+    toast.onmouseenter = Swal.stopTimer; // skipcq: JS-0125
+    toast.onmouseleave = Swal.resumeTimer; // skipcq: JS-0125
   }
 });
 
@@ -27,7 +27,7 @@ function removePageLoader() {
  * @returns {*|[]}
  */
 function initializeFlatpickr(elementSelector, mode = 'single', minDate = '1920-01-01') {
-    return flatpickr(elementSelector, {
+    return flatpickr(elementSelector, { // skipcq: JS-0125
         mode: mode,
         dateFormat: 'd-m-Y',
         minDate: minDate,
