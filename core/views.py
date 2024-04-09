@@ -61,6 +61,7 @@ def create_list_view(request):
     })
 
 
+@login_required
 def profile(request, share_code):
     """Vista que renderiza el perfil de un usuario"""
-    return render(request, 'pages/profile.html', {'share_code': share_code})
+    return render(request, 'pages/profile.html')
