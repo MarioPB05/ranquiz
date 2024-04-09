@@ -54,7 +54,7 @@ function formatElapsedTime(dateTime) {
     }
 
     // If it has been more than a month, return the original date
-    return dateTime.toLocaleString();
+    return dateTime.toLocaleDateString();
 }
 
 
