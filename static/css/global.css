@@ -77,3 +77,8 @@
     color: white!important;
 }
 
+.hover-bg-lighter:hover {
+    transition-duration: 0.3s;
+    opacity: 0.7;
+}
+
