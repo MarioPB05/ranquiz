@@ -159,11 +159,13 @@ function addComment(comment) {
  */
 function getComments() {
     // TODO: Obtener comentarios de la base de datos
-    let result = [exampleComment];
+    comments = [exampleComment];
 
-    $.each(result, function (index, comment) {
+    $.each(comments, function (index, comment) {
         addComment(comment);
     });
+
+    actualizeCommentCounter();
 }
 
 /**
@@ -194,7 +196,11 @@ function writeComment() {
 
     $("#comment_input").val("");
 
-    addComment(uploadComment(comment));
+    let result = uploadComment(comment);
+
+    addComment(result);
+    comments.push(comment);
+    actualizeCommentCounter();
 }
 
 $(document).ready(function () {
