@@ -4,6 +4,7 @@ removePageLoader();
 
 const templateComment = $("#template_comment");
 const templateAward = $("#template_award");
+let templateBuyableAward = $("#template_buyable_award");
 
 const commentsOnPage = [];
 
@@ -17,21 +18,55 @@ let exampleComment = {
     "date": "2021-05-01T12:00:00Z",
     "awards": [
         {
-            "name": "Best Comment",
-            "icon": "fa-trophy",
-            "color": "gold",
+            "id_award": 1,
             "amount": 1
         },
 
         {
-            "name": "Good Comment",
-            "icon": "fa-thumbs-up",
-            "color": "blue",
+            "id_award": 2,
             "amount": 5
         }
     ]
 };
 
+let awards = [];
+
+/**
+ * Obtiene los premios de la base de datos y los añade a la lista de premios en el comentario plantilla
+ */
+function getAwards() {
+    // TODO: Get awards from the database
+    awards = [
+        {
+            "id": 1,
+            "name": "Legendario",
+            "icon": "bi-trophy-fill",
+            "color": "orange",
+            "price": 10
+        },
+
+        {
+            "id": 2,
+            "name": "Good",
+            "icon": "bi-ui-checks-grid",
+            "color": "#23B0FF",
+            "price": 5
+        }
+    ];
+
+    $.each(awards, function (index, award) {
+        let award_element = templateBuyableAward.clone();
+        award_element.removeAttr("id");
+        award_element.removeClass("d-none").addClass("d-flex");
+
+        award_element.find(".award_name").text(award.name);
+        award_element.find(".award_icon").addClass(award.icon);
+        award_element.find("a").css("background-color", award.color);
+        award_element.find(".award_price").text(award.price);
+
+        award_element.appendTo(templateComment.find(".menu"));
+    });
+}
 
 /**
  * Añade un comentario a la lista de comentarios
@@ -91,6 +126,7 @@ function writeComment() {
 }
 
 $(document).ready(function () {
+    getAwards();
     addComment(exampleComment);
 
     $("#write_comment").click(writeComment);
