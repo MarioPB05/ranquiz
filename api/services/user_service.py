@@ -95,5 +95,7 @@ def get_user(user_id=None, share_code=None):
 
         if share_code is not None:
             return User.objects.get(share_code=share_code)
+
+        return None
     except User.DoesNotExist:
         return None
