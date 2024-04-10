@@ -1,6 +1,5 @@
-import {removePageLoader, formatElapsedTime, toastMessage} from "/static/assets/js/ranquiz/utils.js";
+import {removePageLoader, formatElapsedTime, toastMessage, promiseAjax} from "/static/assets/js/ranquiz/utils.js";
 
-removePageLoader();
 
 const templateComment = $("#template_comment");
 const templateAward = $("#template_award");
@@ -161,8 +160,12 @@ function addComment(comment) {
  * Obtiene los comentarios de la base de datos y los añade
  */
 function getComments() {
-    // TODO: Obtener comentarios de la base de datos
-    comments = [exampleComment];
+    promiseAjax(`/api/list/${share_code}/comments`).then(response => {
+        comments = response.comments;
+        console.log(comments);
+    }).catch(error => {
+        toastMessage("error", "Error al obtener los comentarios");
+    });
 
     $.each(comments, function (index, comment) {
         addComment(comment);
@@ -221,4 +224,6 @@ $(document).ready(function () {
 
         addAwardToComment(award_id, comment, true);
     });
+
+    removePageLoader();
 });
