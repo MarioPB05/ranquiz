@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.http import Http404
 from django.shortcuts import render
 
 from api.services.category_service import get_category
@@ -77,6 +78,9 @@ def profile(request, share_code=None):
 
     is_own_profile = share_code is None or request.user.share_code == share_code
     user_data = request.user if is_own_profile else get_user(share_code=share_code)
+
+    if user_data is None:
+        raise Http404('User not found')
 
     return render(request, 'pages/profile.html', {
         'user_data': user_data,
