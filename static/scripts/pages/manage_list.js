@@ -378,7 +378,7 @@ async function acceptSimilarCategory(name) {
  */
 function uploadCategory(name) {
     promiseAjax('/api/category/create/', 'POST', {
-        name: name,
+        name,
         csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
     }).then(() => {
         allCategories.push(name);
@@ -411,7 +411,7 @@ $(document).ready(function () {
             url: '/api/list/types', // La URL de tu endpoint de búsqueda
             dataType: 'json',
             delay: 0,
-            processResults: function (data) {
+            processResults(data) {
                 return {
                     results: data.types
                 };
