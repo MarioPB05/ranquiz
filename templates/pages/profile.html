@@ -149,33 +149,35 @@
                 </li>
                 <!--end::Nav item-->
 
-                <!--begin::Nav item-->
-                <li class="nav-item mt-2">
-                    <a class="nav-link text-active-primary ms-0 me-10 py-5 {{ cards_info.lists|yesno:"active,none" }}"
-                        href="{% url 'user' share_code=user_data.share_code %}?card=lists">Listas</a>
-                </li>
-                <!--end::Nav item-->
-
-                <!--begin::Nav item-->
-                <li class="nav-item mt-2">
-                    <a class="nav-link text-active-primary ms-0 me-10 py-5 {{ cards_info.quests|yesno:"active,none" }}"
-                        href="{% url 'user' share_code=user_data.share_code %}?card=quests">Misiones</a>
-                </li>
-                <!--end::Nav item-->
-
-                <!--begin::Nav item-->
-                <li class="nav-item mt-2">
-                    <a class="nav-link text-active-primary ms-0 me-10 py-5 {{ cards_info.notifications|yesno:"active,none" }}"
-                        href="{% url 'user' share_code=user_data.share_code %}?card=notifications">Notificaciones</a>
-                </li>
-                <!--end::Nav item-->
-
-                <!--begin::Nav item-->
-                <li class="nav-item mt-2">
-                    <a class="nav-link text-active-primary ms-0 me-10 py-5 {{ cards_info.settings|yesno:"active,none" }}"
-                        href="{% url 'user' share_code=user_data.share_code %}?card=settings">Ajustes</a>
-                </li>
-                <!--end::Nav item-->
+                {% if is_own_profile %}
+                    <!--begin::Nav item-->
+                    <li class="nav-item mt-2">
+                        <a class="nav-link text-active-primary ms-0 me-10 py-5 {{ cards_info.lists|yesno:"active,none" }}"
+                            href="{% url 'user' share_code=user_data.share_code %}?card=lists">Listas</a>
+                    </li>
+                    <!--end::Nav item-->
+    
+                    <!--begin::Nav item-->
+                    <li class="nav-item mt-2">
+                        <a class="nav-link text-active-primary ms-0 me-10 py-5 {{ cards_info.quests|yesno:"active,none" }}"
+                            href="{% url 'user' share_code=user_data.share_code %}?card=quests">Misiones</a>
+                    </li>
+                    <!--end::Nav item-->
+    
+                    <!--begin::Nav item-->
+                    <li class="nav-item mt-2">
+                        <a class="nav-link text-active-primary ms-0 me-10 py-5 {{ cards_info.notifications|yesno:"active,none" }}"
+                            href="{% url 'user' share_code=user_data.share_code %}?card=notifications">Notificaciones</a>
+                    </li>
+                    <!--end::Nav item-->
+    
+                    <!--begin::Nav item-->
+                    <li class="nav-item mt-2">
+                        <a class="nav-link text-active-primary ms-0 me-10 py-5 {{ cards_info.settings|yesno:"active,none" }}"
+                            href="{% url 'user' share_code=user_data.share_code %}?card=settings">Ajustes</a>
+                    </li>
+                    <!--end::Nav item-->
+                {% endif %}
             </ul>
             <!--begin::Navs-->
         </div>
