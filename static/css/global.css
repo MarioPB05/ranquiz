@@ -92,3 +92,7 @@
 .semi_full_height {
     height: 65vh;
 }
+
+.ellipsis{
+    text-overflow: ellipsis;
+}
