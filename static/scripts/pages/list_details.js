@@ -1,4 +1,4 @@
-import { removePageLoader, formatElapsedTime } from "/static/assets/js/ranquiz/utils.js";
+import {removePageLoader, formatElapsedTime, toastMessage} from "/static/assets/js/ranquiz/utils.js";
 
 removePageLoader();
 
@@ -80,6 +80,9 @@ function addAwardToComment(award_id, comment, new_award = false) {
 
     if (!new_award && uploadAward(award_id, comment.data("comment-id")).state !== "success") {
         return;
+
+    }else if (new_award) {
+        toastMessage("success", "Premio otorgado");
     }
 
     if (comment.find(`div.award[data-award-id=${award_id}]`).length > 0) {
@@ -159,11 +162,13 @@ function addComment(comment) {
  */
 function getComments() {
     // TODO: Obtener comentarios de la base de datos
-    let result = [exampleComment];
+    comments = [exampleComment];
 
-    $.each(result, function (index, comment) {
+    $.each(comments, function (index, comment) {
         addComment(comment);
     });
+
+    actualizeCommentCounter();
 }
 
 /**
@@ -194,7 +199,11 @@ function writeComment() {
 
     $("#comment_input").val("");
 
-    addComment(uploadComment(comment));
+    let result = uploadComment(comment);
+
+    addComment(result);
+    comments.push(comment);
+    actualizeCommentCounter();
 }
 
 $(document).ready(function () {
