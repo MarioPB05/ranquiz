@@ -20,7 +20,7 @@ def user_login(request):
             if user is not None:
                 login(request, user)
 
-                if next_url:
+                if next_url and next_url != 'None':
                     return redirect(next_url)
 
                 return redirect('homepage')
