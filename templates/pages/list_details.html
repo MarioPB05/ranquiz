@@ -75,7 +75,7 @@
         <div class="d-flex flex-column gap-3 col-lg-4 p-6 primary-border rounded overflow-hidden full-height ">
             <div class="d-flex justify-content-between align-items-center">
                 <h3>Comentarios</h3>
-                <p class="fs-2 text-muted">1340</p>
+                <p class="fs-2 text-muted" id="comment_counter">1340</p>
             </div>
 
             <div class="d-flex gap-7 flex-column scrolleable" id="comments_container">
@@ -97,13 +97,14 @@
                         Esta lista no está actualizada, faltan los brawlers de la nueva temporada.
                     </label>
 
-                    <div class="d-flex flex-row gap-3 mt-2 award_container">
-
-                        <div class="d-none gap-2 bg-info rounded-pill text-white p-1 ps-3 pe-3 align-items-center" id="template_award">
-                            <i class="fs-5 text-white bi award_icon"></i>
-                            <label class="award_text">Útil</label>
+                    <div class="d-flex flex-row gap-3 mt-2 award_container flex-wrap">
+                        <!-- Begin template award -->
+                        <div class="d-none gap-2 award rounded-pill text-white p-1 ps-3 pe-3 align-items-center" id="template_award" data-award-id="0">
+                            <i class="fs-5 text-white award_icon"></i>
+                            <label class="award_name">Útil</label>
                             <label class="ms-2 award_amount">3</label>
                         </div>
+                        <!-- End template award -->
 
                         <div>
                             <button data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start" data-kt-menu-offset="0,5" class="d-flex gap-3 bg-primary-500 rounded-pill text-white p-1 ps-3 pe-3 align-items-center cursor-pointer bg-hover-primary border-0 add_award">
@@ -113,11 +114,11 @@
 
                             <!--begin::Menu-->
                             <div class="menu gap-4 pb-7 pt-7 menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold w-auto min-w-225px mw-300px" data-kt-menu="true">
-                                <!--begin::Menu item-->
-                                <div class="menu-item px-3 d-none" id="template_buyable_award">
-                                    <a href="#" class="menu-link px-3 text-white rounded-pill hover-bg-lighter d-flex justify-content-between" style="background-color: #23B0FF">
+                                <!--begin template buyable award -->
+                                <div class="menu-item px-3 d-none buyable_award cursor-pointer" id="template_buyable_award" data-award-id="0">
+                                    <div class="menu-link px-3 text-white rounded-pill hover-bg-lighter d-flex justify-content-between" style="background-color: #23B0FF">
                                         <div>
-                                             <i class="award_icon bi text-white"></i>
+                                            <i class="award_icon bi text-white"></i>
                                             <span class="award_name ms-2">Example</span>
                                         </div>
 
@@ -126,9 +127,9 @@
                                             <i class="bi bi-gem text-white"></i>
                                         </div>
 
-                                    </a>
+                                    </div>
                                 </div>
-                                <!--end::Menu item-->
+                                <!--end template buyable award-->
 
                             </div>
                             <!--end::Menu-->
