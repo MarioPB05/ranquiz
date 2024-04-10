@@ -88,6 +88,7 @@ def user_register(request):
 
 
 def get_user(user_id=None, share_code=None):
+    """Función que obtiene un usuario por su id o su share_code"""
     try:
         if user_id is not None:
             return User.objects.get(id=user_id)

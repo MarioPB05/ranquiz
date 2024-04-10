@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect
 
 
 def partial_login_required(function):
+    """Decorador para la página de perfil de usuario"""
     @wraps(function)
     def wrap(request, share_code, *args, **kwargs):
         card = request.GET.get('card', 'resume')
