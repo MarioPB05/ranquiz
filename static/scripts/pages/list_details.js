@@ -129,7 +129,6 @@ function addComment(comment) {
     let author_avatar = comment.author.avatar;
     let date = new Date(comment.date);
     let awards = comment.awards;
-    let comment_temp_id = "award_comment_" + commentsOnPage.length;
 
     let element = templateComment.clone();
 
@@ -151,7 +150,6 @@ function addComment(comment) {
         });
     }
 
-    commentsOnPage.push(comment);
     element.appendTo("#comments_container");
     actualizeCommentCounter();
 }
