@@ -3,7 +3,7 @@ import {removePageLoader, initializeFlatpickr, promiseAjax, toastMessage} from "
 const minItems = 5;
 let items_prefix = [];
 let item_last_prefix = 0;
-let categories = [];
+const categories = [];
 const maxCategories = 5;
 const maxCategoryLength = 25;
 let allCategories = [];
@@ -191,7 +191,7 @@ function cancelItemImage(event) {
  * Actualizar el precio del destacado en base a las fechas seleccionadas
  */
 function updateHighlightPrice() {
-    let dates = $("#range_date_highlight").val().split(" hasta ");
+    const dates = $("#range_date_highlight").val().split(" hasta ");
 
     if (dates.length === 2) {
         promiseAjax(`/api/shop/highlight/calculator?start_date=${dates[0]}&end_date=${dates[1]}`)
