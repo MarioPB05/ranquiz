@@ -88,10 +88,11 @@ def user_register(request):
 
 
 def get_user(user_id=None, share_code=None):
-    if user_id is not None:
-        return User.objects.get(id=user_id)
+    try:
+        if user_id is not None:
+            return User.objects.get(id=user_id)
 
-    if share_code is not None:
-        return User.objects.get(share_code=share_code)
-
-    return None
+        if share_code is not None:
+            return User.objects.get(share_code=share_code)
+    except User.DoesNotExist:
+        return None
