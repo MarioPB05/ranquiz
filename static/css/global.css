@@ -45,7 +45,7 @@
 }
 
 .full-height {
-    height: 80vh;
+    height: 81vh;
 }
 
 .scrolleable {
@@ -93,8 +93,8 @@
 }
 
 .share-position {
-    top: -15px;
-    left: -15px;
+    top: -10px;
+    left: -10px;
 }
 
 .hover-bg-lighter:hover {
