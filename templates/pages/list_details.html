@@ -156,5 +156,6 @@
 {% endblock %}
 
 {% block custom_scripts %}
+    <script>const share_code = '{{ share_code }}';</script>
     <script src="{% static 'scripts/pages/list_details.js' %}" type="module"></script>
 {% endblock %}
