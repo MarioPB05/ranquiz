@@ -44,6 +44,10 @@
     background-color: #BD20E9;
 }
 
+.full-height {
+    height: 80vh;
+}
+
 .scrolleable {
     overflow-y: auto;
 }
@@ -86,5 +90,10 @@
 
 .hover-icon-color-lightyellow:hover i {
     color: #fcfc83 !important;
+}
+
+.share-position {
+    top: -15px;
+    left: -15px;
 }
 
