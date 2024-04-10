@@ -177,7 +177,7 @@ function uploadComment(comment) {
 }
 
 function actualizeCommentCounter() {
-    $("#comment_counter").text(commentsOnPage.length);
+    $("#comment_counter").text(comments.length);
 }
 
 /**
