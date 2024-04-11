@@ -9,15 +9,15 @@
                 <div class="d-flex flex-column p-8 gap-10 h-100 align-items-center">
                     <div class="d-flex flex-row justify-content-between align-items-center w-100">
                         <h2 class="text-white m-0">{{ list.name }}</h2>
-                        <a href="" class="d-flex gap-3 align-items-center">
-                            <i class="text-white fs-2tx bi bi-person-circle"></i>
-                            <label href="" class="text-white fw-bolder cursor-pointer">{{ list.owner.username }}</label>
+                        <a href="" class="bg-white p-2 ps-4 pe-4 rounded shadow d-flex gap-3 align-items-center">
+                            <label href="" class="text-dark fw-bolder cursor-pointer">{{ list.owner.username }}</label>
+                            {% cloudinary data.avatar class="rounded-circle" width="50" height="50" crop="fill"  %}
                         </a>
                     </div>
-                    <div class="bg-gray-500 w-100 h-100 rounded mh-250px min-h-250px min-h-lg-100px">
-                        {% cloudinary list.image class="w-100 h-100  rounded" crop="fill"%}
+                    <div class="w-100 h-lg-100 rounded min-h-250px min-h-lg-100px">
+                        {% cloudinary list.image class="w-100 h-100 mh-250px rounded" crop="fill"  %}
                     </div>
-                    <div class="d-flex align-center justify-content-center gap-20">
+                    <div class="d-flex flex-wrap align-center justify-content-center gap-20">
                         <div class="d-flex flex-column gap-3 align-items-center">
                             <div class="bg-white p-4 rounded-circle">
                                 <i class="fs-2x text-muted bi bi-controller"></i>
@@ -41,25 +41,23 @@
                         <div class="d-flex flex-column gap-4 w-60">
                             <div class="d-flex flex-row text-white gap-3 fs-4">
                                 <label class="fw-bolder">Elementos :</label>
-                                <label>77</label>
+                                <label>{{ data.elements }}</label>
                             </div>
                             <div class="d-flex flex-row text-white gap-3 fs-4">
                                 <label class="fw-bolder">Creación :</label>
-                                <label>Hace 27 días</label>
+                                <label>{{ list.creation_date|date:"d/m/Y" }}</label>
                             </div>
                             <div class="d-flex flex-row text-white gap-3 fs-4">
                                 <label class="fw-bolder">Ultima edición :</label>
-                                <label>77</label>
+                                <label>{{ list.edit_date|date:"d/m/Y" }}</label>
                             </div>
                         </div>
                         <div class="d-flex flex-column gap-3 text-white">
                             <label class="fw-bolder fs-3">Categorías:</label>
                             <div class="d-flex gap-3 flex-wrap mw-200px">
-                                <span class="badge bg-white text-primary-800 fs-6">Brawlers</span>
-                                <span class="badge bg-white text-primary-800 fs-6">Skins</span>
-                                <span class="badge bg-white text-primary-800 fs-6">Mapas</span>
-                                <span class="badge bg-white text-primary-800 fs-6">Mapas</span>
-                                <span class="badge bg-white text-primary-800 fs-6">Mapas</span>
+                                {% for category in data.categories %}
+                                    <span class="badge bg-white text-primary-800 fs-6">{{ category }}</span>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
