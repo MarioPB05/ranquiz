@@ -16,14 +16,14 @@ def get_comments(request, share_code):
             'date': comment.date,
             'author': {
                 'name': comment.user.username,
-                'avatar': comment.user.avatar.image
+                # 'avatar': comment.user.avatar.image
             },
             'awards': [
                 {
                     'id': award.id,
                     'title': award.title,
                     'icon': award.icon,
-                } for award in comment.awards.all()
+                } for award in comment.commentaward_set.all()
             ]
         })
 
