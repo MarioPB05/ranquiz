@@ -1,6 +1,7 @@
 from django.http import JsonResponse
 
-from api.services.social_service import get_comments_from_list
+from api.models import User
+from api.services.social_service import get_comments_from_list, create_comment
 
 
 def get_comments(request, share_code):
@@ -28,3 +29,24 @@ def get_comments(request, share_code):
         })
 
     return JsonResponse({'comments': json_comments})
+
+
+def create_and_return_comment(request, share_code):
+    """Función para crear un comentario"""
+    content = request.POST.get('content')
+    author = User.objects.all().first()  # TODO: Cambiar por el usuario autenticado por el que esta iniciado sesión
+
+    comment = create_comment(content, author, share_code)
+
+    if comment is not None:
+        return JsonResponse({"comment": {
+            'id': comment.id,
+            'content': comment.comment,
+            'date': comment.date,
+            'author': {
+                'name': comment.user.username,
+                # 'avatar': comment.user.avatar.image
+            },
+        }})
+
+    return None

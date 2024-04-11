@@ -184,8 +184,16 @@ function getComments() {
  * @returns {*}
  */
 function uploadComment(comment) {
-    // TODO: Subir comentario a la base de datos
-    return exampleComment;
+    comment.csrfmiddlewaretoken = $('input[name=csrfmiddlewaretoken]').val();
+
+    promiseAjax(`/api/list/${share_code}/comment/create`, "POST", comment).then(response => {
+        addComment(response.comment);
+        comments.push(response.comment);
+        actualizeCommentCounter();
+
+    }).catch(error => {
+
+    });
 }
 
 function actualizeCommentCounter() {
@@ -197,20 +205,18 @@ function actualizeCommentCounter() {
  */
 function writeComment() {
     let content = $("#comment_input").val();
-    let date = new Date();
+
+    if (!content) {
+        return;
+    }
 
     let comment = {
-        "content": content,
-        "date": date,
+        "content": content
     };
 
     $("#comment_input").val("");
 
-    let result = uploadComment(comment);
-
-    addComment(result);
-    comments.push(comment);
-    actualizeCommentCounter();
+    uploadComment(comment);
 }
 
 $(document).ready(function () {
