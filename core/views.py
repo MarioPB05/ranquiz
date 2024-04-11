@@ -3,7 +3,7 @@ from django.shortcuts import render
 
 from api.services.category_service import get_category
 from api.services.item_service import create_item_form, create_item
-from api.services.list_service import create_list_form, set_category, create_list
+from api.services.list_service import create_list_form, set_category, create_list, get_list
 from api.services.user_service import user_login, user_register
 
 
@@ -24,7 +24,8 @@ def register(request):
 
 def list_details(request, share_code):
     """Vista que permite a un usuario ver los detalles de una lista"""
-    return render(request, 'pages/list_details.html', {'share_code': share_code})
+    list_data = get_list(share_code)
+    return render(request, 'pages/list_details.html', {'share_code': share_code, 'list': list_data})
 
 @login_required
 def create_list_view(request):

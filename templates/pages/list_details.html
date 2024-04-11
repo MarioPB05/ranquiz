@@ -1,5 +1,6 @@
 {% extends 'base/base.html' %}
 {% load static %}
+{% load cloudinary %}
 
 {% block content %}
     <div class="row h-100 g-5">
@@ -7,10 +8,10 @@
             <div class="w-100 h-auto h-lg-100 p-3 bg-primary-600 rounded position-relative">
                 <div class="d-flex flex-column p-8 gap-10 h-100 align-items-center">
                     <div class="d-flex flex-row justify-content-between align-items-center w-100">
-                        <h2 class="text-white m-0">Brawl Stars personajes</h2>
+                        <h2 class="text-white m-0">{{ list.name }}</h2>
                         <a href="" class="d-flex gap-3 align-items-center">
                             <i class="text-white fs-2tx bi bi-person-circle"></i>
-                            <label href="" class="text-white fw-bolder cursor-pointer">David Pérez Fernández</label>
+                            <label href="" class="text-white fw-bolder cursor-pointer">{{ list.owner.username }}</label>
                         </a>
                     </div>
                     <div class="bg-gray-500 w-100 h-100 rounded min-h-250px min-h-lg-100px">
