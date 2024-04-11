@@ -132,6 +132,8 @@ function addComment(comment) {
     let date = new Date(comment.date);
     let awards = comment.awards;
 
+    console.log(comment);
+
     let element = templateComment.clone();
 
     element.removeAttr("id");
@@ -162,16 +164,18 @@ function addComment(comment) {
 function getComments() {
     promiseAjax(`/api/list/${share_code}/comments`).then(response => {
         comments = response.comments;
-        console.log(comments);
+
+        $.each(comments, function (index, comment) {
+            addComment(comment);
+        });
+
+        actualizeCommentCounter();
+
     }).catch(error => {
         toastMessage("error", "Error al obtener los comentarios");
     });
 
-    $.each(comments, function (index, comment) {
-        addComment(comment);
-    });
 
-    actualizeCommentCounter();
 }
 
 /**
