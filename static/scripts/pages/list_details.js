@@ -154,7 +154,7 @@ function addComment(comment) {
         });
     }
 
-    element.appendTo("#comments_container");
+    element.prependTo("#comments_container");
     actualizeCommentCounter();
 }
 
