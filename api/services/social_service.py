@@ -1,8 +1,10 @@
-from django.db.models import Sum
+from django.db.models import Sum, F, Case, When, Value, IntegerField
+
 from django.utils import timezone
 
-from api.models import ListComment, CommentAward, User
+from api.models import ListComment, CommentAward, Award
 from api.services.list_service import get_list
+from api.services.transaction_service import do_transaction
 
 
 def get_comment(comment_id):
@@ -38,16 +40,21 @@ def get_featured_comments_from_list(share_code, user):
     list_element = get_list(share_code)
     selected_user = user
 
-    # Filtrar los comentarios por el usuario y ordenarlos por el número de premios
-    comentarios_usuario = ListComment.objects.filter(list=list_element, user=selected_user).annotate(
-        award_prices=Sum('commentaward__award__price')).order_by('-award_prices')
+    # Anotar los comentarios con el número de premios
+    comentarios_anotados = ListComment.objects.filter(list=list_element).annotate(
+        award_prices=Sum('commentaward__award__price'),
+        is_selected_user=Case(
+            When(user=selected_user, then=Value(1)),
+            default=Value(0),
+            output_field=IntegerField(),
+        )
+    )
 
-    # Filtrar los comentarios que no son del usuario y ordenarlos por el número de premios
-    otros_comentarios = ListComment.objects.filter(list=list_element).exclude(user=selected_user).annotate(
-        award_prices=Sum('commentaward__award__price')).order_by('-award_prices')
+    # Ordenar los comentarios por el número de premios y si pertenecen al usuario seleccionado
+    comentarios_ordenados = comentarios_anotados.order_by('is_selected_user', 'award_prices')
 
-    # Unir los dos conjuntos de comentarios
-    return otros_comentarios.union(comentarios_usuario)
+    return comentarios_ordenados
+
 
 
 def create_comment(content, author, share_code):
@@ -70,7 +77,7 @@ def get_awards_from_comment(comment_id):
     if selected_comment is not None:
         awards_dict = {}
         for award in selected_comment.commentaward_set.all():
-            award_id = award.id
+            award_id = award.award.id
             if award_id in awards_dict:
                 awards_dict[award_id]['amount'] += 1
             else:
@@ -83,3 +90,32 @@ def get_awards_from_comment(comment_id):
 
     return None
 
+
+def get_award(award_id):
+    """
+    Servicio para obtener un premio
+    """
+    try:
+        return Award.objects.get(id=award_id)
+    except Award.DoesNotExist:
+        return None
+
+
+def add_award_to_comment(comment_id, selected_user, award_id):
+    """
+    Servicio para añadir un premio a un comentario
+    """
+    selected_comment = get_comment(comment_id)
+    selected_award = get_award(award_id)
+    comment_user = selected_comment.user
+
+    if (do_transaction(selected_user, -selected_award.price, "Premio otorgado") is None or
+            do_transaction(comment_user, selected_award.price, "Premio recibido") is None):
+        # TODO: Devolver dinero al usuario si se produce un error
+        return False
+
+    if selected_comment is not None and selected_user is not None:
+        CommentAward.objects.create(comment=selected_comment, user=selected_user, award=selected_award)
+        return True
+
+    return False
