@@ -1,9 +1,10 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
+from api.models import ListCategory
 from api.services.category_service import get_category
-from api.services.item_service import create_item_form, create_item
-from api.services.list_service import create_list_form, set_category, create_list
+from api.services.item_service import create_item_form, create_item, get_items
+from api.services.list_service import create_list_form, set_category, create_list, get_list
 from api.services.user_service import user_login, user_register
 
 
@@ -24,7 +25,25 @@ def register(request):
 
 def list_details(request, share_code):
     """Vista que permite a un usuario ver los detalles de una lista"""
-    return render(request, 'pages/list_details.html', {'share_code': share_code})
+    list_data = get_list(share_code)
+    items_data = get_items(share_code)
+
+    # Obtener todas las instancias de ListCategory asociadas a la lista específica
+    list_categories = ListCategory.objects.filter(list=list_data)
+
+    # Obtener las instancias de Category a partir de las instancias de ListCategory
+    categories = [list_category.category for list_category in list_categories]
+
+    data = {
+        "name": list_data.name,
+        "owner": list_data.owner.username,
+        "elements": len(items_data),
+        "creation_date": list_data.creation_date,
+        "edit_date": list_data.edit_date,
+        "avatar": list_data.owner.avatar.image,
+        "categories": categories
+    }
+    return render(request, 'pages/list_details.html', {'share_code': share_code, 'list': list_data, "data": data})
 
 @login_required
 def create_list_view(request):
