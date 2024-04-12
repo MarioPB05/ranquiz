@@ -1,6 +1,8 @@
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 
+from api.models import User
+from api.services.email_service import send_register_email
 from api.services.shop_service import get_avatar
 from api.forms.user_form import LoginUserForm, CreateUserForm
 from api.services.client_service import create_client, get_client_form
@@ -73,6 +75,9 @@ def user_register(request):
                 # Guardamos el usuario
                 user.save()
 
+                # Enviar correo de registro exitoso
+                send_register_email(client)
+
                 # Redirigimos al usuario a la página de inicio de sesión
                 return redirect('login')
 
@@ -84,3 +89,17 @@ def user_register(request):
         'client_form': client_form,
         'user_form': user_form
     }})
+
+
+def get_user(user_id=None, share_code=None):
+    """Función que obtiene un usuario por su id o su share_code"""
+    try:
+        if user_id is not None:
+            return User.objects.get(id=user_id)
+
+        if share_code is not None:
+            return User.objects.get(share_code=share_code)
+
+        return None
+    except User.DoesNotExist:
+        return None
