@@ -1,11 +1,24 @@
+from cloudinary import CloudinaryImage
 from django.http import JsonResponse
 
-from api.services.social_service import get_comments_from_list, create_comment, get_featured_comments_from_list
+from api.services.social_service import get_comments_from_list, create_comment, get_featured_comments_from_list, \
+    get_most_awarded_comments_from_list
 
 
 def get_comments(request, share_code):
     """Función para obtener todos los comentarios de una lista"""
-    comments = get_featured_comments_from_list(share_code, request.user)
+    comments = []
+    mode = request.GET.get('mode')
+
+    if mode == 'most_awarded':
+        comments = get_most_awarded_comments_from_list(share_code)
+
+    elif mode == 'featured':
+        comments = get_featured_comments_from_list(share_code, request.user)
+
+    elif mode == 'recient':
+        comments = get_comments_from_list(share_code)
+
     json_comments = []
 
     for comment in comments:
@@ -16,13 +29,12 @@ def get_comments(request, share_code):
             'date': comment.date,
             'author': {
                 'name': comment.user.username,
-                # 'avatar': comment.user.avatar.image
+                'avatar': f"https://res.cloudinary.com/dhewpzvg9/{comment.user.avatar.image}",
             },
             'awards': [
                 {
-                    'id': award.id,
-                    'title': award.title,
-                    'icon': award.icon,
+                    'id_award': award.id,
+                    'amount': comment.commentaward_set.filter(id=award.id).count()
                 } for award in comment.commentaward_set.all()
             ]
         })
@@ -44,7 +56,7 @@ def create_and_return_comment(request, share_code):
             'date': comment.date,
             'author': {
                 'name': comment.user.username,
-                # 'avatar': comment.user.avatar.image
+                'avatar': f"https://res.cloudinary.com/dhewpzvg9/{comment.user.avatar.image}"
             },
         }})
 
