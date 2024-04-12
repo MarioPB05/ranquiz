@@ -1,6 +1,8 @@
 import {removePageLoader, formatElapsedTime, toastMessage, promiseAjax} from "/static/assets/js/ranquiz/utils.js";
 
-
+const blockUI = new KTBlockUI($("#comments_container").parent()[0], {
+    message: '<div class="blockui-message"><span class="spinner-border text-primary"></span>Cargando comentarios...</div>',
+});
 const templateComment = $("#template_comment");
 const templateAward = $("#template_award");
 let templateBuyableAward = $("#template_buyable_award");
@@ -160,17 +162,26 @@ function addComment(comment) {
 
 /**
  * Obtiene los comentarios de la base de datos y los añade
+ * @param mode
  */
-function getComments() {
-    promiseAjax(`/api/list/${share_code}/comments`).then(response => {
+function getComments(mode = "featured") {
+    $("#comments_container").empty();
+    comments = [];
+
+    console.log(blockUI)
+    blockUI.block();
+
+    promiseAjax(`/api/list/${share_code}/comments?mode=${mode}`).then(response => {
         comments = response.comments;
 
         $.each(comments, function (index, comment) {
             addComment(comment);
         });
 
+        blockUI.release();
+
         actualizeCommentCounter();
-        removePageLoader();
+
 
     }).catch(error => {
         toastMessage("error", "Error al obtener los comentarios");
@@ -191,7 +202,7 @@ function uploadComment(comment) {
         actualizeCommentCounter();
 
     }).catch(error => {
-        toastMessage("error", "Error al subir el comentarioº");
+        toastMessage("error", "Error al subir el comentario");
     });
 }
 
@@ -218,11 +229,26 @@ function writeComment() {
     uploadComment(comment);
 }
 
+/**
+ * Cambia entre comentarios recientes y destacados
+ */
+function toggleRecientComments() {
+    if ($("#recientComents").hasClass("badge-outline-primary-selected")) {
+        $("#recientComents").removeClass("badge-outline-primary-selected");
+        getComments("featured")
+    }else {
+        $("#recientComents").addClass("badge-outline-primary-selected");
+        getComments("recient");
+    }
+}
+
 $(document).ready(function () {
     getAwards();
     getComments();
 
     $("#write_comment").click(writeComment);
+
+    $("#recientComents").click(toggleRecientComments)
 
      $("#comments_container").on("click", ".buyable_award", function () {
         let award_id = $(this).data("award-id");
@@ -233,6 +259,8 @@ $(document).ready(function () {
 
         addAwardToComment(award_id, comment, true);
     });
+
+     removePageLoader();
 });
 
 $(document).ready(function() {
