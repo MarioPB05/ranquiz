@@ -26,7 +26,7 @@ def get_most_awarded_comments_from_list(share_code):
 
 
 def get_featured_comments_from_list(share_code):
-    """Servicio para obtener todos los comentarios de una lista"""
+    """Servicio para obtener los comentarios destacados de una lista"""
     list_element = get_list(share_code)
     selected_user = User.objects.all().first()
 
