@@ -10,6 +10,7 @@ def do_transaction(user, value, details):
     transaction.save()
 
     user.money += value
+    user.save()
     return id(transaction)
 
 
@@ -19,6 +20,7 @@ def validate_transaction(user, value):
         return True
 
     if user is not None and value is not None:
-        return User.money >= (-value)
+        user_money = user.money
+        return user_money >= (-value)
 
     return False
