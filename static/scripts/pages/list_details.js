@@ -40,7 +40,7 @@ function getAwards() {
         {
             "id": 1,
             "title": "Legendario",
-            "icon": "bi bi-trophy-fill",
+            "icon": "bi-trophy-fill",
             "color": "orange",
             "price": 10
         },
@@ -48,7 +48,7 @@ function getAwards() {
         {
             "id": 2,
             "title": "Good",
-            "icon": "bi bi-ui-checks-grid",
+            "icon": "bi-ui-checks-grid",
             "color": "#23B0FF",
             "price": 5
         }
@@ -70,27 +70,12 @@ function getAwards() {
     });
 }
 
-/**
- * Añade un premio a un comentario
- * @param award_id
- * @param comment
- * @param new_award
- */
-function addAwardToComment(award_id, comment, new_award = false) {
-    let award = awards.find(award => award.id === award_id);
-
-    if (!new_award && uploadAward(award_id, comment.data("comment-id")).state !== "success") {
-        return;
-
-    }else if (new_award) {
-        toastMessage("success", "Premio otorgado");
-    }
-
+function addAwardToPage(comment, award_id, award) {
     if (comment.find(`div.award[data-award-id=${award_id}]`).length > 0) {
         comment.find(`div.award[data-award-id=${award_id}]`).find(".award_amount").text(parseInt(comment.find(`div.award[data-award-id=${award_id}]`).find(".award_amount").text()) + 1);
         console.log(comment.find(`div.award[data-award-id=${award_id}]`));
 
-    }else {
+    } else {
         let award_element = templateAward.clone();
         award_element.removeAttr("id");
         award_element.removeClass("d-none").addClass("d-flex");
@@ -104,23 +89,39 @@ function addAwardToComment(award_id, comment, new_award = false) {
         award_element.removeClass("d-none").addClass("d-flex");
 
         award_element.appendTo(comment.find(".award_container"));
-        console.log(comment.find(".award_container"));
     }
 }
 
 /**
- * Sube un premio a la base de datos
- * @param id_award
- * @param id_comment
- * @returns {{reason: string, state: string, id_award}}
+ * Añade un premio a un comentario
+ * @param award_id
+ * @param comment
+ * @param new_award
  */
-function uploadAward(id_award, id_comment) {
-    // TODO: Subir premio a la base de datos
-    return {
-        "state": "success",
-        "reason": "Premio subido correctamente",
-        id_award
+function addAwardToComment(award_id, comment, new_award = false) {
+    let award = awards.find(award => award.id === award_id);
+
+    if (new_award) {
+        uploadAward(award, comment);
+        return;
     }
+
+    addAwardToPage(comment, award_id, award);
+}
+
+/**
+ * Sube un premio a la base de datos
+ * @param award
+ * @param comment
+ */
+function uploadAward(award, comment) {
+    let id_comment = comment.attr("data-comment-id");
+    let id_award = award.id;
+    let token = $('input[name=csrfmiddlewaretoken]').val();
+
+    promiseAjax(`/api/list/${share_code}/comment/${id_comment}/add_award`, "POST", {"id_award": id_award, "csrfmiddlewaretoken": token}).then(response => {
+        addAwardToPage(comment, id_award, award);
+    });
 }
 
 /**
@@ -133,6 +134,7 @@ function addComment(comment) {
     let author_avatar = comment.author.avatar;
     let date = new Date(comment.date);
     let awards = comment.awards;
+    let id = comment.id;
 
     console.log(comment);
 
@@ -140,6 +142,7 @@ function addComment(comment) {
 
     element.removeAttr("id");
     element.removeClass("d-none").addClass("d-flex");
+    element.attr("data-comment-id", id);
 
     element.find(".comment_content").text(content);
     element.find(".author_name").text(author_name);
@@ -183,7 +186,7 @@ function getComments(mode = "featured") {
         actualizeCommentCounter();
 
     }).catch(error => {
-        toastMessage("error", "Error al obtener los comentarios");
+        toastMessage("error", "Error al obtener los comentarios" + error);
         blockUI.release();
     });
 }
