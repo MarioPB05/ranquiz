@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 
@@ -77,6 +78,9 @@ def user_register(request):
 
                 # Enviar correo de registro exitoso
                 send_register_email(client)
+
+                messages.success(request, 'Inicia sesión con tus credenciales para comenzar a explorar, '
+                                          'crear listas y jugar en Ranquiz.', extra_tags='register')
 
                 # Redirigimos al usuario a la página de inicio de sesión
                 return redirect('login')
