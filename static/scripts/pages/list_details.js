@@ -182,9 +182,9 @@ function getComments(mode = "featured") {
 
         actualizeCommentCounter();
 
-
     }).catch(error => {
         toastMessage("error", "Error al obtener los comentarios");
+        blockUI.release();
     });
 }
 
