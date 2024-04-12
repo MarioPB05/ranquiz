@@ -2,7 +2,7 @@ from cloudinary import CloudinaryImage
 from django.http import JsonResponse
 
 from api.services.social_service import get_comments_from_list, create_comment, get_featured_comments_from_list, \
-    get_most_awarded_comments_from_list
+    get_most_awarded_comments_from_list, get_awards_from_comment
 
 
 def get_comments(request, share_code):
@@ -31,12 +31,7 @@ def get_comments(request, share_code):
                 'name': comment.user.username,
                 'avatar': f"https://res.cloudinary.com/dhewpzvg9/{comment.user.avatar.image}",
             },
-            'awards': [
-                {
-                    'id_award': award.id,
-                    'amount': comment.commentaward_set.filter(id=award.id).count()
-                } for award in comment.commentaward_set.all()
-            ]
+            'awards': get_awards_from_comment(comment.id)
         })
 
     return JsonResponse({'comments': json_comments})

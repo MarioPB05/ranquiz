@@ -5,6 +5,14 @@ from api.models import ListComment, CommentAward, User
 from api.services.list_service import get_list
 
 
+def get_comment(comment_id):
+    """Función para obtener un comentario"""
+    try:
+        return ListComment.objects.get(id=comment_id)
+    except ListComment.DoesNotExist:
+        return None
+
+
 def get_comments_from_list(share_code):
     """Servicio para obtener todos los comentarios de una lista"""
     list_element = get_list(share_code)
@@ -49,6 +57,29 @@ def create_comment(content, author, share_code):
     if list_element is not None and content is not None and author is not None:
         current_datetime = timezone.now()
         return ListComment.objects.create(list=list_element, user=author, comment=content, date=current_datetime)
+
+    return None
+
+
+def get_awards_from_comment(comment_id):
+    """
+    Servicio para obtener todos los premios de un comentario agrupados
+    """
+    selected_comment = get_comment(comment_id)
+
+    if selected_comment is not None:
+        awards_dict = {}
+        for award in selected_comment.commentaward_set.all():
+            award_id = award.id
+            if award_id in awards_dict:
+                awards_dict[award_id]['amount'] += 1
+            else:
+                awards_dict[award_id] = {
+                    'id_award': award_id,
+                    'amount': 1
+                }
+
+        return list(awards_dict.values())
 
     return None
 
