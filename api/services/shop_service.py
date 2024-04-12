@@ -1,7 +1,8 @@
 from datetime import datetime
 
-from api.models import Avatar, UserTransaction, HighlightedList
+from api.models import Avatar, HighlightedList
 from api.services.list_service import get_list
+from api.services.transaction_service import do_transaction
 
 
 def get_avatar(avatar_id):
@@ -29,20 +30,6 @@ def calculate_highlight_price(start_date, end_date):
         days -= 1
 
     return total_price
-
-
-def do_transaction(user, value, date, details):
-    """Realiza una transacción"""
-    if user is not None:
-        transaction = UserTransaction()
-        transaction.user = user
-        transaction.value = value
-        transaction.date = date
-        transaction.details = details
-        transaction.save()
-        return transaction
-
-    return None
 
 
 def highlight_list(share_code, start_date, end_date):
