@@ -14,8 +14,8 @@ def get_avatar(avatar_id):
 
 def calculate_highlight_price(start_date, end_date):
     """Calcula el precio de destacar una lista"""
-    start_date = datetime.strptime(start_date, "%d-%m-%Y").date()
-    end_date = datetime.strptime(end_date, "%d-%m-%Y").date()
+    start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
+    end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
 
     total_price = 0
     days = (end_date - start_date).days
