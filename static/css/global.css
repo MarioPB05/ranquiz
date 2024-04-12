@@ -60,6 +60,10 @@
     font-size: 20px !important;
 }
 
+.fs-30px{
+    font-size: 30px !important;
+}
+
 .w-90{
     width: 90% !important;
 }
@@ -95,4 +99,27 @@
 
 .ellipsis{
     text-overflow: ellipsis;
+}
+
+.two-items > div{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: column;
+    height: 100% !important;
+    width: 50% !important;
+
+}
+
+.four-items > div{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: column;
+    height: 50% !important;
+    width: 50% !important;
+}
+
+.four-items > div > div{
+    grid-template-columns: 7fr 5fr
 }

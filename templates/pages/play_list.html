@@ -13,53 +13,42 @@
         </a>
     </div>
 
-    <div class="progress" style="height: 20px" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+    <div class="progress mb-7" style="height: 20px" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
         <div class="progress-bar fw-bolder bg-primary" style="width: 25%">25%</div> {#Testing#}
     </div>
-
     <div class="row mt-4">
         <div class="position-relative col-md-8 h-md-auto p-3 bg-primary text-center rounded-25px border border-10 border-primary-400 p-12">
-            <div class="text-primary bg-white position-absolute end-0 me-10 fw-boldest fs-3 p-2 rounded-2 shadow">12m 33s</div> {#Testing#}
+            <div class="text-primary bg-white position-absolute end-0 me-10 fw-boldest fs-3 p-2 rounded-2 shadow flex-md-column">12m 33s</div> {#Testing#}
             <h1 class="text-white mb-5">¿Cuál prefieres?</h1> {#Testing#}
-            <div class="row">
+            <div class="row h-100 two-items">
 
-                <div class="col-md-6 p-5">
-                    <div class="list_item d-flex p-2 w-100 h-100 shadow rounded bg-white align-items-center justify-content-around selected_item" style="width: max-content">
-                        <img id="temp_image_preview" src="https://wallpapers.com/images/hd/brawl-stars-crow-character-0s8si9jv8n7wt4yy.png" alt="Imagen"
-                    class="min-w-100px min-h-100px mh-125px mw-125px py-4" style="object-fit: contain"/>
-                        <h1 id="temp_item_name" class="mt-10 text-center fw-boldest ellipsis">Crow</h1> {#Testing#}
+                <div class="col-lg-6 p-5">
+                    <div class="list_item p-4 w-100 h-100 shadow rounded bg-white selected_item d-grid align-items-center">
+                        <div>
+                            <img id="temp_image_preview" src="https://wallpapers.com/images/hd/brawl-stars-crow-character-0s8si9jv8n7wt4yy.png" alt="Imagen"
+                            class="w-75 h-75 125px py-4" style="object-fit: contain"/>
+                        </div>
+                        <h1 id="temp_item_name" class="text-center fw-boldest fs-30px ellipsis">Crow</h1> {#Testing#}
                     </div>
                 </div>
 
-                <div class="col-md-6 p-5">
-                    <div class="list_item d-flex p-2 w-100 h-100 shadow rounded bg-white align-items-center justify-content-around" style="width: max-content">
-                        <img id="temp_image_preview" src="https://wallpapers.com/images/hd/brawl-stars-crow-character-0s8si9jv8n7wt4yy.png" alt="Imagen"
-                    class="min-w-100px min-h-100px mh-125px mw-125px py-4" style="object-fit: contain"/>
-                        <h1 id="temp_item_name" class="mt-10 text-center fw-boldest ellipsis">Crow</h1> {#Testing#}
-                    </div>
-                </div>
+               
 
-                <div class="col-md-6 p-5">
-                    <div class="list_item d-flex p-2 w-100 h-100 shadow rounded bg-white align-items-center justify-content-around" style="width: max-content">
-                        <img id="temp_image_preview" src="https://wallpapers.com/images/hd/brawl-stars-crow-character-0s8si9jv8n7wt4yy.png" alt="Imagen"
-                    class="min-w-100px min-h-100px mh-125px mw-125px py-4" style="object-fit: contain"/>
-                        <h1 id="temp_item_name" class="mt-10 text-center fw-boldest ellipsis">Crow</h1> {#Testing#}
-                    </div>
-                </div>
-
-                <div class="col-md-6 p-5">
-                    <div class="list_item d-flex p-2 w-100 h-100 shadow rounded bg-white align-items-center justify-content-around" style="width: max-content">
-                        <img id="temp_image_preview" src="https://wallpapers.com/images/hd/brawl-stars-crow-character-0s8si9jv8n7wt4yy.png" alt="Imagen"
-                    class="min-w-100px min-h-100px mh-125px mw-125px py-4" style="object-fit: contain"/>
-                        <h1 id="temp_item_name" class="mt-10 text-center fw-boldest ellipsis">Crow</h1>
+                <div class="col-lg-6 p-5 ">
+                    <div class="list_item p-4 w-100 h-100 shadow rounded bg-white d-grid align-items-center">
+                        <div>
+                            <img id="temp_image_preview" src="https://wallpapers.com/images/hd/brawl-stars-crow-character-0s8si9jv8n7wt4yy.png" alt="Imagen"
+                            class="w-75 h-75 125px py-4" style="object-fit: contain"/>
+                        </div>
+                        <h1 id="temp_item_name" class="text-center fw-boldest fs-30px ellipsis">Crow</h1> {#Testing#}
                     </div>
                 </div>
 
             </div>
             <div class="position-absolute top-100 start-50 translate-middle">
-                <button class="shadow btn btn-primary rounded-2 fw-boldest p-2 px-8 fs-6 align-center border border-2 border-gray-900 ">
-                    <p class="m-0 mt-1">Siguiente</p>
-                    <i class="bi bi-caret-down-fill fs-20px"></i>
+                <button class="shadow btn btn-primary rounded-2 fw-boldest p-2 px-8 fs-6 align-center border border-3 border-primary-400 d-flex center justify-content-between align-items-center gap-1">
+                    <p class="m-0">Siguiente</p>
+                    <i class="bi bi-caret-right-fill fs-20px"></i>
                 </button>
             </div>
 
