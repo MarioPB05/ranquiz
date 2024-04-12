@@ -44,8 +44,15 @@
     background-color: #BD20E9;
 }
 
+@media (max-width: 1000px) {
+    .full-height {
+        height: auto !important;
+    }
+
+}
+
 .full-height {
-    height: 81vh;
+    height: 80vh;
 }
 
 .scrolleable {
