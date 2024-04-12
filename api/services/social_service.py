@@ -25,10 +25,10 @@ def get_most_awarded_comments_from_list(share_code):
     return None
 
 
-def get_featured_comments_from_list(share_code):
+def get_featured_comments_from_list(share_code, user):
     """Servicio para obtener los comentarios destacados de una lista"""
     list_element = get_list(share_code)
-    selected_user = User.objects.all().first()
+    selected_user = user
 
     # Filtrar los comentarios por el usuario y ordenarlos por el número de premios
     comentarios_usuario = ListComment.objects.filter(list=list_element, user=selected_user).annotate(
@@ -39,7 +39,7 @@ def get_featured_comments_from_list(share_code):
         award_prices=Sum('commentaward__award__price')).order_by('-award_prices')
 
     # Unir los dos conjuntos de comentarios
-    return comentarios_usuario.union(otros_comentarios)
+    return otros_comentarios.union(comentarios_usuario)
 
 
 def create_comment(content, author, share_code):
