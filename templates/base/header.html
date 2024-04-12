@@ -24,7 +24,7 @@
                     menu-state-title-info menu-icon-white menu-state-icon-primary fw-bold my-5 my-lg-0 align-items-stretch ps-6 gap-4"
                          id="#kt_header_menu" data-kt-menu="true">
                         <div class="menu-item menu-lg-down-accordion me-lg-1">
-                            <a href="#" class="menu-link scroll-btn align-items-start py-3">
+                            <a href="{% url 'homepage' %}" class="menu-link scroll-btn align-items-start py-3">
                                 <span class="menu-icon">
                                     <i class="bi bi-house-fill fs-2"></i>
                                 </span>
@@ -95,7 +95,7 @@
                             {% else %}
                                 <div class="d-flex flex-column gap-2 w-100">
                                     <a href="{% url 'login' %}" class="btn btn-primary fw-bolder w-100">Iniciar Sesión</a>
-                                    <a href="#" class="btn btn-outline btn-outline-primary btn-active-primary fw-bolder w-100">Registrarse</a>
+                                    <a href="{% url 'register' %}" class="btn btn-outline btn-outline-primary btn-active-primary fw-bolder w-100">Registrarse</a>
                                 </div>
                             {% endif %}
                         </div>
@@ -109,7 +109,7 @@
 
                         <!--begin::Menu item-->
                         <div class="menu-item px-5">
-                            <a href="#" class="menu-link px-5">Inicio</a>
+                            <a href="{% url 'homepage' %}" class="menu-link px-5">Inicio</a>
                         </div>
                         <!--end::Menu item-->
 
