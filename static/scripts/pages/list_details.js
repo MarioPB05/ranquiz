@@ -170,12 +170,11 @@ function getComments() {
         });
 
         actualizeCommentCounter();
+        removePageLoader();
 
     }).catch(error => {
         toastMessage("error", "Error al obtener los comentarios");
     });
-
-
 }
 
 /**
@@ -192,7 +191,7 @@ function uploadComment(comment) {
         actualizeCommentCounter();
 
     }).catch(error => {
-
+        toastMessage("error", "Error al subir el comentarioº");
     });
 }
 
@@ -206,7 +205,7 @@ function actualizeCommentCounter() {
 function writeComment() {
     let content = $("#comment_input").val();
 
-    if (!content) {
+    if (!content.trim()) {
         return;
     }
 
@@ -234,8 +233,6 @@ $(document).ready(function () {
 
         addAwardToComment(award_id, comment, true);
     });
-
-    removePageLoader();
 });
 
 $(document).ready(function() {
