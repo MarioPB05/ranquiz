@@ -70,25 +70,24 @@
     color: var(--bs-danger) !important;
 }
 
+.hover-color-white:hover {
+    transition-duration: 0.3s;
+    color: white !important;
+}
+
 
 .hover-text-white:hover {
     transition-duration: 0.3s;
     color: white !important;
 }
 
-.hover-icon-color-coral i {
-    transition-duration: 0.3s;
-}
-
 .hover-icon-color-coral:hover i {
+    transition-duration: 0.3s;
     color: lightcoral !important;
 }
 
-.hover-icon-color-lightyellow i {
-    transition-duration: 0.3s;
-}
-
 .hover-icon-color-lightyellow:hover i {
+    transition-duration: 0.3s;
     color: #fcfc83 !important;
 }
 
@@ -108,4 +107,13 @@
 
 .star-selected {
     color: #FFA800 !important;
+}
+
+.badge-outline-primary-selected {
+    color: white!important;
+    background-color: var(--primary-600);
+}
+
+.badge-outline-primary-selected:hover {
+    background-color: var(--primary-500);
 }
