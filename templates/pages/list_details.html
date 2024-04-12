@@ -64,9 +64,12 @@
                     <a href="" class="d-flex justify-content-end position-absolute share-position">
                         <i class="fs-2 text-hover-white bg-hover-primary border-hover-white text-primary bi bi-share-fill bg-white p-4 rounded-circle border border-3 border-primary"></i>
                     </a>
-                    <div class="d-flex align-items-center bg-primary-500 border border-1 border-dark rounded text-white justify-content-center mh-50px w-50">
-                        <a href=""><i class="fs-4x text-white bi bi-play-fill"></i></a>
-                    </div>
+
+                    {% if user.is_authenticated %}
+                        <div class="d-flex align-items-center bg-primary-500 border border-1 border-dark rounded text-white justify-content-center mh-50px w-50">
+                            <a href=""><i class="fs-4x text-white bi bi-play-fill"></i></a>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -107,59 +110,62 @@
                             <label class="ms-2 award_amount">3</label>
                         </div>
                         <!-- End template award -->
+                        {% if user.is_authenticated %}
+                            <div>
+                                <button data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start"
+                                        data-kt-menu-offset="0,5"
+                                        class="d-flex gap-3 bg-primary-500 rounded-pill text-white p-1 ps-3 pe-3 align-items-center cursor-pointer bg-hover-primary border-0 add_award">
+                                    <i class="text-white fs-5 bi bi-award cursor-pointer"></i>
+                                    Premiar
+                                </button>
 
-                        <div>
-                            <button data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start"
-                                    data-kt-menu-offset="0,5"
-                                    class="d-flex gap-3 bg-primary-500 rounded-pill text-white p-1 ps-3 pe-3 align-items-center cursor-pointer bg-hover-primary border-0 add_award">
-                                <i class="text-white fs-5 bi bi-award cursor-pointer"></i>
-                                Premiar
-                            </button>
+                                <!--begin::Menu-->
+                                <div class="menu gap-4 pb-7 pt-7 menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold w-auto min-w-225px mw-300px"
+                                     data-kt-menu="true">
+                                    <!--begin template buyable award -->
+                                    <div class="menu-item px-3 d-none buyable_award cursor-pointer"
+                                         id="template_buyable_award" data-award-id="0">
+                                        <div class="menu-link px-3 text-white rounded-pill hover-bg-lighter d-flex justify-content-between"
+                                             style="background-color: #23B0FF">
+                                            <div>
+                                                <i class="award_icon bi text-white"></i>
+                                                <span class="award_name ms-2">Example</span>
+                                            </div>
 
-                            <!--begin::Menu-->
-                            <div class="menu gap-4 pb-7 pt-7 menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold w-auto min-w-225px mw-300px"
-                                 data-kt-menu="true">
-                                <!--begin template buyable award -->
-                                <div class="menu-item px-3 d-none buyable_award cursor-pointer"
-                                     id="template_buyable_award" data-award-id="0">
-                                    <div class="menu-link px-3 text-white rounded-pill hover-bg-lighter d-flex justify-content-between"
-                                         style="background-color: #23B0FF">
-                                        <div>
-                                            <i class="award_icon bi text-white"></i>
-                                            <span class="award_name ms-2">Example</span>
+                                            <div>
+                                                <span class="award_price me-1">2</span>
+                                                <i class="bi bi-gem text-white"></i>
+                                            </div>
+
                                         </div>
-
-                                        <div>
-                                            <span class="award_price me-1">2</span>
-                                            <i class="bi bi-gem text-white"></i>
-                                        </div>
-
                                     </div>
+                                    <!--end template buyable award-->
+
                                 </div>
-                                <!--end template buyable award-->
-
+                                <!--end::Menu-->
                             </div>
-                            <!--end::Menu-->
-                        </div>
 
-                    </div>
+                        </div>
+                    {% endif %}
 
                 </div>
                 <!-- End template comment -->
             </div>
-            <form class="mt-auto">
-                {% csrf_token %}
-                <div class="d-flex flex-row border border-1 border-gray-400 rounded p-3 gap-4 align-items-center mt-3 bo">
-                    <label class="w-100">
-                        <div class="borderless-textarea">
-                            <textarea rows="1" class="w-100 border-0 fs-5" placeholder="Añadir comentario..."
-                            data-kt-autosize="true" id="comment_input"></textarea>
-                        </div>
-                    </label>
-                    <i class="fs-2 bg-hover-secondary rounded-circle cursor-pointer text-primary bi bi-send p-2"
-                       id="write_comment"></i>
-                </div>
-            </form>
+            {% if user.is_authenticated %}
+                <form class="mt-auto">
+                    {% csrf_token %}
+                    <div class="d-flex flex-row border border-1 border-gray-400 rounded p-3 gap-4 align-items-center mt-3 bo">
+                        <label class="w-100">
+                            <div class="borderless-textarea">
+                                <textarea rows="1" class="w-100 border-0 fs-5" placeholder="Añadir comentario..."
+                                data-kt-autosize="true" id="comment_input"></textarea>
+                            </div>
+                        </label>
+                        <i class="fs-2 bg-hover-secondary rounded-circle cursor-pointer text-primary bi bi-send p-2"
+                           id="write_comment"></i>
+                    </div>
+                </form>
+            {% endif %}
         </div>
     </div>
 {% endblock %}
