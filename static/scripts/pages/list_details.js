@@ -209,6 +209,41 @@ function writeComment() {
     actualizeCommentCounter();
 }
 
+function handleIconClick() {
+    // Función para manejar el clic en los elementos de corazones y estrellas
+    $('.cursor-pointer').click(function() {
+        var countLabel = $(this).next('label');
+        var icon = $(this).find('i');
+
+        // Obtener el número actual
+        var count = parseInt(countLabel.text());
+
+        // Verificar el ID del icono y aplicar la clase correspondiente
+        if (icon.attr('id') === 'heart-count') {
+            // Si el icono es el de corazón, añadir la clase heart-selected
+            icon.toggleClass("heart-selected");
+        } else if (icon.attr('id') === 'star-count') {
+            // Si el icono es el de estrella, añadir la clase star-selected
+            icon.toggleClass("star-selected");
+        }
+
+        // Incrementar o disminuir según la clase del icono
+        if (icon.hasClass("heart-selected") || icon.hasClass("star-selected")) {
+            // Incrementar el número
+            count += 1;
+        } else {
+            // Disminuir el número
+            count -= 1;
+        }
+
+        // Actualizar el número mostrado
+        countLabel.text(count);
+    });
+}
+
+// Llamar a la función para que maneje los clics en los iconos
+handleIconClick();
+
 $(document).ready(function () {
     getAwards();
     getComments();
@@ -228,34 +263,4 @@ $(document).ready(function () {
     removePageLoader();
 });
 
-$(document).ready(function() {
-        // Función para manejar el clic en los elementos de corazones y estrellas
-        $('.cursor-pointer').click(function() {
-            var countLabel = $(this).next('label');
-            var icon = $(this).find('i');
 
-            // Obtener el número actual
-            var count = parseInt(countLabel.text());
-
-            // Verificar el ID del icono y aplicar la clase correspondiente
-            if (icon.attr('id') === 'heart-count') {
-                // Si el icono es el de corazón, añadir la clase heart-selected
-                icon.toggleClass("heart-selected");
-            } else if (icon.attr('id') === 'star-count') {
-                // Si el icono es el de estrella, añadir la clase star-selected
-                icon.toggleClass("star-selected");
-            }
-
-            // Incrementar o disminuir según la clase del icono
-            if (icon.hasClass("heart-selected") || icon.hasClass("star-selected")) {
-                // Incrementar el número
-                count += 1;
-            } else {
-                // Disminuir el número
-                count -= 1;
-            }
-
-            // Actualizar el número mostrado
-            countLabel.text(count);
-        });
-    });
