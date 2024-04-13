@@ -14,9 +14,10 @@
                             {% cloudinary data.avatar class="rounded-circle" width="50" height="50" crop="fill"  %}
                         </a>
                     </div>
-                    <div class="w-100 h-lg-100 rounded">
-                        {% cloudinary list.image class="w-100 h-100 mh-200px rounded" style="object-fit: cover" %}
-                    </div>
+                    <div class="w-100 h-lg-100 rounded overflow-hidden position-lg-relative bgi-position-center bg-center min-h-300px" style="
+                        background-image: url('https://res.cloudinary.com/dhewpzvg9/{{ list.image }}');
+                            background-size: cover;
+                    "></div>
                     <div class="d-flex flex-wrap align-center justify-content-center gap-lg-20 gap-10">
                         <div class="d-flex flex-column gap-3 align-items-center">
                             <div class="bg-white p-4 rounded-circle">
