@@ -459,6 +459,4 @@ function onDocumentReady() {
     removePageLoader();
 }
 
-$(document).ready(() => {
-    onDocumentReady();
-});
+$(document).ready(onDocumentReady);
