@@ -1,3 +1,4 @@
+{% load cloudinary %}
 {% load static %}
 <div id="kt_header" class="header align-items-stretch">
     <!--begin::Container-->
@@ -12,7 +13,7 @@
         <!--end::Mobile logo-->
 
         <!--begin::Wrapper-->
-        <div class="d-flex align-items-stretch flex-lg-grow-1">
+        <div class="d-flex align-items-stretch flex-lg-grow-1 w-100">
             <!--begin::Navbar-->
             <div class="d-flex align-items-stretch w-100" id="kt_header_nav">
                 <!--begin::Menu wrapper-->
@@ -57,16 +58,19 @@
             <!--end::Navbar-->
 
             <!--begin::Toolbar wrapper-->
-            <div class="d-flex align-items-stretch flex-shrink-0">
+            <div class="d-flex align-items-center ms-1 ms-lg-3">
+                <a class="btn btn-icon btn-icon-muted btn-active-light btn-active-color-primary px-2 w-auto h-30px h-md-40px text-white text-hover-primary me-4">
+                    <i class="bi bi-gem fs-2 text-white"></i>
+                    <span class="fw-bolder ms-2">{{ user.money }}</span>
+                </a>
+
+                <a class="btn btn-icon btn-icon-muted btn-active-light btn-active-color-primary w-30px h-30px w-md-40px h-md-40px text-hover-primary me-4" href="#">
+                    <i class="bi bi-envelope fs-2x text-white"></i>
+                </a>
+
                 <!--begin::Menu wrapper-->
-                <div class="d-flex align-items-center gap-4 p-2 rounded cursor-pointer" data-kt-menu-trigger="click" data-kt-menu-attach=".user-avatar" data-kt-menu-placement="bottom-end" data-kt-menu-offset="0,05">
-                    <div class="symbol symbol-30px symbol-md-40px symbol-circle">
-                        {% if user.is_authenticated and user.profile.avatar %}
-                            <img class="user-avatar" src="{{ user.profile.avatar.url }}" alt="user_avatar" />
-                        {% else %}
-                            <i class="bi bi-person-circle text-white fs-2qx user-avatar"></i>
-                        {% endif %}
-                    </div>
+                <div class="cursor-pointer symbol symbol-30px symbol-md-40px user-avatar" data-kt-menu-trigger="click" data-kt-menu-attach=".user-avatar" data-kt-menu-placement="bottom-end" data-kt-menu-offset="0,05">
+                    {% cloudinary user.avatar.image %}
                 </div>
 
                 <!--begin::User account menu-->
@@ -77,11 +81,7 @@
                             {% if user.is_authenticated %}
                                 <!--begin::Avatar-->
                                 <div class="symbol symbol-50px me-5">
-                                    {% if user.profile.avatar %}
-                                        <img class="user-avatar" src="{{ user.profile.avatar.url }}" alt="user_avatar" />
-                                    {% else %}
-                                        <i class="bi bi-person-circle text-primary fs-3tx user-avatar"></i>
-                                    {% endif %}
+                                    {% cloudinary user.avatar.image class="user-avatar" %}
                                 </div>
                                 <!--end::Avatar-->
 
@@ -89,7 +89,7 @@
                                 <div class="d-flex flex-column">
                                     <div class="fw-bolder d-flex align-items-center fs-5 text-nowrap">{{ user.username }}</div>
 
-                                    <div class="d-inline text-muted fs-8 mt-1">{{ user.email }}</div>
+                                    <div class="d-inline fs-8 mt-1 ps-0 badge badge-light-info">Gemas: {{ user.money }}</div>
                                 </div>
                                 <!--end::Username-->
                             {% else %}
@@ -109,13 +109,45 @@
 
                         <!--begin::Menu item-->
                         <div class="menu-item px-5">
-                            <a href="{% url 'homepage' %}" class="menu-link px-5">Inicio</a>
+                            <a href="{% url 'homepage' %}" class="menu-link px-5">
+                                <span class="menu-icon">
+                                    <i class="bi bi-house fs-3"></i>
+                                </span>
+                                Inicio
+                            </a>
+                        </div>
+                        <!--end::Menu item-->
+
+                        <!--begin::Menu item-->
+                        <div class="menu-item px-5">
+                            <a href="{% url 'user' share_code=user.share_code %}" class="menu-link px-5">
+                                <span class="menu-icon">
+                                    <i class="bi bi-person-circle"></i>
+                                </span>
+                                Perfil
+                            </a>
+                        </div>
+                        <!--end::Menu item-->
+
+                        <!--begin::Menu item-->
+                        <div class="menu-item px-5">
+                            <a href="{% url 'user' share_code=user.share_code %}?card=settings" class="menu-link px-5">
+                                <span class="menu-icon">
+                                    <i class="bi bi-gear"></i>
+                                </span>
+                                Ajustes
+                            </a>
                         </div>
                         <!--end::Menu item-->
 
                         <!--begin::Menu item-->
                         <div class="menu-item text-hover-danger px-5">
-                            <a href="#" class="menu-link px-5" style="color:inherit;">Cerrar Sesión</a>
+                            <a href="#" class="menu-link px-5" style="color:inherit;">
+                                <span class="menu-icon">
+                                    <i class="bi bi-box-arrow-left"></i>
+                                </span>
+                                Cerrar Sesión
+                            </a>
                         </div>
                         <!--end::Menu item-->
                     {% endif %}
