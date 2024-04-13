@@ -228,7 +228,7 @@ function anyItemInputEmpty() {
     // Comprueba si hay algún input de item vacío
     let empty = false;
 
-    $('#items_container .list_item:not(#item_template)').find('input[type="text"]').each(function () {
+    $('#items_container .list_item:not(#item_template)').find('input[type="text"]').each(() => {
         if ($(this).val() === '') {
             empty = true;
             return false;
@@ -328,7 +328,7 @@ function removeCategory(event) {
  */
 function getCategories() {
     promiseAjax('/api/category/').then(response => {
-        allCategories = response.categories.map(function(category) {
+        allCategories = response.categories.map((category) => {
             return category.name;
         });
 
@@ -397,8 +397,7 @@ function beforeSendForm() {
     $('#categories').val(categories);
 }
 
-$(document).ready(function () {
-    // initializeFlatpickr("#range_date_highlight", 'range', moment().format('DD-MM-YYYY')); // skipcq: JS-0125
+$(document).ready(() => {
 
     $('#name').maxlength({
         warningClass: "badge badge-primary",
@@ -442,7 +441,7 @@ $(document).ready(function () {
     $("#cancel_highlight").on("click", cancelHighlight);
 
     getCategories();
-    $('#add_category_button').on('click', function () {
+    $('#add_category_button').on('click', ()=> {
         addCategory($('#add_category').val());
     });
 
