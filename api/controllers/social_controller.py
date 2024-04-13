@@ -76,7 +76,7 @@ def get_awards(request):
             'id': award.id,
             'icon': award.icon,
             'title': award.title,
-            'color': "#23B0FF", # TODO: Cambiar por el color de base de datos
+            'color': award.color,
             'price': award.price,
         })
 
