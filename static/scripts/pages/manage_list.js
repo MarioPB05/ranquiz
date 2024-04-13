@@ -397,8 +397,10 @@ function beforeSendForm() {
     $('#categories').val(categories);
 }
 
-$(document).ready(() => {
-
+/**
+ * Esta función se llama cuando el documento está listo
+ */
+function onDocumentReady() {
     $('#name').maxlength({
         warningClass: "badge badge-primary",
         limitReachedClass: "badge badge-danger"
@@ -441,11 +443,11 @@ $(document).ready(() => {
     $("#cancel_highlight").on("click", cancelHighlight);
 
     getCategories();
-    $('#add_category_button').on('click', ()=> {
+    $('#add_category_button').on('click', () => {
         addCategory($('#add_category').val());
     });
 
-    $("#categories_container").on('click', '.category' ,removeCategory);
+    $("#categories_container").on('click', '.category', removeCategory);
 
     // Añadir los items mínimos
     for (let i = 0; i < minItems; i++) {
@@ -455,4 +457,8 @@ $(document).ready(() => {
     $('button[type=submit]').on('click', beforeSendForm);
 
     removePageLoader();
+}
+
+$(document).ready(() => {
+    onDocumentReady();
 });
