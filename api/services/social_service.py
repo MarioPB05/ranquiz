@@ -67,6 +67,13 @@ def create_comment(content, author, share_code):
     return None
 
 
+def get_all_awards():
+    """
+    Servicio para obtener todos los premios
+    """
+    return Award.objects.all()
+
+
 def get_awards_from_comment(comment_id):
     """
     Servicio para obtener todos los premios de un comentario agrupados

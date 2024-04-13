@@ -15,38 +15,26 @@ let awards = [];
  * Obtiene los premios de la base de datos y los añade a la lista de premios en el comentario plantilla
  */
 function getAwards() {
-    // TODO: Get awards from the database
-    awards = [
-        {
-            "id": 1,
-            "title": "Legendario",
-            "icon": "bi-trophy-fill",
-            "color": "orange",
-            "price": 10
-        },
+    promiseAjax("/api/social/awards").then(response => {
+        awards = response.awards;
 
-        {
-            "id": 2,
-            "title": "Good",
-            "icon": "bi-ui-checks-grid",
-            "color": "#23B0FF",
-            "price": 5
-        }
-    ];
+        $.each(awards, function (index, award) {
+            let award_element = templateBuyableAward.clone();
+            award_element.removeAttr("id");
+            award_element.removeClass("d-none").addClass("d-flex");
 
-    $.each(awards, function (index, award) {
-        let award_element = templateBuyableAward.clone();
-        award_element.removeAttr("id");
-        award_element.removeClass("d-none").addClass("d-flex");
+            award_element.find(".award_name").text(award.title);
+            award_element.find(".award_icon").addClass(award.icon);
+            award_element.find("div").css("background-color", award.color);
+            award_element.find(".award_price").text(award.price);
 
-        award_element.find(".award_name").text(award.title);
-        award_element.find(".award_icon").addClass(award.icon);
-        award_element.find("div").css("background-color", award.color);
-        award_element.find(".award_price").text(award.price);
+            award_element.attr("data-award-id", award.id);
 
-        award_element.attr("data-award-id", award.id);
+            award_element.appendTo(templateComment.find(".menu"));
+        });
 
-        award_element.appendTo(templateComment.find(".menu"));
+    }).catch(error => {
+        toastMessage("error", "Error al obtener los premios");
     });
 }
 

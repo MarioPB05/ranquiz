@@ -3,7 +3,7 @@ from django.http import JsonResponse
 
 from api.services.social_service import get_comments_from_list, create_comment, get_featured_comments_from_list, \
     get_most_awarded_comments_from_list, get_awards_from_comment, get_comment, get_award, add_award_to_comment, \
-    check_user_award_in_comment
+    check_user_award_in_comment, get_all_awards
 from api.services.transaction_service import do_transaction
 
 
@@ -63,6 +63,24 @@ def create_and_return_comment(request, share_code):
         }})
 
     return None
+
+
+def get_awards(request):
+    """Función para obtener todos los premios"""
+    awards = get_all_awards()
+
+    json_awards = []
+
+    for award in awards:
+        json_awards.append({
+            'id': award.id,
+            'icon': award.icon,
+            'title': award.title,
+            'color': "#23B0FF", # TODO: Cambiar por el color de base de datos
+            'price': award.price,
+        })
+
+    return JsonResponse({'awards': json_awards})
 
 
 def add_award_to_comment_function(request, share_code, comment_id):
