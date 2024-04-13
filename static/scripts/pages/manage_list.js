@@ -7,7 +7,7 @@ const categories = [];
 const maxCategories = 5;
 const maxCategoryLength = 25;
 let allCategories = [];
-const flatpickrInstance = initializeFlatpickr("#range_date_highlight", 'range', moment().format('YYYY-MM-DD'));
+const flatpickrInstance = initializeFlatpickr("#range_date_highlight", 'range', moment().format('YYYY-MM-DD')); // skipcq: JS-0125
 
 
 /**
