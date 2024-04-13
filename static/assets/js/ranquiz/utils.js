@@ -26,7 +26,7 @@ function removePageLoader() {
  * @param minDate
  * @returns {*|[]}
  */
-function initializeFlatpickr(elementSelector, mode = 'single', minDate = '01-01-1900') {
+function initializeFlatpickr(elementSelector, mode = 'single', minDate = '1900-01-01') {
     return flatpickr(elementSelector, { // skipcq: JS-0125
         mode,
         dateFormat: 'Y-m-d',

@@ -8,6 +8,7 @@ class Award(ModelTemplate):
 
     icon = models.CharField(max_length=50)
     title = models.CharField(max_length=50)
+    color = models.CharField(max_length=50)
     price = models.IntegerField()
 
     """
