@@ -31,6 +31,7 @@ def get_comments(request, share_code):
             'id': comment.id,
             'content': comment.comment,
             'date': comment.date,
+            'user_is_author': comment.user.id == request.user.id,
             'author': {
                 'name': comment.user.username,
                 'avatar': f"https://res.cloudinary.com/dhewpzvg9/{comment.user.avatar.image}",
@@ -53,6 +54,7 @@ def create_and_return_comment(request, share_code):
             'id': comment.id,
             'content': comment.comment,
             'date': comment.date,
+            'user_is_author': comment.user.id == request.user.id,
             'author': {
                 'name': comment.user.username,
                 'avatar': f"https://res.cloudinary.com/dhewpzvg9/{comment.user.avatar.image}"
@@ -68,6 +70,9 @@ def add_award_to_comment_function(request, share_code, comment_id):
 
     if check_user_award_in_comment(comment_id, request.user, award_id):
         return JsonResponse({'status': 'Error', 'message': 'Ya has otorgado este premio en este comentario'})
+
+    if request.user.id == get_comment(comment_id).user.id:
+        return JsonResponse({'status': 'Error', 'message': 'No puedes otorgar un premio a tu propio comentario'})
 
     if add_award_to_comment(comment_id, request.user, award_id):
         return JsonResponse({'status': 'Success', 'message': 'Premio otorgado'})

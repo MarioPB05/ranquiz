@@ -113,6 +113,7 @@ function addComment(comment) {
     let date = new Date(comment.date);
     let awards = comment.awards;
     let id = comment.id;
+    let user_is_athor = comment.user_is_author;
 
     console.log(comment);
 
@@ -121,6 +122,12 @@ function addComment(comment) {
     element.removeAttr("id");
     element.removeClass("d-none").addClass("d-flex");
     element.attr("data-comment-id", id);
+
+    if (user_is_athor === true) {
+        element.find(".add_award").parent().remove();
+    }
+
+    console.log(user_is_athor);
 
     element.find(".comment_content").text(content);
     element.find(".author_name").text(author_name);
