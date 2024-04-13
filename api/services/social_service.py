@@ -30,7 +30,7 @@ def get_most_awarded_comments_from_list(share_code):
     list_element = get_list(share_code)
 
     if list_element is not None:
-        return ListComment.objects.annotate(award_prices=Sum("commentaward__award__price")).order_by('-award_prices')
+        return ListComment.objects.annotate(award_prices=Sum("commentaward__award__price")).order_by('award_prices')
 
     return None
 
@@ -54,7 +54,6 @@ def get_featured_comments_from_list(share_code, user):
     comentarios_ordenados = comentarios_anotados.order_by('is_selected_user', 'award_prices')
 
     return comentarios_ordenados
-
 
 
 def create_comment(content, author, share_code):
@@ -99,6 +98,19 @@ def get_award(award_id):
         return Award.objects.get(id=award_id)
     except Award.DoesNotExist:
         return None
+
+
+def check_user_award_in_comment(comment_id, user_id, award_id):
+    """Servicio para comprobar si un usuario ya ha otorgado un premio al comentario"""
+    selected_comment = get_comment(comment_id)
+    selected_user = user_id
+    selected_award = get_award(award_id)
+
+    if selected_comment is not None and selected_user is not None and selected_award is not None:
+        return CommentAward.objects.filter(comment=selected_comment, user=selected_user, award=selected_award).exists()
+
+    return False
+
 
 
 def add_award_to_comment(comment_id, selected_user, award_id):

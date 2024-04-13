@@ -2,7 +2,8 @@ from cloudinary import CloudinaryImage
 from django.http import JsonResponse
 
 from api.services.social_service import get_comments_from_list, create_comment, get_featured_comments_from_list, \
-    get_most_awarded_comments_from_list, get_awards_from_comment, get_comment, get_award, add_award_to_comment
+    get_most_awarded_comments_from_list, get_awards_from_comment, get_comment, get_award, add_award_to_comment, \
+    check_user_award_in_comment
 
 
 def get_comments(request, share_code):
@@ -14,7 +15,10 @@ def get_comments(request, share_code):
         comments = get_most_awarded_comments_from_list(share_code)
 
     elif mode == 'featured':
-        comments = get_featured_comments_from_list(share_code, request.user)
+        if request.user.is_authenticated:
+            comments = get_featured_comments_from_list(share_code, request.user)
+        else:
+            comments = get_most_awarded_comments_from_list(share_code)
 
     elif mode == 'recient':
         comments = get_comments_from_list(share_code)
@@ -61,6 +65,9 @@ def create_and_return_comment(request, share_code):
 def add_award_to_comment_function(request, share_code, comment_id):
     """Función para añadir un premio a un comentario"""
     award_id = request.POST.get('id_award')
+
+    if check_user_award_in_comment(comment_id, request.user, award_id):
+        return JsonResponse({'status': 'Error', 'message': 'Ya has otorgado este premio en este comentario'})
 
     if add_award_to_comment(comment_id, request.user, award_id):
         return JsonResponse({'status': 'Success', 'message': 'Premio otorgado'})
