@@ -10,26 +10,6 @@ let templateBuyableAward = $("#template_buyable_award");
 let comments = [];
 let awards = [];
 
-let exampleComment = {
-    "id": 1,
-    "author": {
-        "name": "John Doe",
-        "avatar": "https://via.placeholder.com/150"
-    },
-    "content": "This is a comment",
-    "date": "2021-05-01T12:00:00Z",
-    "awards": [
-        {
-            "id_award": 1,
-            "amount": 1
-        },
-
-        {
-            "id_award": 2,
-            "amount": 5
-        }
-    ]
-};
 
 /**
  * Obtiene los premios de la base de datos y los añade a la lista de premios en el comentario plantilla
@@ -70,7 +50,9 @@ function getAwards() {
     });
 }
 
-function addAwardToPage(comment, award_id, award) {
+function addAwardToComment(award_id, comment) {
+    let award = awards.find(award => award.id === award_id);
+
     if (comment.find(`div.award[data-award-id=${award_id}]`).length > 0) {
         comment.find(`div.award[data-award-id=${award_id}]`).find(".award_amount").text(parseInt(comment.find(`div.award[data-award-id=${award_id}]`).find(".award_amount").text()) + 1);
         console.log(comment.find(`div.award[data-award-id=${award_id}]`));
@@ -93,34 +75,17 @@ function addAwardToPage(comment, award_id, award) {
 }
 
 /**
- * Añade un premio a un comentario
+ * Sube un premio a la base de datos
  * @param award_id
  * @param comment
- * @param new_award
  */
-function addAwardToComment(award_id, comment, new_award = false) {
+function uploadAward(award_id, comment) {
     let award = awards.find(award => award.id === award_id);
-
-    if (new_award) {
-        uploadAward(award, comment);
-        return;
-    }
-
-    addAwardToPage(comment, award_id, award);
-}
-
-/**
- * Sube un premio a la base de datos
- * @param award
- * @param comment
- */
-function uploadAward(award, comment) {
     let id_comment = comment.attr("data-comment-id");
-    let id_award = award.id;
     let token = $('input[name=csrfmiddlewaretoken]').val();
 
-    promiseAjax(`/api/list/${share_code}/comment/${id_comment}/add_award`, "POST", {"id_award": id_award, "csrfmiddlewaretoken": token}).then(response => {
-        addAwardToPage(comment, id_award, award);
+    promiseAjax(`/api/list/${share_code}/comment/${id_comment}/add_award`, "POST", {"id_award": award_id, "csrfmiddlewaretoken": token}).then(response => {
+        addAwardToComment(comment, award_id, award);
     });
 }
 
@@ -295,7 +260,7 @@ $(document).ready(function () {
         console.log(award_id);
         console.log(comment);
 
-        addAwardToComment(award_id, comment, true);
+        uploadAward(award_id, comment, true);
     });
 
      removePageLoader();
