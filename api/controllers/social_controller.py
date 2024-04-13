@@ -1,4 +1,3 @@
-from cloudinary import CloudinaryImage
 from django.http import JsonResponse
 
 from api.services.social_service import get_comments_from_list, create_comment, get_featured_comments_from_list, \

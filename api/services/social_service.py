@@ -4,7 +4,6 @@ from django.utils import timezone
 
 from api.models import ListComment, CommentAward, Award
 from api.services.list_service import get_list
-from api.services.transaction_service import do_transaction
 
 
 def get_comment(comment_id):

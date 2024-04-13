@@ -43,7 +43,6 @@ function addAwardToComment(award_id, comment) {
 
     if (comment.find(`div.award[data-award-id=${award_id}]`).length > 0) {
         comment.find(`div.award[data-award-id=${award_id}]`).find(".award_amount").text(parseInt(comment.find(`div.award[data-award-id=${award_id}]`).find(".award_amount").text()) + 1);
-        console.log(comment.find(`div.award[data-award-id=${award_id}]`));
 
     } else {
         let award_element = templateAward.clone();
@@ -104,8 +103,6 @@ function addComment(comment) {
     let id = comment.id;
     let user_is_athor = comment.user_is_author;
 
-    console.log(comment);
-
     let element = templateComment.clone();
 
     element.removeAttr("id");
@@ -115,8 +112,6 @@ function addComment(comment) {
     if (user_is_athor === true) {
         element.find(".add_award").parent().remove();
     }
-
-    console.log(user_is_athor);
 
     element.find(".comment_content").text(content);
     element.find(".author_name").text(author_name);
@@ -145,7 +140,6 @@ function getComments(mode = "featured") {
     $("#comments_container").empty();
     comments = [];
 
-    console.log(blockUI)
     blockUI.block();
 
     promiseAjax(`/api/list/${share_code}/comments?mode=${mode}`).then(response => {
@@ -267,9 +261,6 @@ function onDocumentReady() {
     $("#comments_container").on("click", ".buyable_award", function () {
         let award_id = $(this).data("award-id");
         let comment = $(this).parent().parent().parent().parent();
-
-        console.log(award_id);
-        console.log(comment);
 
         uploadAward(award_id, comment, true);
     });
