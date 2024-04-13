@@ -5,50 +5,50 @@
 {% block content %}
     <div class="row full-height g-10">
         <div class="pe-lg-6 col-lg-8 h-100 mb-15 mb-lg-0">
-            <div class="w-100 h-auto h-lg-100 p-3 bg-primary-600 rounded position-relative">
+            <div class="w-100 h-auto h-lg-100 p-3 bg-primary-600 rounded position-relative pb-10">
                 <div class="d-flex flex-column p-8 gap-10 h-100 align-items-center">
-                    <div class="d-flex flex-row justify-content-between align-items-center w-100">
-                        <h2 class="text-white m-0">{{ list.name }}</h2>
-                        <a href="" class="bg-white p-2 ps-4 pe-4 rounded shadow d-flex gap-3 align-items-center">
+                    <div class="row justify-content-between align-items-center w-100">
+                        <h2 class="text-white m-0 col-md-8 mb-lg-0 mb-5 text-md-start text-center">{{ list.name }}</h2>
+                        <a href="" class="m-md-0 m-auto bg-white mw-200px p-2 ps-4 pe-4 rounded shadow d-flex justify-content-center gap-3 align-items-center col-md-4">
                             <label href="" class="text-dark fw-bolder cursor-pointer">{{ list.owner.username }}</label>
                             {% cloudinary data.avatar class="rounded-circle" width="50" height="50" crop="fill"  %}
                         </a>
                     </div>
-                    <div class="w-100 h-lg-100 rounded min-h-250px min-h-lg-100px">
-                        {% cloudinary list.image class="w-100 h-100 mh-250px rounded" style="object-fit: cover" %}
+                    <div class="w-100 h-lg-100 rounded">
+                        {% cloudinary list.image class="w-100 h-100 mh-200px rounded" style="object-fit: cover" %}
                     </div>
-                    <div class="d-flex flex-wrap align-center justify-content-center gap-20">
+                    <div class="d-flex flex-wrap align-center justify-content-center gap-lg-20 gap-10">
                         <div class="d-flex flex-column gap-3 align-items-center">
                             <div class="bg-white p-4 rounded-circle">
                                 <i class="fs-2x text-muted bi bi-controller"></i>
                             </div>
-                            <label class="text-white fw-bolder fs-3">2351</label>
+                            <label class="text-white fw-bolder fs-3">0</label>
                         </div>
                         <div class="d-flex flex-column gap-3 align-items-center">
                             <div class="bg-white p-4 rounded-circle cursor-pointer hover-icon-color-coral">
                                 <i id="heart-count" class="fs-2x text-muted bi bi-heart-fill mt-3"></i>
                             </div>
-                            <label id="count-hearts" class="text-white fw-bolder fs-3">1500</label>
+                            <label id="count-hearts" class="text-white fw-bolder fs-3">0</label>
                         </div>
                         <div class="d-flex flex-column gap-3 align-items-center">
                             <div class="bg-white p-4 rounded-circle cursor-pointer hover-icon-color-lightyellow">
                                 <i id="star-count" class="fs-2x text-muted bi bi-star-fill"></i>
                             </div>
-                            <label id="count-stars" class="text-white fw-bolder fs-3">203</label>
+                            <label id="count-stars" class="text-white fw-bolder fs-3">0</label>
                         </div>
                     </div>
                     <div class="d-flex flex-sm-row mb-20px flex-column gap-10 justify-content-between ps-10 pe-10 w-100">
                         <div class="d-flex flex-column gap-4 w-60">
-                            <div class="d-flex flex-row text-white gap-3 fs-4">
-                                <label class="fw-bolder">Elementos :</label>
+                            <div class="text-white fs-5 fs-md-4">
+                                <label class="fw-bolder">Elementos: </label>
                                 <label>{{ data.elements }}</label>
                             </div>
-                            <div class="d-flex flex-row text-white gap-3 fs-4">
-                                <label class="fw-bolder">Creación :</label>
+                            <div class="text-white fs-5 fs-md-4">
+                                <label class="fw-bolder">Creación: </label>
                                 <label>{{ list.creation_date|date:"d/m/Y" }}</label>
                             </div>
-                            <div class="d-flex flex-row text-white gap-3 fs-4">
-                                <label class="fw-bolder">Ultima edición :</label>
+                            <div class="text-white fs-5 fs-md-4">
+                                <label class="fw-bolder">Ultima edición: </label>
                                 <label>{{ list.edit_date|date:"d/m/Y" }}</label>
                             </div>
                         </div>
@@ -66,9 +66,9 @@
                     </a>
 
                     {% if user.is_authenticated %}
-                        <div class="d-flex align-items-center position-absolute bg-primary-500 border border-1 border-dark rounded text-white justify-content-center mh-50px w-50" style="bottom: -20px">
-                            <a href=""><i class="fs-4x text-white bi bi-play-fill"></i></a>
-                        </div>
+                        <a href="" class="d-flex align-items-center position-absolute bg-primary-500 border border-1 border-dark rounded text-white justify-content-center mh-50px w-50" style="bottom: -20px">
+                            <i class="fs-4x text-white bi bi-play-fill"></i>
+                        </a>
                     {% endif %}
                 </div>
             </div>
