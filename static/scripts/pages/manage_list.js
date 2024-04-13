@@ -7,6 +7,7 @@ const categories = [];
 const maxCategories = 5;
 const maxCategoryLength = 25;
 let allCategories = [];
+const flatpickrInstance = initializeFlatpickr("#range_date_highlight", 'range', moment().format('YYYY-MM-DD')); // skipcq: JS-0125
 
 
 /**
@@ -208,7 +209,7 @@ function updateHighlightPrice() {
  * Cancelar el destacado
  */
 function cancelHighlight() {
-    $('#range_date_highlight').flatpickr().clear();
+    flatpickrInstance.clear();
     $('#highlight_price').text('0');
 }
 
@@ -397,7 +398,7 @@ function beforeSendForm() {
 }
 
 $(document).ready(function () {
-    initializeFlatpickr("#range_date_highlight", 'range', moment().format('DD-MM-YYYY')); // skipcq: JS-0125
+    // initializeFlatpickr("#range_date_highlight", 'range', moment().format('DD-MM-YYYY')); // skipcq: JS-0125
 
     $('#name').maxlength({
         warningClass: "badge badge-primary",
