@@ -71,28 +71,34 @@ def add_award_to_comment_function(request, share_code, comment_id):
     selected_comment = get_comment(comment_id)
     selected_award = get_award(award_id)
 
+    # Verificar si el usuario ya otorgó este premio en este comentario
     if check_user_award_in_comment(comment_id, request.user, award_id):
         return JsonResponse({'status': 'Error', 'message': 'Ya has otorgado este premio en este comentario'})
 
+    # Verificar si el usuario está intentando otorgar un premio a su propio comentario
     if request.user.id == selected_comment.user.id:
         return JsonResponse({'status': 'Error', 'message': 'No puedes otorgar un premio a tu propio comentario'})
 
+    # Realizar la transacción para pagar el premio
     transaction_paid = do_transaction(request.user, -selected_award.price, "Premio otorgado")
-
     if transaction_paid is None:
         return JsonResponse({'status': 'Error', 'message': 'No tienes suficientes puntos para otorgar este premio'})
 
+    # Realizar la transacción para recibir el premio
     transaction_received = do_transaction(selected_comment.user, selected_award.price, "Premio recibido")
-
     if transaction_received is None:
+        # Reembolsar al usuario si hay un error al recibir el premio
         do_transaction(request.user, selected_award.price, "Premio reembolsado por error al otorgar el premio")
         return JsonResponse({'status': 'Error', 'message': 'Error al otorgar el premio'})
+
     try:
+        # Intentar agregar el premio al comentario
         if add_award_to_comment(comment_id, request.user, award_id):
             return JsonResponse({'status': 'Success', 'message': 'Premio otorgado'})
 
     except Exception as e:
+        # Reembolsar a los usuarios si hay un error al agregar el premio al comentario
         do_transaction(request.user, selected_award.price, "Premio reembolsado por error al otorgar el premio")
-        do_transaction(selected_comment.user, -selected_award.price,"Premio reembolsado por error al otorgar el premio")
+        do_transaction(selected_comment.user, -selected_award.price, "Premio reembolsado por error al otorgar el premio")
 
     return JsonResponse({'status': 'Error', 'message': 'Error al otorgar el premio'})
