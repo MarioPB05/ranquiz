@@ -112,19 +112,12 @@ def check_user_award_in_comment(comment_id, user_id, award_id):
     return False
 
 
-
 def add_award_to_comment(comment_id, selected_user, award_id):
     """
     Servicio para añadir un premio a un comentario
     """
     selected_comment = get_comment(comment_id)
     selected_award = get_award(award_id)
-    comment_user = selected_comment.user
-
-    if (do_transaction(selected_user, -selected_award.price, "Premio otorgado") is None or
-            do_transaction(comment_user, selected_award.price, "Premio recibido") is None):
-        # TODO: Devolver dinero al usuario si se produce un error
-        return False
 
     if selected_comment is not None and selected_user is not None:
         CommentAward.objects.create(comment=selected_comment, user=selected_user, award=selected_award)
