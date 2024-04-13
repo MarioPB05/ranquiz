@@ -79,6 +79,7 @@ function uploadAward(award_id, comment) {
         if (response.status === "Success") {
             addAwardToComment(award_id, comment);
             toastMessage("success", "Premio otorgado");
+            // TODO: Actualizar la cantidad actual de monedas en el header
         }else if (response.status === "Error") {
             toastMessage("error", response.message);
         }
@@ -219,6 +220,7 @@ function toggleRecientComments() {
 }
 
 function handleIconClick() {
+    // TODO: Refactorizar
     // Función para manejar el clic en los elementos de corazones y estrellas
     $('.cursor-pointer').click(function() {
         var countLabel = $(this).next('label');
@@ -250,18 +252,19 @@ function handleIconClick() {
     });
 }
 
-// Llamar a la función para que maneje los clics en los iconos
-handleIconClick();
-
-$(document).ready(function () {
+/**
+ * Función que se ejecuta cuando el documento está listo
+ */
+function onDocumentReady() {
     getAwards();
     getComments();
+    handleIconClick();
 
     $("#write_comment").click(writeComment);
 
     $("#recientComents").click(toggleRecientComments)
 
-     $("#comments_container").on("click", ".buyable_award", function () {
+    $("#comments_container").on("click", ".buyable_award", function () {
         let award_id = $(this).data("award-id");
         let comment = $(this).parent().parent().parent().parent();
 
@@ -271,7 +274,7 @@ $(document).ready(function () {
         uploadAward(award_id, comment, true);
     });
 
-     removePageLoader();
-});
+    removePageLoader();
+}
 
-
+$(document).ready(onDocumentReady);
