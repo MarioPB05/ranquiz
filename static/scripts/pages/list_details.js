@@ -83,9 +83,22 @@ function uploadAward(award_id, comment) {
     let award = awards.find(award => award.id === award_id);
     let id_comment = comment.attr("data-comment-id");
     let token = $('input[name=csrfmiddlewaretoken]').val();
+    let comment_add_award = comment.find(".add_award");
+    comment_add_award.attr("disabled", "disabled");
+    comment_add_award.addClass("opacity-75");
 
     promiseAjax(`/api/list/${share_code}/comment/${id_comment}/add_award`, "POST", {"id_award": award_id, "csrfmiddlewaretoken": token}).then(response => {
-        addAwardToComment(comment, award_id, award);
+        if (response.status === "Success") {
+            addAwardToComment(award_id, comment);
+            toastMessage("success", "Premio otorgado");
+        }else if (response.status === "Error") {
+            toastMessage("error", response.message);
+        }
+        comment_add_award.removeAttr("disabled");
+        comment_add_award.removeClass("opacity-75");
+    }).catch(error => {
+        toastMessage("error", "Error al subir el premio");
+        comment_add_award.removeClass("opacity-75");
     });
 }
 
