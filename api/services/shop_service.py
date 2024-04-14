@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from django.db.models import Count, Q, F
+
 from api.models import Avatar, UserTransaction, HighlightedList
 from api.services.list_service import get_list
 
@@ -13,8 +15,22 @@ def get_avatar(avatar_id):
 
 
 def get_all_avatars():
-    """Obtiene todos los avatares"""
+    """Obtiene todos los avatares ordenados por rareza"""
     return Avatar.objects.all().order_by('rarity_id')
+
+
+def get_avatars_by_popularity():
+    """Obtiene los avatares por popularidad"""
+    return Avatar.objects.annotate(
+            popularity=Count('user__avatar')
+        ).order_by('-popularity')
+
+
+def get_avatars_by_bought(user_id):
+    """Obtiene los avatares por compras"""
+    return Avatar.objects.annotate(
+        user_have_bought=Count('useravatar', filter=Q(useravatar__user_id=user_id) | Q(rarity__id=1))
+    ).order_by('-user_have_bought')
 
 
 def calculate_highlight_price(start_date, end_date):

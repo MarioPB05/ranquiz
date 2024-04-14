@@ -71,6 +71,7 @@ function getAvatars(mode="rarity") {
         });
     }).catch((error) => {
         toastMessage("error", "Error al obtener los avatares");
+        avatarBlockUI.release();
     });
 }
 

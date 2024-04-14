@@ -1,6 +1,7 @@
 from django.http import JsonResponse
 
-from api.services.shop_service import calculate_highlight_price, get_all_avatars
+from api.services.shop_service import calculate_highlight_price, get_all_avatars, get_avatars_by_popularity, \
+    get_avatars_by_bought
 
 
 def highlight_calculator(request):
@@ -20,6 +21,10 @@ def get_avatars(request):
 
     if mode == 'rarity':
         avatars = get_all_avatars()
+    elif mode == 'popular':
+        avatars = get_avatars_by_popularity()
+    elif mode == 'bought':
+        avatars = get_avatars_by_bought(request.user.id)
 
     for avatar in avatars:
         result.append({
