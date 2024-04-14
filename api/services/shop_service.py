@@ -51,6 +51,22 @@ def buy_avatar(user, avatar_id):
     return None
 
 
+def equip_avatar(user, avatar_id):
+    """Equipa un avatar"""
+    avatar = get_avatar(avatar_id)
+
+    # Si el usuario no tiene el avatar, no se realiza la equipación
+    if not UserAvatar.objects.filter(user=user, avatar=avatar).exists():
+        return None
+
+    if avatar is not None and user is not None:
+        user.avatar = avatar
+        user.save()
+        return user.avatar
+
+    return None
+
+
 def calculate_highlight_price(start_date, end_date):
     """Calcula el precio de destacar una lista"""
     start_date = datetime.strptime(start_date, "%Y-%m-%d").date()

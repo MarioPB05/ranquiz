@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 
 from api.services.shop_service import calculate_highlight_price, get_all_avatars, get_avatars_by_popularity, \
-    get_avatars_by_bought, buy_avatar
+    get_avatars_by_bought, buy_avatar, equip_avatar
 
 
 def highlight_calculator(request):
@@ -40,12 +40,21 @@ def get_avatars(request):
     return JsonResponse({'avatars': result})
 
 
-def buy_a_avatar(request):
+def buy_a_avatar(request, avatar_id):
     """Controlador que compra un avatar"""
     user = request.user
-    avatar_id = request.GET.get('avatar_id')
 
     if buy_avatar(user, avatar_id) is None:
         return JsonResponse({'status': 'error', 'message': 'Ha ocurrido un error al comprar el avatar'})
 
     return JsonResponse({'status': 'success', 'message': 'El avatar ha sido comprado'})
+
+
+def equip_a_avatar(request, avatar_id):
+    """Controlador que equipa un avatar"""
+    user = request.user
+
+    if equip_avatar(user, avatar_id) is None:
+        return JsonResponse({'status': 'error', 'message': 'Ha ocurrido un error al equipar el avatar'})
+
+    return JsonResponse({'status': 'success', 'message': 'El avatar ha sido equipado'})

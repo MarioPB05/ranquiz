@@ -97,10 +97,17 @@ function buyAvatar(avatarId) {
  * @param avatarId
  */
 function equipAvatar(avatarId) {
-    // TODO: Equpar el avatar en base de datos
-    changeButtonToBought($(".equipped_avatar").parent().parent());
-    changeButtonToEquipped($(`div[data-id=${avatarId}]`));
-    toastMessage("success", "Avatar equipado");
+    promiseAjax(`/api/shop/avatar/${avatarId}/equip`, "GET").then((response) => {
+        if (response.status === "success") {
+            changeButtonToBought($(".equipped_avatar").parent().parent());
+            changeButtonToEquipped($(`div[data-id=${avatarId}]`));
+            toastMessage("success", "Avatar equipado");
+        } else {
+            toastMessage("error", response.message);
+        }
+    }).catch((error) => {
+        toastMessage("error", "Error al equipar el avatar");
+    });
 }
 
 /**
