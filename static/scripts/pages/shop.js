@@ -1,7 +1,7 @@
 import { removePageLoader, toastMessage, promiseAjax } from "/static/assets/js/ranquiz/utils.js";
 
 const avatarTemplate = $("#avatar_template");
-const avatarBlockUI = new KTBlockUI($("#avatar_container").parent()[0], {
+const avatarBlockUI = new KTBlockUI($("#avatar_container").parent()[0], {  // skipcq: JS-0125
     message: '<div class="blockui-message"><span class="spinner-border text-primary"></span> Cargando avatares...</div>',
 });
 
@@ -21,7 +21,7 @@ let avatars = [];
 function changeButtonToEquipped(avatar) {
     avatar.find("button").empty();
     avatar.find("button").removeClass("buy_avatar").removeClass("equip_avatar").addClass("equipped_avatar");
-    avatar.find("button").html(`<i class='bi bi-person-square'></i> Equipado`);
+    avatar.find("button").html("<i class='bi bi-person-square'></i> Equipado");
     avatar.find("button").addClass("btn-success").removeClass("btn-info").removeClass("btn-primary");
 }
 
@@ -69,7 +69,7 @@ function getAvatars(mode="rarity") {
 
             newAvatar.appendTo("#avatar_container");
         });
-    }).catch((error) => {
+    }).catch(() => {
         toastMessage("error", "Error al obtener los avatares");
         avatarBlockUI.release();
     });
@@ -87,7 +87,7 @@ function buyAvatar(avatarId) {
        } else {
            toastMessage("error", response.message);
        }
-    }).catch((error) => {
+    }).catch(() => {
         toastMessage("error", "Error al comprar el avatar");
     });
 }
@@ -105,7 +105,7 @@ function equipAvatar(avatarId) {
         } else {
             toastMessage("error", response.message);
         }
-    }).catch((error) => {
+    }).catch(() => {
         toastMessage("error", "Error al equipar el avatar");
     });
 }
