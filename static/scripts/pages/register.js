@@ -20,8 +20,10 @@ function loadCountries() {
     });
 }
 
-$(document).ready(() => {
-
+/**
+ * Esta función se llama cuando el documento está listo
+ */
+function onDocumentReady() {
     const element = document.querySelector("#register_stepper");
     const stepper = new KTStepper(element);  // skipcq: JS-0125
 
@@ -33,4 +35,6 @@ $(document).ready(() => {
     loadCountries();
 
     removePageLoader();
-});
+}
+
+$(document).ready(onDocumentReady);

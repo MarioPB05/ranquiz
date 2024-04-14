@@ -49,6 +49,7 @@ class User(AbstractBaseUser, TimeStamped):
     )
     avatar = models.ForeignKey('Avatar', on_delete=models.DO_NOTHING)
     client = models.ForeignKey('Client', on_delete=models.DO_NOTHING)
+    money = models.IntegerField(default=30)
 
     objects = UserManager()
 

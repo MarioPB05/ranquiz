@@ -7,6 +7,7 @@ const categories = [];
 const maxCategories = 5;
 const maxCategoryLength = 25;
 let allCategories = [];
+const flatpickrInstance = initializeFlatpickr("#range_date_highlight", 'range', moment().format('YYYY-MM-DD')); // skipcq: JS-0125
 
 
 /**
@@ -208,7 +209,7 @@ function updateHighlightPrice() {
  * Cancelar el destacado
  */
 function cancelHighlight() {
-    $('#range_date_highlight').flatpickr().clear();
+    flatpickrInstance.clear();
     $('#highlight_price').text('0');
 }
 
@@ -227,7 +228,7 @@ function anyItemInputEmpty() {
     // Comprueba si hay algún input de item vacío
     let empty = false;
 
-    $('#items_container .list_item:not(#item_template)').find('input[type="text"]').each(function () {
+    $('#items_container .list_item:not(#item_template)').find('input[type="text"]').each(() => {
         if ($(this).val() === '') {
             empty = true;
             return false;
@@ -327,7 +328,7 @@ function removeCategory(event) {
  */
 function getCategories() {
     promiseAjax('/api/category/').then(response => {
-        allCategories = response.categories.map(function(category) {
+        allCategories = response.categories.map((category) => {
             return category.name;
         });
 
@@ -396,9 +397,10 @@ function beforeSendForm() {
     $('#categories').val(categories);
 }
 
-$(document).ready(function () {
-    initializeFlatpickr("#range_date_highlight", 'range', moment().format('DD-MM-YYYY')); // skipcq: JS-0125
-
+/**
+ * Esta función se llama cuando el documento está listo
+ */
+function onDocumentReady() {
     $('#name').maxlength({
         warningClass: "badge badge-primary",
         limitReachedClass: "badge badge-danger"
@@ -441,11 +443,11 @@ $(document).ready(function () {
     $("#cancel_highlight").on("click", cancelHighlight);
 
     getCategories();
-    $('#add_category_button').on('click', function () {
+    $('#add_category_button').on('click', () => {
         addCategory($('#add_category').val());
     });
 
-    $("#categories_container").on('click', '.category' ,removeCategory);
+    $("#categories_container").on('click', '.category', removeCategory);
 
     // Añadir los items mínimos
     for (let i = 0; i < minItems; i++) {
@@ -455,4 +457,6 @@ $(document).ready(function () {
     $('button[type=submit]').on('click', beforeSendForm);
 
     removePageLoader();
-});
+}
+
+$(document).ready(onDocumentReady);
