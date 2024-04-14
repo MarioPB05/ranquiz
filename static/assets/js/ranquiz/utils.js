@@ -81,4 +81,28 @@ function toastMessage(icon, message) {
     });
 }
 
-export {removePageLoader, initializeFlatpickr, promiseAjax, toastMessage};
+function infoLog(message) {
+    console.log(
+        '%c INFO ',
+        'background-color: #BD20E9;color: white;font-weight: bold;border-radius:2px;padding: 2px 6px;',
+        message
+    );
+}
+
+function warningLog(message) {
+    console.log(
+        '%c WARNING ',
+        'background-color: #f1bc00;color: white;font-weight: bold;border-radius:2px;padding: 2px 6px;',
+        message
+    );
+}
+
+function errorLog(message) {
+    console.log(
+        '%c ERROR ',
+        'background-color: #d9214e;color: white;font-weight: bold;border-radius:2px;padding: 2px 6px;',
+        message
+    );
+}
+
+export {removePageLoader, initializeFlatpickr, promiseAjax, toastMessage, infoLog, warningLog, errorLog};
