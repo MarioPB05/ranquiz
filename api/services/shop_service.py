@@ -12,6 +12,11 @@ def get_avatar(avatar_id):
         return None
 
 
+def get_all_avatars():
+    """Obtiene todos los avatares"""
+    return Avatar.objects.all().order_by('rarity_id')
+
+
 def calculate_highlight_price(start_date, end_date):
     """Calcula el precio de destacar una lista"""
     start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
