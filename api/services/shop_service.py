@@ -42,7 +42,7 @@ def buy_avatar(user, avatar_id):
         return None
 
     if avatar is not None and user is not None:
-        transaction = 1  # TODO: Realizar transacción y devolver el objeto
+        transaction = UserTransaction.objects.first()  # TODO: Realizar transacción y devolver el objeto
 
         if transaction is not None:
             UserAvatar.objects.create(user=user, avatar=avatar, transaction=transaction)
