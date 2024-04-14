@@ -80,9 +80,16 @@ function getAvatars(mode="rarity") {
  * @param avatarId
  */
 function buyAvatar(avatarId) {
-    // TODO: Comprar el avatar en base de datos
-    changeButtonToBought($(`div[data-id=${avatarId}]`));
-    toastMessage("success", "Avatar comprado");
+    promiseAjax(`/api/shop/avatar/${avatarId}/buy`, "POST").then((response) => {
+       if (response.status  === "success") {
+           changeButtonToBought($(`div[data-id=${avatarId}]`));
+           toastMessage("success", response.message);
+       } else {
+           toastMessage("error", response.message);
+       }
+    }).catch((error) => {
+        toastMessage("error", "Error al comprar el avatar");
+    });
 }
 
 /**

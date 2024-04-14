@@ -1,8 +1,8 @@
 from datetime import datetime
 
-from django.db.models import Count, Q, F
+from django.db.models import Count, Q
 
-from api.models import Avatar, UserTransaction, HighlightedList
+from api.models import Avatar, UserTransaction, HighlightedList, UserAvatar
 from api.services.list_service import get_list
 
 
@@ -31,6 +31,24 @@ def get_avatars_by_bought(user_id):
     return Avatar.objects.annotate(
         user_have_bought=Count('useravatar', filter=Q(useravatar__user_id=user_id) | Q(rarity__id=1))
     ).order_by('-user_have_bought')
+
+
+def buy_avatar(user, avatar_id):
+    """Compra un avatar"""
+    avatar = get_avatar(avatar_id)
+
+    # Si el usuario ya tiene el avatar, no se realiza la compra
+    if UserAvatar.objects.filter(user=user, avatar=avatar).exists():
+        return None
+
+    if avatar is not None and user is not None:
+        transaction = 1  # TODO: Realizar transacción y devolver el objeto
+
+        if transaction is not None:
+            UserAvatar.objects.create(user=user, avatar=avatar, transaction=transaction)
+            return user.avatar
+
+    return None
 
 
 def calculate_highlight_price(start_date, end_date):
