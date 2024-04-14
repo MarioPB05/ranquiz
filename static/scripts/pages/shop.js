@@ -1,4 +1,4 @@
-import { removePageLoader, toastMessage } from "/static/assets/js/ranquiz/utils.js";
+import { removePageLoader, toastMessage, promiseAjax } from "/static/assets/js/ranquiz/utils.js";
 
 const avatarTemplate = $("#avatar_template");
 const avatarBlockUI = new KTBlockUI($("#avatar_container").parent()[0], {
@@ -13,25 +13,6 @@ const rarityColors = {
 }
 
 let avatars = [];
-const exampleAvatar = {
-    "id": 1,
-    "name": "Tom",
-    "image": "http://res.cloudinary.com/dhewpzvg9/image/upload/v1712514744/avatars/kidcithbb1ogolsssdma.png",
-    "price": 15,
-    "rarity": "Inicial",
-    "bought": false,
-    "equipped": false,
-}
-
-const exampleAvatar2 = {
-    "id": 2,
-    "name": "Carlos",
-    "image": "http://res.cloudinary.com/dhewpzvg9/image/upload/v1712514744/avatars/kidcithbb1ogolsssdma.png",
-    "price": 15,
-    "rarity": "Inicial",
-    "bought": false,
-    "equipped": false,
-}
 
 /**
  * Función que cambia el botón a equipado
@@ -60,33 +41,36 @@ function changeButtonToBought(avatar) {
  * @param mode
  */
 function getAvatars(mode="rarity") {
-    // TODO: Obtener los avatares de base de datos
     avatarBlockUI.block();
     $("#avatar_container").empty();
 
-    avatarBlockUI.release();
-    avatars = [exampleAvatar, exampleAvatar2];
+    promiseAjax(`/api/shop/avatar?mode=${mode}`, "GET").then((response) => {
+        avatarBlockUI.release();
+        avatars = response.avatars;
 
-    $.each(avatars, (index, avatar) => {
-        const newAvatar = avatarTemplate.clone();
+        $.each(avatars, (index, avatar) => {
+            const newAvatar = avatarTemplate.clone();
 
-        newAvatar.removeAttr("id");
-        newAvatar.removeClass("d-none").addClass("d-flex");
-        newAvatar.attr("data-id", avatar.id);
-        newAvatar.find(".avatar_image").attr("src", avatar.image);
-        newAvatar.find(".avatar_name").text(avatar.name);
-        newAvatar.find(".avatar_price").text(avatar.price);
-        newAvatar.find(".avatar_rarity").text(avatar.rarity);
-        newAvatar.find(".avatar_rarity").addClass(rarityColors[avatar.rarity]);
+            newAvatar.removeAttr("id");
+            newAvatar.removeClass("d-none").addClass("d-flex");
+            newAvatar.attr("data-id", avatar.id);
+            newAvatar.find(".avatar_image").attr("src", avatar.image);
+            newAvatar.find(".avatar_name").text(avatar.name);
+            newAvatar.find(".avatar_price").text(avatar.price);
+            newAvatar.find(".avatar_rarity").text(avatar.rarity);
+            newAvatar.find(".avatar_rarity").addClass(rarityColors[avatar.rarity]);
 
-        if (avatar.bought && avatar.equipped) {
-            changeButtonToEquipped(newAvatar);
+            if (avatar.bought && avatar.equipped) {
+                changeButtonToEquipped(newAvatar);
 
-        }else if (avatar.bought) {
-            changeButtonToBought(newAvatar);
-        }
+            }else if (avatar.bought) {
+                changeButtonToBought(newAvatar);
+            }
 
-        newAvatar.appendTo("#avatar_container");
+            newAvatar.appendTo("#avatar_container");
+        });
+    }).catch((error) => {
+        toastMessage("error", "Error al obtener los avatares");
     });
 }
 

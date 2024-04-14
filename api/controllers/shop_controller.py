@@ -24,12 +24,12 @@ def get_avatars(request):
     for avatar in avatars:
         result.append({
             'id': avatar.id,
-            'name': avatar.name,
+            'name': avatar.title,
             'rarity': avatar.rarity.name,
             'price': avatar.rarity.price,
-            'image': avatar.image,
-            'bought': avatar.useravatar_set.filter(avatar=avatar, user=request.user).exists(),
+            'image': f"https://res.cloudinary.com/dhewpzvg9/{avatar.image}",
+            'bought': avatar.rarity.id == 1 or avatar.useravatar_set.filter(avatar=avatar, user=request.user).exists(),
             'equipped': request.user.avatar.id == avatar.id,
         })
 
-    return JsonResponse({'avatars': [result]})
+    return JsonResponse({'avatars': result})
