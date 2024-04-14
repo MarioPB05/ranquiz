@@ -26,7 +26,7 @@ def get_avatars_by_popularity():
         ).order_by('-popularity')
 
 
-def get_avatars_by_bought(user_id):
+def get_avatars_by_purchased(user_id):
     """Obtiene los avatares por compras"""
     return Avatar.objects.annotate(
         user_have_bought=Count('useravatar', filter=Q(useravatar__user_id=user_id) | Q(rarity__id=1))
