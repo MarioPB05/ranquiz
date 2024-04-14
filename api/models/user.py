@@ -49,12 +49,17 @@ class User(AbstractBaseUser, TimeStamped):
     )
     avatar = models.ForeignKey('Avatar', on_delete=models.DO_NOTHING)
     client = models.ForeignKey('Client', on_delete=models.DO_NOTHING)
+    is_admin = models.BooleanField(default=False)
     money = models.IntegerField(default=30)
 
     objects = UserManager()
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['share_code', 'avatar', 'client']
+
+    @property
+    def is_staff(self):
+        return self.is_admin
 
     def __str__(self):
         return self.username + ' (' + self.share_code + ')'
