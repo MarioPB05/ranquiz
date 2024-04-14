@@ -57,10 +57,12 @@ class User(AbstractBaseUser, TimeStamped):
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['share_code', 'avatar', 'client']
 
-    def has_perm(self, perm, obj=None):
+    def has_perm(self, perm, obj=None):  # skipcq: PYL-W0613
+        """Devuelve si el usuario tiene permiso"""
         return self.is_admin
 
-    def has_module_perms(self, app_label):
+    def has_module_perms(self, app_label):  # skipcq: PYL-W0613
+        """Devuelve si el usuario tiene permisos para un módulo"""
         return self.is_admin
 
     @property
