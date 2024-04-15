@@ -86,11 +86,11 @@ function toastMessage(icon, message) {
  * @param message
  */
 function infoLog(message) {
-    console.log(
+    console.log(  // skipcq: JS-0002
         '%c INFO ',
         'background-color: #BD20E9;color: white;font-weight: bold;border-radius:2px;padding: 2px 6px;',
         message
-    ); // skipcq: JS-0002
+    );
 }
 
 /**
@@ -98,11 +98,11 @@ function infoLog(message) {
  * @param message
  */
 function warningLog(message) {
-    console.log(
+    console.log( // skipcq: JS-0002
         '%c WARNING ',
         'background-color: #f1bc00;color: white;font-weight: bold;border-radius:2px;padding: 2px 6px;',
         message
-    ); // skipcq: JS-0002
+    );
 }
 
 /**
@@ -110,11 +110,11 @@ function warningLog(message) {
  * @param message
  */
 function errorLog(message) {
-    console.log(
+    console.log( // skipcq: JS-0002
         '%c ERROR ',
         'background-color: #d9214e;color: white;font-weight: bold;border-radius:2px;padding: 2px 6px;',
         message
-    ); // skipcq: JS-0002
+    );
 }
 
 export {removePageLoader, initializeFlatpickr, promiseAjax, toastMessage, infoLog, warningLog, errorLog};
