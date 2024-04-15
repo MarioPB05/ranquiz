@@ -40,7 +40,7 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
             }))
             await self.close()
 
-    async def disconnect(self, close_code):
+    async def disconnect(self, close_code):  # skipcq: PYL-W0613
         """Función que se ejecuta cuando se desconecta el cliente"""
         user = self.scope['user']
 
