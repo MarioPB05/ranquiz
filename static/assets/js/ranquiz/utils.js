@@ -81,6 +81,10 @@ function toastMessage(icon, message) {
     });
 }
 
+/**
+ * Esta función se encarga de mostrar un mensaje de tipo info en la consola
+ * @param message
+ */
 function infoLog(message) {
     console.log(
         '%c INFO ',
@@ -89,6 +93,10 @@ function infoLog(message) {
     ); // skipcq: JS-0002
 }
 
+/**
+ * Esta función se encarga de mostrar un mensaje de tipo warning en la consola
+ * @param message
+ */
 function warningLog(message) {
     console.log(
         '%c WARNING ',
@@ -97,6 +105,10 @@ function warningLog(message) {
     ); // skipcq: JS-0002
 }
 
+/**
+ * Esta función se encarga de mostrar un mensaje de tipo error en la consola
+ * @param message
+ */
 function errorLog(message) {
     console.log(
         '%c ERROR ',
