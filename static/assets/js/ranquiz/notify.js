@@ -1,5 +1,7 @@
 import {errorLog, infoLog, warningLog} from "/static/assets/js/ranquiz/utils.js";
 
+const startTime = performance.now();
+
 function onOpen() {
     const connectionTime = performance.now() - startTime;
 
@@ -18,9 +20,6 @@ function onMessage(event) {
 function onError() {
     errorLog('Error en la conexión del sistema de notificaciones');
 }
-
-
-const startTime = performance.now();
 
 const socket = new WebSocket('ws://127.0.0.1:8000/ws/notifications/');
 
