@@ -12,7 +12,7 @@ function onClose() {
 
 function onMessage(event) {
     const message = JSON.parse(event.data);
-    console.log('Mensaje recibido del servidor WebSocket:', message);
+    console.log('Mensaje recibido del servidor WebSocket:', message); // skipcq: JS-0002
 }
 
 function onError() {

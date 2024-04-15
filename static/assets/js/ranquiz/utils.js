@@ -86,7 +86,7 @@ function infoLog(message) {
         '%c INFO ',
         'background-color: #BD20E9;color: white;font-weight: bold;border-radius:2px;padding: 2px 6px;',
         message
-    );
+    ); // skipcq: JS-0002
 }
 
 function warningLog(message) {
@@ -94,7 +94,7 @@ function warningLog(message) {
         '%c WARNING ',
         'background-color: #f1bc00;color: white;font-weight: bold;border-radius:2px;padding: 2px 6px;',
         message
-    );
+    ); // skipcq: JS-0002
 }
 
 function errorLog(message) {
@@ -102,7 +102,7 @@ function errorLog(message) {
         '%c ERROR ',
         'background-color: #d9214e;color: white;font-weight: bold;border-radius:2px;padding: 2px 6px;',
         message
-    );
+    ); // skipcq: JS-0002
 }
 
 export {removePageLoader, initializeFlatpickr, promiseAjax, toastMessage, infoLog, warningLog, errorLog};
