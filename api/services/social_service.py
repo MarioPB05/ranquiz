@@ -1,4 +1,4 @@
-from django.db.models import Sum, F, Case, When, Value, IntegerField, Count
+from django.db.models import Sum, Case, When, Value, IntegerField, Count
 
 from django.utils import timezone
 
@@ -97,7 +97,7 @@ def get_awards_from_comments(comments):
         # Si el ID del comentario ya está en el diccionario, agregar el premio a la lista existente
         if comment_id in awards_dict:
             awards_dict[comment_id].append({'id_award': award_id, 'amount': amount})
-        # Si el ID del comentario no está en el diccionario, crear una nueva entrada con una lista que contenga el premio
+        # Si el ID del comentario no está en el diccionario, crearlo con una lista que contenga el premio
         else:
             awards_dict[comment_id] = [{'id_award': award_id, 'amount': amount}]
 

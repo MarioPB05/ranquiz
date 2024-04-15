@@ -33,7 +33,7 @@ function getAwards() {
             award_element.appendTo(templateComment.find(".menu"));
         });
 
-    }).catch(error => {
+    }).catch(() => {
         toastMessage("error", "Error al obtener los premios");
     });
 }
@@ -84,7 +84,7 @@ function uploadAward(award_id, comment) {
         }
         comment_add_award.removeAttr("disabled");
         comment_add_award.removeClass("opacity-75");
-    }).catch(error => {
+    }).catch(() => {
         toastMessage("error", "Error al subir el premio");
         comment_add_award.removeClass("opacity-75");
     });
@@ -153,8 +153,8 @@ function getComments(mode = "featured") {
 
         actualizeCommentCounter();
 
-    }).catch(error => {
-        toastMessage("error", "Error al obtener los comentarios" + error);
+    }).catch(() => {
+        toastMessage("error", "Error al obtener los comentarios");
         blockUI.release();
     });
 }
@@ -172,7 +172,7 @@ function uploadComment(comment) {
         comments.push(response.comment);
         actualizeCommentCounter();
 
-    }).catch(error => {
+    }).catch(() => {
         toastMessage("error", "Error al subir el comentario");
     });
 }
