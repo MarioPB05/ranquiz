@@ -172,6 +172,15 @@ function uploadComment(comment) {
         comments.push(response.comment);
         actualizeCommentCounter();
 
+        // Animación de scroll
+        $("#comments_container").animate({ scrollTop: 0 }, "slow");
+
+        // Animación de resaltado
+        $("#comments_container").children().first().css("background-color", "lightyellow").delay(1000).queue(function(next) {
+            $(this).css("background-color", ""); // Restaurar el color original
+            next();
+        });
+
     }).catch(() => {
         toastMessage("error", "Error al subir el comentario");
     });
@@ -255,6 +264,15 @@ function onDocumentReady() {
     handleIconClick();
 
     $("#write_comment").click(writeComment);
+    $("#comment_input").on("keypress", function(event) {
+        if (event.which === 13) { // Verificar si la tecla presionada es "Enter" (código 13)
+            if ($(this).val()) {
+                writeComment();
+            }
+            event.preventDefault();
+        }
+
+    });
 
     $("#recientComents").click(toggleRecientComments)
 
