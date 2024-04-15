@@ -1,4 +1,4 @@
-from django.db.models import Sum, F, Case, When, Value, IntegerField
+from django.db.models import Sum, F, Case, When, Value, IntegerField, Count
 
 from django.utils import timezone
 
@@ -73,27 +73,35 @@ def get_all_awards():
     return Award.objects.all()
 
 
-def get_awards_from_comment(comment_id):
+def get_awards_from_comments(comments):
     """
-    Servicio para obtener todos los premios de un comentario agrupados
+    Servicio para obtener todos los premios de una lista de comentarios agrupados por comentario y premio
     """
-    selected_comment = get_comment(comment_id)
+    # Obtener una lista de IDs de comentarios
+    comment_ids = [comment.id for comment in comments]
 
-    if selected_comment is not None:
-        awards_dict = {}
-        for award in selected_comment.commentaward_set.all():
-            award_id = award.award.id
-            if award_id in awards_dict:
-                awards_dict[award_id]['amount'] += 1
-            else:
-                awards_dict[award_id] = {
-                    'id_award': award_id,
-                    'amount': 1
-                }
+    # Realizar una consulta para obtener los premios agrupados por ID de comentario y premio, y contar la cantidad
+    awards_queryset = CommentAward.objects.filter(comment_id__in=comment_ids).values('comment_id', 'award_id').annotate(
+        amount=Count('award_id'))
 
-        return list(awards_dict.values())
+    # Crear un diccionario para almacenar los premios agrupados por comentario
+    awards_dict = {}
 
-    return None
+    # Iterar sobre los resultados de la consulta
+    for award_data in awards_queryset:
+        # Obtener el ID del comentario y del premio
+        comment_id = award_data['comment_id']
+        award_id = award_data['award_id']
+        amount = award_data['amount']
+
+        # Si el ID del comentario ya está en el diccionario, agregar el premio a la lista existente
+        if comment_id in awards_dict:
+            awards_dict[comment_id].append({'id_award': award_id, 'amount': amount})
+        # Si el ID del comentario no está en el diccionario, crear una nueva entrada con una lista que contenga el premio
+        else:
+            awards_dict[comment_id] = [{'id_award': award_id, 'amount': amount}]
+
+    return awards_dict
 
 
 def get_award(award_id):

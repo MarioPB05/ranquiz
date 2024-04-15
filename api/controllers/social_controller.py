@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 
 from api.services.social_service import get_comments_from_list, create_comment, get_featured_comments_from_list, \
-    get_most_awarded_comments_from_list, get_awards_from_comment, get_comment, get_award, add_award_to_comment, \
+    get_most_awarded_comments_from_list, get_awards_from_comments, get_comment, get_award, add_award_to_comment, \
     check_user_award_in_comment, get_all_awards
 from api.services.transaction_service import do_transaction
 
@@ -24,9 +24,10 @@ def get_comments(request, share_code):
         comments = get_comments_from_list(share_code)
 
     json_comments = []
+    comments_award = get_awards_from_comments(comments)
 
     for comment in comments:
-
+        awards_in_comment = comments_award.get(comment.id)
         json_comments.append({
             'id': comment.id,
             'content': comment.comment,
@@ -36,7 +37,7 @@ def get_comments(request, share_code):
                 'name': comment.user.username,
                 'avatar': f"https://res.cloudinary.com/dhewpzvg9/{comment.user.avatar.image}",
             },
-            'awards': get_awards_from_comment(comment.id),
+            'awards': awards_in_comment,
         })
 
     return JsonResponse({'comments': json_comments})
