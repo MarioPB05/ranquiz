@@ -3,10 +3,11 @@ import {removePageLoader, initializeFlatpickr, promiseAjax, toastMessage} from "
 const minItems = 5;
 let items_prefix = [];
 let item_last_prefix = 0;
-let categories = [];
+const categories = [];
 const maxCategories = 5;
 const maxCategoryLength = 25;
 let allCategories = [];
+const flatpickrInstance = initializeFlatpickr("#range_date_highlight", 'range', moment().format('YYYY-MM-DD')); // skipcq: JS-0125
 
 
 /**
@@ -191,7 +192,7 @@ function cancelItemImage(event) {
  * Actualizar el precio del destacado en base a las fechas seleccionadas
  */
 function updateHighlightPrice() {
-    let dates = $("#range_date_highlight").val().split(" hasta ");
+    const dates = $("#range_date_highlight").val().split(" hasta ");
 
     if (dates.length === 2) {
         promiseAjax(`/api/shop/highlight/calculator?start_date=${dates[0]}&end_date=${dates[1]}`)
@@ -208,7 +209,7 @@ function updateHighlightPrice() {
  * Cancelar el destacado
  */
 function cancelHighlight() {
-    $('#range_date_highlight').flatpickr().clear();
+    flatpickrInstance.clear();
     $('#highlight_price').text('0');
 }
 
@@ -227,7 +228,7 @@ function anyItemInputEmpty() {
     // Comprueba si hay algún input de item vacío
     let empty = false;
 
-    $('#items_container .list_item:not(#item_template)').find('input[type="text"]').each(function () {
+    $('#items_container .list_item:not(#item_template)').find('input[type="text"]').each(() => {
         if ($(this).val() === '') {
             empty = true;
             return false;
@@ -327,7 +328,7 @@ function removeCategory(event) {
  */
 function getCategories() {
     promiseAjax('/api/category/').then(response => {
-        allCategories = response.categories.map(function(category) {
+        allCategories = response.categories.map((category) => {
             return category.name;
         });
 
@@ -378,7 +379,7 @@ async function acceptSimilarCategory(name) {
  */
 function uploadCategory(name) {
     promiseAjax('/api/category/create/', 'POST', {
-        name: name,
+        name,
         csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
     }).then(() => {
         allCategories.push(name);
@@ -396,9 +397,10 @@ function beforeSendForm() {
     $('#categories').val(categories);
 }
 
-$(document).ready(function () {
-    initializeFlatpickr("#range_date_highlight", 'range', moment().format('DD-MM-YYYY')); // skipcq: JS-0125
-
+/**
+ * Esta función se llama cuando el documento está listo
+ */
+function onDocumentReady() {
     $('#name').maxlength({
         warningClass: "badge badge-primary",
         limitReachedClass: "badge badge-danger"
@@ -411,7 +413,7 @@ $(document).ready(function () {
             url: '/api/list/types', // La URL de tu endpoint de búsqueda
             dataType: 'json',
             delay: 0,
-            processResults: function (data) {
+            processResults(data) {
                 return {
                     results: data.types
                 };
@@ -441,11 +443,11 @@ $(document).ready(function () {
     $("#cancel_highlight").on("click", cancelHighlight);
 
     getCategories();
-    $('#add_category_button').on('click', function () {
+    $('#add_category_button').on('click', () => {
         addCategory($('#add_category').val());
     });
 
-    $("#categories_container").on('click', '.category' ,removeCategory);
+    $("#categories_container").on('click', '.category', removeCategory);
 
     // Añadir los items mínimos
     for (let i = 0; i < minItems; i++) {
@@ -455,4 +457,6 @@ $(document).ready(function () {
     $('button[type=submit]').on('click', beforeSendForm);
 
     removePageLoader();
-});
+}
+
+$(document).ready(onDocumentReady);

@@ -1,10 +1,12 @@
 from django.contrib.auth.decorators import login_required
+from django.http import Http404
 from django.shortcuts import render
 
 from api.services.category_service import get_category
 from api.services.item_service import create_item_form, create_item
 from api.services.list_service import create_list_form, set_category, create_list
-from api.services.user_service import user_login, user_register
+from api.services.user_service import user_login, user_register, get_user
+from core.decorators.decorators import partial_login_required
 
 
 def homepage(request):
@@ -63,3 +65,36 @@ def create_list_view(request):
         'list_form': list_form,
         'item_form': item_form
     })
+
+
+@partial_login_required
+def profile(request, share_code=None):
+    """Vista que renderiza el perfil de un usuario"""
+    current_card = request.GET.get('card', 'resume')
+    card_template = 'pages/profile/' + current_card + '.html'
+    cards_info = {
+        'resume': bool(current_card == 'resume'),
+        'lists': bool(current_card == 'lists'),
+        'quests': bool(current_card == 'quests'),
+        'notifications': bool(current_card == 'notifications'),
+        'settings': bool(current_card == 'settings'),
+    }
+
+    is_own_profile = share_code is None or request.user.share_code == share_code
+    user_data = request.user if is_own_profile else get_user(share_code=share_code)
+
+    if user_data is None:
+        raise Http404('User not found')
+
+    return render(request, 'pages/profile.html', {
+        'user_data': user_data,
+        'share_code': request.user.share_code if is_own_profile else share_code,
+        'is_own_profile': is_own_profile,
+        'card_template': card_template,
+        'cards_info': cards_info,
+    })
+
+
+def shop(request):
+    """Vista que renderiza la tienda de la aplicación"""
+    return render(request, 'pages/shop.html')

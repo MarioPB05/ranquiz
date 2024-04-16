@@ -23,6 +23,7 @@ from .notification_type import NotificationType
 from .setting import Setting
 from .setting_user import SettingUser
 from .user import User
+from .user_avatar import UserAvatar
 from .user_follow import UserFollow
 from .user_goal import UserGoal
 from .user_transaction import UserTransaction
@@ -53,6 +54,7 @@ __all__ = [
     'Setting',
     'SettingUser',
     'User',
+    'UserAvatar',
     'UserFollow',
     'UserGoal',
     'UserTransaction',

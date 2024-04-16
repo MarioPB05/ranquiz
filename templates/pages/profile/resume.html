@@ -1,0 +1,95 @@
+<!--begin::Categories View-->
+<div class="card shadow mb-5 mb-xl-10" id="kt_profile_details_view">
+    <!--begin::Card header-->
+    <div class="card-header cursor-pointer">
+        <!--begin::Card title-->
+        <div class="card-title m-0">
+            <h3 class="fw-bolder m-0">Categorías Seguidas</h3>
+        </div>
+        <!--end::Card title-->
+    </div>
+    <!--begin::Card header-->
+
+    <!--begin::Card body-->
+    <div class="card-body p-9">
+        <!--begin::Notice-->
+        <div class="notice d-flex bg-light-warning rounded border-warning border border-dashed p-6">
+            <!--begin::Icon-->
+            <span class="d-flex align-items-center me-4">
+                <i class="bi bi-exclamation-circle-fill text-warning fs-2tx"></i>
+            </span>
+            <!--end::Icon-->
+
+            <!--begin::Wrapper-->
+            <div class="d-flex flex-stack flex-grow-1">
+                <!--begin::Content-->
+                <div class="fw-bold">
+                    <h4 class="text-gray-900 fw-bolder">
+                        {% if is_own_profile %}
+                            No has seguido ninguna categoría!
+                        {% else %}
+                            Sin categorías.
+                        {% endif %}
+                    </h4>
+                    <div class="fs-6 text-gray-700">
+                        {% if is_own_profile %}
+                            Aún no has seguido ninguna categoría, comienza a seguir categorías para recibir contenido personalizado.
+                        {% else %}
+                            Este usuario aún no ha seguido ninguna categoría.
+                        {% endif %}
+                    </div>
+                </div>
+                <!--end::Content-->
+            </div>
+            <!--end::Wrapper-->
+        </div>
+        <!--end::Notice-->
+    </div>
+    <!--end::Card body-->
+</div>
+<!--end::Categories View-->
+
+<!--begin::Lists View-->
+<div class="card shadow mb-5 mb-xl-10" id="kt_profile_details_view">
+    <!--begin::Card header-->
+    <div class="card-header cursor-pointer">
+        <!--begin::Card title-->
+        <div class="card-title m-0">
+            <h3 class="fw-bolder m-0">Listas Favoritas</h3>
+        </div>
+        <!--end::Card title-->
+    </div>
+    <!--begin::Card header-->
+
+    <!--begin::Card body-->
+    <div class="card-body p-9">
+        <!--begin::Notice-->
+        <div class="notice d-flex bg-light-warning rounded border-warning border border-dashed p-6">
+            <!--begin::Icon-->
+            <span class="d-flex align-items-center me-4">
+                <i class="bi bi-exclamation-circle-fill text-warning fs-2tx"></i>
+            </span>
+            <!--end::Icon-->
+
+            <!--begin::Wrapper-->
+            <div class="d-flex flex-stack flex-grow-1">
+                <!--begin::Content-->
+                <div class="fw-bold">
+                    <h4 class="text-gray-900 fw-bolder">No hay listas favoritas!</h4>
+                    <div class="fs-6 text-gray-700">
+                        {% if is_own_profile %}
+                            Aún no has seleccionado ninguna lista como favorita, comienza a seguir listas para tenerlas a mano.
+                        {% else %}
+                            Este usuario aún no ha seleccionado ninguna lista como favorita.
+                        {% endif %}
+                    </div>
+                </div>
+                <!--end::Content-->
+            </div>
+            <!--end::Wrapper-->
+        </div>
+        <!--end::Notice-->
+    </div>
+    <!--end::Card body-->
+</div>
+<!--end::Lists View-->

@@ -26,11 +26,13 @@ function removePageLoader() {
  * @param minDate
  * @returns {*|[]}
  */
-function initializeFlatpickr(elementSelector, mode = 'single', minDate = '1920-01-01') {
+function initializeFlatpickr(elementSelector, mode = 'single', minDate = '1900-01-01') {
     return flatpickr(elementSelector, { // skipcq: JS-0125
-        mode: mode,
-        dateFormat: 'd-m-Y',
-        minDate: minDate,
+        mode,
+        dateFormat: 'Y-m-d',
+        altFormat: 'd/m/Y',    // Formato de fecha alternativo que se enviará al backend
+        altInput: true,
+        minDate,
         locale: {
             firstDayOfWeek: 1,
             weekdays: {
@@ -58,15 +60,11 @@ function initializeFlatpickr(elementSelector, mode = 'single', minDate = '1920-0
 function promiseAjax(url, method = 'GET', data = null) {
     return new Promise((resolve, reject) => {
         $.ajax({
-            url: url,
-            method: method,
-            data: data,
-            success: function (response) {
-                resolve(response);
-            },
-            error: function (error) {
-                reject(error);
-            }
+            url,
+            method,
+            data,
+            success: resolve,
+            error: reject
         });
     });
 }
@@ -78,7 +76,7 @@ function promiseAjax(url, method = 'GET', data = null) {
  */
 function toastMessage(icon, message) {
     Toast.fire({
-        icon: icon,
+        icon,
         title: message
     });
 }
