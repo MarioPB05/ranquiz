@@ -1,4 +1,5 @@
 from django.http import JsonResponse
+from django.urls import reverse
 
 from api.services.social_service import get_comments_from_list, create_comment, get_featured_comments_from_list, \
     get_most_awarded_comments_from_list, get_awards_from_comments, get_comment, get_award, add_award_to_comment, \
@@ -36,6 +37,7 @@ def get_comments(request, share_code):
             'author': {
                 'name': comment.user.username,
                 'avatar': f"https://res.cloudinary.com/dhewpzvg9/{comment.user.avatar.image}",
+                'url': request.build_absolute_uri(reverse('user', args=[comment.user.share_code]))
             },
             'awards': awards_in_comment,
         })
