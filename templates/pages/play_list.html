@@ -17,32 +17,42 @@
         <div class="progress-bar fw-bolder bg-primary" style="width: 25%">25%</div>
     </div>
     <div class="row mt-4" style="height: 67vh">
-        <div class="position-relative col-lg-8 h-100 d-flex flex-column gap-4 bg-primary text-center rounded-25px border border-10 border-primary-400 p-12">
+        <div class="position-relative col-lg-8 h-100 d-grid gap-4 bg-primary text-center rounded-25px border border-10 border-primary-400 p-12" style="grid-template-rows: auto 1fr">
             <div class="text-primary bg-white position-absolute end-0 m-5 top-0 fw-boldest fs-3 p-2 rounded-2 shadow flex-md-column" id="play_time">0s</div> {#Testing#}
 
             <h1 class="text-white">¿Cuál prefieres?</h1>
 
-            <div class="row h-100 two-items mh-100" id="items_container">
-                <div class="col-lg-6 p-5">
-                    <div class="hover-scale hover-bg-primary-200 cursor-pointer p-4 w-100 h-100 shadow rounded bg-white selected_item d-grid align-items-center">
-                        <div>
-                            <img src="https://wallpapers.com/images/hd/brawl-stars-crow-character-0s8si9jv8n7wt4yy.png" alt="Imagen"
-                            class="w-75 h-75 py-4" style="object-fit: contain"/>
-                        </div>
-                        <h1 class="fw-boldest m-0">Crow</h1>
+            <div class="row two-items" id="items_container">
+                <div class="p-5 col-sm-6">
+                    <div class="h-100 w-100 align-items-center selected_item gap-3 bg-white rounded hover-scale hover-bg-primary-200 cursor-pointer d-flex flex-column justify-content-around p-5">
+                        <img src="https://images.pexels.com/photos/719396/pexels-photo-719396.jpeg?cs=srgb&dl=pexels-gabriel-peter-719396.jpg&fm=jpg" class="w-75 h-75" style="object-fit: contain">
+                        <h1 class="m-0 overflow-hidden w-100">Medalla de oro</h1>
                     </div>
                 </div>
 
-                <div class="col-lg-6 p-5">
-                    <div class="hover-scale hover-bg-primary-200 cursor-pointer p-4 w-100 h-100 shadow rounded bg-white d-grid align-items-center">
-                        <div>
-                            <img src="https://wallpapers.com/images/hd/brawl-stars-crow-character-0s8si9jv8n7wt4yy.png" alt="Imagen"
-                            class="w-75 h-75 py-4" style="object-fit: contain"/>
-                        </div>
-                         <h1 class="fw-boldest m-0 mw-100">Crow</h1>
+                <div class="p-5 col-sm-6">
+                    <div class="h-100 w-100 align-items-center gap-3 bg-white rounded hover-scale hover-bg-primary-200 cursor-pointer d-flex flex-column justify-content-around p-5">
+                        <img src="https://w0.peakpx.com/wallpaper/163/338/HD-wallpaper-top-full-nature-full-for-pc-deskto-fondos-de-pantalla-naturaleza-hermosos-fondos-de-pantalla-fondo-de-pantalla-tropical-1600x900-nature.jpg" class="w-75 h-75" style="object-fit: contain">
+                        <h1 class="m-0 overflow-hidden w-100">Medalla de oro</h1>
                     </div>
                 </div>
+
+{#                <div class="p-5 col-sm-6">#}
+{#                    <div class="h-100 w-100 align-items-center gap-3 bg-white rounded hover-scale hover-bg-primary-200 cursor-pointer d-flex flex-column justify-content-around p-5">#}
+{#                        <img src="https://w0.peakpx.com/wallpaper/163/338/HD-wallpaper-top-full-nature-full-for-pc-deskto-fondos-de-pantalla-naturaleza-hermosos-fondos-de-pantalla-fondo-de-pantalla-tropical-1600x900-nature.jpg" class="w-75 h-75" style="object-fit: contain">#}
+{#                        <h1 class="m-0 overflow-hidden w-100">Medalla de oro asjkodskjd hijsd huj suidh s usdh jsd  jshd jsd hui shd</h1>#}
+{#                    </div>#}
+{#                </div>#}
+{##}
+{#                <div class="p-5 col-sm-6">#}
+{#                    <div class="h-100 w-100 align-items-center gap-3 bg-white rounded hover-scale hover-bg-primary-200 cursor-pointer d-flex flex-column justify-content-around p-5">#}
+{#                        <img src="https://w0.peakpx.com/wallpaper/163/338/HD-wallpaper-top-full-nature-full-for-pc-deskto-fondos-de-pantalla-naturaleza-hermosos-fondos-de-pantalla-fondo-de-pantalla-tropical-1600x900-nature.jpg" class="w-75 h-75" style="object-fit: contain">#}
+{#                        <h1 class="m-0 overflow-hidden w-100">Medalla de oro</h1>#}
+{#                    </div>#}
+{#                </div>#}
+
             </div>
+
 
             <button class="shadow position-absolute top-100 start-50 translate-middle btn btn-primary rounded-2 fw-boldest p-3 px-8 fs-6 align-center border border-3 border-primary-400 d-flex center justify-content-between align-items-center gap-1">
                 <h1 class="m-0 text-white">Siguiente</h1>
