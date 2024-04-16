@@ -387,6 +387,33 @@ function uploadCategory(name) {
 }
 
 function beforeSendForm() {
+    // Verificar que el nombre no esté vacío
+    if (!$('#id_name').val()) {
+        toastMessage('error', 'El nombre no puede estar vacío');
+        $('#id_name').focus();
+        return false;
+    }
+
+    // Verificar que la pregunta no esté vacía
+    if (!$('#question').val()) {
+        toastMessage('error', 'La pregunta no puede estar vacía');
+        $('#id_question').focus();
+        return false;
+    }
+
+    // Verificar que no haya ningun item vacio
+    if (anyItemInputEmpty()) {
+        focusOnFirstEmptyItem();
+        toastMessage('error', 'Hay elementos vacíos, rellénelos todos antes de crear la lista');
+        return false;
+    }
+
+    // Verificar que haya alguna categoría seleccionada
+    if (categories.length === 0) {
+        toastMessage('error', 'Debes seleccionar al menos una categoría');
+        return false;
+    }
+
     // Eliminar el template
     $('#item_template').remove();
 
