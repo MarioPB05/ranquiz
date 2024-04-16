@@ -20,6 +20,14 @@ function removePageLoader() {
 }
 
 /**
+ * Esta función se encarga de volver a añadir el loader de la página
+ */
+function addPageLoader() {
+    $('body').css("overflow-y", "hidden");
+    $('#loading_indicator').addClass("d-flex");
+}
+
+/**
  * Esta función se encarga de inicializar el componente Flatpickr
  * @param elementSelector
  * @param mode
@@ -81,4 +89,4 @@ function toastMessage(icon, message) {
     });
 }
 
-export {removePageLoader, initializeFlatpickr, promiseAjax, toastMessage};
+export {removePageLoader, initializeFlatpickr, promiseAjax, toastMessage, addPageLoader};
