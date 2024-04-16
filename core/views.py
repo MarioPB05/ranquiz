@@ -115,3 +115,8 @@ def profile(request, share_code=None):
         'card_template': card_template,
         'cards_info': cards_info,
     })
+
+
+def shop(request):
+    """Vista que renderiza la tienda de la aplicación"""
+    return render(request, 'pages/shop.html')

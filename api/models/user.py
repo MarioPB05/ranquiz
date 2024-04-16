@@ -49,12 +49,25 @@ class User(AbstractBaseUser, TimeStamped):
     )
     avatar = models.ForeignKey('Avatar', on_delete=models.DO_NOTHING)
     client = models.ForeignKey('Client', on_delete=models.DO_NOTHING)
+    is_admin = models.BooleanField(default=False)
     money = models.IntegerField(default=30)
 
     objects = UserManager()
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['share_code', 'avatar', 'client']
+
+    def has_perm(self, perm, obj=None):  # skipcq: PYL-W0613
+        """Devuelve si el usuario tiene permiso"""
+        return self.is_admin
+
+    def has_module_perms(self, app_label):  # skipcq: PYL-W0613
+        """Devuelve si el usuario tiene permisos para un módulo"""
+        return self.is_admin
+
+    @property
+    def is_staff(self):
+        return self.is_admin
 
     def __str__(self):
         return self.username + ' (' + self.share_code + ')'
