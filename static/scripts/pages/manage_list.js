@@ -395,7 +395,7 @@ function beforeSendForm(event) {
         toastMessage('error', 'El nombre de la lista no puede estar vacío');
         $('#id_name').focus();
         event.preventDefault();
-        return false;
+        return;
     }
 
     // Verificar que la pregunta no esté vacía
@@ -403,7 +403,7 @@ function beforeSendForm(event) {
         toastMessage('error', 'La pregunta no puede estar vacía');
         $('#id_question').focus();
         event.preventDefault();
-        return false;
+        return;
     }
 
     // Verificar que no haya ningun item vacio
@@ -411,14 +411,14 @@ function beforeSendForm(event) {
         focusOnFirstEmptyItem();
         toastMessage('error', 'Hay elementos vacíos, rellénelos todos antes de crear la lista');
         event.preventDefault();
-        return false;
+        return;
     }
 
     // Verificar que haya alguna categoría seleccionada
     if (categories.length === 0) {
         toastMessage('error', 'Debes seleccionar al menos una categoría');
         event.preventDefault();
-        return false;
+        return;
     }
 
     // Eliminar el template
