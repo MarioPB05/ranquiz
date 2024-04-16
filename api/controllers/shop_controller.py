@@ -1,9 +1,12 @@
 from django.http import JsonResponse
+from django.views.decorators.http import require_GET, require_POST
 
+from api.decorators.api_decorators import require_authenticated
 from api.services.shop_service import calculate_highlight_price, get_all_avatars, get_avatars_by_popularity, \
     get_avatars_by_purchased, buy_avatar, equip_avatar
 
 
+@require_GET
 def highlight_calculator(request):
     """Controlador que devuelve el precio de destacar una lista"""
     start_date = request.GET.get('start_date')
@@ -13,6 +16,7 @@ def highlight_calculator(request):
     return JsonResponse({'price': total_price})
 
 
+@require_GET
 def get_avatars(request):
     """Controlador que devuelve todos los avatares"""
     mode = request.GET.get('mode')
@@ -40,6 +44,8 @@ def get_avatars(request):
     return JsonResponse({'avatars': result})
 
 
+@require_GET
+@require_authenticated
 def buy_a_avatar(request, avatar_id):
     """Controlador que compra un avatar"""
     user = request.user
@@ -50,6 +56,8 @@ def buy_a_avatar(request, avatar_id):
     return JsonResponse({'status': 'success', 'message': 'El avatar ha sido comprado'})
 
 
+@require_GET
+@require_authenticated
 def equip_a_avatar(request, avatar_id):
     """Controlador que equipa un avatar"""
     user = request.user
