@@ -98,6 +98,7 @@ function addComment(comment) {
     let content = comment.content;
     let author_name = comment.author.name;
     let author_avatar = comment.author.avatar;
+    let author_url = comment.author.url;
     let date = new Date(comment.date);
     let awards = comment.awards;
     let id = comment.id;
@@ -116,6 +117,7 @@ function addComment(comment) {
     element.find(".comment_content").text(content);
     element.find(".author_name").text(author_name);
     element.find(".author_avatar").attr("src", author_avatar);
+    element.find(".author_group").attr("href", author_url);
     element.find(".comment_date").text(formatElapsedTime(date));
 
     element.find('[data-kt-menu]').each(function () {
