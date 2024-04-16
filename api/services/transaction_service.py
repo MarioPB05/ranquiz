@@ -11,7 +11,7 @@ def do_transaction(user, value, details):
 
     user.money += value
     user.save()
-    return id(transaction)
+    return transaction
 
 
 def validate_transaction(user, value):

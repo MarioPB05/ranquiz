@@ -1,7 +1,6 @@
 from datetime import datetime
 
-from api.models import Avatar, HighlightedList
-from django.db.models import Count, Q
+from django.db.models import Count, Q, Case, When, Exists, OuterRef
 
 from api.models import Avatar, UserTransaction, HighlightedList, UserAvatar
 from api.services.list_service import get_list
@@ -16,10 +15,17 @@ def get_avatar(avatar_id):
         return None
 
 
-def get_all_avatars():
+def get_all_avatars(user):
     """Obtiene todos los avatares ordenados por rareza"""
-    return Avatar.objects.all().order_by('rarity_id')
 
+    if user is None:
+        return None
+
+    return Avatar.objects.annotate(
+        is_user_avatar=Exists(
+            UserAvatar.objects.all().filter(avatar=OuterRef('pk'), user=user)
+        )
+    ).order_by('rarity_id')
 
 def get_avatars_by_popularity():
     """Obtiene los avatares por popularidad"""
@@ -33,6 +39,15 @@ def get_avatars_by_purchased(user_id):
     return Avatar.objects.annotate(
         user_have_bought=Count('useravatar', filter=Q(useravatar__user_id=user_id) | Q(rarity__id=1))
     ).order_by('-user_have_bought')
+    ).annotate(
+        user_have_bought=Count('useravatar', filter=Q(useravatar__user_id=user.id))
+    ).order_by(
+        Case(
+            When(Q(rarity__id=1) | Q(user_have_bought__gt=0), then=0),  # Avatares con rareza 1 o comprados por el usuario primero
+            default=1  # Todos los demás después
+        ),
+        '-user_have_bought'  # Luego, ordenar por la cantidad de compras asociadas al usuario (en orden descendente)
+    )
 
 
 def buy_avatar(user, avatar_id):
@@ -40,11 +55,11 @@ def buy_avatar(user, avatar_id):
     avatar = get_avatar(avatar_id)
 
     # Si el usuario ya tiene el avatar, no se realiza la compra
-    if UserAvatar.objects.filter(user=user, avatar=avatar).exists():
+    if avatar.rarity.id == 1 or UserAvatar.objects.filter(user=user, avatar=avatar).exists():
         return None
 
     if avatar is not None and user is not None:
-        transaction = UserTransaction.objects.first()  # TODO: Realizar transacción y devolver el objeto
+        transaction = do_transaction(user, -avatar.rarity.price, "Avatar comprado")
 
         if transaction is not None:
             UserAvatar.objects.create(user=user, avatar=avatar, transaction=transaction)
@@ -58,7 +73,7 @@ def equip_avatar(user, avatar_id):
     avatar = get_avatar(avatar_id)
 
     # Si el usuario no tiene el avatar, no se realiza la equipación
-    if not UserAvatar.objects.filter(user=user, avatar=avatar).exists():
+    if avatar.rarity.id != 1 and not UserAvatar.objects.filter(user=user, avatar=avatar).exists():
         return None
 
     if avatar is not None and user is not None:

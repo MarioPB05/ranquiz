@@ -20,11 +20,11 @@ def get_avatars(request):
     result = []
 
     if mode == 'rarity':
-        avatars = get_all_avatars()
+        avatars = get_all_avatars(request.user)
     elif mode == 'popular':
-        avatars = get_avatars_by_popularity()
+        avatars = get_avatars_by_popularity(request.user)
     elif mode == 'purchased':
-        avatars = get_avatars_by_purchased(request.user.id)
+        avatars = get_avatars_by_purchased(request.user)
 
     for avatar in avatars:
         result.append({
@@ -33,7 +33,7 @@ def get_avatars(request):
             'rarity': avatar.rarity.name,
             'price': avatar.rarity.price,
             'image': f"https://res.cloudinary.com/dhewpzvg9/{avatar.image}",
-            'bought': avatar.rarity.id == 1 or avatar.useravatar_set.filter(avatar=avatar, user=request.user).exists(),
+            'bought': avatar.rarity.id == 1 or avatar.is_user_avatar,
             'equipped': request.user.avatar.id == avatar.id,
         })
 

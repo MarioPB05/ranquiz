@@ -80,7 +80,7 @@ function getAvatars(mode="rarity") {
  * @param avatarId
  */
 function buyAvatar(avatarId) {
-    promiseAjax(`/api/shop/avatar/${avatarId}/buy`, "POST").then((response) => {
+    promiseAjax(`/api/shop/avatar/${avatarId}/buy`, "GET").then((response) => {
        if (response.status  === "success") {
            changeButtonToBought($(`div[data-id=${avatarId}]`));
            toastMessage("success", response.message);
