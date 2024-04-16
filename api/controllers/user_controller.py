@@ -4,6 +4,7 @@ from api.services.user_service import get_user
 
 
 def get_user_data(request):
+    """Controlador que devuelve los datos del usuario"""
     if request.user.is_authenticated:
         user = get_user(request.user.id)
 
