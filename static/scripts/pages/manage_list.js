@@ -422,6 +422,9 @@ function beforeSendForm() {
 
     // Agregar las categorías seleccionadas
     $('#categories').val(categories);
+
+    // Mostrar el loader
+    addPageLoader();
 }
 
 /**
