@@ -1,4 +1,4 @@
-import {removePageLoader, initializeFlatpickr, promiseAjax, toastMessage} from "/static/assets/js/ranquiz/utils.js";
+import {removePageLoader, initializeFlatpickr, promiseAjax, toastMessage, addPageLoader} from "/static/assets/js/ranquiz/utils.js";
 
 const minItems = 5;
 let items_prefix = [];
@@ -228,8 +228,8 @@ function anyItemInputEmpty() {
     // Comprueba si hay algún input de item vacío
     let empty = false;
 
-    $('#items_container .list_item:not(#item_template)').find('input[type="text"]').each(() => {
-        if ($(this).val() === '') {
+    $('#items_container').find('.list_item:not(#item_template) input[type="text"]').each((index, element) => {
+        if (!$(element).val() && $(element).val() !== '0') {
             empty = true;
             return false;
         }
