@@ -1,4 +1,4 @@
-import {removePageLoader, initializeFlatpickr, promiseAjax, toastMessage} from "/static/assets/js/ranquiz/utils.js";
+import {removePageLoader, initializeFlatpickr, promiseAjax, toastMessage, addPageLoader} from "/static/assets/js/ranquiz/utils.js";
 
 const minItems = 5;
 let items_prefix = [];
@@ -37,6 +37,9 @@ function createItem() {
 
     // Remover el ID de la plantilla
     item.removeAttr('id');
+
+    // Vaciar los inputs
+    item.find('input[type="text"]').val('');
 
     // Obtener el prefijo del item
     const prefix = `${item_last_prefix + 1}-`;
@@ -228,11 +231,11 @@ function anyItemInputEmpty() {
     // Comprueba si hay algún input de item vacío
     let empty = false;
 
-    $('#items_container .list_item:not(#item_template)').find('input[type="text"]').each(() => {
-        if ($(this).val() === '') {
+    $('#items_container').find('.list_item:not(#item_template) input[type="text"]').each((index, element) => {
+        if (!$(element).val() && $(element).val() !== '0') {
             empty = true;
-            return false;
         }
+        return !empty;
     });
 
     return empty;
@@ -386,7 +389,38 @@ function uploadCategory(name) {
     });
 }
 
-function beforeSendForm() {
+function beforeSendForm(event) {
+    // Verificar que el nombre no esté vacío
+    if (!$('#id_name').val().trim()) {
+        toastMessage('error', 'El nombre de la lista no puede estar vacío');
+        $('#id_name').focus();
+        event.preventDefault();
+        return;
+    }
+
+    // Verificar que la pregunta no esté vacía
+    if (!$('#question').val().trim()) {
+        toastMessage('error', 'La pregunta no puede estar vacía');
+        $('#id_question').focus();
+        event.preventDefault();
+        return;
+    }
+
+    // Verificar que no haya ningun item vacio
+    if (anyItemInputEmpty()) {
+        focusOnFirstEmptyItem();
+        toastMessage('error', 'Hay elementos vacíos, rellénelos todos antes de crear la lista');
+        event.preventDefault();
+        return;
+    }
+
+    // Verificar que haya alguna categoría seleccionada
+    if (categories.length === 0) {
+        toastMessage('error', 'Debes seleccionar al menos una categoría');
+        event.preventDefault();
+        return;
+    }
+
     // Eliminar el template
     $('#item_template').remove();
 
@@ -395,6 +429,9 @@ function beforeSendForm() {
 
     // Agregar las categorías seleccionadas
     $('#categories').val(categories);
+
+    // Mostrar el loader
+    addPageLoader();
 }
 
 /**

@@ -20,6 +20,14 @@ function removePageLoader() {
 }
 
 /**
+ * Esta función se encarga de volver a añadir el loader de la página
+ */
+function addPageLoader() {
+    $('body').css("overflow-y", "hidden");
+    $('#loading_indicator').addClass("d-flex");
+}
+
+/**
  * Esta función se encarga de inicializar el componente Flatpickr
  * @param elementSelector
  * @param mode
@@ -109,4 +117,23 @@ function toastMessage(icon, message) {
     });
 }
 
-export {removePageLoader, initializeFlatpickr, promiseAjax, toastMessage, formatElapsedTime};
+/**
+ * Esta función se encarga de recargar la información del usuario
+ */
+function reloadUserData() {
+    promiseAjax('/api/user')
+        /**
+         * @param response
+         * @param response.user Información del usuario
+         * @param response.user.avatar URL del avatar del usuario
+         * @param response.user.money Gemas del usuario
+         */
+        .then((response) => {
+            if (response.user) {
+                $('.user_avatar').attr('src', response.user.avatar);
+                $('.user_money').text(response.user.money);
+            }
+        });
+}
+
+export { removePageLoader, initializeFlatpickr, promiseAjax, toastMessage, addPageLoader, reloadUserData, formatElapsedTime };

@@ -1,12 +1,12 @@
+from django.contrib.auth import logout as django_logout
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from api.models import ListCategory
 from api.services.category_service import get_category
-from api.services.item_service import create_item_form, create_item, get_items
-from api.services.list_service import create_list_form, set_category, create_list, get_list
-from api.services.user_service import user_login, user_register
+from api.services.item_service import get_items
+from api.services.list_service import get_list
 from api.services.item_service import create_item_form, create_item
 from api.services.list_service import create_list_form, set_category, create_list
 from api.services.user_service import user_login, user_register, get_user
@@ -26,6 +26,12 @@ def login(request):
 def register(request):
     """Vista que permite a un usuario registrarse en la aplicación"""
     return user_register(request)
+
+
+def logout(request):
+    """Vista que permite a un usuario cerrar sesión en la aplicación"""
+    django_logout(request)
+    return redirect('login')
 
 
 def list_details(request, share_code):
