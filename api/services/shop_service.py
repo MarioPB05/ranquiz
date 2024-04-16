@@ -2,7 +2,7 @@ from datetime import datetime
 
 from django.db.models import Count, Q, Case, When, Exists, OuterRef
 
-from api.models import Avatar, UserTransaction, HighlightedList, UserAvatar
+from api.models import Avatar, HighlightedList, UserAvatar
 from api.services.list_service import get_list
 from api.services.transaction_service import do_transaction
 
@@ -37,8 +37,9 @@ def get_avatars_by_popularity():
 def get_avatars_by_purchased(user_id):
     """Obtiene los avatares por compras"""
     return Avatar.objects.annotate(
-        user_have_bought=Count('useravatar', filter=Q(useravatar__user_id=user_id) | Q(rarity__id=1))
-    ).order_by('-user_have_bought')
+        is_user_avatar=Exists(
+            UserAvatar.objects.all().filter(avatar=OuterRef('pk'), user=user)
+        )
     ).annotate(
         user_have_bought=Count('useravatar', filter=Q(useravatar__user_id=user.id))
     ).order_by(
