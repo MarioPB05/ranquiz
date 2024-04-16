@@ -234,8 +234,8 @@ function anyItemInputEmpty() {
     $('#items_container').find('.list_item:not(#item_template) input[type="text"]').each((index, element) => {
         if (!$(element).val() && $(element).val() !== '0') {
             empty = true;
-            return false;
         }
+        return !empty;
     });
 
     return empty;
