@@ -207,6 +207,7 @@ function writeComment() {
     };
 
     $("#comment_input").val("");
+    autosize.update($("#comment_input"));
 
     uploadComment(comment);
 }
