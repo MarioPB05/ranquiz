@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from django.views.decorators.http import require_GET, require_POST
+from django.views.decorators.http import require_GET
 
 from api.decorators.api_decorators import require_authenticated
 from api.services.shop_service import calculate_highlight_price, get_all_avatars, get_avatars_by_popularity, \
