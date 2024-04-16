@@ -27,15 +27,28 @@ def get_all_avatars(user):
         )
     ).order_by('rarity_id')
 
-def get_avatars_by_popularity():
+
+def get_avatars_by_popularity(user):
     """Obtiene los avatares por popularidad"""
+
+    if user is None:
+        return None
+
     return Avatar.objects.annotate(
+        is_user_avatar=Exists(
+            UserAvatar.objects.all().filter(avatar=OuterRef('pk'), user=user)
+        )
+    ).annotate(
             popularity=Count('user__avatar')
         ).order_by('-popularity')
 
 
-def get_avatars_by_purchased(user_id):
+def get_avatars_by_purchased(user):
     """Obtiene los avatares por compras"""
+
+    if user is None:
+        return None
+
     return Avatar.objects.annotate(
         is_user_avatar=Exists(
             UserAvatar.objects.all().filter(avatar=OuterRef('pk'), user=user)
