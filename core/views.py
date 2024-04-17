@@ -75,13 +75,7 @@ def profile(request, share_code=None):
     """Vista que renderiza el perfil de un usuario"""
     current_card = request.GET.get('card', 'resume')
     card_template = 'pages/profile/' + current_card + '.html'
-    cards_info = {
-        'resume': bool(current_card == 'resume'),
-        'lists': bool(current_card == 'lists'),
-        'quests': bool(current_card == 'quests'),
-        'notifications': bool(current_card == 'notifications'),
-        'settings': bool(current_card == 'settings'),
-    }
+    cards = ('resume', 'lists', 'quests', 'notifications', 'settings')
 
     is_own_profile = share_code is None or request.user.share_code == share_code
     user_data = request.user if is_own_profile else get_user(share_code=share_code)
@@ -89,12 +83,15 @@ def profile(request, share_code=None):
     if user_data is None:
         raise Http404('User not found')
 
+    if current_card not in cards:
+        raise Http404('Page not found')
+
     return render(request, 'pages/profile.html', {
         'user_data': user_data,
         'share_code': request.user.share_code if is_own_profile else share_code,
         'is_own_profile': is_own_profile,
         'card_template': card_template,
-        'cards_info': cards_info,
+        'current_card': current_card
     })
 
 

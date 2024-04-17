@@ -27,7 +27,7 @@
                             </div>
                             <!--end::Name-->
 
-                            <p class="fw-bolder">Code: <label id="share_code" data-clipboard-text="{{ share_code }}" data-bs-toggle="tooltip" data-bs-custom-class="tooltip-dark" data-bs-placement="right" title="Copiar el Share Code" class="fw-normal cursor-pointer text-muted text-hover-info">{{ user_data.share_code }}</label></p>
+                            <p class="fw-bolder">Code: <label id="share_code" data-clipboard-text="{{ share_code }}" data-bs-toggle="tooltip" data-bs-custom-class="tooltip-dark" data-bs-placement="right" title="Copiar el Share Code" class="fw-normal cursor-pointer text-muted text-hover-info">{{ share_code }}</label></p>
 
                             {% if not is_own_profile %}
                                 <a href="#" class="btn btn-sm btn-primary me-2 mb-4">Seguir</a>
@@ -37,7 +37,7 @@
 
                         <!--begin::Actions-->
                         <div class="d-flex my-4">
-                            <a id="share_account" data-clipboard-text="{{ request.scheme }}://{{ request.get_host }}{% url 'user' share_code=user_data.share_code %}" class="d-flex justify-content-end position-absolute" style="top: 15px; right: 15px">
+                            <a id="share_account" data-clipboard-text="{{ request.scheme }}://{{ request.get_host }}{% url 'user' share_code=share_code %}" class="d-flex justify-content-end position-absolute" style="top: 15px; right: 15px">
                                 <i class="fs-2 text-primary text-hover-white bg-hover-primary bi bi-share-fill bg-white p-4 rounded-circle border border-2 border-primary"></i>
                             </a>
                         </div>
@@ -144,37 +144,37 @@
             <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bolder">
                 <!--begin::Nav item-->
                 <li class="nav-item mt-2">
-                    <a class="nav-link text-active-primary ms-0 me-10 py-5 {{ cards_info.resume|yesno:"active,none" }}"
-                        href="{% url 'user' share_code=user_data.share_code %}?card=resume">Resumen</a>
+                    <a class="nav-link text-active-primary ms-0 me-10 py-5 {% if current_card == 'resume' %}active{% endif %}"
+                        href="{% url 'user' share_code=share_code %}?card=resume">Resumen</a>
                 </li>
                 <!--end::Nav item-->
 
                 {% if is_own_profile %}
                     <!--begin::Nav item-->
                     <li class="nav-item mt-2">
-                        <a class="nav-link text-active-primary ms-0 me-10 py-5 {{ cards_info.lists|yesno:"active,none" }}"
-                            href="{% url 'user' share_code=user_data.share_code %}?card=lists">Listas</a>
+                        <a class="nav-link text-active-primary ms-0 me-10 py-5 {% if current_card == 'lists' %}active{% endif %}"
+                            href="{% url 'user' share_code=share_code %}?card=lists">Listas</a>
                     </li>
                     <!--end::Nav item-->
     
                     <!--begin::Nav item-->
                     <li class="nav-item mt-2">
-                        <a class="nav-link text-active-primary ms-0 me-10 py-5 {{ cards_info.quests|yesno:"active,none" }}"
-                            href="{% url 'user' share_code=user_data.share_code %}?card=quests">Misiones</a>
+                        <a class="nav-link text-active-primary ms-0 me-10 py-5 {% if current_card == 'quests' %}active{% endif %}"
+                            href="{% url 'user' share_code=share_code %}?card=quests">Misiones</a>
                     </li>
                     <!--end::Nav item-->
     
                     <!--begin::Nav item-->
                     <li class="nav-item mt-2">
-                        <a class="nav-link text-active-primary ms-0 me-10 py-5 {{ cards_info.notifications|yesno:"active,none" }}"
-                            href="{% url 'user' share_code=user_data.share_code %}?card=notifications">Notificaciones</a>
+                        <a class="nav-link text-active-primary ms-0 me-10 py-5 {% if current_card == 'notifications' %}active{% endif %}"
+                            href="{% url 'user' share_code=share_code %}?card=notifications">Notificaciones</a>
                     </li>
                     <!--end::Nav item-->
     
                     <!--begin::Nav item-->
                     <li class="nav-item mt-2">
-                        <a class="nav-link text-active-primary ms-0 me-10 py-5 {{ cards_info.settings|yesno:"active,none" }}"
-                            href="{% url 'user' share_code=user_data.share_code %}?card=settings">Ajustes</a>
+                        <a class="nav-link text-active-primary ms-0 me-10 py-5 {% if current_card == 'settings' %}active{% endif %}"
+                            href="{% url 'user' share_code=share_code %}?card=settings">Ajustes</a>
                     </li>
                     <!--end::Nav item-->
                 {% endif %}
