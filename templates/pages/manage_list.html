@@ -114,8 +114,8 @@
                             <div id="{{ item_form.prefix }}" class="w-100 d-flex list_item flex-stack">
                                 {{ item_form.image_url }}
                                 <label for="id_{{ item_form.prefix }}-image"
-                                       class="itemImageLabel w-60px h-60px col-3 cursor-pointer bg-primary p-2 d-flex justify-content-center align-items-center rounded"><i
-                                        class="bi bi-card-image text-primary-800 fs-1"></i></label>
+                                       class="itemImageLabel imageReload w-60px h-60px col-3 cursor-pointer bg-primary p-2 d-flex justify-content-center align-items-center rounded"><i
+                                        class="bi bi-card-image {% if item_form.image_url.value %}text-white{% else %}text-primary-800{% endif %} fs-1"></i></label>
                                 {{ item_form.image }}
 
                                 <div class="col-9 pe-10 ps-10">
@@ -226,7 +226,7 @@
                 </div>
 
                 <div class="modal-footer flex-stack">
-                    <button type="button" class="btn btn-light" id="cancel_item_img" data-bs-dismiss="modal">Cancelar
+                    <button type="button" class="btn btn-light-danger" id="cancel_item_img" data-bs-dismiss="modal">Quitar
                     </button>
                     <button type="button" class="btn btn-light-primary fw-bolder" id="change_item_img">Cambiar Imagen
                     </button>

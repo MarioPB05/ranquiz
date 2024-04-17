@@ -125,7 +125,7 @@ function showItemPreviewModal(target) {
 
 function itemImageChanged(event) {
     // Obtener el archivo seleccionado
-    const file = event.target.files[0];
+    const file = $(event.target).prop('files')[0];
 
     // Verificar si se seleccionó un archivo
     if (file) {
@@ -220,9 +220,15 @@ function itemHasImage(event) {
     // Obtener el target (Input)
     const input = $(`#${$(this).attr('for')}`);
 
-    // Comprobar si ya se ha seleccionado una imagen para mosrar el modal directamente
+    // Comprobar si ya se ha seleccionado una imagen para mostrar el modal directamente
     if (input[0] && input[0].files.length > 0) {
         event.preventDefault();
+
+        if ($(this).hasClass('imageReload'))  {
+            itemImageChanged({target: input});
+            $(this).removeClass('imageReload');
+        }
+
         showItemPreviewModal(input[0]);
     }
 }
@@ -443,14 +449,11 @@ function convertToBlob(url, target) {
         const blob = xhr.response;
         const fileName = url.substring(url.lastIndexOf('/') + 1); // Extraemos el nombre del archivo de la URL
         const file = new File([blob], fileName);
-        const fileList = [];
-        fileList.push(file);
         const input = $('#' + target)[0];
-        Object.defineProperty(input, 'files', {
-            writable: true,
-            value: fileList
-        });
-        // $('#' + target).trigger('change');
+
+        let container = new DataTransfer();
+        container.items.add(file);
+        input.files = container.files;
     };
     xhr.send();
 }
