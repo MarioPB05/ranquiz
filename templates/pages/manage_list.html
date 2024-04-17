@@ -67,7 +67,7 @@
                 <div class="col-lg-6 d-flex align-items-center flex-column justify-content-center p-10">
                     <div class="mb-8 w-100">
                         <label for="id_name" class="form-label fw-boldest text-primary-800 required">Nombre</label>
-                        <input type="text" class="form-control text-black" name="name" id="id_name" maxlength="70" required/>
+                        {{ list_form.name }}
                     </div>
 
 {#                    <div class="mb-8 w-100">#}
@@ -79,7 +79,7 @@
 
                     <div class="mb-4 w-100">
                         <label for="question" class="form-label fw-boldest text-primary-800 required ">Pregunta de enfrentamiento</label>
-                        <input type="text" class="form-control text-black" id="question" maxlength="70" value="¿Cual prefieres?" required/>
+                        {{ list_form.question }}
                         <span class="text-primary fs-8">Es la pregunta que verá el jugador cuando se enfrentan los elementos</span>
                     </div>
                 </div>
@@ -93,7 +93,7 @@
                     <h1 class="text-muted" id="item_number">0</h1>
                 </div>
 
-                <div id="items_container" class="d-flex gap-5 flex-column w-100 mt-5">
+                <div id="items_container" class="d-flex gap-7 flex-column w-100 mt-5">
                     <div id="item_template" class="d-none w-100 list_item flex-stack">
                         <label for="id_template-image"
                                class="itemImageLabel w-60px h-60px col-3 cursor-pointer bg-primary p-2 d-flex justify-content-center align-items-center rounded"><i
@@ -109,6 +109,27 @@
                             <i class="bi bi-trash text-gray-400 fs-1 cursor-pointer hover-text-danger remove_item"></i>
                         </div>
                     </div>
+                    {% if edit_mode %}
+                        {% for item_form in item_form_set %}
+                            <div id="{{ item_form.prefix }}" class="w-100 d-flex list_item flex-stack">
+                                {{ item_form.image_url }}
+                                <label for="id_{{ item_form.prefix }}-image"
+                                       class="itemImageLabel w-60px h-60px col-3 cursor-pointer bg-primary p-2 d-flex justify-content-center align-items-center rounded"><i
+                                        class="bi bi-card-image text-primary-800 fs-1"></i></label>
+                                {{ item_form.image }}
+
+                                <div class="col-9 pe-10 ps-10">
+                                    <label for="id_{{ item_form.prefix }}-name" class="form-label fw-bolder fs-8 mb-0">Nombre</label>
+                                    {{ item_form.name }}
+                                </div>
+
+                                <div class="col-1 d-flex justify-content-center align-items-end h-40px">
+                                    <i class="bi bi-trash text-gray-400 fs-1 cursor-pointer hover-text-danger remove_item"></i>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
                 </div>
 
                 <button id="create_element"
@@ -218,5 +239,8 @@
 {% endblock %}
 
 {% block custom_scripts %}
+    <script>
+    const edit_mode = {{ edit_mode|yesno:"true,false" }};
+    </script>
     <script src="{% static 'scripts/pages/manage_list.js' %}" type="module"></script>
 {% endblock %}
