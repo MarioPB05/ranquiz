@@ -3,10 +3,10 @@ from api.models import Item
 from api.services.list_service import get_list
 
 
-def create_item_form(request, prefix=None):
+def create_item_form(request, prefix=None, instance=None):
     """Función para obtener el formulario de un item"""
-    return CreateItemForm(request.POST, request.FILES, prefix=prefix) if request.method == 'POST' \
-        else CreateItemForm(prefix=prefix)
+    return CreateItemForm(request.POST, request.FILES, prefix=prefix, instance=instance) if request.method == 'POST' \
+        else CreateItemForm(prefix=prefix, instance=instance)
 
 
 def create_item(item_form):
