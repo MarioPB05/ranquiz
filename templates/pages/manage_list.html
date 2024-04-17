@@ -112,7 +112,7 @@
                     </div>
                     {% if edit_mode %}
                         {% for item_form in item_form_set %}
-                            <div id="{{ item_form.prefix }}" class="w-100 d-flex list_item flex-stack">
+                            <div id="{{ item_form.prefix }}" class="w-100 d-flex list_item flex-stack" data-prefix="{{ item_form.prefix }}">
                                 {{ item_form.image_url }}
                                 <label for="id_{{ item_form.prefix }}-image"
                                        class="itemImageLabel imageReload w-60px h-60px col-3 cursor-pointer bg-primary p-2 d-flex justify-content-center align-items-center rounded"><i

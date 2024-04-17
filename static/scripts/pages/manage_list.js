@@ -95,6 +95,7 @@ function removeItem(event) {
 
     // Eliminar el prefijo de la lista
     items_prefix = items_prefix.filter(item => item !== parseInt(prefix));
+    console.log(items_prefix);
 
     // Eliminar el item
     parent.remove();
@@ -471,7 +472,7 @@ function addItemImagesToInput() {
             convertToBlob(url, target);
         }
 
-        items_prefix.push($(element).parent().attr('id'));
+        items_prefix.push(parseInt($(element).parent().attr('id')));
     });
 
     item_last_prefix = items_prefix[items_prefix.length - 1];
