@@ -18,6 +18,14 @@ def create_item(item_form):
     return None
 
 
+def get_item(item_id):
+    """Función para obtener un item"""
+    try:
+        return Item.objects.get(id=item_id)
+    except Item.DoesNotExist:
+        return None
+
+
 def get_items(share_code):
     """Función para obtener los items de una lista"""
     # Obtenemos la lista

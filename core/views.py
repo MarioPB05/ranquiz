@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 from api.models import List, Item
 from api.services.category_service import get_category
-from api.services.item_service import create_item_form, create_item
+from api.services.item_service import create_item_form, create_item, get_item
 from api.services.list_service import create_list_form, set_category, create_list
 from api.services.user_service import user_login, user_register, get_user
 from core.decorators.decorators import partial_login_required
@@ -99,16 +99,37 @@ def edit_list_view(request, share_code):
             list_obj.type = 0
             list_obj.save()
 
-            # Eliminar todos los elementos existentes de la lista
-            list_obj.item_set.all().delete()
+            # Obtén todos los elementos existentes en la base de datos que pertenecen a la lista actual
+            existing_items = list_obj.item_set.all()
 
+            for item in existing_items:
+                # Verifica si el prefijo del elemento existe en los elementos recibidos del formulario
+                if str(item.id) not in items_prefix:
+                    # Si el elemento existe en la base de datos pero no en la lista actual, elimínalo
+                    item.delete()
+
+            # Itera sobre cada prefijo de elemento recibido del formulario
             for prefix in items_prefix:
-                item_form = create_item_form(request, prefix=prefix)
-                item = create_item(item_form)
+                item = get_item(prefix)
 
-                if item_form.is_valid() and item is not None:
-                    item.list = list_obj
-                    item.save()
+                # Verifica si corresponde a un elemento existente en la base de datos
+                if item is not None and item.list == list_obj:
+                    # Compara los datos del formulario con los datos existentes en la base de datos
+                    item_data = model_to_dict(item)
+                    if item_data['name'] != request.POST[f'{prefix}-name'] or item_data['image'] != request.FILES.get(
+                            f'{prefix}-image'):
+                        # Actualiza los datos del elemento existente en la base de datos
+                        item.name = request.POST[f'{prefix}-name']
+                        item.image = request.FILES.get(f'{prefix}-image')
+                        item.save()
+                else:
+                    # Si no existe un elemento correspondiente en la base de datos, crea un nuevo elemento en la lista
+                    item_form = create_item_form(request, prefix=prefix)
+                    new_item = create_item(item_form)
+
+                    if item_form.is_valid() and new_item is not None:
+                        new_item.list = list_obj
+                        new_item.save()
 
             # Elimina las categorías existentes de la lista antes de añadir las nuevas
             list_obj.listcategory_set.all().delete()
