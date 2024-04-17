@@ -8,7 +8,7 @@ const maxCategories = 5;
 const maxCategoryLength = 25;
 let allCategories = [];
 const flatpickrInstance = initializeFlatpickr("#range_date_highlight", 'range', moment().format('YYYY-MM-DD')); // skipcq: JS-0125
-
+const imageInput = new KTImageInput.getInstance($('#kt_image_input')[0]); // skipcq: JS-0125
 
 /**
  * Cambiar la imagen de la lista
@@ -270,18 +270,21 @@ function actualizeItemNumber() {
     $("#item_number").text(i);
 }
 
-async function addCategory(name) {
-    // Verificar que la categoría sea válida
-    if (!validateCategory(name)) {
-        return;
-    }
+async function addCategory(name, skipValidation = false) {
 
-    // Verificar si la categoría no existe y si es similar a alguna
-    if (allCategories.indexOf(name) === -1) {
-        if (await acceptSimilarCategory(name)) {
+    if (!skipValidation) {
+        // Verificar que la categoría sea válida
+        if (!validateCategory(name)) {
             return;
-        }else {
-            uploadCategory(name);
+        }
+
+        // Verificar si la categoría no existe y si es similar a alguna
+        if (allCategories.indexOf(name) === -1) {
+            if (await acceptSimilarCategory(name)) {
+                return;
+            }else {
+                uploadCategory(name);
+            }
         }
     }
 
@@ -289,7 +292,7 @@ async function addCategory(name) {
     categories.push(name);
     $('#add_category').val('');
 
-    // Añaadir la categoría al contenedor
+    // Añadir la categoría al contenedor
     const category = $('#category_template').clone();
 
     category.removeAttr('id');
@@ -441,7 +444,6 @@ function beforeSendForm(event) {
 }
 
 function convertToBlob(url, target) {
-    console.log(url, target);
     const xhr = new XMLHttpRequest();
     xhr.open('GET', url);
     xhr.responseType = 'blob';
@@ -454,6 +456,8 @@ function convertToBlob(url, target) {
         let container = new DataTransfer();
         container.items.add(file);
         input.files = container.files;
+
+        input.dispatchEvent(new Event('change'));
     };
     xhr.send();
 }
@@ -466,6 +470,24 @@ function addItemImagesToInput() {
         if (url) {
             convertToBlob(url, target);
         }
+    });
+}
+
+/**
+ * Poner la imagen de la lista por URL
+ */
+function putListImageByURL() {
+    const url = $('#image_url').val();
+    const target = 'image';
+    convertToBlob(url, target);
+}
+
+function reloadCategories() {
+    let text_categories = $("#categories").val();
+    text_categories = text_categories.split(",");
+
+    $.each(text_categories, (index, element) => {
+        addCategory(element, true);
     });
 }
 
@@ -528,6 +550,8 @@ function onDocumentReady() {
         }
     }else {
         addItemImagesToInput();
+        putListImageByURL();
+        reloadCategories();
         actualizeItemNumber();
     }
 
