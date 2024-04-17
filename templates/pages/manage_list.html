@@ -100,12 +100,12 @@
                                 class="bi bi-card-image text-primary-800 fs-1"></i></label>
                         {{ item_form.image }}
 
-                        <div class="col-9 pe-10 ps-10">
+                        <div class="col-9 pe-10 ps-5 pb-2">
                             <label for="id_template-name" class="form-label fw-bolder fs-8 mb-0">Nombre</label>
                             {{ item_form.name }}
                         </div>
 
-                        <div class="col-1 d-flex justify-content-center align-items-end h-40px">
+                        <div class="col-1 d-flex justify-content-center align-items-end h-40px pb-1">
                             <i class="bi bi-trash text-gray-400 fs-1 cursor-pointer hover-text-danger remove_item"></i>
                         </div>
                     </div>
@@ -118,12 +118,12 @@
                                         class="bi bi-card-image {% if item_form.image_url.value %}text-white{% else %}text-primary-800{% endif %} fs-1"></i></label>
                                 {{ item_form.image }}
 
-                                <div class="col-9 pe-10 ps-10">
+                                <div class="col-9 pe-10 ps-5 pb-2">
                                     <label for="id_{{ item_form.prefix }}-name" class="form-label fw-bolder fs-8 mb-0">Nombre</label>
                                     {{ item_form.name }}
                                 </div>
 
-                                <div class="col-1 d-flex justify-content-center align-items-end h-40px">
+                                <div class="col-1 d-flex justify-content-center align-items-end h-40px pb-1">
                                     <i class="bi bi-trash text-gray-400 fs-1 cursor-pointer hover-text-danger remove_item"></i>
                                 </div>
                             </div>
