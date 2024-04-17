@@ -8,7 +8,8 @@
         {% csrf_token %}
 
         <input id="items_prefix" type="hidden" name="items_prefix">
-        <input id="categories" type="hidden" name="categories">
+        {{ list_form.categories }}
+        {{ list_form.image_url }}
 
         <main class="bg-primary-300 p-10 w-100 rounded">
             <div class="row">
@@ -138,14 +139,10 @@
                 </button>
             </div>
 
-            <div class="col-lg-6  order-lg-2 order-1 border-primary border border-1 rounded p-10 position-lg-sticky top-25 h-lg-400px">
+            <div class="col-lg-6 d-flex justify-content-around flex-column order-lg-2 order-1 border-primary border border-1 rounded p-10 position-lg-sticky top-25 h-lg-400px">
                 <div class="mb-8">
                     <label for="visibility" class="required fw-boldest text-primary-800">Visibilidad</label>
-                    <select class="form-select text-black" id="visibility" required data-hide-search="true"
-                            data-control="select2" name="visibility">
-                        <option value="public">Público</option>
-                        <option value="private">Privado</option>
-                    </select>
+                    {{ list_form.visibility }}
                 </div>
 
                 <div class="mb-12">
@@ -172,25 +169,26 @@
                     </div>
 
                 </div>
+                {% if not edit_mode %}
+                    <div class="mb-3 row">
+                        <div class="col-10">
+                            <div class="d-flex align-items-center">
+                                <label for="range_date_highlight" class="fw-boldest text-primary-800">Destacar</label>
+                                <i class="bi bi-x-lg ms-2 hover-text-danger cursor-pointer" id="cancel_highlight"></i>
+                            </div>
 
-                <div class="mb-3 row">
-                    <div class="col-10">
-                        <div class="d-flex align-items-center">
-                            <label for="range_date_highlight" class="fw-boldest text-primary-800">Destacar</label>
-                            <i class="bi bi-x-lg ms-2 hover-text-danger cursor-pointer" id="cancel_highlight"></i>
+                            <input class="form-control position-relative" placeholder="Selecciona un rango de fechas"
+                                   id="range_date_highlight">
+
                         </div>
 
-                        <input class="form-control position-relative" placeholder="Selecciona un rango de fechas"
-                               id="range_date_highlight">
+                        <div class="col-2 d-flex align-items-center justify-content-center flex-column">
+                            <span class="text-muted fs-7">Precio</span>
+                            <span class="fw-boldest fs-2" id="highlight_price">0</span>
+                        </div>
 
                     </div>
-
-                    <div class="col-2 d-flex align-items-center justify-content-center flex-column">
-                        <span class="text-muted fs-7">Precio</span>
-                        <span class="fw-boldest fs-2" id="highlight_price">0</span>
-                    </div>
-
-                </div>
+                {% endif %}
             </div>
         </div>
 
