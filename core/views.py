@@ -99,7 +99,7 @@ def edit_list_view(request, share_code):
             list_obj.type = 0
             list_obj.save()
 
-            # Elimina los elementos existentes de la lista antes de añadir los nuevos
+            # Eliminar todos los elementos existentes de la lista
             list_obj.item_set.all().delete()
 
             for prefix in items_prefix:

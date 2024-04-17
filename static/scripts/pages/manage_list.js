@@ -470,7 +470,11 @@ function addItemImagesToInput() {
         if (url) {
             convertToBlob(url, target);
         }
+
+        items_prefix.push($(element).parent().attr('id'));
     });
+
+    item_last_prefix = items_prefix[items_prefix.length - 1];
 }
 
 /**
@@ -482,6 +486,9 @@ function putListImageByURL() {
     convertToBlob(url, target);
 }
 
+/**
+ * Recargar las categorías
+ */
 function reloadCategories() {
     let text_categories = $("#categories").val();
     text_categories = text_categories.split(",");
