@@ -8,7 +8,11 @@ class CreateListForm(ModelForm):
 
     name = forms.CharField(max_length=100)
     image = forms.ImageField(required=False)
+    question = forms.CharField(
+        max_length=100,
+       widget=forms.TextInput(attrs={'class': 'form-control text-black', 'id': 'question', 'maxlength': '70', 'value': '¿Cúal prefieres?', 'required': True})
+    )
 
     class Meta:
         model = List
-        fields = ['name', 'image']
+        fields = ['name', 'image', 'question']
