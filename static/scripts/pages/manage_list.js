@@ -434,6 +434,38 @@ function beforeSendForm(event) {
     addPageLoader();
 }
 
+function convertToBlob(url, target) {
+    console.log(url, target);
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', url);
+    xhr.responseType = 'blob';
+    xhr.onload = () => {
+        const blob = xhr.response;
+        const fileName = url.substring(url.lastIndexOf('/') + 1); // Extraemos el nombre del archivo de la URL
+        const file = new File([blob], fileName);
+        const fileList = [];
+        fileList.push(file);
+        const input = $('#' + target)[0];
+        Object.defineProperty(input, 'files', {
+            writable: true,
+            value: fileList
+        });
+        // $('#' + target).trigger('change');
+    };
+    xhr.send();
+}
+
+
+function addItemImagesToInput() {
+    $('#items_container').find('.list_item:not(#item_template) input[type="file"]').each((index, element) => {
+        const url = $(element).parent().find(".item-image-url").val();
+        const target = $(element).attr('id');
+        if (url) {
+            convertToBlob(url, target);
+        }
+    });
+}
+
 /**
  * Esta función se llama cuando el documento está listo
  */
@@ -486,9 +518,14 @@ function onDocumentReady() {
 
     $("#categories_container").on('click', '.category', removeCategory);
 
-    // Añadir los items mínimos
-    for (let i = 0; i < minItems; i++) {
-        createItem();
+    if (!edit_mode) {
+        // Añadir los items mínimos
+        for (let i = 0; i < minItems; i++) {
+            createItem();
+        }
+    }else {
+        addItemImagesToInput();
+        actualizeItemNumber();
     }
 
     $('button[type=submit]').on('click', beforeSendForm);
