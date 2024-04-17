@@ -100,7 +100,7 @@ def edit_list_view(request, share_code):
             list_obj.save()
 
             # Elimina los elementos existentes de la lista antes de añadir los nuevos
-            list_obj.items.all().delete()
+            list_obj.item_set.all().delete()
 
             for prefix in items_prefix:
                 item_form = create_item_form(request, prefix=prefix)
@@ -111,7 +111,7 @@ def edit_list_view(request, share_code):
                     item.save()
 
             # Elimina las categorías existentes de la lista antes de añadir las nuevas
-            list_obj.categories.clear()
+            list_obj.listcategory_set.all().delete()
 
             if categories_names is not None:
                 for category_name in categories_names:
@@ -120,7 +120,7 @@ def edit_list_view(request, share_code):
                     if category is not None:
                         set_category(list_obj, category)
 
-        return redirect('ruta_a_la_vista_de_detalle_de_lista', list_id=list_obj.id)
+        return redirect("/", list_id=list_obj.id)
 
     item_form_set = []
 

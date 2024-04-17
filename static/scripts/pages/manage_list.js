@@ -39,7 +39,7 @@ function createItem() {
     item.removeAttr('id');
 
     // Vaciar los inputs
-    item.find('input[type="text"]').val('');
+    // item.find('input[type="text"]').val('');
 
     // Obtener el prefijo del item
     const prefix = `${item_last_prefix + 1}-`;
@@ -237,7 +237,7 @@ function anyItemInputEmpty() {
     // Comprueba si hay algún input de item vacío
     let empty = false;
 
-    $('#items_container').find('.list_item:not(#item_template) input[type="text"]').each((index, element) => {
+    $('#items_container').find('.list_item:not(#item_template) .item-name').each((index, element) => {
         if (!$(element).val() && $(element).val() !== '0') {
             empty = true;
         }

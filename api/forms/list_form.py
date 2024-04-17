@@ -28,8 +28,9 @@ class CreateListForm(ModelForm):
        widget=forms.TextInput(attrs={'class': 'form-control text-black', 'id': 'question', 'maxlength': '70', 'value': '¿Cúal prefieres?', 'required': True})
     )
     image_url = forms.CharField(
+        required=False,
         max_length=100,
-       widget=forms.TextInput(attrs={'class': 'form-control text-black, d-none', 'id': 'image_url', 'maxlength': '70', 'value': '', 'required': False})
+       widget=forms.TextInput(attrs={'class': 'd-none', 'id': 'image_url', 'maxlength': '70', 'value': '', 'required': False})
     )
     visibility = forms.ChoiceField(choices=[('public', 'Público'), ('private', 'Privado')],
                                    widget=forms.Select(attrs={
