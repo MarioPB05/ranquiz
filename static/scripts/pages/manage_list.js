@@ -556,6 +556,7 @@ function onDocumentReady() {
             createItem();
         }
     }else {
+        $("#submit_list").text("Guardar cambios");
         addItemImagesToInput();
         putListImageByURL();
         reloadCategories();
