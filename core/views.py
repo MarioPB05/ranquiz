@@ -125,11 +125,9 @@ def edit_list_view(request, share_code):
 
                 # Verifica si corresponde a un elemento existente en la base de datos
                 if item is not None and item.list == list_obj and item.id == int(prefix):
-                    print('Item found', prefix)
                     # Compara los datos del formulario con los datos existentes en la base de datos
                     if item.name != request.POST[f'{prefix}-name'] or item.image != request.FILES.get(
                             f'{prefix}-image'):
-                        return HttpResponseServerError("Error interno del servidor: {}")
                         # Actualiza los datos del elemento existente en la base de datos
                         item.name = request.POST[f'{prefix}-name']
 
