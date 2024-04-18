@@ -9,6 +9,8 @@
     --primary-700: #9A0FBC;
     --primary-800: #800E9A;
     --primary-900: #6B127D;
+
+    --secondary-dark: #a1a1a1;
 }
 
 
@@ -46,6 +48,17 @@
     color: var(--bs-danger)!important;
 }
 
+.border-secondary-dark {
+    border-color: var(--secondary-dark)!important;
+}
+
+.bg-secondary-dark {
+    background-color: var(--secondary-dark)!important;
+}
+
+.text-secondary-dark {
+    color: var(--secondary-dark)!important;
+}
 
 .hover-text-white:hover {
     transition-duration: 0.3s;
