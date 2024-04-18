@@ -136,8 +136,6 @@ function reloadUserData() {
         });
 }
 
-export { removePageLoader, initializeFlatpickr, promiseAjax, toastMessage, addPageLoader, reloadUserData, formatElapsedTime };
-
 /**
  * Esta función tiene como objetivo transformar un número de segundos en un formato de cantidades de tiempo.
  */
@@ -168,3 +166,6 @@ function secondsToTime(seconds, digits = 4) {
 
     return timeString;
 }
+
+export { removePageLoader, initializeFlatpickr, promiseAjax, toastMessage, addPageLoader, reloadUserData, formatElapsedTime, secondsToTime };
+
