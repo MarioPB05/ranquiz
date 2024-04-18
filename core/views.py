@@ -9,7 +9,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from api.models import List, Item
 from api.services.category_service import get_category
 from api.services.item_service import create_item_form, create_item, get_item
-from api.services.list_service import create_list_form, set_category, create_list
+from api.services.list_service import create_list_form, set_category, create_list, get_list
 from api.services.user_service import user_login, user_register, get_user
 from core.decorators.decorators import partial_login_required
 
@@ -90,8 +90,11 @@ def edit_list_view(request, share_code):
 
     if request.method == 'POST' and list_form.is_valid():
         # Actualiza los datos de la lista con los datos del formulario
-        list_obj = list_form.save(commit=False)
-        list_obj.owner = request.user
+        # list_obj = list_form.save(commit=False)
+        list_obj = get_list(share_code)
+        list_obj.name = request.POST.get('name')
+        list_obj.question = request.POST.get('question')
+        # list_obj.owner = request.user
         list_obj.public = bool(request.POST.get('visibility') == 'public')
 
         # Verifica si la foto de la lista ha cambiado y la elimina de Cloudinary
@@ -117,6 +120,7 @@ def edit_list_view(request, share_code):
                 # Verifica si el prefijo del elemento existe en los elementos recibidos del formulario
                 if str(item.id) not in items_prefix:
                     # Si el elemento existe en la base de datos pero no en la lista actual, elimínalo
+                    cloudinary.uploader.destroy(item.image.public_id, invalidate=True)
                     item.delete()
 
             # Itera sobre cada prefijo de elemento recibido del formulario
