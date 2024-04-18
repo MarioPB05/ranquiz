@@ -37,6 +37,10 @@
     color: red;
 }
 
+.fs-60px {
+    font-size: 60px;
+}
+
 .hover-text-danger:hover {
     transition-duration: 0.3s;
     color: var(--bs-danger)!important;
