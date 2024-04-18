@@ -609,7 +609,7 @@ function onDocumentReady() {
 
     $("#categories_container").on('click', '.category', removeCategory);
 
-    if (!edit_mode) {
+    if (!edit_mode) { // skipcq: JS-0125
         // Añadir los items mínimos
         for (let i = 0; i < minItems; i++) {
             createItem();
