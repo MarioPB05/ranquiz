@@ -2,11 +2,9 @@ import cloudinary
 from cloudinary import uploader
 from django.contrib.auth import logout as django_logout
 from django.contrib.auth.decorators import login_required
-from django.forms import inlineformset_factory, model_to_dict
 from django.http import Http404, HttpResponseForbidden
 from django.shortcuts import render, redirect, get_object_or_404
-
-from api.models import List, Item
+from api.models import List
 from api.services.category_service import get_category
 from api.services.item_service import create_item_form, create_item, get_item
 from api.services.list_service import create_list_form, set_category, create_list, get_list
@@ -81,8 +79,8 @@ def edit_list_view(request, share_code):
     list_obj = get_object_or_404(List, share_code=share_code)
 
     # Comprueba si el usuario tiene permiso para editar la lista
-    # if list_obj.owner != request.user:
-    #     return HttpResponseForbidden("No tienes permiso para editar esta lista")
+    if list_obj.owner != request.user:
+        return HttpResponseForbidden("No tienes permiso para editar esta lista")
 
     # Crea el formulario de lista con los datos de la lista existente
     list_form = create_list_form(request, instance=list_obj)
@@ -90,11 +88,9 @@ def edit_list_view(request, share_code):
 
     if request.method == 'POST' and list_form.is_valid():
         # Actualiza los datos de la lista con los datos del formulario
-        # list_obj = list_form.save(commit=False)
         list_obj = get_list(share_code)
         list_obj.name = request.POST.get('name')
         list_obj.question = request.POST.get('question')
-        # list_obj.owner = request.user
         list_obj.public = bool(request.POST.get('visibility') == 'public')
 
         # Verifica si la foto de la lista ha cambiado y la elimina de Cloudinary
