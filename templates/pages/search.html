@@ -3,14 +3,51 @@
 
 {% block content %}
     <div class="w-100">
-        <div class="w-75 p-5 pt-20 m-auto">
+        <div class="w-75 p-5 pt-20 m-auto mb-10">
 {#            <div class="d-flex gap-10 align-items-center w-100 justify-content-center pb-10">#}
 {#                <img src="{% static '/assets/media/logo/ranquiz.png' %}" class="w-auto h-40px">#}
 {#                <h1 class="text-center text-primary fw-boldest fs-60px m-0">RANQUIZ</h1>#}
 {#                <img src="{% static '/assets/media/logo/ranquiz.png' %}" class="w-auto h-40px">#}
 {#            </div>#}
-            
-            <input class="form-control border-active-secondary text-black" data-bs-toggle="tooltip" data-bs-custom-class="tooltip-dark" data-bs-placement="right" title="Pulsa intro para buscar" placeholder="Buscar en ranquiz" style="border-color: #a1a1a1">
+
+            <div class="d-flex align-items-center gap-3">
+                <button class="btn btn-outline-primary p-2 rounded-4 text-hover-white" id="search_button">
+                    <i class="bi bi-search text-primary fs-2 "></i>
+                </button>
+                <input class="form-control border-active-secondary text-black border-secondary-dark" data-bs-toggle="tooltip" data-bs-custom-class="tooltip-dark" data-bs-placement="right" title="Pulsa intro para buscar" placeholder="Buscar en ranquiz">
+            </div>
+        </div>
+
+
+        <nav class="d-grid gap-10 mb-10" style="grid-template-columns: repeat(3, 1fr)">
+            <button class="btn btn-primary p-2 border-bottom border-bottom-1 border-secondary-dark text-white text-hover-white nav_selected fs-3" id="list_nav">Listas</button>
+            <button class="btn btn-outline-primary p-2 border-bottom border-bottom-1 border-secondary-dark text-secondary-dark text-hover-white fs-3" id="category_nav">Categorias</button>
+            <button class="btn btn-outline-primary p-2 border-bottom border-bottom-1 border-secondary-dark text-secondary-dark text-hover-white fs-3" id="user_nav">Usuarios</button>
+        </nav>
+
+
+        <div class="" id="content">
+
+            <div class="list mw-400px h-250px p-5 cursor-pointer pb-2 position-relative border-secondary-dark border-1 border rounded d-grid gap-4" style="grid-template-rows: 1fr auto auto">
+                <div class="overflow-hidden rounded mb-3">
+                    <img src="https://images.wikidexcdn.net/mwuploads/wikidex/thumb/a/a7/latest/20220715200149/EP1206_Dragonite_de_Iris.png/640px-EP1206_Dragonite_de_Iris.png" class="h-100 w-100 list_image" style="object-fit: cover">
+                </div>
+                <div class="w-100">
+                    <h2 class="m-0 text-primary fw-bolder list_name text-break">Titulo de la lista</h2>
+                </div>
+                <a class="d-flex gap-3 align-items-center" href="/">
+                    <img src="http://res.cloudinary.com/dhewpzvg9/image/upload/c_fill/v1712514744/avatars/kidcithbb1ogolsssdma.png" class="h-30px w-30px rounded-circle">
+                    <h4 class="m-0 text-secondary-dark fw-light text-break">Usuario</h4>
+                </a>
+                <div class="rounded-circle p-3 pb-2 border border-secondary bg-white shadow position-absolute end-0 top-0 m-2 cursor-pointer text-hover-danger">
+                    <i class="bi bi-heart fs-1"></i>
+                </div>
+                <div class="position-absolute bottom-0 end-0 m-2 me-5 d-flex gap-2 align-items-center">
+                    <p class="m-0 fs-3 fw-bolder text-secondary-dark">33</p>
+                    <i class="bi bi-controller fs-1"></i>
+                </div>
+            </div>
+
         </div>
     </div>
 {% endblock %}
