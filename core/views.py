@@ -1,5 +1,5 @@
 import cloudinary
-from cloudinary import uploader
+from cloudinary import uploader  # skipcq: PY-W2000
 from django.contrib.auth import logout as django_logout
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponseForbidden
