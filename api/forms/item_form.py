@@ -13,9 +13,13 @@ class CreateItemForm(ModelForm):
         if instance:
             # Si se proporciona una instancia, inicializa los campos con los valores de la instancia
             self.fields['name'].initial = instance.name
-            self.fields['image_url'].initial = cloudinary.CloudinaryImage.build_url(instance.image) if instance.image else None
+            self.fields['image_url'].initial = cloudinary.CloudinaryImage.build_url(instance.image) \
+                if instance.image else None
 
-    name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control text-black item-name', 'id': 'id_template-name'}))
+    name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={
+        'class': 'form-control text-black item-name',
+        'id': 'id_template-name'
+    }))
     image = forms.ImageField(required=False, widget=forms.FileInput(attrs={
         'class': 'd-none item-image', 'id': 'id_template-image'
     }), allow_empty_file=True)
