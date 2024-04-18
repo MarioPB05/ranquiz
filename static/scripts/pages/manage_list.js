@@ -252,13 +252,10 @@ function itemHasImage(event) {
     const input = $(`#${$(this).attr('for')}`);
 
     // Comprobar si ya se ha seleccionado una imagen para mostrar el modal directamente
-    if (input[0] && input[0].files.length > 0) {
+    if (input[0] && input.prop('files').length > 0) {
         event.preventDefault();
 
-        if ($(this).hasClass('imageReload'))  {
-            itemImageChanged({target: input});
-            $(this).removeClass('imageReload');
-        }
+        itemImageChanged({target: input});
 
         showItemPreviewModal(input[0]);
     }
@@ -475,12 +472,16 @@ function convertToBlob(url, target) {
 function addItemImagesToInput() {
     $('#items_container').find('.list_item:not(#item_template) input[type="file"]').each((index, element) => {
         const url = $(element).parent().find(".item-image-url").val();
-        const target = $(element).attr('id');
+        const item_prefix = parseInt($(element).parent().attr('id'));
+
+        $(element).attr('id', `id_${item_prefix}-image`);
+        $(element).parent().find('.item-name').attr('id', `id_${item_prefix}-name`);
+
         if (url) {
-            convertToBlob(url, target);
+            convertToBlob(url, $(element).attr('id'));
         }
 
-        items_prefix.push(parseInt($(element).parent().attr('id')));
+        items_prefix.push(item_prefix);
     });
 
     item_last_prefix = items_prefix[items_prefix.length - 1];
