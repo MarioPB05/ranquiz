@@ -8,7 +8,6 @@ const maxCategories = 5;
 const maxCategoryLength = 25;
 let allCategories = [];
 const flatpickrInstance = initializeFlatpickr("#range_date_highlight", 'range', moment().format('YYYY-MM-DD')); // skipcq: JS-0125
-const imageInput = new KTImageInput.getInstance($('#kt_image_input')[0]); // skipcq: JS-0125, JS-0128
 
 /**
  * Cambiar la imagen de la lista
