@@ -1,3 +1,5 @@
+import cloudinary
+from cloudinary import uploader
 from django.contrib.auth import logout as django_logout
 from django.contrib.auth.decorators import login_required
 from django.forms import inlineformset_factory, model_to_dict
@@ -92,6 +94,15 @@ def edit_list_view(request, share_code):
         list_obj.owner = request.user
         list_obj.public = bool(request.POST.get('visibility') == 'public')
 
+        # Verifica si la foto de la lista ha cambiado y la elimina de Cloudinary
+        if 'image' in request.FILES:
+            new_image = request.FILES['image']
+            if new_image != list_obj.image:
+                if list_obj.image:
+                    cloudinary.uploader.destroy(list_obj.image.public_id, invalidate=True)
+
+                list_obj.image = new_image
+
         items_prefix = request.POST.get('items_prefix').split(',')
         categories_names = request.POST.get('categories').split(',')
 
@@ -120,6 +131,11 @@ def edit_list_view(request, share_code):
                             f'{prefix}-image'):
                         # Actualiza los datos del elemento existente en la base de datos
                         item.name = request.POST[f'{prefix}-name']
+
+                        # Verifica si la imagen del elemento ha cambiado y la elimina de Cloudinary
+                        if item.image and request.FILES.get(f'{prefix}-image') != item.image:
+                            cloudinary.uploader.destroy(item.image.public_id, invalidate=True)
+
                         item.image = request.FILES.get(f'{prefix}-image')
                         item.save()
                 else:
