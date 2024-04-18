@@ -27,35 +27,7 @@
 
 
         <div class="w-100 d-md-grid d-flex flex-column gap-7" id="content" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr))">
-
-            <div class="list w-100 h-250px p-5 cursor-pointer pb-2 position-relative border-secondary-dark border-1 border rounded d-grid gap-4" style="grid-template-rows: 1fr auto auto">
-                <!--
-                Clases:
-                - list_image: Imagen de la lista
-                - list_name: Nombre de la lista
-                - list_author_group: Grupo de autor (hay que poner el enlace)
-                - author_image: Imagen del autor
-                - author_name: Nombre del autor
-                - list_like: Icono de like
-                -->
-                <div class="overflow-hidden rounded mb-3">
-                    <img src="https://images.wikidexcdn.net/mwuploads/wikidex/thumb/a/a7/latest/20220715200149/EP1206_Dragonite_de_Iris.png/640px-EP1206_Dragonite_de_Iris.png" class="h-100 w-100 list_image" style="object-fit: cover">
-                </div>
-                <div class="w-100">
-                    <h2 class="m-0 text-primary fw-bolder list_name text-break">Titulo de la lista</h2>
-                </div>
-                <a class="d-flex gap-3 align-items-center list_author_group" href="/">
-                    <img src="http://res.cloudinary.com/dhewpzvg9/image/upload/c_fill/v1712514744/avatars/kidcithbb1ogolsssdma.png" class="h-30px w-30px rounded-circle author_image">
-                    <h4 class="m-0 text-secondary-dark fw-light text-break author_name">Usuario</h4>
-                </a>
-                <div class="rounded-circle p-3 pb-2 border border-secondary bg-white shadow position-absolute end-0 top-0 m-2 cursor-pointer text-hover-danger">
-                    <i class="bi bi-heart fs-1 list_like"></i>
-                </div>
-                <div class="position-absolute bottom-0 end-0 m-2 me-5 d-flex gap-2 align-items-center">
-                    <p class="m-0 fs-3 fw-bolder text-secondary-dark list_plays_number">0</p>
-                    <i class="bi bi-controller fs-1"></i>
-                </div>
-            </div>
+            {% include 'base/list_template.html' %}
 
         </div>
     </div>
