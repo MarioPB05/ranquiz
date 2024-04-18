@@ -1,0 +1,20 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="w-100">
+        <div class="w-75 p-5 pt-20 m-auto">
+{#            <div class="d-flex gap-10 align-items-center w-100 justify-content-center pb-10">#}
+{#                <img src="{% static '/assets/media/logo/ranquiz.png' %}" class="w-auto h-40px">#}
+{#                <h1 class="text-center text-primary fw-boldest fs-60px m-0">RANQUIZ</h1>#}
+{#                <img src="{% static '/assets/media/logo/ranquiz.png' %}" class="w-auto h-40px">#}
+{#            </div>#}
+            
+            <input class="form-control border-active-secondary text-black" data-bs-toggle="tooltip" data-bs-custom-class="tooltip-dark" data-bs-placement="right" title="Pulsa intro para buscar" placeholder="Buscar en ranquiz" style="border-color: #a1a1a1">
+        </div>
+    </div>
+{% endblock %}
+
+{% block custom_scripts %}
+<script src="{% static '/scripts/pages/search.js' %}" type="module"></script>
+{% endblock %}
