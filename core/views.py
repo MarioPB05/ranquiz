@@ -5,9 +5,9 @@ from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponseForbidden
 from django.shortcuts import render, redirect, get_object_or_404
 from api.models import List
-from api.services.category_service import get_category, edit_list_categories
-from api.services.item_service import create_item_form, create_item, get_item, edit_list_items
-from api.services.list_service import create_list_form, set_category, create_list, get_list
+from api.services.category_service import edit_list_categories
+from api.services.item_service import create_item_form, create_item, edit_list_items
+from api.services.list_service import create_list_form, create_list, get_list
 from api.services.user_service import user_login, user_register, get_user
 from core.decorators.decorators import partial_login_required
 
