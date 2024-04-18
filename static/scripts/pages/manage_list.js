@@ -458,9 +458,9 @@ function convertToBlob(url, target) {
         const blob = xhr.response;
         const fileName = url.substring(url.lastIndexOf('/') + 1); // Extraemos el nombre del archivo de la URL
         const file = new File([blob], fileName);
-        const input = $('#' + target)[0];
+        const input = $(`#${target}`)[0];
 
-        let container = new DataTransfer();
+        const container = new DataTransfer();
         container.items.add(file);
         input.files = container.files;
 
