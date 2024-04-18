@@ -23,6 +23,11 @@ def get_list(share_code):
         return None
 
 
+def get_user_lists(user):
+    """Función que devuelve todas las listas de un usuario"""
+    return List.objects.filter(owner=user)
+
+
 def set_category(list_obj, category):
     """Función que añade una categoría a una lista"""
     list_category = ListCategory(list=list_obj, category=category)
