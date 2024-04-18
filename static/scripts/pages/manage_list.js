@@ -127,7 +127,6 @@ function removeItem(event) {
 
     // Eliminar el prefijo de la lista
     items_prefix = items_prefix.filter(item => item !== parseInt(prefix));
-    console.log(items_prefix);
 
     // Eliminar el item
     parent.remove();
