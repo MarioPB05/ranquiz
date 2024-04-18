@@ -1,5 +1,6 @@
 from api.forms.category_form import CreateCategoryForm
 from api.models import Category
+from api.services.list_service import set_category
 
 
 def create_category(data):
@@ -11,6 +12,18 @@ def create_category(data):
         return category_form.save()
 
     return None
+
+
+def edit_list_categories(categories_names, list_obj):
+    """Función para editar las categorías de una lista"""
+    # Elimina las categorías existentes de la lista antes de añadir las nuevas
+    list_obj.listcategory_set.all().delete()
+    if categories_names is not None:
+        for category_name in categories_names:
+            category = get_category(category_name=category_name)
+
+            if category is not None:
+                set_category(list_obj, category)
 
 
 def get_category(category_id=None, category_name=None):

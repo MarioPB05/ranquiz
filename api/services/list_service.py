@@ -2,9 +2,12 @@ from api.forms.list_form import CreateListForm
 from api.models import List, ListCategory
 
 
-def create_list_form(request):
+def create_list_form(request, instance=None):
     """Obtiene el formulario para crear una lista"""
-    return CreateListForm(request.POST, request.FILES) if request.method == 'POST' else CreateListForm()
+    if request.method == 'POST':
+        return CreateListForm(request.POST, request.FILES, instance=instance)
+
+    return CreateListForm(instance=instance)
 
 
 def create_list(list_form):
