@@ -1,4 +1,4 @@
-import {removePageLoader, formatElapsedTime, toastMessage, promiseAjax} from "/static/assets/js/ranquiz/utils.js";
+import {removePageLoader, formatElapsedTime, toastMessage, promiseAjax, secondsToTime} from "/static/assets/js/ranquiz/utils.js";
 
 const blockUI = new KTBlockUI($("#comments_container").parent()[0], {
     message: '<div class="blockui-message"><span class="spinner-border text-primary"></span>Cargando comentarios...</div>',
@@ -290,3 +290,20 @@ function onDocumentReady() {
 }
 
 $(document).ready(onDocumentReady);
+
+/**
+ * Calcular el tiempo que le va a llevar al usuario completar la lista aproximadamente.
+ */
+
+function calculate_play_time(items, mode) {
+    let time = 5;
+    let total_time = 0;
+
+    if (mode === 4) {
+        total_time = items * time;
+    } else if (mode === 2) {
+        total_time = items * time * 3;
+    }
+
+    return secondsToTime(total_time, 2)
+}
