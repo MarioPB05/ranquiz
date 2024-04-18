@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 
 from api.services.category_service import get_category
 from api.services.item_service import create_item_form, create_item
-from api.services.list_service import create_list_form, set_category, create_list
+from api.services.list_service import create_list_form, set_category, create_list, get_user_lists
 from api.services.user_service import user_login, user_register, get_user
 from core.decorators.decorators import partial_login_required
 
@@ -86,12 +86,24 @@ def profile(request, share_code=None):
     if current_card not in cards:
         raise Http404('Page not found')
 
+    card_data = {'data': []}
+    if current_card == 'lists':
+        user_lists = get_user_lists(user_data)
+
+        for user_list in user_lists:
+            card_data['data'].append({
+                'name': user_list.name,
+                'public': user_list.public,
+                'share_code': user_list.share_code
+            })
+
     return render(request, 'pages/profile.html', {
         'user_data': user_data,
         'share_code': request.user.share_code if is_own_profile else share_code,
         'is_own_profile': is_own_profile,
         'card_template': card_template,
-        'current_card': current_card
+        'current_card': current_card,
+        'card_data': card_data
     })
 
 
