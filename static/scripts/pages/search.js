@@ -2,6 +2,7 @@ import { removePageLoader } from "/static/assets/js/ranquiz/utils.js";
 const blockcontent = new KTBlockUI($("#content")[0], { // skipcq: JS-0125
     message: '<div class="blockui-message"><span class="spinner-border text-primary"></span> Cargando...</div>',
 });
+const elementsPerPage = 30;
 
 const templateList = $("#template_list");
 
@@ -11,7 +12,7 @@ const exampleList = {
     name: "Lista 1",
     image: "https://images.wikidexcdn.net/mwuploads/wikidex/thumb/a/a7/latest/20220715200149/EP1206_Dragonite_de_Iris.png/640px-EP1206_Dragonite_de_Iris.png",
     url: "http://127.0.0.1:8000/list/LSdYgfiXomAobVAXHnnk",
-    liked: true,
+    liked: false,
     plays: 23,
     highlighted: true,
     author: {
@@ -89,18 +90,34 @@ function addList(list) {
  * @param sort (default, popular, newest)
  */
 function getLists(search, page, reset = false, sort = "default") {
+    console.log(`Buscando listas con: ${search}, en la página ${page}, ordenadas por ${sort}`);
+
     // Verificar si se debe resetear la lista
     if (reset) lists.length = 0;
 
     // Bloquear contenido
     blockcontent.block();
 
-    // TODO: Obtener listas de base de datos
+    // TODO: Obtener {elementsPerPage} listas de base de datos a partir de la página {page}
 
     // Desbloquear contenido
     blockcontent.release();
 
     lists.push(exampleList);
+
+    // Verificar si se encontraron resultados
+    if (lists.length === 0) {
+        notFoundResults();
+        return;
+    }
+
+    // Cambiar tamaño de las columnas
+    changeGridColumnsOfParent("350px");
+
+    // Verificar si se deben mostrar más elementos
+    if (lists.length === 1) {
+        $("#load_more").removeClass("d-none").addClass("d-flex");
+    }
 
     // Añadir listas a la página
     $.each(lists, (index, list) => {
@@ -109,17 +126,92 @@ function getLists(search, page, reset = false, sort = "default") {
 }
 
 /**
+ * Función que se activa o desactiva el mensaje de no se encontraron resultados
+ * @param active true para activar, false para desactivar
+ */
+function notFoundResults(active = true) {
+    if (active) {
+        $("#load_more").removeClass("d-flex").addClass("d-none");
+        changeGridColumnsOfParent("100%");
+        $("#notFoundResults").removeClass("d-none").addClass("d-flex");
+    }else if ($("#notFoundResults").hasClass("d-flex")) {
+        $("#notFoundResults").removeClass("d-flex").addClass("d-none");
+    }
+}
+
+/**
+ * Función que obtiene el modo de búsqueda seleccionado
+ * @returns {*}
+ */
+function getSelectedNav() {
+    return $("nav button.nav_selected").attr("id").split("_")[0];
+}
+
+/**
+ * Función que cambia el tamaño de las columnas de la vista principal
+ * @param minWidth
+ */
+function changeGridColumnsOfParent(minWidth) {
+    $("#content").css("grid-template-columns", `repeat(auto-fill, minmax(${minWidth}, 1fr)`);
+}
+
+/**
+ * Función que limpia los elementos de la página
+ */
+function emptyContent() {
+    $("#content>*").filter(function() {
+        return !this.id.startsWith("template");
+    }).not("#notFoundResults").remove()
+}
+
+/**
+ * Función que obtiene el texto de búsqueda
+ * @returns string
+ */
+function getSearch() {
+    return $("#search").val();
+}
+
+/**
  * Función que se ejecuta cuando el documento está listo
  */
 function onDocumentReady() {
+
+    // Evento para cambiar lo que el usuario está buscando
     $("nav button").on("click", (event) => {
+        // Si el botón ya está seleccionado, no hacer nada
         if ($(event.target).hasClass("nav_selected")) return;
-        const selected = $(event.target).attr("id").split("_")[0];
+
+        // Obtenemos el modo seleccionado y cambiamos la vista
+        const selected = getSelectedNav();
         toggleNavs(selected);
 
-        $("#content").empty();
+        // Limpiamos el contenido y obtenemos los elementos
+        emptyContent();
+        $("#content").attr("data-page", 1);
+        notFoundResults(false);
+
         if (selected === "list") {
             getLists("", 1, true, getSort());
+        }else if (selected === "category") {
+            notFoundResults();
+        } else if (selected === "user") {
+            notFoundResults();
+        }
+    });
+
+    $("#load_more button").on("click", () => {
+        const page = parseInt($("#content").attr("data-page")) + 1;
+        const selected = getSelectedNav();
+
+        $("#content").attr("data-page", page);
+
+        if (selected === "list") {
+            getLists(getSearch(), page, false, getSort());
+        }else if (selected === "category") {
+            notFoundResults();
+        } else if (selected === "user") {
+            notFoundResults();
         }
     });
 
