@@ -24,11 +24,13 @@
             <button class="btn btn-outline-primary p-2 border-bottom border-bottom-1 border-secondary-dark text-secondary-dark text-hover-white fs-3" id="category_nav">Categorias</button>
             <button class="btn btn-outline-primary p-2 border-bottom border-bottom-1 border-secondary-dark text-secondary-dark text-hover-white fs-3" id="user_nav">Usuarios</button>
         </nav>
-
-
+        
+        <div class="d-flex gap-5 mb-5">
+            <button class="btn btn-outline-primary p-1 border border-1 border-primary text-primary text-hover-white fs-7" id="newest">Recientes</button>
+            <button class="btn btn-outline-primary p-1 border border-1 border-primary text-primary text-hover-white fs-7" id="popular">Populares</button>
+        </div>
         <div class="w-100 d-md-grid d-flex flex-column gap-7" id="content" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr))">
             {% include 'base/list_template.html' %}
-
         </div>
     </div>
 {% endblock %}
