@@ -1,14 +1,18 @@
-<div class="list d-none w-100 overflow-hidden h-250px p-5 cursor-pointer pb-2 position-relative border-secondary-dark border-1 border rounded d-grid gap-4" style="grid-template-rows: 1fr auto auto" id="template_list">
-    <!--
-    Clases:
+<!--
+Clases:
+    - list: Contenedor de la lista
     - list_image: Imagen de la lista
     - list_name: Nombre de la lista
     - highlight_list: Poner en d-flex y quitar el display none si es destacado
     - list_author_group: Grupo de autor (hay que poner el enlace y prevenir el comportamiento por defecto)
     - author_image: Imagen del autor
     - author_name: Nombre del autor
-    - list_like: Icono de like (quitar el bi-heart y poner bi-heart-fill y text-danger si le ha dado like)
-    -->
+    - list_like: Icono de like (quitar el bi-heart y poner bi-heart-fill y text-danger si le ha dado like y prevenir el comportamiento por defecto)
+    - list_plays_number: Número de veces que se ha jugado la lista
+-->
+
+<!-- Begin List Template -->
+<div class="list d-none w-100 overflow-hidden bg-hover-lighten h-250px p-5 cursor-pointer pb-2 position-relative border-secondary-dark border-1 border rounded d-grid gap-4" style="grid-template-rows: 1fr auto auto" id="template_list">
     <div class="overflow-hidden rounded mb-3">
         <img src="https://images.wikidexcdn.net/mwuploads/wikidex/thumb/a/a7/latest/20220715200149/EP1206_Dragonite_de_Iris.png/640px-EP1206_Dragonite_de_Iris.png" class="h-100 w-100 list_image" style="object-fit: cover">
     </div>
@@ -30,3 +34,4 @@
         Destacado
     </div>
 </div>
+<!-- End List Template -->
