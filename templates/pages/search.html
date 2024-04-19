@@ -17,8 +17,7 @@
                 <input class="form-control border-active-secondary text-black border-secondary-dark" data-bs-toggle="tooltip" data-bs-custom-class="tooltip-dark" data-bs-placement="right" title="Pulsa intro para buscar" placeholder="Buscar en ranquiz">
             </div>
         </div>
-
-
+        
         <nav class="d-grid gap-10 mb-10" style="grid-template-columns: repeat(auto-fit, minmax(100px, 1fr))">
             <button class="btn btn-primary p-2 border-bottom border-bottom-1 border-secondary-dark text-white text-hover-white nav_selected fs-3" id="list_nav">Listas</button>
             <button class="btn btn-outline-primary p-2 border-bottom border-bottom-1 border-secondary-dark text-secondary-dark text-hover-white fs-3" id="category_nav">Categorias</button>
@@ -29,6 +28,7 @@
             <button class="btn btn-outline-primary p-1 border border-1 border-primary text-primary text-hover-white fs-7" id="newest">Recientes</button>
             <button class="btn btn-outline-primary p-1 border border-1 border-primary text-primary text-hover-white fs-7" id="popular">Populares</button>
         </div>
+        
         <div class="w-100 d-md-grid d-flex flex-column gap-7 min-h-250px" id="content" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr))">
             {% include 'base/list_template.html' %}
         </div>
