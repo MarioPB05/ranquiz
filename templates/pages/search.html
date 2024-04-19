@@ -3,18 +3,18 @@
 
 {% block content %}
     <div class="w-100">
-        <div class="w-75 p-5 pt-20 m-auto mb-10">
-{#            <div class="d-flex gap-10 align-items-center w-100 justify-content-center pb-10">#}
-{#                <img src="{% static '/assets/media/logo/ranquiz.png' %}" class="w-auto h-40px">#}
-{#                <h1 class="text-center text-primary fw-boldest fs-60px m-0">RANQUIZ</h1>#}
-{#                <img src="{% static '/assets/media/logo/ranquiz.png' %}" class="w-auto h-40px">#}
-{#            </div>#}
+        <div class="w-75 p-5 pt-20 m-auto mb-20">
+            <div class="d-flex gap-10 align-items-center w-100 justify-content-center pb-10">
+                <img src="{% static '/assets/media/logo/ranquiz.png' %}" class="w-auto h-40px">
+                <h1 class="text-center text-primary fw-boldest fs-60px m-0">RANQUIZ</h1>
+                <img src="{% static '/assets/media/logo/ranquiz.png' %}" class="w-auto h-40px">
+            </div>
 
             <div class="d-flex align-items-center gap-3">
                 <button class="btn btn-outline-primary p-2 rounded-4 text-hover-white" id="search_button">
-                    <i class="bi bi-search text-primary fs-2 "></i>
+                    <i class="bi bi-search text-primary fs-2"></i>
                 </button>
-                <input class="form-control border-active-secondary text-black border-secondary-dark" data-bs-toggle="tooltip" data-bs-custom-class="tooltip-dark" data-bs-placement="right" title="Pulsa intro para buscar" placeholder="Buscar en ranquiz">
+                <input id="search" class="form-control border-active-secondary text-black border-secondary-dark" data-bs-toggle="tooltip" data-bs-custom-class="tooltip-dark" data-bs-placement="right" title="Pulsa intro para buscar" placeholder="Buscar en ranquiz">
             </div>
         </div>
         
@@ -29,8 +29,19 @@
             <button class="btn btn-outline-primary p-1 border border-1 border-primary text-primary text-hover-white fs-7" id="popular">Populares</button>
         </div>
         
-        <div class="w-100 d-md-grid d-flex flex-column gap-7 min-h-250px" id="content" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr))">
+        <div data-page="1" class="w-100 d-md-grid d-flex flex-column bg-light-primary rounded p-5 gap-7 min-h-250px" id="content" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr))">
             {% include 'base/list_template.html' %}
+            
+            <!-- Begin not found results -->
+            <div class="text-white w-100 text-center flex-column gap-5 rounded p-10 bg-primary d-none justify-content-center align-items-center" id="notFoundResults">
+                <i class="bi bi-exclamation-diamond-fill text-white fs-60px"></i>
+                <span class="fs-3 fw-light">No se han encontrado resultados para la búsqueda</span>
+            </div>
+            <!-- End not found results -->
+        </div>
+        
+        <div class="d-none w-100 justify-content-center mt-8" id="load_more">
+            <button class="btn btn-primary p-2 border border-1 border-primary text-white text-hover-white fs-3 m-auto" >Cargar más</button>
         </div>
     </div>
 {% endblock %}
