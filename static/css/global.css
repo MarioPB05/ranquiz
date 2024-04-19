@@ -60,6 +60,26 @@
     color: var(--secondary-dark)!important;
 }
 
+.hover-text-secondary-dark:hover {
+    color: var(--secondary-dark)!important;
+}
+
+.hover-fw-600:hover {
+    font-weight: 600!important;
+}
+
+.transition-duration-0-3s {
+    transition-duration: 0.3s!important;
+}
+
+.transition-duration-0-1s {
+    transition-duration: 0.1s!important;
+}
+
+.hover-fs-25px:hover {
+    font-size: 25px!important;
+}
+
 .hover-text-white:hover {
     transition-duration: 0.3s;
     color: white!important;
