@@ -47,6 +47,24 @@ function toggleNavs(selected) {
 }
 
 /**
+ * Función que cambia el ordenamiento seleccionado
+ * @param selected (newest, popular)
+ */
+function toggleSort(selected) {
+    const allSorts = $("#sort_container button");
+    const selectedSort = $(`#${selected}`);
+
+    if (selectedSort.hasClass("btn-primary")) {
+        selectedSort.removeClass("btn-primary text-white");
+        selectedSort.addClass("btn-outline-primary text-primary");
+    }else {
+        allSorts.removeClass("btn-primary text-white").addClass("btn-outline-primary text-primary");
+        selectedSort.addClass("btn-primary text-white");
+        selectedSort.removeClass("btn-outline-primary text-primary");
+    }
+}
+
+/**
  * Función que obtiene el tipo de ordenamiento seleccionado
  * @returns string (default, popular, newest)
  */
