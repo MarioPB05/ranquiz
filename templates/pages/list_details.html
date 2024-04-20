@@ -73,14 +73,13 @@
                             </div>
                         </div>
                     </div>
-                    <a href="" class="d-flex justify-content-end position-absolute share-position">
+                
+                    <a id="share_list" data-clipboard-text="{{ request.scheme }}://{{ request.get_host }}{% url 'list_details' share_code=list.share_code %}" class="d-flex justify-content-end position-absolute share-position">
                         <i class="fs-2 text-hover-white bg-hover-primary border-hover-white text-primary bi bi-share-fill bg-white p-4 rounded-circle border border-3 border-primary"></i>
                     </a>
 
                     {% if user.is_authenticated %}
-                        <a id="share_list" data-clipboard-text="{{ request.scheme }}://
-                                {{ request.get_host }}{% url 'list_details' share_code=list.share_code %}"
-                           class="d-flex align-items-center position-absolute bg-primary-500 border border-1 border-dark rounded text-white justify-content-center mh-50px w-50"
+                        <a class="d-flex align-items-center position-absolute bg-primary-500 border border-1 border-dark rounded text-white justify-content-center mh-50px w-50"
                            style="bottom: -20px">
                             <i class="fs-4x text-white bi bi-play-fill"></i>
                         </a>
