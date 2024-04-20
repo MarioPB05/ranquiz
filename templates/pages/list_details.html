@@ -23,7 +23,11 @@
                     <div class="d-flex flex-wrap align-center justify-content-center gap-lg-20 gap-10">
                         <div class="d-flex flex-column gap-3 align-items-center">
                             <div class="bg-white p-4 rounded-circle">
-                                <i class="fs-2x text-muted bi bi-controller"></i>
+                                {% if data.user_has_played %}
+                                    <i class="fs-2x text-muted bi bi-controller play-selected"></i>
+                                {% else %}
+                                    <i class="fs-2x text-muted bi bi-controller"></i>
+                                {% endif %}
                             </div>
                             <label class="text-white fw-bolder fs-3">{{ data.play_count }}</label>
                         </div>
@@ -73,8 +77,10 @@
                             </div>
                         </div>
                     </div>
-                
-                    <a id="share_list" data-clipboard-text="{{ request.scheme }}://{{ request.get_host }}{% url 'list_details' share_code=list.share_code %}" class="d-flex justify-content-end position-absolute share-position">
+
+                    <a id="share_list" data-clipboard-text="{{ request.scheme }}://
+                            {{ request.get_host }}{% url 'list_details' share_code=list.share_code %}"
+                       class="d-flex justify-content-end position-absolute share-position">
                         <i class="fs-2 text-hover-white bg-hover-primary border-hover-white text-primary bi bi-share-fill bg-white p-4 rounded-circle border border-3 border-primary"></i>
                     </a>
 
