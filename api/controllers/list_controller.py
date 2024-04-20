@@ -21,12 +21,13 @@ def get_list_types(request):
 
 def like_list(request, share_code):
     list_instance = get_object_or_404(List, share_code=share_code)
+    is_liked = request.POST.get('is_liked') == 'true'  # Convertir la cadena en un booleano
 
-    # Verificar si el usuario ya ha dado like a la lista
-    if ListLike.objects.filter(user=request.user, list=list_instance).exists():
-        return JsonResponse({'message': 'Ya has dado like a esta lista'}, status=400)
-
-    # Crear una nueva instancia de ListLike
-    ListLike.objects.create(user=request.user, list=list_instance)
-
-    return JsonResponse({'message': 'Like registrado exitosamente'})
+    if is_liked:
+        # Si ya está "liked", eliminar el like
+        ListLike.objects.filter(user=request.user, list=list_instance).delete()
+        return JsonResponse({'message': 'Like eliminado exitosamente'})
+    else:
+        # Si no está "liked", agregar el like
+        ListLike.objects.create(user=request.user, list=list_instance)
+        return JsonResponse({'message': 'Like registrado exitosamente'})

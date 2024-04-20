@@ -262,21 +262,34 @@ function handleIconClick() {
  */
 function handleLikeClick() {
     $('#heart-count').click(function() {
+        // Verificar si el icono tiene la clase 'heart-selected'
+        const isLiked = $(this).hasClass('heart-selected');
+
         $.ajax({
             type: 'POST',
             url: `/api/list/${share_code}/like`,
             headers: {'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val()},
+            data: {'is_liked': isLiked},  // Enviar el estado actual del like al backend
             success: function(response) {
-                toastMessage('success', response.message);
+                if (isLiked) {
+                    // Si ya estaba "liked", mostrar un mensaje de confirmación de eliminación
+                    toastMessage('success', 'Like eliminado exitosamente');
+                } else {
+                    // Si no estaba "liked", mostrar un mensaje de confirmación de like
+                    toastMessage('success', 'Like registrado exitosamente');
+                }
+
                 // Actualizar la interfaz de usuario según sea necesario
+                $(this).toggleClass('heart-selected');  // Cambiar el estado del like en la interfaz de usuario
             },
             error: function(xhr, status, error) {
                 const errorMessage = xhr.responseJSON.message || 'Error al procesar la solicitud';
-                toastMessage('error', "Error al procesar la solicitud");
+                toastMessage('error', errorMessage);
             }
         });
     });
 }
+
 
 
 /**
