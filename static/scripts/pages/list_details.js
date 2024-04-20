@@ -262,7 +262,7 @@ function handleIconClick() {
 }
 
 /**
- * Añadir un like, fav a la lista
+ * Añadir o eliminar un like a la lista
  */
 function handleLikeClick() {
     $('#heart-count').click(function() {
@@ -286,7 +286,9 @@ function handleLikeClick() {
     });
 }
 
-
+/**
+ * Añadir o eliminar un favorito a la lista
+ */
 function handleFavoriteClick() {
     $('#star-count').click(function() {
         // Verificar si el icono tiene la clase 'star-selected'
