@@ -26,5 +26,5 @@ urlpatterns = [
     path('shop/highlight/calculator', highlight_calculator, name='api_shop_highlight_calculator'),
     path('user/', get_user_data, name='api_user'),
     path('list/<str:share_code>/like', like_list, name='api_like_list'),
-path('list/<str:share_code>/favorite', favorite_list, name='api_favorite_list'),
+    path('list/<str:share_code>/favorite', favorite_list, name='api_favorite_list'),
 ]
