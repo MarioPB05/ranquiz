@@ -9,8 +9,7 @@
                 <div class="d-flex flex-column p-8 gap-10 h-100 align-items-center">
                     <div class="row justify-content-between align-items-center w-100">
                         <h2 class="text-white m-0 col-md-8 mb-lg-0 mb-5 text-md-start text-center">{{ list.name }}</h2>
-                        <a href="{{ request.scheme }}://
-                                {{ request.get_host }}{% url 'user' share_code=data.owner_sharecode %}"
+                        <a href="{% url 'user' share_code=data.owner_sharecode %}"
                            class="m-md-0 m-auto bg-white mw-200px p-2 ps-4 pe-4 rounded shadow d-flex justify-content-center gap-3 align-items-center col-md-4">
                             <label href="" class="text-dark fw-bolder cursor-pointer">{{ list.owner.username }}</label>
                             {% cloudinary data.avatar class="rounded-circle" width="50" height="50" crop="fill" %}
@@ -74,14 +73,13 @@
                             </div>
                         </div>
                     </div>
-                    <a href="" class="d-flex justify-content-end position-absolute share-position">
+                
+                    <a id="share_list" data-clipboard-text="{{ request.scheme }}://{{ request.get_host }}{% url 'list_details' share_code=list.share_code %}" class="d-flex justify-content-end position-absolute share-position">
                         <i class="fs-2 text-hover-white bg-hover-primary border-hover-white text-primary bi bi-share-fill bg-white p-4 rounded-circle border border-3 border-primary"></i>
                     </a>
 
                     {% if user.is_authenticated %}
-                        <a id="share_list" data-clipboard-text="{{ request.scheme }}://
-                                {{ request.get_host }}{% url 'list_details' share_code=list.share_code %}"
-                           class="d-flex align-items-center position-absolute bg-primary-500 border border-1 border-dark rounded text-white justify-content-center mh-50px w-50"
+                        <a class="d-flex align-items-center position-absolute bg-primary-500 border border-1 border-dark rounded text-white justify-content-center mh-50px w-50"
                            style="bottom: -20px">
                             <i class="fs-4x text-white bi bi-play-fill"></i>
                         </a>

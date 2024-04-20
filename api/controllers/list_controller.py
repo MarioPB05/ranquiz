@@ -1,10 +1,11 @@
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
+from django.views.decorators.http import require_GET
 
 from api.models import ListLike, ListFavorite
 from api.models.list import List
 
 
+@require_GET
 def get_list_types(request):
     """Controlador que devuelve los tipos de listas"""
     list_types = List.TYPE_CHOICES
@@ -17,9 +18,6 @@ def get_list_types(request):
         })
 
     return JsonResponse({'types': result})
-
-
-from django.http import JsonResponse
 
 
 def like_list(request, share_code):
