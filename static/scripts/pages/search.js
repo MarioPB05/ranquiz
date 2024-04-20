@@ -13,7 +13,7 @@ const exampleList = {
     id: 1,
     name: "Lista 1",
     image: "https://images.wikidexcdn.net/mwuploads/wikidex/thumb/a/a7/latest/20220715200149/EP1206_Dragonite_de_Iris.png/640px-EP1206_Dragonite_de_Iris.png",
-    url: "http://127.0.0.1:8000/list/LSdYgfiXomAobVAXHnnk",
+    url: "http://127.0.0.1:8000/list/LSdYgfiXomAobVAXHnnk/view/",
     liked: false,
     plays: 23,
     highlighted: true,
@@ -288,6 +288,14 @@ function onDocumentReady() {
 
         // Obtenemos los elementos
         getElements(getSelectedNav(), search.val(), 1, true, getSort());
+    });
+
+    // Evento de click en un elemento
+    $("#content").on("click", ".list, .category, .user", (event) => {
+       if (event.target.tagName === "A") return;
+
+        const url = $(event.currentTarget).attr("href");
+        if (url) window.location.href = url;
     });
 
     getElements(getSelectedNav(), "", 1);
