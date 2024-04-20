@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 
-from api.models import ListLike
+from api.models import ListLike, ListFavorite
 from api.models.list import List
 
 
@@ -34,3 +34,17 @@ def like_list(request, share_code):
         list_instance, _ = List.objects.get_or_create(share_code=share_code)
         ListLike.objects.create(user=request.user, list=list_instance)
         return JsonResponse({'message': 'Like registrado exitosamente'})
+
+
+def favorite_list(request, share_code):
+    is_favorited = request.POST.get('is_favorited') == 'true'  # Convertir la cadena en un booleano
+
+    if is_favorited:
+        # Si ya está marcada como favorita, eliminar el favorito si existe
+        ListFavorite.objects.filter(user=request.user, list__share_code=share_code).delete()
+        return JsonResponse({'message': 'Favorito eliminado exitosamente'})
+    else:
+        # Si no está marcada como favorita, agregar el favorito
+        list_instance, _ = List.objects.get_or_create(share_code=share_code)
+        ListFavorite.objects.create(user=request.user, list=list_instance)
+        return JsonResponse({'message': 'Favorito registrado exitosamente'})

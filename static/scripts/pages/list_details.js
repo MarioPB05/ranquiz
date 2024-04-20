@@ -74,12 +74,15 @@ function uploadAward(award_id, comment) {
     comment_add_award.attr("disabled", "disabled");
     comment_add_award.addClass("opacity-75");
 
-    promiseAjax(`/api/list/${share_code}/comment/${id_comment}/add_award`, "POST", {"id_award": award_id, "csrfmiddlewaretoken": token}).then(response => {
+    promiseAjax(`/api/list/${share_code}/comment/${id_comment}/add_award`, "POST", {
+        "id_award": award_id,
+        "csrfmiddlewaretoken": token
+    }).then(response => {
         if (response.status === "Success") {
             addAwardToComment(award_id, comment);
             toastMessage("success", "Premio otorgado");
             // TODO: Actualizar la cantidad actual de monedas en el header
-        }else if (response.status === "Error") {
+        } else if (response.status === "Error") {
             toastMessage("error", response.message);
         }
         comment_add_award.removeAttr("disabled");
@@ -175,10 +178,10 @@ function uploadComment(comment) {
         actualizeCommentCounter();
 
         // Animación de scroll
-        $("#comments_container").animate({ scrollTop: 0 }, "slow");
+        $("#comments_container").animate({scrollTop: 0}, "slow");
 
         // Animación de resaltado
-        $("#comments_container").children().first().css("background-color", "lightyellow").delay(1000).queue(function(next) {
+        $("#comments_container").children().first().css("background-color", "lightyellow").delay(1000).queue(function (next) {
             $(this).css("background-color", ""); // Restaurar el color original
             next();
         });
@@ -219,7 +222,7 @@ function toggleRecientComments() {
     if ($("#recientComents").hasClass("badge-outline-primary-selected")) {
         $("#recientComents").removeClass("badge-outline-primary-selected");
         getComments("featured")
-    }else {
+    } else {
         $("#recientComents").addClass("badge-outline-primary-selected");
         getComments("recient");
     }
@@ -228,7 +231,7 @@ function toggleRecientComments() {
 function handleIconClick() {
     // TODO: Refactorizar
     // Función para manejar el clic en los elementos de corazones y estrellas
-    $('.cursor-pointer').click(function() {
+    $('.cursor-pointer').click(function () {
         var countLabel = $(this).next('label');
         var icon = $(this).find('i');
 
@@ -257,40 +260,40 @@ function handleIconClick() {
         countLabel.text(count);
     });
 }
+
 /**
  * Añadir un like a la lista
  */
-function handleLikeClick() {
-    $('#heart-count').click(function() {
-        // Verificar si el icono tiene la clase 'heart-selected'
-        const isLiked = $(this).hasClass('heart-selected');
+function handleInteractionClick(iconId, endpoint) {
+    $(`#${iconId}`).click(function () {
+        // Verificar si el icono tiene la clase 'heart-selected' o 'star-selected' según el ID del icono
+        const isSelected = $(this).hasClass('heart-selected') || $(this).hasClass('star-selected');
 
         $.ajax({
             type: 'POST',
-            url: `/api/list/${share_code}/like`,
+            url: endpoint,
             headers: {'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val()},
-            data: {'is_liked': isLiked},  // Enviar el estado actual del like al backend
-            success: function(response) {
-                if (isLiked) {
-                    // Si ya estaba "liked", mostrar un mensaje de confirmación de eliminación
-                    toastMessage('success', 'Like eliminado exitosamente');
+            data: {'is_selected': isSelected},  // Enviar el estado actual del like/favorito al backend
+            success: function (response) {
+                if (isSelected) {
+                    // Si ya estaba seleccionado, mostrar un mensaje de confirmación de eliminación
+                    toastMessage('success', 'Eliminado exitosamente');
                 } else {
-                    // Si no estaba "liked", mostrar un mensaje de confirmación de like
-                    toastMessage('success', 'Like registrado exitosamente');
+                    // Si no estaba seleccionado, mostrar un mensaje de confirmación de registro
+                    toastMessage('success', 'Registrado exitosamente');
                 }
 
                 // Actualizar la interfaz de usuario según sea necesario
-                $(this).toggleClass('heart-selected');  // Cambiar el estado del like en la interfaz de usuario
+                $(this).toggleClass('heart-selected');  // Cambiar el estado del like/favorito en la interfaz de usuario
+                $(this).toggleClass('star-selected');  // Cambiar el estado del like/favorito en la interfaz de usuario
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 const errorMessage = xhr.responseJSON.message || 'Error al procesar la solicitud';
                 toastMessage('error', errorMessage);
             }
         });
     });
 }
-
-
 
 /**
  * Obtener cuando se ha hecho click en el botón de compartir lista
@@ -309,10 +312,9 @@ function onDocumentReady() {
     getAwards();
     getComments();
     handleIconClick();
-    handleLikeClick();
 
     $("#write_comment").click(writeComment);
-    $("#comment_input").on("keypress", function(event) {
+    $("#comment_input").on("keypress", function (event) {
         if (event.which === 13) { // Verificar si la tecla presionada es "Enter" (código 13)
             if ($(this).val()) {
                 writeComment();
@@ -330,6 +332,10 @@ function onDocumentReady() {
 
         uploadAward(award_id, comment, true);
     });
+
+    // Llamar a la función para manejar los clicks en los iconos de like y favorito
+    handleInteractionClick('heart-count', `/api/list/${share_code}/like`);
+    handleInteractionClick('star-count', `/api/list/${share_code}/favorite`);
 
     removePageLoader();
 }
