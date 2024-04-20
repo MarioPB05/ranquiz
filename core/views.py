@@ -17,7 +17,7 @@ from api.services.list_service import (
     create_list_form,
     create_list,
     get_list,
-    set_category,
+    set_category, get_list_counts,
 )
 from api.services.user_service import (
     user_login,
@@ -60,9 +60,7 @@ def list_details(request, share_code):
     categories = [list_category.category for list_category in list_categories]
 
     # Obtener la cantidad de favoritos, likes, partidas de la lista
-    favorites_count = ListFavorite.objects.filter(list=list_data).count()
-    likes_count = ListLike.objects.filter(list=list_data).count()
-    play_count = ListAnswer.objects.filter(list=list_data).count()
+    favorites_count, likes_count, play_count = get_list_counts(list_data)
 
     # Verificar si el usuario ha dado like, favorito o jugado a la lista específica
     user_has_liked = ListLike.objects.filter(user=request.user, list=list_data).exists()
