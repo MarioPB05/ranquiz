@@ -9,7 +9,8 @@
                 <div class="d-flex flex-column p-8 gap-10 h-100 align-items-center">
                     <div class="row justify-content-between align-items-center w-100">
                         <h2 class="text-white m-0 col-md-8 mb-lg-0 mb-5 text-md-start text-center">{{ list.name }}</h2>
-                        <a href="{{ request.scheme }}://{{ request.get_host }}{% url 'user' share_code=data.owner_sharecode %}"
+                        <a href="{{ request.scheme }}://
+                                {{ request.get_host }}{% url 'user' share_code=data.owner_sharecode %}"
                            class="m-md-0 m-auto bg-white mw-200px p-2 ps-4 pe-4 rounded shadow d-flex justify-content-center gap-3 align-items-center col-md-4">
                             <label href="" class="text-dark fw-bolder cursor-pointer">{{ list.owner.username }}</label>
                             {% cloudinary data.avatar class="rounded-circle" width="50" height="50" crop="fill" %}
@@ -25,19 +26,28 @@
                             <div class="bg-white p-4 rounded-circle">
                                 <i class="fs-2x text-muted bi bi-controller"></i>
                             </div>
-                            <label class="text-white fw-bolder fs-3">0</label>
+                            <label class="text-white fw-bolder fs-3">{{ data.play_count }}</label>
                         </div>
                         <div class="d-flex flex-column gap-3 align-items-center">
                             <div class="bg-white p-4 rounded-circle cursor-pointer hover-icon-color-coral">
-                                <i id="heart-count" class="fs-2x text-muted bi bi-heart-fill mt-3"></i>
+                                {% if data.user_has_liked %}
+                                    <i id="heart-count"
+                                       class="fs-2x text-muted bi bi-heart-fill mt-3 heart-selected"></i>
+                                {% else %}
+                                    <i id="heart-count" class="fs-2x text-muted bi bi-heart-fill mt-3"></i>
+                                {% endif %}
                             </div>
-                            <label id="count-hearts" class="text-white fw-bolder fs-3">0</label>
+                            <label id="count-hearts" class="text-white fw-bolder fs-3">{{ data.likes_count }}</label>
                         </div>
                         <div class="d-flex flex-column gap-3 align-items-center">
                             <div class="bg-white p-4 rounded-circle cursor-pointer hover-icon-color-lightyellow">
-                                <i id="star-count" class="fs-2x text-muted bi bi-star-fill"></i>
+                                {% if data.user_has_favorited %}
+                                    <i id="star-count" class="fs-2x text-muted bi bi-star-fill star-selected"></i>
+                                {% else %}
+                                    <i id="star-count" class="fs-2x text-muted bi bi-star-fill"></i>
+                                {% endif %}
                             </div>
-                            <label id="count-stars" class="text-white fw-bolder fs-3">0</label>
+                            <label id="count-stars" class="text-white fw-bolder fs-3">{{ data.favorites_count }}</label>
                         </div>
                     </div>
                     <div class="d-flex mb-20px w-100 row g-10">
@@ -69,7 +79,8 @@
                     </a>
 
                     {% if user.is_authenticated %}
-                        <a id="share_list" data-clipboard-text="{{ request.scheme }}://{{ request.get_host }}{% url 'list_details' share_code=list.share_code %}"
+                        <a id="share_list" data-clipboard-text="{{ request.scheme }}://
+                                {{ request.get_host }}{% url 'list_details' share_code=list.share_code %}"
                            class="d-flex align-items-center position-absolute bg-primary-500 border border-1 border-dark rounded text-white justify-content-center mh-50px w-50"
                            style="bottom: -20px">
                             <i class="fs-4x text-white bi bi-play-fill"></i>

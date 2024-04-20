@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.shortcuts import render, redirect
 
-from api.models import ListCategory
+from api.models import ListCategory, ListFavorite, ListLike, ListAnswer
 from api.services.category_service import get_category
 from api.services.item_service import get_items
 from api.services.list_service import get_list
@@ -45,6 +45,16 @@ def list_details(request, share_code):
     # Obtener las instancias de Category a partir de las instancias de ListCategory
     categories = [list_category.category for list_category in list_categories]
 
+    # Obtener la cantidad de favoritos, likes, partidas de la lista
+    favorites_count = ListFavorite.objects.filter(list=list_data).count()
+    likes_count = ListLike.objects.filter(list=list_data).count()
+    play_count = ListAnswer.objects.filter(list=list_data).count()
+
+    # Verificar si el usuario ha dado like, favorito o jugado a la lista específica
+    user_has_liked = ListLike.objects.filter(user=request.user, list=list_data).exists()
+    user_has_favorited = ListFavorite.objects.filter(user=request.user, list=list_data).exists()
+    user_has_played = ListAnswer.objects.filter(user=request.user, list=list_data).exists()
+
     data = {
         "name": list_data.name,
         "owner": list_data.owner.username,
@@ -53,7 +63,13 @@ def list_details(request, share_code):
         "creation_date": list_data.creation_date,
         "edit_date": list_data.edit_date,
         "avatar": list_data.owner.avatar.image,
-        "categories": categories
+        "categories": categories,
+        "favorites_count": favorites_count,
+        "likes_count": likes_count,
+        "play_count": play_count,
+        "user_has_liked": user_has_liked,
+        "user_has_favorited": user_has_favorited,
+        "user_has_played": user_has_played,
     }
     return render(request, 'pages/list_details.html', {'share_code': share_code, 'list': list_data, "data": data})
 
