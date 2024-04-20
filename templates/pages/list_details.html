@@ -69,8 +69,7 @@
                     </a>
 
                     {% if user.is_authenticated %}
-                        <a id="share_list" data-clipboard-text="{{ request.scheme }}://
-                                {{ request.get_host }}{% url 'list_details' share_code=list.share_code %}"
+                        <a id="share_list" data-clipboard-text="{{ request.scheme }}://{{ request.get_host }}{% url 'list_details' share_code=list.share_code %}"
                            class="d-flex align-items-center position-absolute bg-primary-500 border border-1 border-dark rounded text-white justify-content-center mh-50px w-50"
                            style="bottom: -20px">
                             <i class="fs-4x text-white bi bi-play-fill"></i>
