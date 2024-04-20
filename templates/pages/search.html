@@ -25,15 +25,16 @@
         </nav>
         
         <div class="d-flex gap-5 mb-5" id="sort_container">
-            <button class="btn btn-outline-primary p-1 border border-1 border-primary text-primary text-hover-white fs-7" id="newest">Recientes</button>
-            <button class="btn btn-outline-primary p-1 border border-1 border-primary text-primary text-hover-white fs-7" id="popular">Populares</button>
+            <button class="btn btn-outline-primary p-1 btn-outline btn-active-primary fs-7" id="newest">Recientes</button>
+            <button class="btn btn-outline-primary p-1 btn-outline btn-active-primary fs-7" id="popular">Populares</button>
         </div>
         
-        <div data-page="1" class="w-100 d-md-grid d-flex flex-column bg-light-primary rounded p-5 gap-7 min-h-250px" id="content" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr))">
+        <div data-page="1" class="w-100 align-items-center d-md-grid d-flex flex-column bg-light-primary rounded p-5 gap-7 min-h-250px" id="content" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr))">
             {% include 'components/list_template.html' %}
+            {% include 'components/category_template.html' %}
             
             <!-- Begin not found results -->
-            <div class="text-white w-100 text-center flex-column gap-5 rounded p-10 bg-primary d-none justify-content-center align-items-center" id="notFoundResults">
+            <div class="text-white h-100 w-100 text-center flex-column gap-5 rounded bg-primary d-none justify-content-center align-items-center" id="notFoundResults">
                 <i class="bi bi-exclamation-diamond-fill text-white fs-60px"></i>
                 <span class="fs-3 fw-light">No se han encontrado resultados para la búsqueda</span>
             </div>
