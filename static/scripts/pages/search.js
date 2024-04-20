@@ -88,18 +88,24 @@ function addList(list) {
  * @param type (list, category, user)
  * @param search
  * @param page
- * @param reset
+ * @param reset boolean
  * @param sort (default, popular, newest)
  */
 async function getElements(type, search, page, reset = false, sort = "default") {
     console.log(`Buscando ${type} con: ${search}, en la página ${page}, ordenadas por ${sort}`);
 
-    // Verificar si se debe resetear la lista
-    if (reset) elements.length = 0;
+    // Verificar si se debe resetear la lista y limpiamos el contenido
+    if (reset) {
+        emptyContent();
+        $("#content").attr("data-page", 1);
+        notFoundResults(false);
+        elements.length = 0;
+    }
 
     // Bloquear contenido
     blockcontent.block();
 
+    // Obtener elementos
     if (type === "list") {
         elements = await getLists("", 1, getSort());
         changeGridColumnsOfParent("350px");
@@ -110,6 +116,7 @@ async function getElements(type, search, page, reset = false, sort = "default") 
     }else {
         toastMessage("Error", "No se ha seleccionado un modo de búsqueda", "error");
         notFoundResults();
+        return;
     }
 
     // Desbloquear contenido
@@ -199,27 +206,25 @@ function onDocumentReady() {
         const selected = $(event.target).attr("id").split("_")[0];
         toggleNavs(selected);
 
-        // Limpiamos el contenido y obtenemos los elementos
-        emptyContent();
-        $("#content").attr("data-page", 1);
-        notFoundResults(false);
-
+        // Obtenemos los elementos
         getElements(selected, search.val(), 1, true, getSort());
     });
 
     $("#load_more button").on("click", () => {
+        // Obtenemos la página actual y la incrementamos
         const page = parseInt($("#content").attr("data-page")) + 1;
-        const selected = getSelectedNav();
-
         $("#content").attr("data-page", page);
 
-        if (selected === "list") {
-            getElements(selected, search.val(), page, false, getSort());
-        }else if (selected === "category") {
-            notFoundResults();
-        } else if (selected === "user") {
-            notFoundResults();
-        }
+        // Obtenemos los elementos
+        getElements(getSelectedNav(), search.val(), page, false, getSort());
+    });
+
+    $("#sort_container button").on("click", (event) => {
+        // Cambiamos el ordenamiento seleccionado
+        toggleSort($(event.target).attr("id"));
+
+        // Obtenemos los elementos
+        getElements(getSelectedNav(), search.val(), 1, true, getSort());
     });
 
     getElements(getSelectedNav(), "", 1);
