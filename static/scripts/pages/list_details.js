@@ -257,6 +257,27 @@ function handleIconClick() {
         countLabel.text(count);
     });
 }
+/**
+ * Añadir un like a la lista
+ */
+function handleLikeClick() {
+    $('#heart-count').click(function() {
+        $.ajax({
+            type: 'POST',
+            url: `/api/list/${share_code}/like`,
+            headers: {'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val()},
+            success: function(response) {
+                toastMessage('success', response.message);
+                // Actualizar la interfaz de usuario según sea necesario
+            },
+            error: function(xhr, status, error) {
+                const errorMessage = xhr.responseJSON.message || 'Error al procesar la solicitud';
+                toastMessage('error', "Error al procesar la solicitud");
+            }
+        });
+    });
+}
+
 
 /**
  * Obtener cuando se ha hecho click en el botón de compartir lista
@@ -275,6 +296,7 @@ function onDocumentReady() {
     getAwards();
     getComments();
     handleIconClick();
+    handleLikeClick();
 
     $("#write_comment").click(writeComment);
     $("#comment_input").on("keypress", function(event) {
