@@ -262,38 +262,53 @@ function handleIconClick() {
 }
 
 /**
- * Añadir un like a la lista
+ * Añadir un like, fav a la lista
  */
-function handleInteractionClick(iconId, endpoint) {
-    $(`#${iconId}`).click(function () {
-        // Verificar si el icono tiene la clase 'heart-selected' o 'star-selected' según el ID del icono
-        const isSelected = $(this).hasClass('heart-selected') || $(this).hasClass('star-selected');
+function handleLikeClick() {
+    $('#heart-count').click(function() {
+        // Verificar si el icono tiene la clase 'heart-selected'
+        const isLiked = $(this).hasClass('heart-selected');
 
         $.ajax({
             type: 'POST',
-            url: endpoint,
+            url: `/api/list/${share_code}/like`,
             headers: {'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val()},
-            data: {'is_selected': isSelected},  // Enviar el estado actual del like/favorito al backend
-            success: function (response) {
-                if (isSelected) {
-                    // Si ya estaba seleccionado, mostrar un mensaje de confirmación de eliminación
-                    toastMessage('success', 'Eliminado exitosamente');
-                } else {
-                    // Si no estaba seleccionado, mostrar un mensaje de confirmación de registro
-                    toastMessage('success', 'Registrado exitosamente');
-                }
-
+            data: {'is_liked': isLiked},  // Enviar el estado actual del like al backend
+            success: function(response) {
                 // Actualizar la interfaz de usuario según sea necesario
-                $(this).toggleClass('heart-selected');  // Cambiar el estado del like/favorito en la interfaz de usuario
-                $(this).toggleClass('star-selected');  // Cambiar el estado del like/favorito en la interfaz de usuario
+                $(this).toggleClass('heart-selected');  // Cambiar el estado del like en la interfaz de usuario
             },
-            error: function (xhr, status, error) {
+            error: function(xhr, status, error) {
                 const errorMessage = xhr.responseJSON.message || 'Error al procesar la solicitud';
                 toastMessage('error', errorMessage);
             }
         });
     });
 }
+
+
+function handleFavoriteClick() {
+    $('#star-count').click(function() {
+        // Verificar si el icono tiene la clase 'star-selected'
+        const isFavorited = $(this).hasClass('star-selected');
+
+        $.ajax({
+            type: 'POST',
+            url: `/api/list/${share_code}/favorite`,
+            headers: {'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val()},
+            data: {'is_favorited': isFavorited},  // Enviar el estado actual del favorito al backend
+            success: function(response) {
+                // Actualizar la interfaz de usuario según sea necesario
+                $(this).toggleClass('star-selected');  // Cambiar el estado del favorito en la interfaz de usuario
+            },
+            error: function(xhr, status, error) {
+                const errorMessage = xhr.responseJSON.message || 'Error al procesar la solicitud';
+                toastMessage('error', errorMessage);
+            }
+        });
+    });
+}
+
 
 /**
  * Obtener cuando se ha hecho click en el botón de compartir lista
@@ -312,6 +327,8 @@ function onDocumentReady() {
     getAwards();
     getComments();
     handleIconClick();
+    handleLikeClick();
+    handleFavoriteClick();
 
     $("#write_comment").click(writeComment);
     $("#comment_input").on("keypress", function (event) {
@@ -332,10 +349,6 @@ function onDocumentReady() {
 
         uploadAward(award_id, comment, true);
     });
-
-    // Llamar a la función para manejar los clicks en los iconos de like y favorito
-    handleInteractionClick('heart-count', `/api/list/${share_code}/like`);
-    handleInteractionClick('star-count', `/api/list/${share_code}/favorite`);
 
     removePageLoader();
 }
