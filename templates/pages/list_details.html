@@ -9,15 +9,17 @@
                 <div class="d-flex flex-column p-8 gap-10 h-100 align-items-center">
                     <div class="row justify-content-between align-items-center w-100">
                         <h2 class="text-white m-0 col-md-8 mb-lg-0 mb-5 text-md-start text-center">{{ list.name }}</h2>
-                        <a href="" class="m-md-0 m-auto bg-white mw-200px p-2 ps-4 pe-4 rounded shadow d-flex justify-content-center gap-3 align-items-center col-md-4">
+                        <a href="{{ request.scheme }}://{{ request.get_host }}{% url 'user' share_code=data.owner_sharecode %}"
+                           class="m-md-0 m-auto bg-white mw-200px p-2 ps-4 pe-4 rounded shadow d-flex justify-content-center gap-3 align-items-center col-md-4">
                             <label href="" class="text-dark fw-bolder cursor-pointer">{{ list.owner.username }}</label>
-                            {% cloudinary data.avatar class="rounded-circle" width="50" height="50" crop="fill"  %}
+                            {% cloudinary data.avatar class="rounded-circle" width="50" height="50" crop="fill" %}
                         </a>
                     </div>
-                    <div class="w-100 h-lg-100 rounded overflow-hidden position-lg-relative bgi-position-center bg-center min-h-300px" style="
-                        background-image: url('https://res.cloudinary.com/dhewpzvg9/{{ list.image }}');
-                            background-size: cover;
-                    "></div>
+                    <div class="w-100 h-lg-100 rounded overflow-hidden position-lg-relative bgi-position-center bg-center min-h-300px"
+                         style="
+                                 background-image: url('https://res.cloudinary.com/dhewpzvg9/{{ list.image }}');
+                                 background-size: cover;
+                                 "></div>
                     <div class="d-flex flex-wrap align-center justify-content-center gap-lg-20 gap-10">
                         <div class="d-flex flex-column gap-3 align-items-center">
                             <div class="bg-white p-4 rounded-circle">
@@ -67,7 +69,10 @@
                     </a>
 
                     {% if user.is_authenticated %}
-                        <a href="" class="d-flex align-items-center position-absolute bg-primary-500 border border-1 border-dark rounded text-white justify-content-center mh-50px w-50" style="bottom: -20px">
+                        <a id="share_list" data-clipboard-text="{{ request.scheme }}://
+                                {{ request.get_host }}{% url 'list_details' share_code=list.share_code %}"
+                           class="d-flex align-items-center position-absolute bg-primary-500 border border-1 border-dark rounded text-white justify-content-center mh-50px w-50"
+                           style="bottom: -20px">
                             <i class="fs-4x text-white bi bi-play-fill"></i>
                         </a>
                     {% endif %}
@@ -77,7 +82,9 @@
         <div class="d-flex h-100 flex-column gap-3 col-lg-4 p-6 primary-border rounded overflow-hidden">
             <div class="d-flex justify-content-between align-items-center">
                 <h3>Comentarios</h3>
-                <button class="btn btn-outline-primary border-primary border border-1 fs-8 cursor-pointer p-1 ps-2 pe-2 rounded-pill hover-color-white" id="recientComents">Recientes</button>
+                <button class="btn btn-outline-primary border-primary border border-1 fs-8 cursor-pointer p-1 ps-2 pe-2 rounded-pill hover-color-white"
+                        id="recientComents">Recientes
+                </button>
                 <p class="fs-2 text-muted" id="comment_counter">0</p>
             </div>
 
@@ -143,8 +150,8 @@
                                 <!--end::Menu-->
                             </div>
 
-                        </div>
-                    {% endif %}
+                            </div>
+                        {% endif %}
 
                 </div>
                 <!-- End template comment -->
@@ -156,7 +163,7 @@
                         <label class="w-100">
                             <div class="borderless-textarea">
                                 <textarea rows="1" class="w-100 border-0 fs-5" placeholder="Añadir comentario..."
-                                data-kt-autosize="true" id="comment_input" maxlength="500"></textarea>
+                                          data-kt-autosize="true" id="comment_input" maxlength="500"></textarea>
                             </div>
                         </label>
                         <i class="fs-2 bg-hover-secondary rounded-circle cursor-pointer text-primary bi bi-send p-2"

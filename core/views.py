@@ -48,6 +48,7 @@ def list_details(request, share_code):
     data = {
         "name": list_data.name,
         "owner": list_data.owner.username,
+        "owner_sharecode": list_data.owner.share_code,
         "elements": len(items_data),
         "creation_date": list_data.creation_date,
         "edit_date": list_data.edit_date,

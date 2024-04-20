@@ -259,9 +259,19 @@ function handleIconClick() {
 }
 
 /**
+ * Obtener cuando se ha hecho click en el botón de compartir lista
+ */
+function onShareList() {
+    toastMessage('success', '¡URL copiada al portapapeles!');
+}
+
+/**
  * Función que se ejecuta cuando el documento está listo
  */
 function onDocumentReady() {
+    const clipboardShareList = new ClipboardJS($('#share_list')[0]);
+
+    clipboardShareList.on('success', onShareList);
     getAwards();
     getComments();
     handleIconClick();
