@@ -6,6 +6,7 @@ const elementsPerPage = 30;
 
 const search = $("#search");
 const templateList = $("#template_list");
+const templateCategory = $("#template_category");
 
 let elements = [];
 const exampleList = {
@@ -21,6 +22,14 @@ const exampleList = {
         avatar: "http://res.cloudinary.com/dhewpzvg9/image/upload/c_fill/v1712514744/avatars/kidcithbb1ogolsssdma.png",
         url: "http://127.0.0.1:8000/user/"
     }
+};
+const exampleCategory = {
+    id: 1,
+    name: "Categoría 1",
+    plays: 455,
+    followers: 23,
+    followed: true,
+    url: "/"
 };
 
 /**
@@ -55,12 +64,13 @@ function toggleSort(selected) {
     const selectedSort = $(`#${selected}`);
 
     if (selectedSort.hasClass("btn-primary")) {
-        selectedSort.removeClass("btn-primary text-white");
-        selectedSort.addClass("btn-outline-primary text-primary");
+        selectedSort.removeClass("btn-primary");
+        selectedSort.addClass("btn-outline-primary");
+        selectedSort.blur();
     }else {
-        allSorts.removeClass("btn-primary text-white").addClass("btn-outline-primary text-primary");
-        selectedSort.addClass("btn-primary text-white");
-        selectedSort.removeClass("btn-outline-primary text-primary");
+        allSorts.removeClass("btn-primary").addClass("btn-outline-primary");
+        selectedSort.addClass("btn-primary");
+        selectedSort.removeClass("btn-outline-primary");
     }
 }
 
@@ -102,6 +112,27 @@ function addList(list) {
 }
 
 /**
+ * Función que añade una categoría a la página
+ * @param category
+ */
+function addCategory(category) {
+    const newCategory = templateCategory.clone();
+    newCategory.removeAttr("id");
+    newCategory.removeClass("d-none");
+
+    newCategory.attr("data-id", category.id);
+    newCategory.find(".category_name").text(category.name);
+    newCategory.find(".category_plays_number").text(category.plays);
+    newCategory.attr("href", category.url);
+
+    category.followed ? newCategory.find(".category_follow").addClass("btn-primary").removeClass("btn-outline-primary") : "";
+    category.followed ? newCategory.find(".category_follow").text("Siguiendo") : "";
+    newCategory.find(".category_follower_number").text(category.followers);
+
+    $("#content").append(newCategory);
+}
+
+/**
  * Función que obtiene los elementos de la página
  * @param type (list, category, user)
  * @param search
@@ -128,7 +159,8 @@ async function getElements(type, search, page, reset = false, sort = "default") 
         elements = await getLists("", 1, getSort());
         changeGridColumnsOfParent("350px");
     }else if (type === "category") {
-        notFoundResults();
+        elements = await getCategories("", 1, getSort());
+        changeGridColumnsOfParent("250px");
     } else if (type === "user") {
         notFoundResults();
     }else {
@@ -153,7 +185,13 @@ async function getElements(type, search, page, reset = false, sort = "default") 
 
     // Añadir listas a la página
     $.each(elements, (index, element) => {
-        addList(element);
+        if (type === "list") {
+            addList(element);
+        }else if (type === "category") {
+           addCategory(element);
+        } else if (type === "user") {
+            // TODO: Añadir usuarios a la página
+        }
     });
 }
 
@@ -168,6 +206,13 @@ async function getLists(search, page, sort = "default") {
     return new Promise((resolve, reject) => {
         // TODO: Obtener {elementsPerPage} listas de base de datos a partir de la página {page}
         resolve([exampleList]);
+    });
+}
+
+async function getCategories(search, page, sort = "default") {
+    return new Promise((resolve, reject) => {
+       // TODO: Obtener {elementsPerPage} categorías de base de datos a partir de la página {page}
+         resolve([exampleCategory]);
     });
 }
 
