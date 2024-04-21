@@ -139,28 +139,31 @@ function reloadUserData() {
 /**
  * Esta función tiene como objetivo transformar un número de segundos en un formato de cantidades de tiempo.
  */
-
-function secondsToTime(seconds, digits = 4) {
+function secondsToTime(seconds, digits) {
     let time = {
-        "año": 31536000,
-        "día": 86400,
-        "hora": 3600,
-        "minuto": 60,
-        "segundo": 1
+        "d": 86400,
+        "h": 3600,
+        "m": 60,
+        "s": 1
     };
 
     let timeString = "";
     let count = 0;
 
+    if (seconds > 2592000) {
+        return new Date(seconds * 1000).toLocaleDateString();
+    }
+
     for (let key in time) {
-        let value = Math.floor(seconds / time[key]);
-        if (value > 0) {
-            timeString += value + key[0];
-            count++;
-            if (count === digits) {
-                break;
+        let value = time[key];
+        let timeCount = Math.floor(seconds / value);
+
+        if (timeCount > 0) {
+            if (count < digits) {
+                timeString += timeCount + " " + key + " ";
+                count++;
             }
-            seconds = seconds % time[key];
+            seconds -= timeCount * value;
         }
     }
 
