@@ -3,10 +3,12 @@ const blockcontent = new KTBlockUI($("#content")[0], { // skipcq: JS-0125
     message: '<div class="blockui-message"><span class="spinner-border text-primary"></span> Cargando...</div>',
 });
 const elementsPerPage = 30;
+let previousSearch = "";
 
 const search = $("#search");
 const templateList = $("#template_list");
 const templateCategory = $("#template_category");
+const templateUser = $("#template_user");
 
 let elements = [];
 const exampleList = {
@@ -26,11 +28,20 @@ const exampleList = {
 const exampleCategory = {
     id: 1,
     name: "Categoría 1",
-    plays: 455,
+    lists: 45,
     followers: 23,
     followed: true,
     url: "/"
 };
+const exampleUser = {
+    id: 1,
+    username: "user1",
+    avatar: "http://res.cloudinary.com/dhewpzvg9/image/upload/c_fill/v1712514744/avatars/kidcithbb1ogolsssdma.png",
+    url: "http://127.0.0.1:8000/user/US8EAxfMkYiPXV3ERicR/",
+    followers: 23,
+    lists: 2,
+    followed: true
+}
 
 /**
  * Función que cambia la vista de los elementos de la página
@@ -122,7 +133,7 @@ function addCategory(category) {
 
     newCategory.attr("data-id", category.id);
     newCategory.find(".category_name").text(category.name);
-    newCategory.find(".category_plays_number").text(category.plays);
+    newCategory.find(".category_list_number").text(category.lists);
     newCategory.attr("href", category.url);
 
     category.followed ? newCategory.find(".category_follow").addClass("btn-primary").removeClass("btn-outline-primary") : "";
@@ -130,6 +141,28 @@ function addCategory(category) {
     newCategory.find(".category_follower_number").text(category.followers);
 
     $("#content").append(newCategory);
+}
+
+/**
+ * Función que añade un usuario a la página
+ * @param user
+ */
+function addUser(user) {
+    const newUser = templateUser.clone();
+    newUser.removeAttr("id");
+    newUser.removeClass("d-none");
+
+    newUser.attr("data-id", user.id);
+    newUser.find(".user_name").text(user.username);
+    newUser.attr("href", user.url);
+    newUser.find(".user_list_number").text(user.lists);
+    newUser.find(".user_follower_number").text(user.followers);
+    newUser.find(".user_image").attr("src", user.avatar);
+
+    user.followed ? newUser.find(".user_follow_icon").addClass("text-primary").removeClass("text-secondary") : "";
+    user.followed ? newUser.find(".user_follow_icon").addClass("bi-person-check-fill").removeClass("bi-person-plus-fill") : "";
+
+    $("#content").append(newUser);
 }
 
 /**
@@ -162,9 +195,10 @@ async function getElements(type, search, page, reset = false, sort = "default") 
         elements = await getCategories("", 1, getSort());
         changeGridColumnsOfParent("250px");
     } else if (type === "user") {
-        notFoundResults();
+        elements = await getUsers("", 1, getSort());
+        changeGridColumnsOfParent("200px");
     }else {
-        toastMessage("Error", "No se ha seleccionado un modo de búsqueda", "error");
+        toastMessage("Error", "No se ha seleccionado un modo de búsqueda");
         notFoundResults();
         return;
     }
@@ -190,7 +224,7 @@ async function getElements(type, search, page, reset = false, sort = "default") 
         }else if (type === "category") {
            addCategory(element);
         } else if (type === "user") {
-            // TODO: Añadir usuarios a la página
+            addUser(element);
         }
     });
 }
@@ -209,10 +243,31 @@ async function getLists(search, page, sort = "default") {
     });
 }
 
+/**
+ * Función que obtiene las categorías de la base de datos
+ * @param search
+ * @param page
+ * @param sort
+ * @returns {Promise<unknown>}
+ */
 async function getCategories(search, page, sort = "default") {
     return new Promise((resolve, reject) => {
        // TODO: Obtener {elementsPerPage} categorías de base de datos a partir de la página {page}
          resolve([exampleCategory]);
+    });
+}
+
+/**
+ * Función que obtiene los usuarios de la base de datos
+ * @param search
+ * @param page
+ * @param sort
+ * @returns {Promise<unknown>}
+ */
+async function getUsers(search, page, sort = "default") {
+    return new Promise((resolve, reject) => {
+        // TODO: Obtener {elementsPerPage} usuarios de base de datos a partir de la página {page}
+        resolve([exampleUser]);
     });
 }
 
@@ -273,6 +328,7 @@ function onDocumentReady() {
         getElements(selected, search.val(), 1, true, getSort());
     });
 
+    // Evento de carga de más elementos
     $("#load_more button").on("click", () => {
         // Obtenemos la página actual y la incrementamos
         const page = parseInt($("#content").attr("data-page")) + 1;
@@ -282,6 +338,7 @@ function onDocumentReady() {
         getElements(getSelectedNav(), search.val(), page, false, getSort());
     });
 
+    // Evento de cambio de ordenamiento
     $("#sort_container button").on("click", (event) => {
         // Cambiamos el ordenamiento seleccionado
         toggleSort($(event.target).attr("id"));
