@@ -26,6 +26,10 @@
     color: var(--primary-800);
 }
 
+.hover-text-primary-400:hover {
+    color: var(--primary-400)!important;
+}
+
 .category {
     cursor: pointer;
 }
