@@ -355,6 +355,22 @@ function onDocumentReady() {
         if (url) window.location.href = url;
     });
 
+    // Evento de búsqueda al pulsar enter
+    search.on("keypress", (event) => {
+        if (event.key === "Enter" && search.val() !== previousSearch) {
+            previousSearch = search.val();
+            getElements(getSelectedNav(), search.val(), 1, true, getSort());
+        }
+    });
+
+    // Evento de búsqueda al hacer click en el botón
+    $("#search_button").on("click", () => {
+        if (search.val() === previousSearch) return;
+
+        previousSearch = search.val();
+        getElements(getSelectedNav(), search.val(), 1, true, getSort());
+    });
+
     getElements(getSelectedNav(), "", 1);
     removePageLoader();
 }
