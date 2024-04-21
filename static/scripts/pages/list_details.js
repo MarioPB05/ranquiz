@@ -259,6 +259,32 @@ function handleIconClick() {
 }
 
 /**
+ * Calcular el tiempo que le va a llevar al usuario completar la lista aproximadamente.
+ */
+function calculatePlayTime(items, mode) {
+    let time_per_duel = 5;
+    let total_time = 0;
+
+    if (mode === 4) {
+        total_time = items * time_per_duel;
+    } else if (mode === 2) {
+        total_time = items * time_per_duel * 3;
+    }
+
+    console.log(total_time, mode)
+    return secondsToTime(total_time, 2)
+}
+
+
+function reloadPlaytime() {
+    let duel_items = parseInt($("#duel_elements_selector").val());
+    let total_items = $("#total_items").text();
+    let play_time = calculatePlayTime(total_items, duel_items);
+
+    $("#estimated_playtime").text(play_time);
+}
+
+/**
  * Función que se ejecuta cuando el documento está listo
  */
 function onDocumentReady() {
@@ -286,24 +312,12 @@ function onDocumentReady() {
         uploadAward(award_id, comment, true);
     });
 
+    $("#duel_elements_selector").on("change", () => {
+        reloadPlaytime();
+    });
+
+    reloadPlaytime()
     removePageLoader();
 }
 
 $(document).ready(onDocumentReady);
-
-/**
- * Calcular el tiempo que le va a llevar al usuario completar la lista aproximadamente.
- */
-
-function calculate_play_time(items, mode) {
-    let time = 5;
-    let total_time = 0;
-
-    if (mode === 4) {
-        total_time = items * time;
-    } else if (mode === 2) {
-        total_time = items * time * 3;
-    }
-
-    return secondsToTime(total_time, 2)
-}
