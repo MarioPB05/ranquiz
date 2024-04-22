@@ -63,26 +63,31 @@ def list_details(request, share_code):
     favorites_count, likes_count, play_count = get_list_counts(list_data)
 
     # Verificar si el usuario ha dado like, favorito o jugado a la lista específica
-    user_has_liked = ListLike.objects.filter(user=request.user, list=list_data).exists()
-    user_has_favorited = ListFavorite.objects.filter(user=request.user, list=list_data).exists()
-    user_has_played = ListAnswer.objects.filter(user=request.user, list=list_data).exists()
+    user_has_liked = False
+    user_has_favorited = False
+    user_has_played = False
+    if request.user.is_authenticated:
+        user_has_liked = ListLike.objects.filter(user=request.user, list=list_data).exists()
+        user_has_favorited = ListFavorite.objects.filter(user=request.user, list=list_data).exists()
+        user_has_played = ListAnswer.objects.filter(user=request.user, list=list_data).exists()
 
     data = {
-        "name": list_data.name,
-        "owner": list_data.owner.username,
-        "owner_sharecode": list_data.owner.share_code,
-        "elements": len(items_data),
-        "creation_date": list_data.creation_date,
-        "edit_date": list_data.edit_date,
-        "avatar": list_data.owner.avatar.image,
-        "categories": categories,
-        "favorites_count": favorites_count,
-        "likes_count": likes_count,
-        "play_count": play_count,
-        "user_has_liked": user_has_liked,
-        "user_has_favorited": user_has_favorited,
-        "user_has_played": user_has_played,
+            "name": list_data.name,
+            "owner": list_data.owner.username,
+            "owner_sharecode": list_data.owner.share_code,
+            "elements": len(items_data),
+            "creation_date": list_data.creation_date,
+            "edit_date": list_data.edit_date,
+            "avatar": list_data.owner.avatar.image,
+            "categories": categories,
+            "favorites_count": favorites_count,
+            "likes_count": likes_count,
+            "play_count": play_count,
+            "user_has_liked": user_has_liked,
+            "user_has_favorited": user_has_favorited,
+            "user_has_played": user_has_played,
     }
+
     return render(request, 'pages/list_details.html', {'share_code': share_code, 'list': list_data, "data": data})
 
 
