@@ -1,4 +1,5 @@
 import {removePageLoader, formatElapsedTime, toastMessage, promiseAjax, secondsToTime} from "/static/assets/js/ranquiz/utils.js";
+
 const commentsContainer = $("#comments_container");
 const blockUI = new KTBlockUI(commentsContainer.parent()[0], {
     message: '<div class="blockui-message"><span class="spinner-border text-primary"></span>Cargando comentarios...</div>',
@@ -67,13 +68,17 @@ function addAwardToComment(award_id, comment) {
  * @param comment
  */
 function uploadAward(award_id, comment) {
+    let award = awards.find(award => award.id === award_id);
     let id_comment = comment.attr("data-comment-id");
     let token = $('input[name=csrfmiddlewaretoken]').val();
     let comment_add_award = comment.find(".add_award");
     comment_add_award.attr("disabled", "disabled");
     comment_add_award.addClass("opacity-75");
 
-    promiseAjax(`/api/list/${share_code}/comment/${id_comment}/add_award`, "POST", {"id_award": award_id, "csrfmiddlewaretoken": token}).then(response => {
+    promiseAjax(`/api/list/${share_code}/comment/${id_comment}/add_award`, "POST", {
+        "id_award": award_id,
+        "csrfmiddlewaretoken": token
+    }).then(response => {
         if (response.status === "Success") {
             addAwardToComment(award_id, comment);
             toastMessage("success", "Premio otorgado");
@@ -258,6 +263,64 @@ function handleIconClick() {
 }
 
 /**
+ * Añadir o eliminar un like a la lista
+ */
+function handleLikeClick() {
+    $('#heart-count').click(function() {
+        // Verificar si el icono tiene la clase 'heart-selected'
+        const isLiked = $(this).hasClass('heart-selected');
+
+        $.ajax({
+            type: 'POST',
+            url: `/api/list/${share_code}/like`,
+            headers: {'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val()},
+            data: {'is_liked': isLiked},  // Enviar el estado actual del like al backend
+            success: function(response) {
+                // Actualizar la interfaz de usuario según sea necesario
+                $(this).toggleClass('heart-selected');  // Cambiar el estado del like en la interfaz de usuario
+            },
+            error: function(xhr, status, error) {
+                const errorMessage = xhr.responseJSON.message || 'Error al procesar la solicitud';
+                toastMessage('error', errorMessage);
+            }
+        });
+    });
+}
+
+/**
+ * Añadir o eliminar un favorito a la lista
+ */
+function handleFavoriteClick() {
+    $('#star-count').click(function() {
+        // Verificar si el icono tiene la clase 'star-selected'
+        const isFavorited = $(this).hasClass('star-selected');
+
+        $.ajax({
+            type: 'POST',
+            url: `/api/list/${share_code}/favorite`,
+            headers: {'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val()},
+            data: {'is_favorited': isFavorited},  // Enviar el estado actual del favorito al backend
+            success: function(response) {
+                // Actualizar la interfaz de usuario según sea necesario
+                $(this).toggleClass('star-selected');  // Cambiar el estado del favorito en la interfaz de usuario
+            },
+            error: function(xhr, status, error) {
+                const errorMessage = xhr.responseJSON.message || 'Error al procesar la solicitud';
+                toastMessage('error', errorMessage);
+            }
+        });
+    });
+}
+
+
+/**
+ * Obtener cuando se ha hecho click en el botón de compartir lista
+ */
+function onShareList() {
+    toastMessage('success', '¡URL copiada al portapapeles!');
+}
+
+/**
  * Calcular el tiempo que le va a llevar al usuario completar la lista aproximadamente.
  */
 function calculatePlayTime(items, mode) {
@@ -287,9 +350,14 @@ function reloadPlaytime() {
  * Función que se ejecuta cuando el documento está listo
  */
 function onDocumentReady() {
+    const clipboardShareList = new ClipboardJS($('#share_list')[0]);
+
+    clipboardShareList.on('success', onShareList);
     getAwards();
     getComments();
     handleIconClick();
+    handleLikeClick();
+    handleFavoriteClick();
 
     $("#write_comment").click(writeComment);
     $("#comment_input").on("keypress", function(event) {
@@ -311,9 +379,7 @@ function onDocumentReady() {
         uploadAward(award_id, comment, true);
     });
 
-    $("#duel_elements_selector").on("change", () => {
-        reloadPlaytime();
-    });
+    $("#duel_elements_selector").on("change", reloadPlaytime);
 
     reloadPlaytime()
     removePageLoader();

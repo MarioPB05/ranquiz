@@ -1,8 +1,10 @@
 from django.http import JsonResponse
+from django.views.decorators.http import require_GET, require_POST
 
 from api.services.category_service import get_all_categories, similarity, create_category
 
 
+@require_GET
 def validate_category(request, category_name):
     """Función para validar una categoría"""
     categories = get_all_categories()
@@ -31,6 +33,7 @@ def validate_category(request, category_name):
     })
 
 
+@require_GET
 def get_categories(request):
     """Función para obtener todas las categorías"""
     categories = get_all_categories()
@@ -46,15 +49,12 @@ def get_categories(request):
     return JsonResponse({'categories': json_categories})
 
 
+@require_POST
 def add_category(request):
     """Función para crear una categoría"""
-    if request.method == 'POST':
-        # Creamos la categoría
-        category = create_category(request.POST)
+    category = create_category(request.POST)
 
-        if category is not None:
-            return JsonResponse({'id': category.id})
-
-        return JsonResponse({'id': None})
+    if category is not None:
+        return JsonResponse({'id': category.id})
 
     return JsonResponse({'id': None})
