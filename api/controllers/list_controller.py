@@ -21,7 +21,7 @@ def get_list_types(request):
 
 
 def like_list(request, share_code):
-    is_liked = request.POST.get('is_liked') == 'true'  # Convertir la cadena en un booleano
+    is_liked = request.GET.get('isLiked') == 'true'  # Convertir la cadena en un booleano
 
     if is_liked:
         # Si ya está "liked", eliminar el like si existe
@@ -35,7 +35,7 @@ def like_list(request, share_code):
 
 
 def favorite_list(request, share_code):
-    is_favorited = request.POST.get('is_favorited') == 'true'  # Convertir la cadena en un booleano
+    is_favorited = request.GET.get('isFavorited') == 'true'  # Convertir la cadena en un booleano
 
     if is_favorited:
         # Si ya está marcada como favorita, eliminar el favorito si existe

@@ -269,20 +269,17 @@ function handleLikeClick() {
         // Verificar si el icono tiene la clase 'heart-selected'
         const isLiked = $(this).hasClass('heart-selected');
 
-        $.ajax({
-            type: 'POST',
-            url: `/api/list/${share_code}/like`,
-            headers: {'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val()},
-            data: {'is_liked': isLiked},  // Enviar el estado actual del like al backend
-            success: function(response) {
-                // Actualizar la interfaz de usuario según sea necesario
-                $(this).toggleClass('heart-selected');  // Cambiar el estado del like en la interfaz de usuario
-            },
-            error: function(xhr, status, error) {
-                const errorMessage = xhr.responseJSON.message || 'Error al procesar la solicitud';
-                toastMessage('error', errorMessage);
+        promiseAjax(`/api/list/${share_code}/like?isLiked=${isLiked}`, "GET").then(response => {
+            if (response.status === "success") {
+                $(this).toggleClass('heart-selected');
+            }else if (response.status === "error") {
+                toastMessage("error", response.message);
             }
+
+        }).catch(() => {
+            toastMessage("error", "Error al dar like a la lista");
         });
+
     });
 }
 
@@ -294,19 +291,15 @@ function handleFavoriteClick() {
         // Verificar si el icono tiene la clase 'star-selected'
         const isFavorited = $(this).hasClass('star-selected');
 
-        $.ajax({
-            type: 'POST',
-            url: `/api/list/${share_code}/favorite`,
-            headers: {'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val()},
-            data: {'is_favorited': isFavorited},  // Enviar el estado actual del favorito al backend
-            success: function(response) {
-                // Actualizar la interfaz de usuario según sea necesario
-                $(this).toggleClass('star-selected');  // Cambiar el estado del favorito en la interfaz de usuario
-            },
-            error: function(xhr, status, error) {
-                const errorMessage = xhr.responseJSON.message || 'Error al procesar la solicitud';
-                toastMessage('error', errorMessage);
+        promiseAjax(`/api/list/${share_code}/favorite?isFavorited=${isFavorited}`, "GET").then(response => {
+            if (response.status === "success") {
+                $(this).toggleClass('star-selected');
+            }else if (response.status === "error") {
+                toastMessage("error", response.message);
             }
+
+        }).catch(() => {
+            toastMessage("error", "Error al dar favorito a la lista");
         });
     });
 }
