@@ -1,6 +1,6 @@
 import {removePageLoader, formatElapsedTime, toastMessage, promiseAjax, secondsToTime} from "/static/assets/js/ranquiz/utils.js";
-
-const blockUI = new KTBlockUI($("#comments_container").parent()[0], {
+const commentsContainer = $("#comments_container");
+const blockUI = new KTBlockUI(commentsContainer.parent()[0], {
     message: '<div class="blockui-message"><span class="spinner-border text-primary"></span>Cargando comentarios...</div>',
 });
 const templateComment = $("#template_comment");
@@ -67,7 +67,6 @@ function addAwardToComment(award_id, comment) {
  * @param comment
  */
 function uploadAward(award_id, comment) {
-    let award = awards.find(award => award.id === award_id);
     let id_comment = comment.attr("data-comment-id");
     let token = $('input[name=csrfmiddlewaretoken]').val();
     let comment_add_award = comment.find(".add_award");
@@ -121,7 +120,7 @@ function addComment(comment) {
     element.find(".comment_date").text(formatElapsedTime(date));
 
     element.find('[data-kt-menu]').each(function () {
-        const menu = new KTMenu($(this)[0]);
+        const menu = new KTMenu($(this)[0]);  // skipcq: JS-0125
     });
 
     if (awards) {
@@ -139,7 +138,7 @@ function addComment(comment) {
  * @param mode
  */
 function getComments(mode = "featured") {
-    $("#comments_container").empty();
+    commentsContainer.empty();
     comments = [];
 
     blockUI.block();
@@ -175,10 +174,10 @@ function uploadComment(comment) {
         actualizeCommentCounter();
 
         // Animación de scroll
-        $("#comments_container").animate({ scrollTop: 0 }, "slow");
+        commentsContainer.animate({ scrollTop: 0 }, "slow");
 
         // Animación de resaltado
-        $("#comments_container").children().first().css("background-color", "lightyellow").delay(1000).queue(function(next) {
+        commentsContainer.children().first().css("background-color", "lightyellow").delay(1000).queue(function(next) {
             $(this).css("background-color", ""); // Restaurar el color original
             next();
         });
@@ -262,13 +261,13 @@ function handleIconClick() {
  * Calcular el tiempo que le va a llevar al usuario completar la lista aproximadamente.
  */
 function calculatePlayTime(items, mode) {
-    let time_per_duel = 5;
+    let time_per_duel = 3;
     let total_time = 0;
 
     if (mode === 4) {
-        total_time = items * time_per_duel;
+        total_time = items * time_per_duel * 2;
     } else if (mode === 2) {
-        total_time = items * time_per_duel * 3;
+        total_time = items * 3 * time_per_duel;
     }
 
     console.log(total_time, mode)
@@ -305,7 +304,7 @@ function onDocumentReady() {
 
     $("#recientComents").click(toggleRecientComments)
 
-    $("#comments_container").on("click", ".buyable_award", function () {
+    commentsContainer.on("click", ".buyable_award", function () {
         let award_id = $(this).data("award-id");
         let comment = $(this).parent().parent().parent().parent();
 
