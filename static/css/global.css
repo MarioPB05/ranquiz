@@ -116,6 +116,10 @@
     color: #FFA800 !important;
 }
 
+.play-selected {
+    color: #0c6af3; !important;
+}
+
 .badge-outline-primary-selected {
     color: white!important;
     background-color: var(--primary-600);

@@ -1,15 +1,29 @@
+import cloudinary
+from cloudinary import uploader  # skipcq: PY-W2000
 from django.contrib.auth import logout as django_logout
 from django.contrib.auth.decorators import login_required
-from django.http import Http404
-from django.shortcuts import render, redirect
+from django.http import Http404, HttpResponseForbidden
+from django.shortcuts import render, redirect, get_object_or_404
 
-from api.models import ListCategory
-from api.services.category_service import get_category
-from api.services.item_service import get_items
-from api.services.list_service import get_list
-from api.services.item_service import create_item_form, create_item
-from api.services.list_service import create_list_form, set_category, create_list
-from api.services.user_service import user_login, user_register, get_user
+from api.models import List, ListCategory, ListFavorite, ListLike, ListAnswer
+from api.services.category_service import edit_list_categories, get_category
+from api.services.item_service import (
+    create_item_form,
+    create_item,
+    edit_list_items,
+    get_items,
+)
+from api.services.list_service import (
+    create_list_form,
+    create_list,
+    get_list,
+    set_category, get_list_counts,
+)
+from api.services.user_service import (
+    user_login,
+    user_register,
+    get_user,
+)
 from core.decorators.decorators import partial_login_required
 
 
@@ -45,16 +59,32 @@ def list_details(request, share_code):
     # Obtener las instancias de Category a partir de las instancias de ListCategory
     categories = [list_category.category for list_category in list_categories]
 
+    # Obtener la cantidad de favoritos, likes, partidas de la lista
+    favorites_count, likes_count, play_count = get_list_counts(list_data)
+
+    # Verificar si el usuario ha dado like, favorito o jugado a la lista específica
+    user_has_liked = ListLike.objects.filter(user=request.user, list=list_data).exists()
+    user_has_favorited = ListFavorite.objects.filter(user=request.user, list=list_data).exists()
+    user_has_played = ListAnswer.objects.filter(user=request.user, list=list_data).exists()
+
     data = {
         "name": list_data.name,
         "owner": list_data.owner.username,
+        "owner_sharecode": list_data.owner.share_code,
         "elements": len(items_data),
         "creation_date": list_data.creation_date,
         "edit_date": list_data.edit_date,
         "avatar": list_data.owner.avatar.image,
-        "categories": categories
+        "categories": categories,
+        "favorites_count": favorites_count,
+        "likes_count": likes_count,
+        "play_count": play_count,
+        "user_has_liked": user_has_liked,
+        "user_has_favorited": user_has_favorited,
+        "user_has_played": user_has_played,
     }
     return render(request, 'pages/list_details.html', {'share_code': share_code, 'list': list_data, "data": data})
+
 
 @login_required
 def create_list_view(request):
@@ -82,16 +112,67 @@ def create_list_view(request):
                     item.list = list_obj
                     item.save()
 
-            if categories_names is not None:
-                for category_name in categories_names:
-                    category = get_category(category_name=category_name)
-
-                    if category is not None:
-                        set_category(list_obj, category)
+            edit_list_categories(categories_names, list_obj)
 
     return render(request, 'pages/manage_list.html', {
         'list_form': list_form,
-        'item_form': item_form
+        'item_form': item_form,
+        'edit_mode': False
+    })
+
+
+@login_required
+def edit_list_view(request, share_code):
+    """Vista que permite a un usuario editar una lista existente"""
+    list_obj = get_object_or_404(List, share_code=share_code)
+
+    # Comprueba si el usuario tiene permiso para editar la lista
+    if list_obj.owner != request.user:
+        return HttpResponseForbidden("No tienes permiso para editar esta lista")
+
+    # Crea el formulario de lista con los datos de la lista existente
+    list_form = create_list_form(request, instance=list_obj)
+    item_form = create_item_form(request, prefix='template')
+
+    if request.method == 'POST' and list_form.is_valid():
+        # Actualiza los datos de la lista con los datos del formulario
+        list_obj = get_list(share_code)
+        list_obj.name = request.POST.get('name')
+        list_obj.question = request.POST.get('question')
+        list_obj.public = bool(request.POST.get('visibility') == 'public')
+
+        # Verifica si la foto de la lista ha cambiado y la elimina de Cloudinary
+        if 'image' in request.FILES:
+            new_image = request.FILES['image']
+            if new_image != list_obj.image:
+                if list_obj.image:
+                    cloudinary.uploader.destroy(list_obj.image.public_id, invalidate=True)
+
+                list_obj.image = new_image
+
+        items_prefix = request.POST.get('items_prefix').split(',')
+        categories_names = request.POST.get('categories').split(',')
+
+        if len(items_prefix) > 0:
+            list_obj.type = 0
+            list_obj.save()
+
+            edit_list_items(items_prefix, list_obj, request)
+            edit_list_categories(categories_names, list_obj)
+
+        return redirect("/", list_id=list_obj.id)
+
+    item_form_set = []
+
+    for item in list_obj.item_set.all():
+        item_form = create_item_form(request, prefix=item.id, instance=item)
+        item_form_set.append(item_form)
+
+    return render(request, 'pages/manage_list.html', {
+        'item_form_set': item_form_set,
+        'list_form': list_form,
+        'item_form': item_form,
+        'edit_mode': True
     })
 
 

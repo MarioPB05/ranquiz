@@ -9,33 +9,48 @@
                 <div class="d-flex flex-column p-8 gap-10 h-100 align-items-center">
                     <div class="row justify-content-between align-items-center w-100">
                         <h2 class="text-white m-0 col-md-8 mb-lg-0 mb-5 text-md-start text-center">{{ list.name }}</h2>
-                        <a href="" class="m-md-0 m-auto bg-white mw-200px p-2 ps-4 pe-4 rounded shadow d-flex justify-content-center gap-3 align-items-center col-md-4">
+                        <a href="{% url 'user' share_code=data.owner_sharecode %}"
+                           class="m-md-0 m-auto bg-white mw-200px p-2 ps-4 pe-4 rounded shadow d-flex justify-content-center gap-3 align-items-center col-md-4">
                             <label href="" class="text-dark fw-bolder cursor-pointer">{{ list.owner.username }}</label>
-                            {% cloudinary data.avatar class="rounded-circle" width="50" height="50" crop="fill"  %}
+                            {% cloudinary data.avatar class="rounded-circle" width="50" height="50" crop="fill" %}
                         </a>
                     </div>
-                    <div class="w-100 h-lg-100 min-h-lg-10px rounded overflow-hidden position-lg-relative bgi-position-center bg-center min-h-300px" style="
-                        background-image: url('https://res.cloudinary.com/dhewpzvg9/{{ list.image }}');
-                            background-size: cover;
-                    "></div>
+                    <div class="w-100 h-lg-100 min-h-lg-10px rounded overflow-hidden position-lg-relative bgi-position-center bg-center min-h-300px"
+                         style="
+                                 background-image: url('https://res.cloudinary.com/dhewpzvg9/{{ list.image }}');
+                                 background-size: cover;
+                                 "></div>
                     <div class="d-flex flex-wrap align-center justify-content-center gap-lg-20 gap-10">
                         <div class="d-flex flex-column gap-3 align-items-center">
                             <div class="bg-white p-4 rounded-circle">
-                                <i class="fs-2x text-muted bi bi-controller"></i>
+                                {% if data.user_has_played %}
+                                    <i class="fs-2x text-muted bi bi-controller play-selected"></i>
+                                {% else %}
+                                    <i class="fs-2x text-muted bi bi-controller"></i>
+                                {% endif %}
                             </div>
-                            <label class="text-white fw-bolder fs-3">0</label>
+                            <label class="text-white fw-bolder fs-3">{{ data.play_count }}</label>
                         </div>
                         <div class="d-flex flex-column gap-3 align-items-center">
                             <div class="bg-white p-4 rounded-circle cursor-pointer hover-icon-color-coral">
-                                <i id="heart-count" class="fs-2x text-muted bi bi-heart-fill mt-3"></i>
+                                {% if data.user_has_liked %}
+                                    <i id="heart-count"
+                                       class="fs-2x text-muted bi bi-heart-fill mt-3 heart-selected"></i>
+                                {% else %}
+                                    <i id="heart-count" class="fs-2x text-muted bi bi-heart-fill mt-3"></i>
+                                {% endif %}
                             </div>
-                            <label id="count-hearts" class="text-white fw-bolder fs-3">0</label>
+                            <label id="count-hearts" class="text-white fw-bolder fs-3">{{ data.likes_count }}</label>
                         </div>
                         <div class="d-flex flex-column gap-3 align-items-center">
                             <div class="bg-white p-4 rounded-circle cursor-pointer hover-icon-color-lightyellow">
-                                <i id="star-count" class="fs-2x text-muted bi bi-star-fill"></i>
+                                {% if data.user_has_favorited %}
+                                    <i id="star-count" class="fs-2x text-muted bi bi-star-fill star-selected"></i>
+                                {% else %}
+                                    <i id="star-count" class="fs-2x text-muted bi bi-star-fill"></i>
+                                {% endif %}
                             </div>
-                            <label id="count-stars" class="text-white fw-bolder fs-3">0</label>
+                            <label id="count-stars" class="text-white fw-bolder fs-3">{{ data.favorites_count }}</label>
                         </div>
                     </div>
                     <div class="d-flex mb-20px w-100 row g-10">
@@ -62,16 +77,19 @@
                             </div>
                         </div>
                     </div>
-                    <a href="" class="d-flex justify-content-end position-absolute share-position">
+
+                    <a id="share_list" data-clipboard-text="{{ request.scheme }}://
+                            {{ request.get_host }}{% url 'list_details' share_code=list.share_code %}"
+                       class="d-flex justify-content-end position-absolute share-position">
                         <i class="fs-2 text-hover-white bg-hover-primary border-hover-white text-primary bi bi-share-fill bg-white p-4 rounded-circle border border-3 border-primary"></i>
                     </a>
-                
+
                     <div class="position-absolute w-100 d-flex flex-wrap justify-content-center gap-4 align-items-center" style="bottom: -20px">
                         <!-- TODO: Poner URL de pantalla de resultados -->
                         <a href="{% url 'user' share_code=list.share_code %}" class="h-100 btn btn-info w-25 min-w-150px">
                             Ver resultados
                         </a>
-                        
+
                         {% if user.is_authenticated %}
                             <a href="" class="d-flex align-items-center justify-content-center btn btn-primary-500 border border-dark rounded mh-50px w-25">
                                 <i class="fs-4x text-white bi bi-play-fill"></i>
@@ -79,14 +97,16 @@
                         {% endif %}
                     </div>
 
-                    
+
                 </div>
             </div>
         </div>
         <div class="d-flex h-100 flex-column gap-3 col-lg-4 p-6 primary-border rounded overflow-hidden">
             <div class="d-flex justify-content-between align-items-center">
                 <h3>Comentarios</h3>
-                <button class="btn btn-outline-primary border-primary border border-1 fs-8 cursor-pointer p-1 ps-2 pe-2 rounded-pill hover-color-white" id="recientComents">Recientes</button>
+                <button class="btn btn-outline-primary border-primary border border-1 fs-8 cursor-pointer p-1 ps-2 pe-2 rounded-pill hover-color-white"
+                        id="recientComents">Recientes
+                </button>
                 <p class="fs-2 text-muted" id="comment_counter">0</p>
             </div>
 
