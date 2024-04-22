@@ -65,12 +65,21 @@
                     <a href="" class="d-flex justify-content-end position-absolute share-position">
                         <i class="fs-2 text-hover-white bg-hover-primary border-hover-white text-primary bi bi-share-fill bg-white p-4 rounded-circle border border-3 border-primary"></i>
                     </a>
-
-                    {% if user.is_authenticated %}
-                        <a href="" class="d-flex align-items-center position-absolute bg-primary-500 border border-1 border-dark rounded text-white justify-content-center mh-50px w-50" style="bottom: -20px">
-                            <i class="fs-4x text-white bi bi-play-fill"></i>
+                
+                    <div class="position-absolute w-100 d-flex flex-wrap justify-content-center gap-4 align-items-center" style="bottom: -20px">
+                        <!-- TODO: Poner URL de pantalla de resultados -->
+                        <a href="{% url 'user' share_code=list.share_code %}" class="h-100 btn btn-info w-25 min-w-150px">
+                            Ver resultados
                         </a>
-                    {% endif %}
+                        
+                        {% if user.is_authenticated %}
+                            <a href="" class="d-flex align-items-center justify-content-center btn btn-primary-500 border border-dark rounded mh-50px w-25">
+                                <i class="fs-4x text-white bi bi-play-fill"></i>
+                            </a>
+                        {% endif %}
+                    </div>
+
+                    
                 </div>
             </div>
         </div>
