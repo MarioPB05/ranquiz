@@ -124,3 +124,13 @@
 .badge-outline-primary-selected:hover {
     background-color: var(--primary-500);
 }
+
+.btn-primary-500 {
+    color: #fff;
+    border-color: var(--primary-500);
+    background-color: var(--primary-500);
+}
+
+.btn-primary-500:hover {
+    background-color: #d44bff !important;
+}
