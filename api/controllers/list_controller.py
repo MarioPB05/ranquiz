@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.views.decorators.http import require_GET
 
 from api.models.list import List
-from api.services.list_service import get_lists_order_default
+from api.services.list_service import get_lists
 
 
 @require_GET
@@ -30,8 +30,7 @@ def get_lists_filtered(request):
     lists = []
     result = []
 
-    if sort == "default":
-        lists = get_lists_order_default(limit, page, search, request.user)
+    lists = get_lists(limit, page, search, request.user, sort)
 
     # TODO: Cambiar URL por la de list details
     print(lists)
