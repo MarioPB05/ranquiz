@@ -1,6 +1,7 @@
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET
 
+from api.decorators.api_decorators import require_authenticated
 from api.models import ListLike, ListFavorite
 from api.models.list import List
 
@@ -20,6 +21,7 @@ def get_list_types(request):
     return JsonResponse({'types': result})
 
 
+@require_authenticated
 def like_list(request, share_code):
     is_liked = request.GET.get('isLiked') == 'true'  # Convertir la cadena en un booleano
 
@@ -34,6 +36,7 @@ def like_list(request, share_code):
         return JsonResponse({'message': 'Like registrado exitosamente'})
 
 
+@require_authenticated
 def favorite_list(request, share_code):
     is_favorited = request.GET.get('isFavorited') == 'true'  # Convertir la cadena en un booleano
 
