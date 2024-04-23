@@ -1,5 +1,5 @@
 import {promiseAjax, removePageLoader, toastMessage} from "/static/assets/js/ranquiz/utils.js";
-const blockcontent = new KTBlockUI(content[0], { // skipcq: JS-0125
+const blockcontent = new KTBlockUI($("#content")[0], { // skipcq: JS-0125
     message: '<div class="blockui-message"><span class="spinner-border text-primary"></span> Cargando...</div>',
 });
 const elementsPerPage = 30;
