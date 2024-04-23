@@ -1,4 +1,4 @@
-import {removePageLoader, toastMessage} from "/static/assets/js/ranquiz/utils.js";
+import {promiseAjax, removePageLoader, toastMessage} from "/static/assets/js/ranquiz/utils.js";
 const blockcontent = new KTBlockUI($("#content")[0], { // skipcq: JS-0125
     message: '<div class="blockui-message"><span class="spinner-border text-primary"></span> Cargando...</div>',
 });
@@ -115,7 +115,7 @@ function addList(list) {
     newList.find(".author_image").attr("src", list.author.avatar);
 
     newList.find(".list_plays_number").text(list.plays);
-    list.highlighted ? newList.find(".highlight_list").removeClass("d-none") : "";
+    !list.highlighted ? newList.find(".highlight_list").addClass("d-none") : '';
     list.liked ? newList.find(".list_like").addClass("bi-heart-fill").removeClass("bi-heart") : "";
     list.liked ? newList.find(".list_like").addClass("text-danger") : "";
 
@@ -189,13 +189,13 @@ async function getElements(type, search, page, reset = false, sort = "default") 
 
     // Obtener elementos
     if (type === "list") {
-        elements = await getLists("", 1, getSort());
+        elements = await getLists(search, page, getSort());
         changeGridColumnsOfParent("350px");
     }else if (type === "category") {
-        elements = await getCategories("", 1, getSort());
+        elements = await getCategories(search, page, getSort());
         changeGridColumnsOfParent("250px");
     } else if (type === "user") {
-        elements = await getUsers("", 1, getSort());
+        elements = await getUsers(search, page, getSort());
         changeGridColumnsOfParent("200px");
     }else {
         toastMessage("Error", "No se ha seleccionado un modo de búsqueda");
@@ -207,7 +207,7 @@ async function getElements(type, search, page, reset = false, sort = "default") 
     blockcontent.release();
 
     // Verificar si se encontraron resultados
-    if (elements.length === 0) {
+    if (elements.length === 0 && page === 1) {
         notFoundResults();
         return;
     }
@@ -239,7 +239,9 @@ async function getElements(type, search, page, reset = false, sort = "default") 
 async function getLists(search, page, sort = "default") {
     return new Promise((resolve, reject) => {
         // TODO: Obtener {elementsPerPage} listas de base de datos a partir de la página {page}
-        resolve([exampleList]);
+        promiseAjax(`/api/lists?page=${page}&search=${search}&sort=${sort}`, "GET").then((response) => {
+            resolve(response.lists);
+        });
     });
 }
 
@@ -333,6 +335,7 @@ function onDocumentReady() {
         // Obtenemos la página actual y la incrementamos
         const page = parseInt($("#content").attr("data-page")) + 1;
         $("#content").attr("data-page", page);
+        $("#load_more").removeClass("d-flex").addClass("d-none");
 
         // Obtenemos los elementos
         getElements(getSelectedNav(), search.val(), page, false, getSort());
