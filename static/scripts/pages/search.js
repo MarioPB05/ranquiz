@@ -108,7 +108,7 @@ function addList(list) {
     newList.attr("data-id", list.id);
     newList.find(".list_name").text(list.name);
     newList.find(".list_image").attr("src", list.image);
-    !list.image ? newList.find(".list_image").attr("src", "/static/assets/media/placeholders/list_mix.png") : "";
+    !list.image ? newList.find(".list_image").attr("src", "/static/assets/media/placeholders/list_mix2.png") : "";
     newList.attr("href", list.url);
 
     newList.find(".author_name").text(list.author.username);
