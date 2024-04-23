@@ -1,7 +1,9 @@
 from django.http import JsonResponse
+from django.urls import reverse
 from django.views.decorators.http import require_GET
 
 from api.models.list import List
+from api.services.list_service import get_lists_order_default
 
 
 @require_GET
@@ -17,3 +19,36 @@ def get_list_types(request):
         })
 
     return JsonResponse({'types': result})
+
+
+def get_lists_filtered(request):
+    """Controlador que devuelve las listas"""
+    page = int(request.GET.get('page', '1'))
+    limit = 30
+    sort = request.GET.get('sort', 'default')
+    search = request.GET.get('search', '')
+    lists = []
+    result = []
+
+    if sort == "default":
+        lists = get_lists_order_default(limit, page, search, request.user)
+
+    # TODO: Cambiar URL por la de list details
+    print(lists)
+    for list_obj in lists:
+        result.append({
+            'id': list_obj['id'],
+            'name': list_obj['name'],
+            'image':  f"https://res.cloudinary.com/dhewpzvg9/{list_obj['image']}" if list_obj['image'] else None,
+            'url': request.build_absolute_uri(reverse('api_lists', args=[])),
+            'liked': list_obj['liked'],
+            'plays': list_obj['plays'],
+            'highlighted': list_obj['highlighted'],
+            'author': {
+                'username': list_obj['owner_username'],
+                'avatar':  f"https://res.cloudinary.com/dhewpzvg9/{list_obj['owner_avatar']}",
+                'url': request.build_absolute_uri(reverse('user', args=[list_obj['owner_share_code']])),
+            }
+        })
+
+    return JsonResponse({'lists': result})
