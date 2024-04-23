@@ -188,6 +188,9 @@ async function getElements(type, search, page, reset = false, sort = "default") 
     // Bloquear contenido
     blockcontent.block();
 
+    // Esconder boton de cargar mas
+    $("#load_more").removeClass("d-flex").addClass("d-none");
+
     // Obtener elementos
     if (type === "list") {
         elements = await getLists(search, page, getSort());
@@ -336,7 +339,6 @@ function onDocumentReady() {
         // Obtenemos la página actual y la incrementamos
         const page = parseInt($("#content").attr("data-page")) + 1;
         $("#content").attr("data-page", page);
-        $("#load_more").removeClass("d-flex").addClass("d-none");
 
         // Obtenemos los elementos
         getElements(getSelectedNav(), search.val(), page, false, getSort());
