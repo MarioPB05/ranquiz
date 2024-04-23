@@ -27,8 +27,19 @@ def get_list(share_code):
         return None
 
 
-def get_lists_order_default(limit=None, page=1, search='', user=None):
-    """Función que devuelve las listas públicas con filtros ordenadas por defecto"""
+def get_lists(limit=None, page=1, search='', user=None, order='default'):
+    """Función que devuelve las listas públicas con filtros"""
+    order_by = "1"
+
+    if order == 'default':
+        order_by = ("CASE "
+                 "WHEN hl.id IS NOT NULL AND hl.start_date <= NOW() AND hl.end_date >= NOW() "
+                 "THEN hl.start_date END DESC")
+    elif order == 'popular':
+        order_by = "plays DESC"
+    elif order == 'newest':
+        order_by = "l.edit_date DESC"
+
     query = """SELECT l.id, l.name, l.share_code, l.image,
                     (SELECT IF(COUNT(sll.id) > 0, TRUE, FALSE)
                      FROM api_listlike sll
@@ -45,10 +56,7 @@ def get_lists_order_default(limit=None, page=1, search='', user=None):
                 LEFT JOIN ranquiz.api_highlightedlist hl on l.id = hl.list_id
                 WHERE l.public = TRUE AND l.name LIKE %s
                 ORDER BY 
-                    CASE 
-                        WHEN hl.id IS NOT NULL AND hl.start_date <= NOW() AND hl.end_date >= NOW() 
-                        THEN hl.start_date 
-                    END DESC
+                """ + order_by + """
                 LIMIT %s OFFSET %s;"""
 
     params = [user.id if user else None, f"%{search}%", limit, (page - 1) * limit]
