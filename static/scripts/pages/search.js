@@ -1,5 +1,5 @@
 import {promiseAjax, removePageLoader, toastMessage} from "/static/assets/js/ranquiz/utils.js";
-const blockcontent = new KTBlockUI($("#content")[0], { // skipcq: JS-0125
+const blockcontent = new KTBlockUI(content[0], { // skipcq: JS-0125
     message: '<div class="blockui-message"><span class="spinner-border text-primary"></span> Cargando...</div>',
 });
 const elementsPerPage = 30;
@@ -9,6 +9,8 @@ const search = $("#search");
 const templateList = $("#template_list");
 const templateCategory = $("#template_category");
 const templateUser = $("#template_user");
+const content = $("#content");
+const loadMore = $("#load_more");
 
 let elements = [];
 const exampleList = {
@@ -120,7 +122,7 @@ function addList(list) {
     list.liked ? newList.find(".list_like").addClass("bi-heart-fill").removeClass("bi-heart") : "";
     list.liked ? newList.find(".list_like").addClass("text-danger") : "";
 
-    $("#content").append(newList);
+    content.append(newList);
 }
 
 /**
@@ -141,7 +143,7 @@ function addCategory(category) {
     category.followed ? newCategory.find(".category_follow").text("Siguiendo") : "";
     newCategory.find(".category_follower_number").text(category.followers);
 
-    $("#content").append(newCategory);
+    content.append(newCategory);
 }
 
 /**
@@ -163,7 +165,7 @@ function addUser(user) {
     user.followed ? newUser.find(".user_follow_icon").addClass("text-primary").removeClass("text-secondary") : "";
     user.followed ? newUser.find(".user_follow_icon").addClass("bi-person-check-fill").removeClass("bi-person-plus-fill") : "";
 
-    $("#content").append(newUser);
+    content.append(newUser);
 }
 
 /**
@@ -180,7 +182,7 @@ async function getElements(type, search, page, reset = false, sort = "default") 
     // Verificar si se debe resetear la lista y limpiamos el contenido
     if (reset) {
         emptyContent();
-        $("#content").attr("data-page", 1);
+        content.attr("data-page", 1);
         notFoundResults(false);
         elements.length = 0;
     }
@@ -188,8 +190,8 @@ async function getElements(type, search, page, reset = false, sort = "default") 
     // Bloquear contenido
     blockcontent.block();
 
-    // Esconder boton de cargar mas
-    $("#load_more").removeClass("d-flex").addClass("d-none");
+    // Esconder botón de cargar más
+    loadMore.removeClass("d-flex").addClass("d-none");
 
     // Obtener elementos
     if (type === "list") {
@@ -218,7 +220,7 @@ async function getElements(type, search, page, reset = false, sort = "default") 
 
     // Verificar si se deben mostrar más elementos
     if (elements.length === elementsPerPage) {
-        $("#load_more").removeClass("d-none").addClass("d-flex");
+        loadMore.removeClass("d-none").addClass("d-flex");
     }
 
     // Añadir listas a la página
@@ -283,7 +285,7 @@ async function getUsers(search, page, sort = "default") {
  */
 function notFoundResults(active = true) {
     if (active) {
-        $("#load_more").removeClass("d-flex").addClass("d-none");
+        loadMore.removeClass("d-flex").addClass("d-none");
         changeGridColumnsOfParent("100%");
         $("#notFoundResults").removeClass("d-none").addClass("d-flex");
     }else if ($("#notFoundResults").hasClass("d-flex")) {
@@ -304,7 +306,7 @@ function getSelectedNav() {
  * @param minWidth
  */
 function changeGridColumnsOfParent(minWidth) {
-    $("#content").css("grid-template-columns", `repeat(auto-fill, minmax(${minWidth}, 1fr)`);
+    content.css("grid-template-columns", `repeat(auto-fill, minmax(${minWidth}, 1fr)`);
 }
 
 /**
@@ -337,8 +339,8 @@ function onDocumentReady() {
     // Evento de carga de más elementos
     $("#load_more button").on("click", () => {
         // Obtenemos la página actual y la incrementamos
-        const page = parseInt($("#content").attr("data-page")) + 1;
-        $("#content").attr("data-page", page);
+        const page = parseInt(content.attr("data-page")) + 1;
+        content.attr("data-page", page);
 
         // Obtenemos los elementos
         getElements(getSelectedNav(), search.val(), page, false, getSort());
@@ -353,8 +355,8 @@ function onDocumentReady() {
         getElements(getSelectedNav(), search.val(), 1, true, getSort());
     });
 
-    // Evento de click en un elemento
-    $("#content").on("click", ".list, .category, .user", (event) => {
+    // Evento de clic en un elemento
+    content.on("click", ".list, .category, .user", (event) => {
        if (event.target.tagName === "A") return;
 
         const url = $(event.currentTarget).attr("href");
@@ -369,7 +371,7 @@ function onDocumentReady() {
         }
     });
 
-    // Evento de búsqueda al hacer click en el botón
+    // Evento de búsqueda al hacer clic en el botón
     $("#search_button").on("click", () => {
         if (search.val() === previousSearch) return;
 
