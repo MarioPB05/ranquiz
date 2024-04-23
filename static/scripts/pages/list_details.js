@@ -264,43 +264,41 @@ function handleIconClick() {
 /**
  * Añadir o eliminar un like a la lista
  */
-function handleLikeClick() {
-    $('#heart-count').click(function() {
-        // Verificar si el icono tiene la clase 'heart-selected'
-        const isLiked = $(this).hasClass('heart-selected');
+function handleLikeClick(event) {
+    event.preventDefault();
+    // Verificar si el icono tiene la clase 'heart-selected'
+    const isLiked = $(this).hasClass('heart-selected');
 
-        promiseAjax(`/api/list/${share_code}/like?isLiked=${isLiked}`, "GET").then(response => {
-            if (response.status === "success") {
-                $(this).toggleClass('heart-selected');
-            }else if (response.status === "error") {
-                toastMessage("error", response.message);
-            }
+    promiseAjax(`/api/list/${share_code}/like?isLiked=${isLiked}`, "GET").then(response => {
+        if (response.status === "success") {
+            $(this).toggleClass('heart-selected');
 
-        }).catch(() => {
-            toastMessage("error", "Error al dar like a la lista");
-        });
+        } else if (response.status === "error") {
+            toastMessage("error", response.message);
+        }
 
+    }).catch(() => {
+        toastMessage("error", "Error al dar like a la lista");
     });
 }
 
 /**
  * Añadir o eliminar un favorito a la lista
  */
-function handleFavoriteClick() {
-    $('#star-count').click(function() {
-        // Verificar si el icono tiene la clase 'star-selected'
-        const isFavorited = $(this).hasClass('star-selected');
+function handleFavoriteClick(event) {
+    event.preventDefault();
+    // Verificar si el icono tiene la clase 'star-selected'
+    const isFavorited = $(this).hasClass('star-selected');
 
-        promiseAjax(`/api/list/${share_code}/favorite?isFavorited=${isFavorited}`, "GET").then(response => {
-            if (response.status === "success") {
-                $(this).toggleClass('star-selected');
-            }else if (response.status === "error") {
-                toastMessage("error", response.message);
-            }
+    promiseAjax(`/api/list/${share_code}/favorite?isFavorited=${isFavorited}`, "GET").then(response => {
+        if (response.status === "success") {
+            $(this).toggleClass('star-selected');
+        } else if (response.status === "error") {
+            toastMessage("error", response.message);
+        }
 
-        }).catch(() => {
-            toastMessage("error", "Error al dar favorito a la lista");
-        });
+    }).catch(() => {
+        toastMessage("error", "Error al dar favorito a la lista");
     });
 }
 
@@ -322,8 +320,6 @@ function onDocumentReady() {
     getAwards();
     getComments();
     handleIconClick();
-    handleLikeClick();
-    handleFavoriteClick();
 
     $("#write_comment").click(writeComment);
     $("#comment_input").on("keypress", function (event) {
@@ -344,6 +340,10 @@ function onDocumentReady() {
 
         uploadAward(award_id, comment, true);
     });
+
+    $('#heart-count').on("click", handleLikeClick);
+    $('#star-count').on("click", handleFavoriteClick);
+
 
     removePageLoader();
 }
