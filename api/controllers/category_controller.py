@@ -62,7 +62,6 @@ def get_categories_filtered(request):
     categories = category_service.get_categories(limit, page, search, request.user, sort)
 
     # TODO: Cambiar URL por la de category view
-    print(categories)
     for category in categories:
         result.append({
             'id': category['id'],
