@@ -114,8 +114,12 @@ function addCategory(category) {
     newCategory.find(".category_list_number").text(category.lists);
     newCategory.attr("href", category.url);
 
-    category.followed ? newCategory.find(".category_follow").addClass("btn-primary").removeClass("btn-outline-primary") : "";
-    category.followed ? newCategory.find(".category_follow").text("Siguiendo") : "";
+    if (category.followed) {
+        newCategory.find(".category_follow").addClass("btn-primary");
+        newCategory.find(".category_follow").removeClass("btn-outline-primary");
+        newCategory.find(".category_follow").text("Siguiendo");
+    }
+
     newCategory.find(".category_follower_number").text(category.followers);
 
     content.append(newCategory);
@@ -137,8 +141,11 @@ function addUser(user) {
     newUser.find(".user_follower_number").text(user.followers);
     newUser.find(".user_avatar").attr("src", user.avatar);
 
-    user.followed ? newUser.find(".user_follow_icon").addClass("text-primary").removeClass("text-secondary") : "";
-    user.followed ? newUser.find(".user_follow_icon").addClass("bi-person-check-fill").removeClass("bi-person-plus-fill") : "";
+    if (user.followed) {
+        newUser.find(".user_follow_icon").addClass("bi-person-check-fill")
+        newUser.find(".user_follow_icon").removeClass("bi-person-plus-fill");
+        newUser.find(".user_follow_icon").addClass("text-primary").removeClass("text-secondary");
+    }
 
     content.append(newUser);
 }
