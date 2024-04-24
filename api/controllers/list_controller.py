@@ -28,12 +28,12 @@ def like_list(request, share_code):
     if is_liked:
         # Si ya está "liked", eliminar el like si existe
         ListLike.objects.filter(user=request.user, list__share_code=share_code).delete()
-        return JsonResponse({'message': 'Like eliminado exitosamente'})
     else:
         # Si no está "liked", agregar el like
         list_instance, _ = List.objects.get_or_create(share_code=share_code)
         ListLike.objects.create(user=request.user, list=list_instance)
-        return JsonResponse({'message': 'Like registrado exitosamente'})
+
+    return JsonResponse({'status': 'success'})
 
 
 @require_authenticated
@@ -43,9 +43,9 @@ def favorite_list(request, share_code):
     if is_favorited:
         # Si ya está marcada como favorita, eliminar el favorito si existe
         ListFavorite.objects.filter(user=request.user, list__share_code=share_code).delete()
-        return JsonResponse({'message': 'Favorito eliminado exitosamente'})
     else:
         # Si no está marcada como favorita, agregar el favorito
         list_instance, _ = List.objects.get_or_create(share_code=share_code)
         ListFavorite.objects.create(user=request.user, list=list_instance)
-        return JsonResponse({'message': 'Favorito registrado exitosamente'})
+
+    return JsonResponse({'status': 'success'})
