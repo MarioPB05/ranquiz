@@ -382,7 +382,7 @@ function onDocumentReady() {
         const award_id = $(this).data("award-id");
         const comment = $(this).parent().parent().parent().parent();
 
-        uploadAward(award_id, comment, true);
+        uploadAward(award_id, comment);
     });
 
     $('.cursor-pointer').on("custom_click", handleIconClick);
