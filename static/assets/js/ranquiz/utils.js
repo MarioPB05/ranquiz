@@ -155,6 +155,8 @@ function secondsToTime(seconds, digits) {
     }
 
     for (let key in time) {
+        if (Object.prototype.hasOwnProperty.call(time, key) === false) continue;
+
         let value = time[key];
         let timeCount = Math.floor(seconds / value);
 
