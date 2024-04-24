@@ -9,6 +9,8 @@
     --primary-700: #9A0FBC;
     --primary-800: #800E9A;
     --primary-900: #6B127D;
+
+    --secondary-dark: #a1a1a1;
 }
 
 
@@ -22,6 +24,10 @@
 
 .text-primary-800 {
     color: var(--primary-800);
+}
+
+.hover-text-primary-400:hover {
+    color: var(--primary-400)!important;
 }
 
 .category {
@@ -72,6 +78,21 @@
     color: red;
 }
 
+.fs-60px {
+    font-size: 60px;
+}
+
+.fs-40px {
+    font-size: 40px;
+}
+
+@media (min-width: 768px) {
+    .fs-sm-60px {
+        font-size: 60px!important;
+    }
+
+}
+
 .hover-text-danger:hover {
     transition-duration: 0.3s;
     color: var(--bs-danger) !important;
@@ -82,6 +103,37 @@
     color: white !important;
 }
 
+.border-secondary-dark {
+    border-color: var(--secondary-dark)!important;
+}
+
+.bg-secondary-dark {
+    background-color: var(--secondary-dark)!important;
+}
+
+.text-secondary-dark {
+    color: var(--secondary-dark)!important;
+}
+
+.hover-text-secondary-dark:hover {
+    color: var(--secondary-dark)!important;
+}
+
+.hover-fw-600:hover {
+    font-weight: 600!important;
+}
+
+.transition-duration-0-3s {
+    transition-duration: 0.3s!important;
+}
+
+.transition-duration-0-1s {
+    transition-duration: 0.1s!important;
+}
+
+.hover-fs-25px:hover {
+    font-size: 25px!important;
+}
 
 .hover-text-white:hover {
     transition-duration: 0.3s;

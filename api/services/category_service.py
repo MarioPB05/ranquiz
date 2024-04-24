@@ -1,6 +1,7 @@
 from api.forms.category_form import CreateCategoryForm
 from api.models import Category
 from api.services.list_service import set_category
+from api.services.query_service import execute_query
 
 
 def create_category(data):
@@ -43,6 +44,33 @@ def get_all_categories():
     categories = Category.objects.all()
 
     return categories
+
+
+def get_categories(limit=None, page=1, search='', user=None, order='default'):
+    """Función para obtener todas las categorías"""
+    order_by = "1"
+
+    if order == 'default':
+        order_by = "id DESC"
+    elif order == 'popular':
+        order_by = "followers DESC"
+    elif order == 'newest':
+        order_by = "max(al.edit_date) DESC"
+
+    query = """SELECT c.id, c.name, c.share_code, COUNT(lc.list_id) as lists, COUNT(cs.user_id) as followers,
+                if(cs.user_id = %s, TRUE, FALSE) as followed
+                FROM api_category c
+                LEFT JOIN api_listcategory lc on c.id = lc.category_id
+                LEFT JOIN api_categorysubscription cs on c.id = cs.category_id
+                JOIN ranquiz.api_list al on lc.list_id = al.id
+                WHERE c.name LIKE %s
+                GROUP BY c.id
+                ORDER BY %s
+                LIMIT %s OFFSET %s;"""
+
+    params = [user.id if user is not None else 0, f"%{search}%", order_by, limit, (page - 1) * limit]
+
+    return execute_query(query, params)
 
 
 def edit_distance(s1, s2):

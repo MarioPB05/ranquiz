@@ -1,4 +1,5 @@
 from api.forms.list_form import CreateListForm
+from api.services.query_service import execute_query
 from api.models import List, ListCategory, ListFavorite, ListLike, ListAnswer
 
 
@@ -19,11 +20,47 @@ def create_list(list_form):
 
 
 def get_list(share_code):
-    """Función que devuelve el objeto "lista" al que pertenece el sharecode"""
+    """Función que devuelve el objeto "lista" al que pertenece el share code"""
     try:
         return List.objects.get(share_code=share_code)
     except List.DoesNotExist:
         return None
+
+
+def get_lists(limit=None, page=1, search='', user=None, order='default'):
+    """Función que devuelve las listas públicas con filtros"""
+    order_by = ""
+
+    if order == 'popular':
+        order_by = "plays DESC, "
+    elif order == 'newest':
+        order_by = "l.edit_date DESC, "
+
+    order_by += ("CASE "
+                 "WHEN hl.id IS NOT NULL AND hl.start_date <= NOW() AND hl.end_date >= NOW() "
+                 "THEN hl.start_date END DESC")
+
+    query = """SELECT l.id, l.name, l.share_code, l.image,
+                    (SELECT IF(COUNT(sll.id) > 0, TRUE, FALSE)
+                     FROM api_listlike sll
+                     WHERE sll.list_id = l.id AND sll.user_id = %s) AS liked,
+                    (SELECT COUNT(sla.id)
+                     FROM api_listanswer sla
+                     WHERE sla.list_id = l.id) AS plays,
+                    IF(hl.id IS NOT NULL AND hl.start_date <= NOW() AND hl.end_date >= NOW(), TRUE, FALSE)
+                    AS highlighted,
+                    au.username as owner_username, au.share_code as owner_share_code, aa.image as owner_avatar
+                FROM api_list l
+                JOIN ranquiz.api_user au on l.owner_id = au.id
+                JOIN ranquiz.api_avatar aa on au.avatar_id = aa.id
+                LEFT JOIN ranquiz.api_highlightedlist hl on l.id = hl.list_id
+                WHERE l.public = TRUE AND l.name LIKE %s
+                ORDER BY %s
+                LIMIT %s OFFSET %s;"""
+
+    params = [user.id if user is not None else 0, f"%{search}%", order_by, limit, (page - 1) * limit]
+
+    return execute_query(query, params)
 
 
 def set_category(list_obj, category):

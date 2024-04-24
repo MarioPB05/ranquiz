@@ -1,6 +1,7 @@
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET, require_POST
 
+from api.services import category_service
 from api.services.category_service import get_all_categories, similarity, create_category
 
 
@@ -47,6 +48,31 @@ def get_categories(request):
         })
 
     return JsonResponse({'categories': json_categories})
+
+
+@require_GET
+def get_categories_filtered(request):
+    """Función para obtener las categorías filtradas"""
+    page = int(request.GET.get('page', '1'))
+    limit = 30
+    sort = request.GET.get('sort', 'default')
+    search = request.GET.get('search', '')
+    result = []
+
+    categories = category_service.get_categories(limit, page, search, request.user, sort)
+
+    # TODO: Cambiar URL por la de category view
+    for category in categories:
+        result.append({
+            'id': category['id'],
+            'name': category['name'],
+            'url': '/',
+            'lists': category['lists'],
+            'followers': category['followers'],
+            'followed': category['followed']
+        })
+
+    return JsonResponse({'categories': result})
 
 
 @require_POST

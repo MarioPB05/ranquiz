@@ -13,5 +13,6 @@ urlpatterns = [
     path('user/', views.profile, name='user'),
     path('user/<str:share_code>/', views.profile, name='user'),
     path('shop/', views.shop, name='shop'),
+    path('search/', views.search, name='search'),
     path('admin/', admin.site.urls),
 ]

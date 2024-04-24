@@ -212,3 +212,8 @@ def profile(request, share_code=None):
 def shop(request):
     """Vista que renderiza la tienda de la aplicación"""
     return render(request, 'pages/shop.html')
+
+
+def search(request):
+    """Vista que permite a un usuario buscar en la aplicación"""
+    return render(request, 'pages/search.html')
