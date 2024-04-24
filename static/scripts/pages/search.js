@@ -227,7 +227,7 @@ async function getElements(type, search, page, reset = false, sort = "default") 
  * @param sort
  * @returns {Promise<list>}
  */
-async function getLists(search, page, sort = "default") {
+function getLists(search, page, sort = "default") {
     return new Promise((resolve) => {
         promiseAjax(`/api/list/filter?page=${page}&search=${search}&sort=${sort}`, "GET").then((response) => {
             resolve(response.lists);
@@ -245,7 +245,7 @@ async function getLists(search, page, sort = "default") {
  * @param sort
  * @returns {Promise<unknown>}
  */
-async function getCategories(search, page, sort = "default") {
+function getCategories(search, page, sort = "default") {
     return new Promise((resolve) => {
         promiseAjax(`/api/category/filter?page=${page}&search=${search}&sort=${sort}`, "GET").then((response) => {
             resolve(response.categories);
@@ -263,7 +263,7 @@ async function getCategories(search, page, sort = "default") {
  * @param sort
  * @returns {Promise<unknown>}
  */
-async function getUsers(search, page, sort = "default") {
+function getUsers(search, page, sort = "default") {
     return new Promise((resolve) => {
         promiseAjax(`/api/user/filter?page=${page}&search=${search}&sort=${sort}`, "GET").then((response) => {
             resolve(response.users);
