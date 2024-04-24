@@ -1,4 +1,4 @@
-from api.models import UserTransaction, User
+from api.models import UserTransaction
 
 
 def do_transaction(user, value, details):

@@ -6,7 +6,7 @@ from django.http import Http404, HttpResponseForbidden
 from django.shortcuts import render, redirect, get_object_or_404
 
 from api.models import List, ListCategory, ListFavorite, ListLike, ListAnswer
-from api.services.category_service import edit_list_categories, get_category
+from api.services.category_service import edit_list_categories
 from api.services.item_service import (
     create_item_form,
     create_item,
@@ -17,7 +17,7 @@ from api.services.list_service import (
     create_list_form,
     create_list,
     get_list,
-    set_category, get_list_counts,
+    get_list_counts,
 )
 from api.services.user_service import (
     user_login,
