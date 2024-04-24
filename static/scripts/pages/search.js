@@ -157,6 +157,7 @@ function addUser(user) {
  * @param page
  * @param reset boolean
  * @param sort (default, popular, newest)
+ * @returns no-return
  */
 async function getElements(type, search, page, reset = false, sort = "default") {
     // Verificar si se debe resetear la lista y limpiamos el contenido
@@ -232,6 +233,7 @@ async function getLists(search, page, sort = "default") {
             resolve(response.lists);
         }).catch(() => {
             toastMessage("error", "No se pudieron obtener las listas");
+            allNavs.attr("disabled", false);
         });
     });
 }
@@ -249,6 +251,7 @@ async function getCategories(search, page, sort = "default") {
             resolve(response.categories);
         }).catch(() => {
             toastMessage("error", "No se pudieron obtener las categorías");
+            allNavs.attr("disabled", false);
         });
     });
 }
@@ -266,6 +269,7 @@ async function getUsers(search, page, sort = "default") {
             resolve(response.users);
         }).catch(() => {
             toastMessage("error", "No se pudieron obtener los usuarios");
+            allNavs.attr("disabled", false);
         });
     });
 }
