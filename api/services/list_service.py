@@ -29,16 +29,16 @@ def get_list(share_code):
 
 def get_lists(limit=None, page=1, search='', user=None, order='default'):
     """Función que devuelve las listas públicas con filtros"""
-    order_by = "1"
+    order_by = ""
 
-    if order == 'default':
-        order_by = ("CASE "
+    if order == 'popular':
+        order_by = "plays DESC, "
+    elif order == 'newest':
+        order_by = "l.edit_date DESC, "
+
+    order_by += ("CASE "
                  "WHEN hl.id IS NOT NULL AND hl.start_date <= NOW() AND hl.end_date >= NOW() "
                  "THEN hl.start_date END DESC")
-    elif order == 'popular':
-        order_by = "plays DESC"
-    elif order == 'newest':
-        order_by = "l.edit_date DESC"
 
     query = """SELECT l.id, l.name, l.share_code, l.image,
                     (SELECT IF(COUNT(sll.id) > 0, TRUE, FALSE)
