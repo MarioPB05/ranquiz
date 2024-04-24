@@ -77,7 +77,6 @@ function addAwardToComment(award_id, comment) {
  * @param comment
  */
 function uploadAward(award_id, comment) {
-    let award = awards.find(award => award.id === award_id);
     let id_comment = comment.attr("data-comment-id");
     let token = $('input[name=csrfmiddlewaretoken]').val();
     let comment_add_award = comment.find(".add_award");
