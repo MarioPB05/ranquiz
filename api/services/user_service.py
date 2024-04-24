@@ -132,10 +132,9 @@ def get_users(limit=None, page=1, search='', order='default', user=None):
                 LEFT JOIN api_list l on u.id = l.owner_id
                 WHERE u.username LIKE %s
                 GROUP BY u.id
-                ORDER BY 
-                """ + order_by + """
+                ORDER BY %s
                 LIMIT %s OFFSET %s;"""
 
-    params = [user.id, f"%{search}%", limit, (page - 1) * limit]
+    params = [user.id if user is not None else 0, f"%{search}%", order_by, limit, (page - 1) * limit]
 
     return execute_query(query, params)

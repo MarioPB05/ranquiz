@@ -55,11 +55,10 @@ def get_lists(limit=None, page=1, search='', user=None, order='default'):
                 JOIN ranquiz.api_avatar aa on au.avatar_id = aa.id
                 LEFT JOIN ranquiz.api_highlightedlist hl on l.id = hl.list_id
                 WHERE l.public = TRUE AND l.name LIKE %s
-                ORDER BY 
-                """ + order_by + """
+                ORDER BY %s
                 LIMIT %s OFFSET %s;"""
 
-    params = [user.id if user else None, f"%{search}%", limit, (page - 1) * limit]
+    params = [user.id if user is not None else 0, f"%{search}%", order_by, limit, (page - 1) * limit]
 
     return execute_query(query, params)
 
