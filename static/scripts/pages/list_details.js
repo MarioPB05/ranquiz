@@ -134,7 +134,7 @@ function addComment(comment) {
     element.find(".comment_date").text(formatElapsedTime(date));
 
     element.find('[data-kt-menu]').each(function () {
-        const menu = new KTMenu($(this)[0]);  // skipcq: JS-0125
+        new KTMenu($(this)[0]);  // skipcq: JS-0125
     });
 
     if (awards) {
@@ -265,7 +265,7 @@ function handleIconClick() {
 /**
  * Añadir o eliminar un like a la lista
  */
-function handleLikeClick(event) {
+function handleLikeClick() {
     if (blockLikeBtn.isBlocked()) return;
 
     blockLikeBtn.block();
@@ -291,7 +291,7 @@ function handleLikeClick(event) {
 /**
  * Añadir o eliminar un favorito a la lista
  */
-function handleFavoriteClick(event) {
+function handleFavoriteClick() {
     if (blockFavoriteBtn.isBlocked()) return;
 
     blockFavoriteBtn.block();
