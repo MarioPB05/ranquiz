@@ -119,7 +119,7 @@ def get_users(limit=None, page=1, search='', order='default', user=None):
     elif order == 'newest':
         order_by = "max(l.creation_date) DESC"
 
-    query = """SELECT u.id, u.username, u.share_code, a.image as avatar, 
+    query = """SELECT u.id, u.username, u.share_code, a.image as avatar,
                     (SELECT COUNT(uf.user_followed_id)
                      FROM api_userfollow uf
                      WHERE uf.user_followed_id = u.id) AS followers,

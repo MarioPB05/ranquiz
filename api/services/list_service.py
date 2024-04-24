@@ -47,7 +47,7 @@ def get_lists(limit=None, page=1, search='', user=None, order='default'):
                     (SELECT COUNT(sla.id)
                      FROM api_listanswer sla
                      WHERE sla.list_id = l.id) AS plays,
-                    IF(hl.id IS NOT NULL AND hl.start_date <= NOW() AND hl.end_date >= NOW(), TRUE, FALSE) 
+                    IF(hl.id IS NOT NULL AND hl.start_date <= NOW() AND hl.end_date >= NOW(), TRUE, FALSE)
                     AS highlighted,
                     au.username as owner_username, au.share_code as owner_share_code, aa.image as owner_avatar
                 FROM api_list l
