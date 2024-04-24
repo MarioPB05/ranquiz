@@ -1,0 +1,229 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load cloudinary %}
+
+{% block content %}
+    <div class="row full-height g-10">
+        <div class="pe-lg-6 col-lg-8 h-100 mb-15 mb-lg-0">
+            <div class="w-100 h-auto h-lg-100 p-3 bg-primary-600 rounded position-relative pb-10">
+                <div class="d-flex flex-column p-8 gap-10 h-100 align-items-center">
+                    <div class="row justify-content-between align-items-center w-100">
+                        <h2 class="text-white m-0 col-md-8 mb-lg-0 mb-5 text-md-start text-center">{{ list.name }}</h2>
+                        <a href="{% url 'user' share_code=data.owner_sharecode %}"
+                           class="m-md-0 m-auto bg-white mw-200px p-2 ps-4 pe-4 rounded shadow d-flex justify-content-center gap-3 align-items-center col-md-4">
+                            <label href="" class="text-dark fw-bolder cursor-pointer">{{ list.owner.username }}</label>
+                            {% cloudinary data.avatar class="rounded-circle" width="50" height="50" crop="fill" %}
+                        </a>
+                    </div>
+                    <div class="w-100 h-lg-100 min-h-lg-10px rounded overflow-hidden position-lg-relative bgi-position-center bg-center min-h-300px"
+                         style="
+                                 background-image: url('https://res.cloudinary.com/dhewpzvg9/{{ list.image }}');
+                                 background-size: cover;
+                                 "></div>
+                    <div class="d-flex flex-wrap align-center justify-content-center gap-lg-20 gap-10">
+                        <div class="d-flex flex-column gap-3 align-items-center">
+                            <div class="bg-white p-4 rounded-circle">
+                                {% if data.user_has_played %}
+                                    <i class="fs-2x text-muted bi bi-controller play-selected"></i>
+                                {% else %}
+                                    <i class="fs-2x text-muted bi bi-controller"></i>
+                                {% endif %}
+                            </div>
+                            <label class="text-white fw-bolder fs-3">{{ data.play_count }}</label>
+                        </div>
+                        <div class="d-flex flex-column gap-3 align-items-center">
+                            <div id="heart-btn" class="bg-white p-4 rounded-circle cursor-pointer hover-icon-color-coral">
+                                {% if data.user_has_liked %}
+                                    <i id="heart-count"
+                                       class="fs-2x text-muted bi bi-heart-fill mt-3 heart-selected"></i>
+                                {% else %}
+                                    <i id="heart-count" class="fs-2x text-muted bi bi-heart-fill mt-3"></i>
+                                {% endif %}
+                            </div>
+                            <label id="count-hearts" class="text-white fw-bolder fs-3">{{ data.likes_count }}</label>
+                        </div>
+                        <div class="d-flex flex-column gap-3 align-items-center">
+                            <div id="star-btn" class="bg-white p-4 rounded-circle cursor-pointer hover-icon-color-lightyellow">
+                                {% if data.user_has_favorited %}
+                                    <i id="star-count" class="fs-2x text-muted bi bi-star-fill star-selected"></i>
+                                {% else %}
+                                    <i id="star-count" class="fs-2x text-muted bi bi-star-fill"></i>
+                                {% endif %}
+                            </div>
+                            <label id="count-stars" class="text-white fw-bolder fs-3">{{ data.favorites_count }}</label>
+                        </div>
+                    </div>
+                    <div class="d-flex mb-20px w-100 row g-10">
+                        <div class="col-md-5 d-flex justify-content-around flex-column gap-3">
+                            <div class="text-white fs-5 fs-md-4 text-center text-md-start">
+                                <label class="fw-bolder">Elementos: </label>
+                                <label id="total_items">{{ data.elements }}</label>
+                            </div>
+                            <div class="text-white fs-5 fs-md-4 text-center text-md-start">
+                                <label class="fw-bolder">Creación: </label>
+                                <label>{{ list.creation_date|date:"d/m/Y" }}</label>
+                            </div>
+                            <div class="text-white fs-5 fs-md-4 text-center text-md-start">
+                                <label class="fw-bolder">Ultima edición: </label>
+                                <label>{{ list.edit_date|date:"d/m/Y" }}</label>
+                            </div>
+                        </div>
+                        <div class="col-md-7 d-flex flex-column gap-3">
+                            <label class="fw-bolder fs-3 text-white text-center text-md-end">Categorías</label>
+                            <div class="d-flex gap-3 flex-wrap w-100 justify-content-center justify-content-md-end">
+                                {% for category in data.categories %}
+                                    <span class="badge bg-white text-primary-800 fs-6">{{ category }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <a id="share_list" data-clipboard-text="{{ request.scheme }}://
+                            {{ request.get_host }}{% url 'list_details' share_code=list.share_code %}"
+                       class="d-flex justify-content-end position-absolute share-position">
+                        <i class="fs-2 text-hover-white bg-hover-primary border-hover-white text-primary bi bi-share-fill bg-white p-4 rounded-circle border border-3 border-primary"></i>
+                    </a>
+
+                    <div class="position-absolute w-100 d-flex flex-wrap justify-content-center gap-4 align-items-center" style="bottom: -20px">
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'user' share_code=list.share_code %}" class="h-100 btn btn-info w-25 min-w-150px">
+                                Ver resultados
+                            </a>
+
+                            <a data-bs-toggle="modal" data-bs-target="#playModal" class="d-flex align-items-center justify-content-center btn btn-primary border border-dark rounded mh-50px w-25" style="bottom: -20px">
+                                <i class="fs-4x text-white bi bi-play-fill"></i>
+                            </a>
+
+                            <!-- Begin modal -->
+                            <div class="modal fade" id="playModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Jugar</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+
+                                        <div class="modal-body">
+                                            <label class="fs-5 mb-3">Elementos a elegir en cada ronda a la vez</label>
+                                            <select id="duel_elements_selector" class="form-select" data-control="select2" data-placeholder="Select an option" data-hide-search="true" aria-label="Default select example">
+                                              <option value="4">4 Elementos</option>
+                                              <option value="2">2 Elementos</option>
+                                            </select>
+                                            <label class="fs-5 mt-10">Tiempo aproximado de juego:</label>
+                                            <p id="estimated_playtime" class="fs-1 fw-bolder text-success">0m 0s</p>
+                                        </div>
+
+                                        <div class="modal-footer d-flex justify-content-around">
+                                            <!--TODO: Cambiar url por play_list -->
+                                            <a  href="{% url 'user' share_code=list.share_code %}" class="btn btn-primary px-16" id="play_button">Jugar ahora</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End modal -->
+
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex h-100 flex-column gap-3 col-lg-4 p-6 primary-border rounded overflow-hidden">
+            <div class="d-flex justify-content-between align-items-center">
+                <h3>Comentarios</h3>
+                <button class="btn btn-outline-primary border-primary border border-1 fs-8 cursor-pointer p-1 ps-2 pe-2 rounded-pill hover-color-white"
+                        id="recientComents">Recientes
+                </button>
+                <p class="fs-2 text-muted" id="comment_counter">0</p>
+            </div>
+
+            <div class="d-flex h-100 mh-600px gap-7 flex-column scrolleable" id="comments_container">
+                <!-- Begin template comment -->
+                <div class="d-none flex-column border border-1 border-gray-400 rounded p-5 gap-4 comment mb-1"
+                     id="template_comment">
+                    <div class="d-flex flex-row align-items-center justify-content-between">
+                        <a href="" class="d-flex flex-row gap-3 align-items-center justify-content-center author_group">
+                            <img class="author_avatar w-40px" alt="Imagen del usuario"/>
+                            <label class="text-muted author_name cursor-pointer">David Pérez Fernández</label>
+                        </a>
+                        <div>
+                            <label class="comment_date">Hace 3 m</label>
+                        </div>
+                    </div>
+
+                    <label class="fs-5 comment_content" style="overflow-wrap: break-word;">
+                        Esta lista no está actualizada, faltan los brawlers de la nueva temporada.
+                    </label>
+
+                    <div class="d-flex flex-row gap-3 mt-2 award_container flex-wrap">
+                        <!-- Begin template award -->
+                        <div class="d-none gap-2 award rounded-pill text-white p-1 ps-3 pe-3 align-items-center"
+                             id="template_award" data-award-id="0">
+                            <i class="fs-5 text-white award_icon"></i>
+                            <label class="award_name">Útil</label>
+                            <label class="ms-2 award_amount">3</label>
+                        </div>
+                        <!-- End template award -->
+                        {% if user.is_authenticated %}
+                            <div>
+                                <button data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start"
+                                        data-kt-menu-offset="0,5"
+                                        class="d-flex gap-3 bg-primary-500 rounded-pill text-white p-1 ps-3 pe-3 align-items-center cursor-pointer bg-hover-primary border-0 add_award">
+                                    <i class="text-white fs-5 bi bi-award cursor-pointer"></i>
+                                    Premiar
+                                </button>
+
+                                <!--begin::Menu-->
+                                <div class="menu gap-4 pb-7 pt-7 menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold w-auto min-w-225px mw-300px"
+                                     data-kt-menu="true">
+                                    <!--begin template buyable award -->
+                                    <div class="menu-item px-3 d-none buyable_award cursor-pointer"
+                                         id="template_buyable_award" data-award-id="0">
+                                        <div class="menu-link px-3 text-white rounded-pill hover-bg-lighter d-flex justify-content-between"
+                                             style="background-color: #23B0FF">
+                                            <div>
+                                                <i class="award_icon bi text-white"></i>
+                                                <span class="award_name ms-2">Example</span>
+                                            </div>
+
+                                            <div>
+                                                <span class="award_price me-1">2</span>
+                                                <i class="bi bi-gem text-white"></i>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <!--end template buyable award-->
+
+                                </div>
+                                <!--end::Menu-->
+                            </div>
+
+                        </div>
+                    {% endif %}
+
+                </div>
+                <!-- End template comment -->
+            </div>
+            {% if user.is_authenticated %}
+                <form class="mt-auto">
+                    {% csrf_token %}
+                    <div class="d-flex flex-row border border-1 border-gray-400 rounded p-3 gap-4 align-items-center mt-3 bo">
+                        <label class="w-100">
+                            <div class="borderless-textarea">
+                                <textarea rows="1" class="w-100 border-0 fs-5" placeholder="Añadir comentario..."
+                                data-kt-autosize="true" id="comment_input" maxlength="500"></textarea>
+                            </div>
+                        </label>
+                        <i class="fs-2 bg-hover-secondary rounded-circle cursor-pointer text-primary bi bi-send p-2"
+                           id="write_comment"></i>
+                    </div>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block custom_scripts %}
+    <script>const share_code = '{{ share_code }}';</script>
+    <script src="{% static 'scripts/pages/list_details.js' %}" type="module"></script>
+{% endblock %}

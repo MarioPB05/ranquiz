@@ -4,11 +4,26 @@ from django.contrib.auth import logout as django_logout
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponseForbidden
 from django.shortcuts import render, redirect, get_object_or_404
-from api.models import List
+
+from api.models import List, ListCategory, ListFavorite, ListLike, ListAnswer
 from api.services.category_service import edit_list_categories
-from api.services.item_service import create_item_form, create_item, edit_list_items
-from api.services.list_service import create_list_form, create_list, get_list
-from api.services.user_service import user_login, user_register, get_user
+from api.services.item_service import (
+    create_item_form,
+    create_item,
+    edit_list_items,
+    get_items,
+)
+from api.services.list_service import (
+    create_list_form,
+    create_list,
+    get_list,
+    get_list_counts,
+)
+from api.services.user_service import (
+    user_login,
+    user_register,
+    get_user,
+)
 from core.decorators.decorators import partial_login_required
 
 
@@ -31,6 +46,49 @@ def logout(request):
     """Vista que permite a un usuario cerrar sesión en la aplicación"""
     django_logout(request)
     return redirect('login')
+
+
+def list_details(request, share_code):
+    """Vista que permite a un usuario ver los detalles de una lista"""
+    list_data = get_list(share_code)
+    items_data = get_items(share_code)
+
+    # Obtener todas las instancias de ListCategory asociadas a la lista específica
+    list_categories = ListCategory.objects.filter(list=list_data)
+
+    # Obtener las instancias de Category a partir de las instancias de ListCategory
+    categories = [list_category.category for list_category in list_categories]
+
+    # Obtener la cantidad de favoritos, likes, partidas de la lista
+    favorites_count, likes_count, play_count = get_list_counts(list_data)
+
+    # Verificar si el usuario ha dado like, favorito o jugado a la lista específica
+    user_has_liked = False
+    user_has_favorited = False
+    user_has_played = False
+    if request.user.is_authenticated:
+        user_has_liked = ListLike.objects.filter(user=request.user, list=list_data).exists()
+        user_has_favorited = ListFavorite.objects.filter(user=request.user, list=list_data).exists()
+        user_has_played = ListAnswer.objects.filter(user=request.user, list=list_data).exists()
+
+    data = {
+            "name": list_data.name,
+            "owner": list_data.owner.username,
+            "owner_sharecode": list_data.owner.share_code,
+            "elements": len(items_data),
+            "creation_date": list_data.creation_date,
+            "edit_date": list_data.edit_date,
+            "avatar": list_data.owner.avatar.image,
+            "categories": categories,
+            "favorites_count": favorites_count,
+            "likes_count": likes_count,
+            "play_count": play_count,
+            "user_has_liked": user_has_liked,
+            "user_has_favorited": user_has_favorited,
+            "user_has_played": user_has_played,
+    }
+
+    return render(request, 'pages/list_details.html', {'share_code': share_code, 'list': list_data, "data": data})
 
 
 @login_required
