@@ -259,8 +259,11 @@ async function getLists(search, page, sort = "default") {
  */
 async function getCategories(search, page, sort = "default") {
     return new Promise((resolve, reject) => {
-       // TODO: Obtener {elementsPerPage} categorías de base de datos a partir de la página {page}
-         resolve([exampleCategory]);
+        promiseAjax(`/api/category/filter?page=${page}&search=${search}&sort=${sort}`, "GET").then((response) => {
+            resolve(response.categories);
+        }).catch(() => {
+            toastMessage("error", "No se pudieron obtener las categorías");
+        });
     });
 }
 
