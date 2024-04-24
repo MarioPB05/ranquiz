@@ -90,6 +90,7 @@ def add_award_to_comment_function(request, share_code, comment_id):
     award_id = request.POST.get('id_award')
     selected_comment = get_comment(comment_id)
     selected_award = get_award(award_id)
+    final_price = int(selected_award.price * 0.7)
 
     # Verificar si el usuario ya otorgó este premio en este comentario
     if check_user_award_in_comment(comment_id, request.user, award_id):
@@ -105,7 +106,7 @@ def add_award_to_comment_function(request, share_code, comment_id):
         return JsonResponse({'status': 'Error', 'message': 'No tienes suficientes puntos para otorgar este premio'})
 
     # Realizar la transacción para recibir el premio
-    transaction_received = do_transaction(selected_comment.user, selected_award.price, "Premio recibido")
+    transaction_received = do_transaction(selected_comment.user, final_price, "Premio recibido")
     if transaction_received is None:
         # Reembolsar al usuario si hay un error al recibir el premio
         do_transaction(request.user, selected_award.price, "Premio reembolsado por error al otorgar el premio")
@@ -119,6 +120,6 @@ def add_award_to_comment_function(request, share_code, comment_id):
     except Exception as e:
         # Reembolsar a los usuarios si hay un error al agregar el premio al comentario
         do_transaction(request.user, selected_award.price, "Premio reembolsado por error al otorgar el premio")
-        do_transaction(selected_comment.user, -selected_award.price, "Premio reembolsado por error al otorgar el premio")
+        do_transaction(selected_comment.user, -final_price, "Premio reembolsado por error al otorgar el premio")
 
     return JsonResponse({'status': 'Error', 'message': 'Error al otorgar el premio'})
