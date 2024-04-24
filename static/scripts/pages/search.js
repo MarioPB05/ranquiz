@@ -9,6 +9,7 @@ const templateCategory = $("#template_category");
 const templateUser = $("#template_user");
 const content = $("#content");
 const loadMore = $("#load_more");
+const allNavs = $("nav button");
 
 const blockcontent = new KTBlockUI(content[0], { // skipcq: JS-0125
     message: '<div class="blockui-message"><span class="spinner-border text-primary"></span> Cargando...</div>',
@@ -52,8 +53,10 @@ const exampleUser = {
  * @param selected puede ser "list", "category" o "user"
  */
 function toggleNavs(selected) {
-    const allNavs = $("nav button");
     const selectedNav = $(`#${selected}_nav`);
+
+    // Bloquear todos los botones
+    allNavs.attr("disabled", true);
 
     // Remover clases de nav seleccionado a todos los botones
     allNavs.removeClass("nav_selected");
@@ -179,8 +182,6 @@ function addUser(user) {
  * @param sort (default, popular, newest)
  */
 async function getElements(type, search, page, reset = false, sort = "default") {
-    console.log(`Buscando ${type} con: ${search}, en la página ${page}, ordenadas por ${sort}`);
-
     // Verificar si se debe resetear la lista y limpiamos el contenido
     if (reset) {
         emptyContent();
@@ -208,8 +209,12 @@ async function getElements(type, search, page, reset = false, sort = "default") 
     }else {
         toastMessage("Error", "No se ha seleccionado un modo de búsqueda");
         notFoundResults();
+        allNavs.attr("disabled", false);
         return;
     }
+
+    // Desbloquear botones del nav
+    allNavs.attr("disabled", false);
 
     // Desbloquear contenido
     blockcontent.release();
