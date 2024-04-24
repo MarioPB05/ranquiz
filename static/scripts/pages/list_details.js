@@ -49,7 +49,7 @@ function getAwards() {
 }
 
 function addAwardToComment(award_id, comment) {
-    const award = awards.find(award => award.id === award_id);
+    const found_award = awards.find(award => award.id === award_id);
 
     if (comment.find(`div.award[data-award-id=${award_id}]`).length > 0) {
         comment.find(`div.award[data-award-id=${award_id}]`).find(".award_amount").text(parseInt(comment.find(`div.award[data-award-id=${award_id}]`).find(".award_amount").text()) + 1);
@@ -59,10 +59,10 @@ function addAwardToComment(award_id, comment) {
         award_element.removeAttr("id");
         award_element.removeClass("d-none").addClass("d-flex");
 
-        award_element.find(".award_icon").addClass(award.icon);
-        award_element.find(".award_name").text(award.title);
+        award_element.find(".award_icon").addClass(found_award.icon);
+        award_element.find(".award_name").text(found_award.title);
         award_element.find(".award_amount").text(1);
-        award_element.css("background-color", award.color);
+        award_element.css("background-color", found_award.color);
 
         award_element.attr("data-award-id", award_id);
         award_element.removeClass("d-none").addClass("d-flex");
@@ -112,7 +112,7 @@ function addComment(comment) {
     const author_avatar = comment.author.avatar;
     const author_url = comment.author.url;
     const date = new Date(comment.date);
-    const awards = comment.awards;
+    const comment_awards = comment.awards;
     const id = comment.id;
     const user_is_athor = comment.user_is_author;
 
@@ -136,8 +136,8 @@ function addComment(comment) {
         new KTMenu($(this)[0]);  // skipcq: JS-0125
     });
 
-    if (awards) {
-        $.each(awards, (index, award) => {
+    if (comment_awards) {
+        $.each(comment_awards, (index, award) => {
             addAwardToComment(award.id_award, element);
         });
     }
