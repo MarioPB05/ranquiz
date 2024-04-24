@@ -17,7 +17,6 @@ def get_avatar(avatar_id):
 
 def get_all_avatars(user):
     """Obtiene todos los avatares ordenados por rareza"""
-
     if user is None:
         return None
 
@@ -30,7 +29,6 @@ def get_all_avatars(user):
 
 def get_avatars_by_popularity(user):
     """Obtiene los avatares por popularidad"""
-
     if user is None:
         return None
 
@@ -45,7 +43,6 @@ def get_avatars_by_popularity(user):
 
 def get_avatars_by_purchased(user):
     """Obtiene los avatares por compras"""
-
     if user is None:
         return None
 
