@@ -3,7 +3,7 @@ import {promiseAjax, removePageLoader, toastMessage} from "/static/assets/js/ran
 const elementsPerPage = 30;
 let previousSearch = "";
 
-const search = $("#search");
+const searchInput = $("#search");
 const templateList = $("#template_list");
 const templateCategory = $("#template_category");
 const templateUser = $("#template_user");
@@ -328,7 +328,7 @@ function onDocumentReady() {
         toggleNavs(selected);
 
         // Obtenemos los elementos
-        getElements(selected, search.val(), 1, true, getSort());
+        getElements(selected, searchInput.val(), 1, true, getSort());
     });
 
     // Evento de carga de más elementos
@@ -338,7 +338,7 @@ function onDocumentReady() {
         content.attr("data-page", page);
 
         // Obtenemos los elementos
-        getElements(getSelectedNav(), search.val(), page, false, getSort());
+        getElements(getSelectedNav(), searchInput.val(), page, false, getSort());
     });
 
     // Evento de cambio de ordenamiento
@@ -347,7 +347,7 @@ function onDocumentReady() {
         toggleSort($(event.target).attr("id"));
 
         // Obtenemos los elementos
-        getElements(getSelectedNav(), search.val(), 1, true, getSort());
+        getElements(getSelectedNav(), searchInput.val(), 1, true, getSort());
     });
 
     // Evento de clic en un elemento
@@ -359,19 +359,19 @@ function onDocumentReady() {
     });
 
     // Evento de búsqueda al pulsar enter
-    search.on("keypress", (event) => {
-        if (event.key === "Enter" && search.val() !== previousSearch) {
-            previousSearch = search.val();
-            getElements(getSelectedNav(), search.val(), 1, true, getSort());
+    searchInput.on("keypress", (event) => {
+        if (event.key === "Enter" && searchInput.val() !== previousSearch) {
+            previousSearch = searchInput.val();
+            getElements(getSelectedNav(), searchInput.val(), 1, true, getSort());
         }
     });
 
     // Evento de búsqueda al hacer clic en el botón
     $("#search_button").on("click", () => {
-        if (search.val() === previousSearch) return;
+        if (searchInput.val() === previousSearch) return;
 
-        previousSearch = search.val();
-        getElements(getSelectedNav(), search.val(), 1, true, getSort());
+        previousSearch = searchInput.val();
+        getElements(getSelectedNav(), searchInput.val(), 1, true, getSort());
     });
 
     getElements(getSelectedNav(), "", 1);
