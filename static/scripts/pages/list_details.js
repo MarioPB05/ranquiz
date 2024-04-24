@@ -1,9 +1,11 @@
 import {removePageLoader, formatElapsedTime, toastMessage, promiseAjax, secondsToTime} from "/static/assets/js/ranquiz/utils.js";
 
 const commentsContainer = $("#comments_container");
-const blockUI = new KTBlockUI(commentsContainer.parent()[0], {
+const blockUI = new KTBlockUI(commentsContainer.parent()[0], {  // skipcq: JS-0125
     message: '<div class="blockui-message"><span class="spinner-border text-primary"></span>Cargando comentarios...</div>',
 });
+const blockLikeBtn = new KTBlockUI($("#heart-btn")[0]);  // skipcq: JS-0125
+const blockFavoriteBtn = new KTBlockUI($("#star-btn")[0]);  // skipcq: JS-0125
 const templateComment = $("#template_comment");
 const templateAward = $("#template_award");
 let templateBuyableAward = $("#template_buyable_award");
@@ -223,92 +225,86 @@ function toggleRecientComments() {
     if ($("#recientComents").hasClass("badge-outline-primary-selected")) {
         $("#recientComents").removeClass("badge-outline-primary-selected");
         getComments("featured")
-    }else {
+    } else {
         $("#recientComents").addClass("badge-outline-primary-selected");
         getComments("recient");
     }
 }
 
+/**
+ * Maneja el clic en los elementos de corazones y estrellas
+ */
 function handleIconClick() {
-    // TODO: Refactorizar
     // Función para manejar el clic en los elementos de corazones y estrellas
-    $('.cursor-pointer').click(function() {
-        var countLabel = $(this).next('label');
-        var icon = $(this).find('i');
+    const countLabel = $(this).next('label');
+    const icon = $(this).find('i');
 
-        // Obtener el número actual
-        var count = parseInt(countLabel.text());
+    // Obtener el número actual
+    let count = parseInt(countLabel.text());
 
-        // Verificar el ID del icono y aplicar la clase correspondiente
-        if (icon.attr('id') === 'heart-count') {
-            // Si el icono es el de corazón, añadir la clase heart-selected
-            icon.toggleClass("heart-selected");
-        } else if (icon.attr('id') === 'star-count') {
-            // Si el icono es el de estrella, añadir la clase star-selected
-            icon.toggleClass("star-selected");
-        }
+    // Incrementar o disminuir según la clase del icono
+    if (icon.hasClass("heart-selected") || icon.hasClass("star-selected")) {
+        // Incrementar el número
+        count += 1;
+    } else {
+        // Disminuir el número
+        count -= 1;
+    }
 
-        // Incrementar o disminuir según la clase del icono
-        if (icon.hasClass("heart-selected") || icon.hasClass("star-selected")) {
-            // Incrementar el número
-            count += 1;
-        } else {
-            // Disminuir el número
-            count -= 1;
-        }
-
-        // Actualizar el número mostrado
-        countLabel.text(count);
-    });
+    // Actualizar el número mostrado
+    countLabel.text(count);
 }
 
 /**
  * Añadir o eliminar un like a la lista
  */
-function handleLikeClick() {
-    $('#heart-count').click(function() {
-        // Verificar si el icono tiene la clase 'heart-selected'
-        const isLiked = $(this).hasClass('heart-selected');
+function handleLikeClick(event) {
+    if (blockLikeBtn.isBlocked()) return;
 
-        $.ajax({
-            type: 'POST',
-            url: `/api/list/${share_code}/like`,
-            headers: {'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val()},
-            data: {'is_liked': isLiked},  // Enviar el estado actual del like al backend
-            success: function(response) {
-                // Actualizar la interfaz de usuario según sea necesario
-                $(this).toggleClass('heart-selected');  // Cambiar el estado del like en la interfaz de usuario
-            },
-            error: function(xhr, status, error) {
-                const errorMessage = xhr.responseJSON.message || 'Error al procesar la solicitud';
-                toastMessage('error', errorMessage);
-            }
-        });
+    blockLikeBtn.block();
+
+    // Verificar si el icono tiene la clase 'heart-selected'
+    const isLiked = !$(this).find('i').hasClass('heart-selected');
+
+    promiseAjax(`/api/list/${share_code}/like?isLiked=${isLiked}`, "GET").then(response => {
+        console.log(response);
+        if (response.status === "success") {
+            $(this).find('i').toggleClass('heart-selected');
+            $(this).trigger("custom_click");
+        } else if (response.status === "error") {
+            toastMessage("error", response.message);
+        }
+
+        blockLikeBtn.release();
+    }).catch(() => {
+        toastMessage("error", "Error al dar like a la lista");
+        blockLikeBtn.release();
     });
 }
 
 /**
  * Añadir o eliminar un favorito a la lista
  */
-function handleFavoriteClick() {
-    $('#star-count').click(function() {
-        // Verificar si el icono tiene la clase 'star-selected'
-        const isFavorited = $(this).hasClass('star-selected');
+function handleFavoriteClick(event) {
+    if (blockFavoriteBtn.isBlocked()) return;
 
-        $.ajax({
-            type: 'POST',
-            url: `/api/list/${share_code}/favorite`,
-            headers: {'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val()},
-            data: {'is_favorited': isFavorited},  // Enviar el estado actual del favorito al backend
-            success: function(response) {
-                // Actualizar la interfaz de usuario según sea necesario
-                $(this).toggleClass('star-selected');  // Cambiar el estado del favorito en la interfaz de usuario
-            },
-            error: function(xhr, status, error) {
-                const errorMessage = xhr.responseJSON.message || 'Error al procesar la solicitud';
-                toastMessage('error', errorMessage);
-            }
-        });
+    blockFavoriteBtn.block();
+
+    // Verificar si el icono tiene la clase 'star-selected'
+    const isFavorited = !$(this).find('i').hasClass('star-selected');
+
+    promiseAjax(`/api/list/${share_code}/favorite?isFavorited=${isFavorited}`, "GET").then(response => {
+        if (response.status === "success") {
+            $(this).find('i').toggleClass('star-selected');
+            $(this).trigger("custom_click");
+        } else if (response.status === "error") {
+            toastMessage("error", response.message);
+        }
+
+        blockFavoriteBtn.release();
+    }).catch(() => {
+        toastMessage("error", "Error al dar favorito a la lista");
+        blockFavoriteBtn.release();
     });
 }
 
@@ -356,11 +352,9 @@ function onDocumentReady() {
     getAwards();
     getComments();
     handleIconClick();
-    handleLikeClick();
-    handleFavoriteClick();
 
     $("#write_comment").click(writeComment);
-    $("#comment_input").on("keypress", function(event) {
+    $("#comment_input").on("keypress", function (event) {
         if (event.which === 13) { // Verificar si la tecla presionada es "Enter" (código 13)
             if ($(this).val()) {
                 writeComment();
@@ -378,6 +372,11 @@ function onDocumentReady() {
 
         uploadAward(award_id, comment, true);
     });
+
+    $('.cursor-pointer').on("custom_click", handleIconClick);
+    $('#heart-btn').on("click", handleLikeClick);
+    $('#star-btn').on("click", handleFavoriteClick);
+
 
     $("#duel_elements_selector").on("change", reloadPlaytime);
 

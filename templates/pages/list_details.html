@@ -32,7 +32,7 @@
                             <label class="text-white fw-bolder fs-3">{{ data.play_count }}</label>
                         </div>
                         <div class="d-flex flex-column gap-3 align-items-center">
-                            <div class="bg-white p-4 rounded-circle cursor-pointer hover-icon-color-coral">
+                            <div id="heart-btn" class="bg-white p-4 rounded-circle cursor-pointer hover-icon-color-coral">
                                 {% if data.user_has_liked %}
                                     <i id="heart-count"
                                        class="fs-2x text-muted bi bi-heart-fill mt-3 heart-selected"></i>
@@ -43,7 +43,7 @@
                             <label id="count-hearts" class="text-white fw-bolder fs-3">{{ data.likes_count }}</label>
                         </div>
                         <div class="d-flex flex-column gap-3 align-items-center">
-                            <div class="bg-white p-4 rounded-circle cursor-pointer hover-icon-color-lightyellow">
+                            <div id="star-btn" class="bg-white p-4 rounded-circle cursor-pointer hover-icon-color-lightyellow">
                                 {% if data.user_has_favorited %}
                                     <i id="star-count" class="fs-2x text-muted bi bi-star-fill star-selected"></i>
                                 {% else %}
