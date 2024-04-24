@@ -117,7 +117,7 @@ def add_award_to_comment_function(request, comment_id):
         if add_award_to_comment(comment_id, request.user, award_id):
             return JsonResponse({'status': 'Success', 'message': 'Premio otorgado'})
 
-    except Exception as e:
+    except Exception:
         # Reembolsar a los usuarios si hay un error al agregar el premio al comentario
         do_transaction(request.user, selected_award.price, "Premio reembolsado por error al otorgar el premio")
         do_transaction(selected_comment.user, -final_price, "Premio reembolsado por error al otorgar el premio")
