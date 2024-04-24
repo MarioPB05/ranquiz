@@ -67,16 +67,12 @@ def create_comment(content, author, share_code):
 
 
 def get_all_awards():
-    """
-    Servicio para obtener todos los premios
-    """
+    """Servicio para obtener todos los premios"""
     return Award.objects.all()
 
 
 def get_awards_from_comments(comments):
-    """
-    Servicio para obtener todos los premios de una lista de comentarios agrupados por comentario y premio
-    """
+    """Servicio para obtener todos los premios de una lista de comentarios agrupados por comentario y premio"""
     # Obtener una lista de IDs de comentarios
     comment_ids = [comment.id for comment in comments]
 
@@ -105,9 +101,7 @@ def get_awards_from_comments(comments):
 
 
 def get_award(award_id):
-    """
-    Servicio para obtener un premio
-    """
+    """Servicio para obtener un premio"""
     try:
         return Award.objects.get(id=award_id)
     except Award.DoesNotExist:
@@ -127,9 +121,7 @@ def check_user_award_in_comment(comment_id, user_id, award_id):
 
 
 def add_award_to_comment(comment_id, selected_user, award_id):
-    """
-    Servicio para añadir un premio a un comentario
-    """
+    """Servicio para añadir un premio a un comentario"""
     selected_comment = get_comment(comment_id)
     selected_award = get_award(award_id)
 
