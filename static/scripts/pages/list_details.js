@@ -15,7 +15,7 @@ const blockLikeBtn = new KTBlockUI($("#heart-btn")[0]);  // skipcq: JS-0125
 const blockFavoriteBtn = new KTBlockUI($("#star-btn")[0]);  // skipcq: JS-0125
 const templateComment = $("#template_comment");
 const templateAward = $("#template_award");
-let templateBuyableAward = $("#template_buyable_award");
+const templateBuyableAward = $("#template_buyable_award");
 
 let comments = [];
 let awards = [];
@@ -29,7 +29,7 @@ function getAwards() {
         awards = response.awards;
 
         $.each(awards, function (index, award) {
-            let award_element = templateBuyableAward.clone();
+            const award_element = templateBuyableAward.clone();
             award_element.removeAttr("id");
             award_element.removeClass("d-none").addClass("d-flex");
 
@@ -49,13 +49,13 @@ function getAwards() {
 }
 
 function addAwardToComment(award_id, comment) {
-    let award = awards.find(award => award.id === award_id);
+    const award = awards.find(award => award.id === award_id);
 
     if (comment.find(`div.award[data-award-id=${award_id}]`).length > 0) {
         comment.find(`div.award[data-award-id=${award_id}]`).find(".award_amount").text(parseInt(comment.find(`div.award[data-award-id=${award_id}]`).find(".award_amount").text()) + 1);
 
     } else {
-        let award_element = templateAward.clone();
+        const award_element = templateAward.clone();
         award_element.removeAttr("id");
         award_element.removeClass("d-none").addClass("d-flex");
 
@@ -77,9 +77,9 @@ function addAwardToComment(award_id, comment) {
  * @param comment
  */
 function uploadAward(award_id, comment) {
-    let id_comment = comment.attr("data-comment-id");
-    let token = $('input[name=csrfmiddlewaretoken]').val();
-    let comment_add_award = comment.find(".add_award");
+    const id_comment = comment.attr("data-comment-id");
+    const token = $('input[name=csrfmiddlewaretoken]').val();
+    const comment_add_award = comment.find(".add_award");
     comment_add_award.attr("disabled", "disabled");
     comment_add_award.addClass("opacity-75");
 
@@ -107,16 +107,16 @@ function uploadAward(award_id, comment) {
  * @param comment
  */
 function addComment(comment) {
-    let content = comment.content;
-    let author_name = comment.author.name;
-    let author_avatar = comment.author.avatar;
-    let author_url = comment.author.url;
-    let date = new Date(comment.date);
-    let awards = comment.awards;
-    let id = comment.id;
-    let user_is_athor = comment.user_is_author;
+    const content = comment.content;
+    const author_name = comment.author.name;
+    const author_avatar = comment.author.avatar;
+    const author_url = comment.author.url;
+    const date = new Date(comment.date);
+    const awards = comment.awards;
+    const id = comment.id;
+    const user_is_athor = comment.user_is_author;
 
-    let element = templateComment.clone();
+    const element = templateComment.clone();
 
     element.removeAttr("id");
     element.removeClass("d-none").addClass("d-flex");
@@ -208,13 +208,13 @@ function actualizeCommentCounter() {
  * Añade el comentario que se ha escrito en la base de datos y a los comentarios
  */
 function writeComment() {
-    let content = $("#comment_input").val();
+    const content = $("#comment_input").val();
 
     if (!content.trim()) {
         return;
     }
 
-    let comment = { content };
+    const comment = { content };
 
     $("#comment_input").val("");
     autosize.update($("#comment_input"));  // skipcq: JS-0125
@@ -323,7 +323,7 @@ function onShareList() {
  * Calcular el tiempo que le va a llevar al usuario completar la lista aproximadamente.
  */
 function calculatePlayTime(items, mode) {
-    let time_per_duel = 3;
+    const time_per_duel = 3;
     let total_time = 0;
 
     if (mode === 4) {
@@ -337,9 +337,9 @@ function calculatePlayTime(items, mode) {
 
 
 function reloadPlaytime() {
-    let duel_items = parseInt($("#duel_elements_selector").val());
-    let total_items = $("#total_items").text();
-    let play_time = calculatePlayTime(total_items, duel_items);
+    const duel_items = parseInt($("#duel_elements_selector").val());
+    const total_items = $("#total_items").text();
+    const play_time = calculatePlayTime(total_items, duel_items);
 
     $("#estimated_playtime").text(play_time);
 }
@@ -369,8 +369,8 @@ function onDocumentReady() {
     $("#recientComents").click(toggleRecientComments)
 
     commentsContainer.on("click", ".buyable_award", function () {
-        let award_id = $(this).data("award-id");
-        let comment = $(this).parent().parent().parent().parent();
+        const award_id = $(this).data("award-id");
+        const comment = $(this).parent().parent().parent().parent();
 
         uploadAward(award_id, comment, true);
     });
