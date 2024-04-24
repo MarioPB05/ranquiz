@@ -84,7 +84,7 @@ function uploadAward(award_id, comment) {
     comment_add_award.attr("disabled", "disabled");
     comment_add_award.addClass("opacity-75");
 
-    promiseAjax(`/api/list/${share_code}/comment/${id_comment}/add_award`, "POST", {
+    promiseAjax(`/api/list/${share_code}/comment/${id_comment}/add_award`, "POST", {  // skipcq: JS-0125
         "id_award": award_id,
         "csrfmiddlewaretoken": token
     }).then(response => {
@@ -157,7 +157,7 @@ function getComments(mode = "featured") {
 
     blockUI.block();
 
-    promiseAjax(`/api/list/${share_code}/comments?mode=${mode}`).then(response => {
+    promiseAjax(`/api/list/${share_code}/comments?mode=${mode}`).then(response => {  // skipcq: JS-0125
         comments = response.comments;
 
         $.each(comments, function (index, comment) {
@@ -182,7 +182,7 @@ function getComments(mode = "featured") {
 function uploadComment(comment) {
     comment.csrfmiddlewaretoken = $('input[name=csrfmiddlewaretoken]').val();
 
-    promiseAjax(`/api/list/${share_code}/comment/create`, "POST", comment).then(response => {
+    promiseAjax(`/api/list/${share_code}/comment/create`, "POST", comment).then(response => {  // skipcq: JS-0125
         addComment(response.comment);
         comments.push(response.comment);
         actualizeCommentCounter();
@@ -220,7 +220,7 @@ function writeComment() {
     };
 
     $("#comment_input").val("");
-    autosize.update($("#comment_input"));
+    autosize.update($("#comment_input"));  // skipcq: JS-0125
 
     uploadComment(comment);
 }
@@ -273,7 +273,7 @@ function handleLikeClick(event) {
     // Verificar si el icono tiene la clase 'heart-selected'
     const isLiked = !$(this).find('i').hasClass('heart-selected');
 
-    promiseAjax(`/api/list/${share_code}/like?isLiked=${isLiked}`, "GET").then(response => {
+    promiseAjax(`/api/list/${share_code}/like?isLiked=${isLiked}`, "GET").then(response => {  // skipcq: JS-0125
         if (response.status === "success") {
             $(this).find('i').toggleClass('heart-selected');
             $(this).trigger("custom_click");
@@ -299,7 +299,7 @@ function handleFavoriteClick(event) {
     // Verificar si el icono tiene la clase 'star-selected'
     const isFavorited = !$(this).find('i').hasClass('star-selected');
 
-    promiseAjax(`/api/list/${share_code}/favorite?isFavorited=${isFavorited}`, "GET").then(response => {
+    promiseAjax(`/api/list/${share_code}/favorite?isFavorited=${isFavorited}`, "GET").then(response => {  // skipcq: JS-0125
         if (response.status === "success") {
             $(this).find('i').toggleClass('star-selected');
             $(this).trigger("custom_click");
@@ -351,7 +351,7 @@ function reloadPlaytime() {
  * Función que se ejecuta cuando el documento está listo
  */
 function onDocumentReady() {
-    const clipboardShareList = new ClipboardJS($('#share_list')[0]);
+    const clipboardShareList = new ClipboardJS($('#share_list')[0]);  // skipcq: JS-0125
 
     clipboardShareList.on('success', onShareList);
     getAwards();
