@@ -67,10 +67,10 @@ function toggleSort(selected) {
  * @returns string (default, popular, newest)
  */
 function getSort() {
-    if(!$("#sort_container button").hasClass("btn-primary")) return "default";
-
     if ($("#newest").hasClass("btn-primary")) return "newest";
     if ($("#popular").hasClass("btn-primary")) return "popular";
+
+    return "default"
 }
 
 /**
