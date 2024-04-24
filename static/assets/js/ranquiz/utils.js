@@ -63,22 +63,22 @@ function formatElapsedTime(dateTime) {
     const elapsedSeconds = Math.floor(elapsedTime / 1000);
 
     if (elapsedSeconds < 60) {
-        return "Hace " + elapsedSeconds + " s";
+        return `Hace ${elapsedSeconds} s`;
     }
 
     const elapsedMinutes = Math.floor(elapsedSeconds / 60);
     if (elapsedMinutes < 60) {
-        return "Hace " + elapsedMinutes + " min";
+        return `Hace ${elapsedMinutes} min`;
     }
 
     const elapsedHours = Math.floor(elapsedMinutes / 60);
     if (elapsedHours < 24) {
-        return "Hace " + elapsedHours + " h";
+        return `Hace ${elapsedHours} h`;
     }
 
     const elapsedDays = Math.floor(elapsedHours / 24);
     if (elapsedDays < 30) {
-        return "Hace " + elapsedDays + " d";
+        return `Hace ${elapsedDays} d`;
     }
 
     // If it has been more than a month, return the original date
@@ -162,7 +162,7 @@ function secondsToTime(seconds, digits) {
 
         if (timeCount > 0) {
             if (count < digits) {
-                timeString += timeCount + " " + key + " ";
+                timeString += `${timeCount} ${key} `;
                 count++;
             }
             seconds -= timeCount * value;
