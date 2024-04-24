@@ -60,7 +60,7 @@
             <!--begin::Toolbar wrapper-->
             <div class="d-flex align-items-center ms-1 ms-lg-3">
                 {% if user.is_authenticated %}
-                    <a class="btn btn-icon btn-icon-muted btn-active-light btn-active-color-primary px-2 w-auto h-30px h-md-40px text-white text-hover-primary me-4">
+                    <a href="{% url 'shop' %}" class="btn btn-icon btn-icon-muted btn-active-light btn-active-color-primary px-2 w-auto h-30px h-md-40px text-white text-hover-primary me-4">
                         <i class="bi bi-gem fs-2 text-white"></i>
                         <span class="fw-bolder ms-2 user_money">{{ user.money }}</span>
                     </a>
