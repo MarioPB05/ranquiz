@@ -175,13 +175,13 @@ async function getElements(type, search, page, reset = false, sort = "default") 
 
     // Obtener elementos
     if (type === "list") {
-        elements = await getLists(search, page, getSort());
+        elements = await getLists(search, page, sort);
         changeGridColumnsOfParent("350px");
     }else if (type === "category") {
-        elements = await getCategories(search, page, getSort());
+        elements = await getCategories(search, page, sort);
         changeGridColumnsOfParent("250px");
     } else if (type === "user") {
-        elements = await getUsers(search, page, getSort());
+        elements = await getUsers(search, page, sort);
         changeGridColumnsOfParent("200px");
     }else {
         toastMessage("Error", "No se ha seleccionado un modo de búsqueda");
@@ -227,7 +227,7 @@ async function getElements(type, search, page, reset = false, sort = "default") 
  * @returns {Promise<list>}
  */
 async function getLists(search, page, sort = "default") {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         promiseAjax(`/api/list/filter?page=${page}&search=${search}&sort=${sort}`, "GET").then((response) => {
             resolve(response.lists);
         }).catch(() => {
@@ -244,7 +244,7 @@ async function getLists(search, page, sort = "default") {
  * @returns {Promise<unknown>}
  */
 async function getCategories(search, page, sort = "default") {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         promiseAjax(`/api/category/filter?page=${page}&search=${search}&sort=${sort}`, "GET").then((response) => {
             resolve(response.categories);
         }).catch(() => {
@@ -261,7 +261,7 @@ async function getCategories(search, page, sort = "default") {
  * @returns {Promise<unknown>}
  */
 async function getUsers(search, page, sort = "default") {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         promiseAjax(`/api/user/filter?page=${page}&search=${search}&sort=${sort}`, "GET").then((response) => {
             resolve(response.users);
         }).catch(() => {
