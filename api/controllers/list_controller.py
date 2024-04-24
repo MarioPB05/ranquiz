@@ -23,6 +23,7 @@ def get_list_types(request):
 
 @require_authenticated
 def like_list(request, share_code):
+    """Controlador que permite dar like a una lista"""
     is_liked = request.GET.get('isLiked') == 'true'  # Convertir la cadena en un booleano
 
     if not is_liked:
@@ -38,6 +39,7 @@ def like_list(request, share_code):
 
 @require_authenticated
 def favorite_list(request, share_code):
+    """Controlador que permite marcar una lista como favorita"""
     is_favorited = request.GET.get('isFavorited') == 'true'  # Convertir la cadena en un booleano
 
     if not is_favorited:
