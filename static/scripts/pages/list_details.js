@@ -138,7 +138,7 @@ function addComment(comment) {
     element.find(".comment_date").text(formatElapsedTime(date));
 
     element.find('[data-kt-menu]').each(function () {
-        new KTMenu($(this)[0]);  // skipcq: JS-0125
+        new KTMenu($(this)[0]);  // skipcq: JS-0125, JS-R1002
     });
 
     if (comment_awards) {
