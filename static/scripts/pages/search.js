@@ -315,7 +315,7 @@ function emptyContent() {
 function onDocumentReady() {
 
     // Evento para cambiar lo que el usuario está buscando
-    $("nav button").on("click", (event) => {
+    allNavs.on("click", (event) => {
         // Si el botón ya está seleccionado, no hacer nada
         if ($(event.target).hasClass("nav_selected")) return;
 
