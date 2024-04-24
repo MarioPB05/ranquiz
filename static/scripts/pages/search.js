@@ -70,7 +70,7 @@ function getSort() {
     if ($("#newest").hasClass("btn-primary")) return "newest";
     if ($("#popular").hasClass("btn-primary")) return "popular";
 
-    return "default"
+    return "default";
 }
 
 /**
