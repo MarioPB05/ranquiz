@@ -267,7 +267,6 @@ function handleLikeClick(event) {
     const isLiked = !$(this).find('i').hasClass('heart-selected');
 
     promiseAjax(`/api/list/${share_code}/like?isLiked=${isLiked}`, "GET").then(response => {
-        console.log(response);
         if (response.status === "success") {
             $(this).find('i').toggleClass('heart-selected');
             $(this).trigger("custom_click");
@@ -329,7 +328,6 @@ function calculatePlayTime(items, mode) {
         total_time = items * 3 * time_per_duel;
     }
 
-    console.log(total_time, mode)
     return secondsToTime(total_time, 2)
 }
 
