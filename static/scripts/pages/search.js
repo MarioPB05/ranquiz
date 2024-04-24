@@ -16,37 +16,7 @@ const blockcontent = new KTBlockUI(content[0], { // skipcq: JS-0125
 });
 
 let elements = [];
-const exampleList = {
-    id: 1,
-    name: "Lista 1",
-    image: "https://images.wikidexcdn.net/mwuploads/wikidex/thumb/a/a7/latest/20220715200149/EP1206_Dragonite_de_Iris.png/640px-EP1206_Dragonite_de_Iris.png",
-    url: "http://127.0.0.1:8000/list/LSdYgfiXomAobVAXHnnk/view/",
-    liked: false,
-    plays: 23,
-    highlighted: true,
-    author: {
-        username: "user1",
-        avatar: "http://res.cloudinary.com/dhewpzvg9/image/upload/c_fill/v1712514744/avatars/kidcithbb1ogolsssdma.png",
-        url: "http://127.0.0.1:8000/user/"
-    }
-};
-const exampleCategory = {
-    id: 1,
-    name: "Categoría 1",
-    lists: 45,
-    followers: 23,
-    followed: true,
-    url: "/"
-};
-const exampleUser = {
-    id: 1,
-    username: "user1",
-    avatar: "http://res.cloudinary.com/dhewpzvg9/image/upload/c_fill/v1712514744/avatars/kidcithbb1ogolsssdma.png",
-    url: "http://127.0.0.1:8000/user/US8EAxfMkYiPXV3ERicR/",
-    followers: 23,
-    lists: 2,
-    followed: true
-}
+
 
 /**
  * Función que cambia la vista de los elementos de la página
