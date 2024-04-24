@@ -1,4 +1,11 @@
-import {removePageLoader, formatElapsedTime, toastMessage, promiseAjax, secondsToTime} from "/static/assets/js/ranquiz/utils.js";
+import {
+    removePageLoader,
+    formatElapsedTime,
+    toastMessage,
+    promiseAjax,
+    secondsToTime,
+    reloadUserData
+} from "/static/assets/js/ranquiz/utils.js";
 
 const commentsContainer = $("#comments_container");
 const blockUI = new KTBlockUI(commentsContainer.parent()[0], {  // skipcq: JS-0125
@@ -84,7 +91,7 @@ function uploadAward(award_id, comment) {
         if (response.status === "Success") {
             addAwardToComment(award_id, comment);
             toastMessage("success", "Premio otorgado");
-            // TODO: Actualizar la cantidad actual de monedas en el header
+            reloadUserData();
         }else if (response.status === "Error") {
             toastMessage("error", response.message);
         }
