@@ -49,6 +49,11 @@ def get_categories(request):
     return JsonResponse({'categories': json_categories})
 
 
+def get_categories_filtered(request):
+    """Función para obtener las categorías filtradas"""
+    pass
+
+
 @require_POST
 def add_category(request):
     """Función para crear una categoría"""
