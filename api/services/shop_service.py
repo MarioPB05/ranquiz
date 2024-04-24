@@ -57,7 +57,8 @@ def get_avatars_by_purchased(user):
         user_have_bought=Count('useravatar', filter=Q(useravatar__user_id=user.id))
     ).order_by(
         Case(
-            When(Q(rarity__id=1) | Q(user_have_bought__gt=0), then=0),  # Avatares con rareza 1 o comprados por el usuario primero
+            # Avatares con rareza 1 o comprados por el usuario primero
+            When(Q(rarity__id=1) | Q(user_have_bought__gt=0), then=0),
             default=1  # Todos los demás después
         ),
         '-user_have_bought'  # Luego, ordenar por la cantidad de compras asociadas al usuario (en orden descendente)
