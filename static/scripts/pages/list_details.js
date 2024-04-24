@@ -214,9 +214,7 @@ function writeComment() {
         return;
     }
 
-    let comment = {
-        "content": content
-    };
+    let comment = { content };
 
     $("#comment_input").val("");
     autosize.update($("#comment_input"));  // skipcq: JS-0125
