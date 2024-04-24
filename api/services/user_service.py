@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 
 from api.models import User
 from api.services.email_service import send_register_email
+from api.services.query_service import execute_query
 from api.services.shop_service import get_avatar
 from api.forms.user_form import LoginUserForm, CreateUserForm
 from api.services.client_service import create_client, get_client_form
@@ -107,3 +108,34 @@ def get_user(user_id=None, share_code=None):
         return None
     except User.DoesNotExist:
         return None
+
+
+def get_users(limit=None, page=1, search='', order='default', user=None):
+    """Servicio que devuelve los usuarios con filtros"""
+    order_by = "1"
+
+    if order == 'popular':
+        order_by = "followers DESC"
+    elif order == 'newest':
+        order_by = "max(l.creation_date) DESC"
+
+    query = """SELECT u.id, u.username, u.share_code, a.image as avatar, 
+                    (SELECT COUNT(uf.user_followed_id)
+                     FROM api_userfollow uf
+                     WHERE uf.user_followed_id = u.id) AS followers,
+                    (SELECT IF(COUNT(uf.user_followed_id) > 0, TRUE, FALSE)
+                     FROM api_userfollow uf
+                     WHERE uf.user_followed_id = u.id AND uf.follower_id = %s) AS followed,
+                    COUNT(l.id) AS lists
+                FROM api_user u
+                JOIN ranquiz.api_avatar a on u.avatar_id = a.id
+                LEFT JOIN api_list l on u.id = l.owner_id
+                WHERE u.username LIKE %s
+                GROUP BY u.id
+                ORDER BY 
+                """ + order_by + """
+                LIMIT %s OFFSET %s;"""
+
+    params = [user.id, f"%{search}%", limit, (page - 1) * limit]
+
+    return execute_query(query, params)
