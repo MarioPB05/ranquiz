@@ -126,7 +126,6 @@ def highlight_list(share_code, start_date, end_date):
         transaction = do_transaction(
             required_list.user,
             -(calculate_highlight_price(start_date, end_date)),
-            datetime.now(),
             'Destacar lista')
 
         if transaction is not None:
