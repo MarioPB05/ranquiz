@@ -3,7 +3,7 @@ from django.urls import path
 from api.controllers.category_controller import validate_category, get_categories, add_category, get_categories_filtered
 from api.controllers.list_controller import get_list_types, get_lists_filtered
 from api.controllers.shop_controller import highlight_calculator, get_avatars, buy_a_avatar, equip_a_avatar
-from api.controllers.user_controller import get_user_data
+from api.controllers.user_controller import get_user_data, get_users_filtered
 
 urlpatterns = [
     path('list/filter', get_lists_filtered, name='api_lists_filtered'),
@@ -17,4 +17,5 @@ urlpatterns = [
     path('shop/avatar/<int:avatar_id>/equip', equip_a_avatar, name='api_shop_avatar_equip'),
     path('shop/highlight/calculator', highlight_calculator, name='api_shop_highlight_calculator'),
     path('user/', get_user_data, name='api_user'),
+    path('user/filter', get_users_filtered, name='api_users_filtered'),
 ]
