@@ -162,7 +162,7 @@ function addUser(user) {
     newUser.attr("href", user.url);
     newUser.find(".user_list_number").text(user.lists);
     newUser.find(".user_follower_number").text(user.followers);
-    newUser.find(".user_image").attr("src", user.avatar);
+    newUser.find(".user_avatar").attr("src", user.avatar);
 
     user.followed ? newUser.find(".user_follow_icon").addClass("text-primary").removeClass("text-secondary") : "";
     user.followed ? newUser.find(".user_follow_icon").addClass("bi-person-check-fill").removeClass("bi-person-plus-fill") : "";
@@ -280,8 +280,11 @@ async function getCategories(search, page, sort = "default") {
  */
 async function getUsers(search, page, sort = "default") {
     return new Promise((resolve, reject) => {
-        // TODO: Obtener {elementsPerPage} usuarios de base de datos a partir de la página {page}
-        resolve([exampleUser]);
+        promiseAjax(`/api/user/filter?page=${page}&search=${search}&sort=${sort}`, "GET").then((response) => {
+            resolve(response.users);
+        }).catch(() => {
+            toastMessage("error", "No se pudieron obtener los usuarios");
+        });
     });
 }
 
