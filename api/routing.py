@@ -6,7 +6,7 @@ from api.controllers.shop_controller import highlight_calculator, get_avatars, b
 from api.controllers.user_controller import get_user_data
 
 urlpatterns = [
-    path('lists/', get_lists_filtered, name='api_lists'),
+    path('list/filter', get_lists_filtered, name='api_lists'),
     path('list/types', get_list_types, name='api_list_types'),
     path('category/', get_categories, name='api_categories'),
     path('category/create/', add_category, name='api_category_create'),

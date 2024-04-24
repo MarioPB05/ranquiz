@@ -244,8 +244,7 @@ async function getElements(type, search, page, reset = false, sort = "default") 
  */
 async function getLists(search, page, sort = "default") {
     return new Promise((resolve, reject) => {
-        // TODO: Obtener {elementsPerPage} listas de base de datos a partir de la página {page}
-        promiseAjax(`/api/lists?page=${page}&search=${search}&sort=${sort}`, "GET").then((response) => {
+        promiseAjax(`/api/list/filter?page=${page}&search=${search}&sort=${sort}`, "GET").then((response) => {
             resolve(response.lists);
         });
     });
