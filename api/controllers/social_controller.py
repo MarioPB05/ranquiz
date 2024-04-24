@@ -85,7 +85,7 @@ def get_awards(request):
     return JsonResponse({'awards': json_awards})
 
 
-def add_award_to_comment_function(request, share_code, comment_id):
+def add_award_to_comment_function(request, comment_id):
     """Función para añadir un premio a un comentario"""
     award_id = request.POST.get('id_award')
     selected_comment = get_comment(comment_id)
