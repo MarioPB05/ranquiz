@@ -246,6 +246,8 @@ async function getLists(search, page, sort = "default") {
     return new Promise((resolve, reject) => {
         promiseAjax(`/api/list/filter?page=${page}&search=${search}&sort=${sort}`, "GET").then((response) => {
             resolve(response.lists);
+        }).catch(() => {
+            toastMessage("error", "No se pudieron obtener las listas");
         });
     });
 }
