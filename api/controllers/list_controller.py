@@ -34,13 +34,12 @@ def get_lists_filtered(request):
 
     lists = get_lists(limit, page, search, request.user, sort)
 
-    # TODO: Cambiar URL por la de list details
     for list_obj in lists:
         result.append({
             'id': list_obj['id'],
             'name': list_obj['name'],
             'image':  f"https://res.cloudinary.com/dhewpzvg9/{list_obj['image']}" if list_obj['image'] else None,
-            'url': '/',
+            'url': request.build_absolute_uri(reverse('list_details', args=[list_obj['share_code']])),
             'liked': list_obj['liked'],
             'plays': list_obj['plays'],
             'highlighted': list_obj['highlighted'],
