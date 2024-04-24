@@ -1,8 +1,10 @@
 import {removePageLoader, formatElapsedTime, toastMessage, promiseAjax} from "/static/assets/js/ranquiz/utils.js";
 
-const blockUI = new KTBlockUI($("#comments_container").parent()[0], {
+const blockUI = new KTBlockUI($("#comments_container").parent()[0], {  // skipcq: JS-0125
     message: '<div class="blockui-message"><span class="spinner-border text-primary"></span>Cargando comentarios...</div>',
 });
+const blockLikeBtn = new KTBlockUI($("#heart-btn")[0]);  // skipcq: JS-0125
+const blockFavoriteBtn = new KTBlockUI($("#star-btn")[0]);  // skipcq: JS-0125
 const templateComment = $("#template_comment");
 const templateAward = $("#template_award");
 let templateBuyableAward = $("#template_buyable_award");
@@ -228,57 +230,54 @@ function toggleRecientComments() {
     }
 }
 
+/**
+ * Maneja el clic en los elementos de corazones y estrellas
+ */
 function handleIconClick() {
-    // TODO: Refactorizar
     // Función para manejar el clic en los elementos de corazones y estrellas
-    $('.cursor-pointer').click(function () {
-        var countLabel = $(this).next('label');
-        var icon = $(this).find('i');
+    const countLabel = $(this).next('label');
+    const icon = $(this).find('i');
 
-        // Obtener el número actual
-        var count = parseInt(countLabel.text());
+    // Obtener el número actual
+    let count = parseInt(countLabel.text());
 
-        // Verificar el ID del icono y aplicar la clase correspondiente
-        if (icon.attr('id') === 'heart-count') {
-            // Si el icono es el de corazón, añadir la clase heart-selected
-            icon.toggleClass("heart-selected");
-        } else if (icon.attr('id') === 'star-count') {
-            // Si el icono es el de estrella, añadir la clase star-selected
-            icon.toggleClass("star-selected");
-        }
+    // Incrementar o disminuir según la clase del icono
+    if (icon.hasClass("heart-selected") || icon.hasClass("star-selected")) {
+        // Incrementar el número
+        count += 1;
+    } else {
+        // Disminuir el número
+        count -= 1;
+    }
 
-        // Incrementar o disminuir según la clase del icono
-        if (icon.hasClass("heart-selected") || icon.hasClass("star-selected")) {
-            // Incrementar el número
-            count += 1;
-        } else {
-            // Disminuir el número
-            count -= 1;
-        }
-
-        // Actualizar el número mostrado
-        countLabel.text(count);
-    });
+    // Actualizar el número mostrado
+    countLabel.text(count);
 }
 
 /**
  * Añadir o eliminar un like a la lista
  */
 function handleLikeClick(event) {
-    event.preventDefault();
+    if (blockLikeBtn.isBlocked()) return;
+
+    blockLikeBtn.block();
+
     // Verificar si el icono tiene la clase 'heart-selected'
-    const isLiked = $(this).hasClass('heart-selected');
+    const isLiked = !$(this).find('i').hasClass('heart-selected');
 
     promiseAjax(`/api/list/${share_code}/like?isLiked=${isLiked}`, "GET").then(response => {
+        console.log(response);
         if (response.status === "success") {
-            $(this).toggleClass('heart-selected');
-
+            $(this).find('i').toggleClass('heart-selected');
+            $(this).trigger("custom_click");
         } else if (response.status === "error") {
             toastMessage("error", response.message);
         }
 
+        blockLikeBtn.release();
     }).catch(() => {
         toastMessage("error", "Error al dar like a la lista");
+        blockLikeBtn.release();
     });
 }
 
@@ -286,19 +285,25 @@ function handleLikeClick(event) {
  * Añadir o eliminar un favorito a la lista
  */
 function handleFavoriteClick(event) {
-    event.preventDefault();
+    if (blockFavoriteBtn.isBlocked()) return;
+
+    blockFavoriteBtn.block();
+
     // Verificar si el icono tiene la clase 'star-selected'
-    const isFavorited = $(this).hasClass('star-selected');
+    const isFavorited = !$(this).find('i').hasClass('star-selected');
 
     promiseAjax(`/api/list/${share_code}/favorite?isFavorited=${isFavorited}`, "GET").then(response => {
         if (response.status === "success") {
-            $(this).toggleClass('star-selected');
+            $(this).find('i').toggleClass('star-selected');
+            $(this).trigger("custom_click");
         } else if (response.status === "error") {
             toastMessage("error", response.message);
         }
 
+        blockFavoriteBtn.release();
     }).catch(() => {
         toastMessage("error", "Error al dar favorito a la lista");
+        blockFavoriteBtn.release();
     });
 }
 
@@ -341,8 +346,9 @@ function onDocumentReady() {
         uploadAward(award_id, comment, true);
     });
 
-    $('#heart-count').on("click", handleLikeClick);
-    $('#star-count').on("click", handleFavoriteClick);
+    $('.cursor-pointer').on("custom_click", handleIconClick);
+    $('#heart-btn').on("click", handleLikeClick);
+    $('#star-btn').on("click", handleFavoriteClick);
 
 
     removePageLoader();
