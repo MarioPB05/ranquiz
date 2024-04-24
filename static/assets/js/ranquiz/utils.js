@@ -57,6 +57,11 @@ function initializeFlatpickr(elementSelector, mode = 'single', minDate = '1900-0
     });
 }
 
+/**
+ * Esta función se encarga de dar formato a la fecha y hora de creación de una publicación
+ * @param dateTime
+ * @returns {string}
+ */
 function formatElapsedTime(dateTime) {
     const currentDate = new Date();
     const elapsedTime = currentDate - dateTime;

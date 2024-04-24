@@ -48,6 +48,11 @@ function getAwards() {
     });
 }
 
+/**
+ * Añade un premio a un comentario
+ * @param award_id
+ * @param comment
+ */
 function addAwardToComment(award_id, comment) {
     const found_award = awards.find(award => award.id === award_id);
 
@@ -200,6 +205,9 @@ function uploadComment(comment) {
     });
 }
 
+/**
+ * Actualiza el contador de comentarios
+ */
 function actualizeCommentCounter() {
     $("#comment_counter").text(comments.length);
 }
@@ -335,7 +343,9 @@ function calculatePlayTime(items, mode) {
     return secondsToTime(total_time, 2)
 }
 
-
+/**
+ * Recargar el tiempo de juego estimado
+ */
 function reloadPlaytime() {
     const duel_items = parseInt($("#duel_elements_selector").val());
     const total_items = $("#total_items").text();
