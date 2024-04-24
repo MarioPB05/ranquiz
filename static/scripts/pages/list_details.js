@@ -28,7 +28,7 @@ function getAwards() {
     promiseAjax("/api/social/awards").then(response => {
         awards = response.awards;
 
-        $.each(awards, function (index, award) {
+        $.each(awards, (index, award) => {
             const award_element = templateBuyableAward.clone();
             award_element.removeAttr("id");
             award_element.removeClass("d-none").addClass("d-flex");
@@ -137,7 +137,7 @@ function addComment(comment) {
     });
 
     if (awards) {
-        $.each(awards, function (index, award) {
+        $.each(awards, (index, award) => {
             addAwardToComment(award.id_award, element);
         });
     }
@@ -159,7 +159,7 @@ function getComments(mode = "featured") {
     promiseAjax(`/api/list/${share_code}/comments?mode=${mode}`).then(response => {  // skipcq: JS-0125
         comments = response.comments;
 
-        $.each(comments, function (index, comment) {
+        $.each(comments, (index, comment) => {
             addComment(comment);
         });
 
