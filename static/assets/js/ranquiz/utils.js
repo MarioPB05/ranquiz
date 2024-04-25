@@ -20,6 +20,14 @@ function removePageLoader() {
 }
 
 /**
+ * Esta función se encarga de volver a añadir el loader de la página
+ */
+function addPageLoader() {
+    $('body').css("overflow-y", "hidden");
+    $('#loading_indicator').addClass("d-flex");
+}
+
+/**
  * Esta función se encarga de inicializar el componente Flatpickr
  * @param elementSelector
  * @param mode
@@ -47,6 +55,39 @@ function initializeFlatpickr(elementSelector, mode = 'single', minDate = '1900-0
             rangeSeparator: ' hasta ',
         },
     });
+}
+
+/**
+ * Esta función se encarga de dar formato a la fecha y hora de creación de una publicación
+ * @param dateTime
+ * @returns {string}
+ */
+function formatElapsedTime(dateTime) {
+    const currentDate = new Date();
+    const elapsedTime = currentDate - dateTime;
+    const elapsedSeconds = Math.floor(elapsedTime / 1000);
+
+    if (elapsedSeconds < 60) {
+        return `Hace ${elapsedSeconds} s`;
+    }
+
+    const elapsedMinutes = Math.floor(elapsedSeconds / 60);
+    if (elapsedMinutes < 60) {
+        return `Hace ${elapsedMinutes} min`;
+    }
+
+    const elapsedHours = Math.floor(elapsedMinutes / 60);
+    if (elapsedHours < 24) {
+        return `Hace ${elapsedHours} h`;
+    }
+
+    const elapsedDays = Math.floor(elapsedHours / 24);
+    if (elapsedDays < 30) {
+        return `Hace ${elapsedDays} d`;
+    }
+
+    // If it has been more than a month, return the original date
+    return dateTime.toLocaleDateString();
 }
 
 
@@ -117,4 +158,59 @@ function errorLog(message) {
     );
 }
 
-export {removePageLoader, initializeFlatpickr, promiseAjax, toastMessage, infoLog, warningLog, errorLog};
+/**
+ * Esta función se encarga de recargar la información del usuario
+ */
+function reloadUserData() {
+    promiseAjax('/api/user')
+        /**
+         * @param response
+         * @param response.user Información del usuario
+         * @param response.user.avatar URL del avatar del usuario
+         * @param response.user.money Gemas del usuario
+         */
+        .then((response) => {
+            if (response.user) {
+                $('.user_avatar').attr('src', response.user.avatar);
+                $('.user_money').text(response.user.money);
+            }
+        });
+}
+
+/**
+ * Esta función tiene como objetivo transformar un número de segundos en un formato de cantidades de tiempo.
+ */
+function secondsToTime(seconds, digits) {
+    const time = {
+        "d": 86400,
+        "h": 3600,
+        "m": 60,
+        "s": 1
+    };
+
+    let timeString = "";
+    let count = 0;
+
+    if (seconds > 2592000) {
+        return new Date(seconds * 1000).toLocaleDateString();
+    }
+
+    for (const key in time) {
+        if (Object.prototype.hasOwnProperty.call(time, key) === false) continue;
+
+        const value = time[key];
+        const timeCount = Math.floor(seconds / value);
+
+        if (timeCount > 0) {
+            if (count < digits) {
+                timeString += `${timeCount} ${key} `;
+                count++;
+            }
+            seconds -= timeCount * value;
+        }
+    }
+
+    return timeString;
+}
+
+export { removePageLoader, initializeFlatpickr, promiseAjax, toastMessage, addPageLoader, reloadUserData, formatElapsedTime, secondsToTime, infoLog, warningLog, errorLog };
