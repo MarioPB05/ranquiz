@@ -282,14 +282,17 @@ function anyItemInputEmpty() {
  * Enfocar en el primer item vacío
  */
 function focusOnFirstEmptyItem() {
+    let found = false;
+
     // Enfoca en el primer item vacío
     $('#items_container .list_item:not(#item_template)').find('input[type="text"]').each(function () {
 
         if ($(this).val() === '') {
             $(this).focus();
-            return false;
+            found = true;
         }
 
+        return !found;
     });
 }
 
