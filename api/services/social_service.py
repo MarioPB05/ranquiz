@@ -13,7 +13,7 @@ def get_comment(comment_id):
         return None
 
 
-def get_comments_from_list(share_code, user, order='featured'):
+def get_comments_from_list(share_code, order='featured'):
     """Servicio para obtener todos los comentarios de una lista"""
     list_element = get_list(share_code)
 
@@ -23,17 +23,17 @@ def get_comments_from_list(share_code, user, order='featured'):
         order_by = "awards DESC, lc.date DESC"
 
     if list_element is None:
-        return
+        return None
 
-    query = """SELECT lc.id, lc.comment, lc.date, lc.user_id, au.username, aa.image as avatar, au.share_code,
-                    (SELECT SUM(a.price) FROM api_commentaward ca 
-                    JOIN ranquiz.api_award a on a.id = ca.award_id 
+    query = f"""SELECT lc.id, lc.comment, lc.date, lc.user_id, au.username, aa.image as avatar, au.share_code,
+                    (SELECT SUM(a.price) FROM api_commentaward ca
+                    JOIN ranquiz.api_award a on a.id = ca.award_id
                     WHERE ca.comment_id = lc.id) as awards
                 FROM api_listcomment lc
                 JOIN ranquiz.api_user au on lc.user_id = au.id
                 JOIN ranquiz.api_avatar aa on au.avatar_id = aa.id
                 WHERE lc.list_id = %s
-                ORDER BY {};""".format(order_by)
+                ORDER BY {order_by};"""  # skipcq: BAN-B608
 
     params = [list_element.id]
 
@@ -55,12 +55,12 @@ def get_all_awards():
     return Award.objects.all()
 
 
-def get_awards_from_comments(comments, dict=False):
+def get_awards_from_comments(comments, dictionary=False):
     """Servicio para obtener todos los premios de una lista de comentarios agrupados por comentario y premio"""
     # Obtener una lista de IDs de comentarios
     comment_ids = []
 
-    if dict:
+    if dictionary:
         comment_ids = [comment['id'] for comment in comments]
     else:
         comment_ids = [comment.id for comment in comments]

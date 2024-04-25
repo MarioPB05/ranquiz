@@ -9,7 +9,7 @@ from api.services.transaction_service import do_transaction
 def get_comments(request, share_code):
     """Función para obtener todos los comentarios de una lista"""
     mode = request.GET.get('mode')  # featured, recent
-    comments = get_comments_from_list(share_code, request.user, mode)
+    comments = get_comments_from_list(share_code, mode)
 
     json_comments = []
     comments_award = get_awards_from_comments(comments, True)
@@ -76,7 +76,7 @@ def get_awards(request):
     return JsonResponse({'awards': json_awards})
 
 
-def add_award_to_comment_function(request, share_code, comment_id):
+def add_award_to_comment_function(request, share_code, comment_id):  # skipcq: PYL-W0613
     """Función para añadir un premio a un comentario"""
     award_id = request.POST.get('id_award')
     selected_comment = get_comment(comment_id)
