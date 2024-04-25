@@ -2,8 +2,43 @@
 {% load static %}
 
 {% block content %}
+    <div class="card shadow-sm">
+        <div class="card-header align-items-center">
+            <h1 class="text-primary m-0" id="category_name">Category name</h1>
+            
+            <div>
+                <button class="btn btn-outline btn-outline-primary btn-active-primary p-2 ps-6 pe-6" id="follow_category">Seguir</button>
+            </div>
+        </div>
+    
+        <div class="card-body" id="">
+            <div id="list_container"  class="w-100 align-items-center d-md-grid d-flex flex-column bg-light-primary rounded p-5 gap-7 min-h-250px" id="content" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr))">
+                {% for list in lists %}
+                    {% include 'components/list_template.html' with data=list %}
+                {% endfor %}
+            </div>
+            
+            <ul class="pagination">
+                <li class="page-item previous disabled">
+                    <span class="page-link page-text">Previous</span>
+                </li>
+                <li class="page-item "><a href="#" class="page-link">1</a></li>
+                <li class="page-item active"><a href="#" class="page-link">2</a></li>
+                <li class="page-item "><a href="#" class="page-link">3</a></li>
+                <li class="page-item "><a href="#" class="page-link">4</a></li>
+                <li class="page-item "><a href="#" class="page-link">5</a></li>
+                <li class="page-item "><a href="#" class="page-link">6</a></li>
+                <li class="page-item next">
+                    <a class="page-link page-text" href="#">Next</a>
+                </li>
+            </ul>
+        </div>
+    </div>
 {% endblock %}
 
 {% block custom_scripts %}
+<script>
+    const share_code = "{{ share_code }}";
+</script>
 <script src="{% static 'scripts/pages/category_lists.js' %}" type="module"></script>
 {% endblock %}
