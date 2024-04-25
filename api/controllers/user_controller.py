@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.views.decorators.http import require_GET
 
 from api.decorators.api_decorators import require_authenticated
+from api.services import PAGINATION_ITEMS_PER_PAGE
 from api.services.user_service import get_user, get_users
 
 
@@ -22,12 +23,11 @@ def get_user_data(request):
 def get_users_filtered(request):
     """Controlador que devuelve los usuarios filtrados"""
     page = int(request.GET.get('page', '1'))
-    limit = 30
     sort = request.GET.get('sort', 'default')
     search = request.GET.get('search', '')
     result = []
 
-    users = get_users(limit, page, search, sort, request.user)
+    users = get_users(PAGINATION_ITEMS_PER_PAGE, page, search, sort, request.user)
 
     for user in users:
         result.append({

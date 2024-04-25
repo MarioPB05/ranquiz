@@ -54,12 +54,11 @@ def get_categories(request):
 def get_categories_filtered(request):
     """Función para obtener las categorías filtradas"""
     page = int(request.GET.get('page', '1'))
-    limit = 30
     sort = request.GET.get('sort', 'default')
     search = request.GET.get('search', '')
     result = []
 
-    categories = category_service.get_categories(limit, page, search, request.user, sort)
+    categories = category_service.get_categories(PAGINATION_ITEMS_PER_PAGE, page, search, request.user, sort)
 
     # TODO: Cambiar URL por la de category view
     for category in categories:
