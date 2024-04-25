@@ -282,14 +282,17 @@ function anyItemInputEmpty() {
  * Enfocar en el primer item vacío
  */
 function focusOnFirstEmptyItem() {
+    let found = false;
+
     // Enfoca en el primer item vacío
     $('#items_container .list_item:not(#item_template)').find('input[type="text"]').each(function () {
 
         if ($(this).val() === '') {
             $(this).focus();
-            return false;
+            found = true;
         }
 
+        return !found;
     });
 }
 
@@ -300,9 +303,7 @@ function actualizeItemNumber() {
     // Actualiza el número de items
     let i = 0;
 
-    $('#items_container').find('.list_item:not(#item_template)').each(function () {
-        i++;
-    });
+    $('#items_container').find('.list_item:not(#item_template)').each(() => i++);
 
     $("#item_number").text(i);
 }
