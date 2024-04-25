@@ -1,4 +1,5 @@
 from django.http import JsonResponse
+from django.urls import reverse
 from django.views.decorators.http import require_GET, require_POST
 
 from api.services import category_service, PAGINATION_ITEMS_PER_PAGE
@@ -60,12 +61,11 @@ def get_categories_filtered(request):
 
     categories = category_service.get_categories(PAGINATION_ITEMS_PER_PAGE, page, search, request.user, sort)
 
-    # TODO: Cambiar URL por la de category view
     for category in categories:
         result.append({
             'id': category['id'],
             'name': category['name'],
-            'url': '/',
+            'url': request.build_absolute_uri(reverse('category_lists', args=[category['share_code']])),
             'lists': category['lists'],
             'followers': category['followers'],
             'followed': category['followed']
