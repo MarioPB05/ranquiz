@@ -27,13 +27,16 @@ def edit_list_categories(categories_names, list_obj):
                 set_category(list_obj, category)
 
 
-def get_category(category_id=None, category_name=None):
+def get_category(category_id=None, category_name=None, share_code=None):
     """Función para obtener una categoría"""
     if category_id is not None:
         return Category.objects.get(id=category_id)
 
     if category_name is not None:
         return Category.objects.get(name=category_name)
+
+    if share_code is not None:
+        return Category.objects.get(share_code=share_code)
 
     return None
 
