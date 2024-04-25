@@ -217,3 +217,7 @@ def shop(request):
 def search(request):
     """Vista que permite a un usuario buscar en la aplicación"""
     return render(request, 'pages/search.html')
+
+
+def category_lists(request, share_code):
+    return render(request, 'pages/category_lists.html', {'share_code': share_code})
