@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET, require_POST
 
-from api.services import category_service
+from api.services import category_service, PAGINATION_ITEMS_PER_PAGE
 from api.services.category_service import get_all_categories, similarity, create_category
 
 
