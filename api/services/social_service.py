@@ -1,6 +1,4 @@
-
-from django.db.models import Sum, Case, When, Value, IntegerField, Count
-from django.utils import timezone
+from django.db.models import Count
 
 from api.models import ListComment, CommentAward, Award
 from api.services.list_service import get_list
@@ -37,8 +35,6 @@ def get_comments_from_list(share_code, user, order='featured'):
                 WHERE lc.list_id = %s
                 ORDER BY {};""".format(order_by)
 
-    print(order_by)
-
     params = [list_element.id]
 
     return execute_query(query, params)
@@ -49,8 +45,7 @@ def create_comment(content, author, share_code):
     list_element = get_list(share_code)
 
     if list_element is not None and content is not None and author is not None:
-        current_datetime = timezone.now()
-        return ListComment.objects.create(list=list_element, user=author, comment=content, date=current_datetime)
+        return ListComment.objects.create(list=list_element, user=author, comment=content)
 
     return None
 
