@@ -1,9 +1,10 @@
-from django.db.models import Sum, Case, When, Value, IntegerField, Count
 
+from django.db.models import Sum, Case, When, Value, IntegerField, Count
 from django.utils import timezone
 
 from api.models import ListComment, CommentAward, Award
 from api.services.list_service import get_list
+from api.services.query_service import execute_query
 
 
 def get_comment(comment_id):
@@ -14,45 +15,33 @@ def get_comment(comment_id):
         return None
 
 
-def get_comments_from_list(share_code):
+def get_comments_from_list(share_code, user, order='featured'):
     """Servicio para obtener todos los comentarios de una lista"""
     list_element = get_list(share_code)
 
-    if list_element is not None:
-        return ListComment.objects.filter(list=list_element)
+    if order == 'recent':
+        order_by = "lc.date DESC"
+    else:
+        order_by = "awards DESC, lc.date DESC"
 
-    return None
+    if list_element is None:
+        return
 
+    query = """SELECT lc.id, lc.comment, lc.date, lc.user_id, au.username, aa.image as avatar, au.share_code,
+                    (SELECT SUM(a.price) FROM api_commentaward ca 
+                    JOIN ranquiz.api_award a on a.id = ca.award_id 
+                    WHERE ca.comment_id = lc.id) as awards
+                FROM api_listcomment lc
+                JOIN ranquiz.api_user au on lc.user_id = au.id
+                JOIN ranquiz.api_avatar aa on au.avatar_id = aa.id
+                WHERE lc.list_id = %s
+                ORDER BY {};""".format(order_by)
 
-def get_most_awarded_comments_from_list(share_code):
-    """Servicio para obtener todos los comentarios de una lista ordenados por la cantidad de premios que han recibido"""
-    list_element = get_list(share_code)
+    print(order_by)
 
-    if list_element is not None:
-        return ListComment.objects.annotate(award_prices=Sum("commentaward__award__price")).order_by('award_prices')
+    params = [list_element.id]
 
-    return None
-
-
-def get_featured_comments_from_list(share_code, user):
-    """Servicio para obtener los comentarios destacados de una lista"""
-    list_element = get_list(share_code)
-    selected_user = user
-
-    # Anotar los comentarios con el número de premios
-    comentarios_anotados = ListComment.objects.filter(list=list_element).annotate(
-        award_prices=Sum('commentaward__award__price'),
-        is_selected_user=Case(
-            When(user=selected_user, then=Value(1)),
-            default=Value(0),
-            output_field=IntegerField(),
-        )
-    )
-
-    # Ordenar los comentarios por el número de premios y si pertenecen al usuario seleccionado
-    comentarios_ordenados = comentarios_anotados.order_by('is_selected_user', 'award_prices')
-
-    return comentarios_ordenados
+    return execute_query(query, params)
 
 
 def create_comment(content, author, share_code):
@@ -71,10 +60,15 @@ def get_all_awards():
     return Award.objects.all()
 
 
-def get_awards_from_comments(comments):
+def get_awards_from_comments(comments, dict=False):
     """Servicio para obtener todos los premios de una lista de comentarios agrupados por comentario y premio"""
     # Obtener una lista de IDs de comentarios
-    comment_ids = [comment.id for comment in comments]
+    comment_ids = []
+
+    if dict:
+        comment_ids = [comment['id'] for comment in comments]
+    else:
+        comment_ids = [comment.id for comment in comments]
 
     # Realizar una consulta para obtener los premios agrupados por ID de comentario y premio, y contar la cantidad
     awards_queryset = CommentAward.objects.filter(comment_id__in=comment_ids).values('comment_id', 'award_id').annotate(
