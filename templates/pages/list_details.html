@@ -16,8 +16,11 @@
                         </a>
                     </div>
                     <div class="w-100 h-lg-100 min-h-lg-10px rounded overflow-hidden position-lg-relative bgi-position-center bg-center min-h-300px"
-                         style="
-                                 background-image: url('https://res.cloudinary.com/dhewpzvg9/{{ list.image }}');
+                         style="{% if not list.image %}
+                                    background-image: url('{% static 'assets/media/placeholders/list_mix2.png' %}');
+                                {% else %}
+                                    background-image: url('https://res.cloudinary.com/dhewpzvg9/{{ list.image }}');
+                                {% endif %}
                                  background-size: cover;
                                  "></div>
                     <div class="d-flex flex-wrap align-center justify-content-center gap-lg-20 gap-10">
@@ -70,11 +73,15 @@
                         </div>
                         <div class="col-md-7 d-flex flex-column gap-3">
                             <label class="fw-bolder fs-3 text-white text-center text-md-end">Categorías</label>
-                            <div class="d-flex gap-3 flex-wrap w-100 justify-content-center justify-content-md-end">
-                                {% for category in data.categories %}
-                                    <span class="badge bg-white text-primary-800 fs-6">{{ category }}</span>
-                                {% endfor %}
-                            </div>
+                            {% if data.categories %}
+                                <div class="d-flex gap-3 flex-wrap w-100 justify-content-center justify-content-md-end">
+                                    {% for category in data.categories %}
+                                        <span class="badge bg-white text-primary-800 fs-6">{{ category }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <label class="fs-7 text-white text-center text-md-end">Sin categorías</label>
+                            {% endif %}
                         </div>
                     </div>
 
@@ -131,7 +138,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <h3>Comentarios</h3>
                 <button class="btn btn-outline-primary border-primary border border-1 fs-8 cursor-pointer p-1 ps-2 pe-2 rounded-pill hover-color-white"
-                        id="recientComents">Recientes
+                        id="featuredComments">Destacados
                 </button>
                 <p class="fs-2 text-muted" id="comment_counter">0</p>
             </div>

@@ -111,7 +111,7 @@ function uploadAward(award_id, comment) {
  * Añade un comentario a la lista de comentarios
  * @param comment
  */
-function addComment(comment) {
+function addComment(comment, new_comment = false) {
     const content = comment.content;
     const author_name = comment.author.name;
     const author_avatar = comment.author.avatar;
@@ -147,7 +147,12 @@ function addComment(comment) {
         });
     }
 
-    element.prependTo("#comments_container");
+    if (new_comment) {
+        element.prependTo("#comments_container");
+    }else {
+        element.appendTo("#comments_container");
+    }
+
     actualizeCommentCounter();
 }
 
@@ -155,7 +160,7 @@ function addComment(comment) {
  * Obtiene los comentarios de la base de datos y los añade
  * @param mode
  */
-function getComments(mode = "featured") {
+function getComments(mode = "recent") {
     commentsContainer.empty();
     comments = [];
 
@@ -187,7 +192,7 @@ function uploadComment(comment) {
     comment.csrfmiddlewaretoken = $('input[name=csrfmiddlewaretoken]').val();
 
     promiseAjax(`/api/list/${share_code}/comment/create`, "POST", comment).then(response => {  // skipcq: JS-0125
-        addComment(response.comment);
+        addComment(response.comment, true);
         comments.push(response.comment);
         actualizeCommentCounter();
 
@@ -233,13 +238,13 @@ function writeComment() {
 /**
  * Cambia entre comentarios recientes y destacados
  */
-function toggleRecientComments() {
-    if ($("#recientComents").hasClass("badge-outline-primary-selected")) {
-        $("#recientComents").removeClass("badge-outline-primary-selected");
-        getComments("featured")
+function toggleFeaturedComments() {
+    if ($("#featuredComments").hasClass("badge-outline-primary-selected")) {
+        $("#featuredComments").removeClass("badge-outline-primary-selected");
+        getComments("recent")
     } else {
-        $("#recientComents").addClass("badge-outline-primary-selected");
-        getComments("recient");
+        $("#featuredComments").addClass("badge-outline-primary-selected");
+        getComments("featured");
     }
 }
 
@@ -376,7 +381,7 @@ function onDocumentReady() {
 
     });
 
-    $("#recientComents").click(toggleRecientComments)
+    $("#featuredComments").click(toggleFeaturedComments)
 
     commentsContainer.on("click", ".buyable_award", function () {
         const award_id = $(this).data("award-id");

@@ -1,45 +1,36 @@
 from django.http import JsonResponse
 from django.urls import reverse
 
-from api.services.social_service import get_comments_from_list, create_comment, get_featured_comments_from_list, \
-    get_most_awarded_comments_from_list, get_awards_from_comments, get_comment, get_award, add_award_to_comment, \
-    check_user_award_in_comment, get_all_awards
+from api.services.social_service import (get_comments_from_list, create_comment, get_awards_from_comments, get_comment,
+                                         get_award, add_award_to_comment, check_user_award_in_comment, get_all_awards)
 from api.services.transaction_service import do_transaction
 
 
 def get_comments(request, share_code):
     """Función para obtener todos los comentarios de una lista"""
-    comments = []
-    mode = request.GET.get('mode')
-
-    if mode == 'most_awarded':
-        comments = get_most_awarded_comments_from_list(share_code)
-
-    elif mode == 'featured':
-        if request.user.is_authenticated:
-            comments = get_featured_comments_from_list(share_code, request.user)
-        else:
-            comments = get_most_awarded_comments_from_list(share_code)
-
-    elif mode == 'recient':
-        comments = get_comments_from_list(share_code)
+    mode = request.GET.get('mode')  # featured, recent
+    comments = get_comments_from_list(share_code, mode)
 
     json_comments = []
-    comments_award = get_awards_from_comments(comments)
+    comments_award = get_awards_from_comments(comments, True)
 
     for comment in comments:
-        awards_in_comment = comments_award.get(comment.id)
+        awards_in_comment = None
+
+        if comment['awards'] != "0":
+            awards_in_comment = comments_award.get(comment['id'])
+
         json_comments.append({
-            'id': comment.id,
-            'content': comment.comment,
-            'date': comment.date,
-            'user_is_author': comment.user.id == request.user.id,
+            'id': comment['id'],
+            'content': comment['comment'],
+            'date': comment['date'],
+            'user_is_author': comment['user_id'] == request.user.id,
             'author': {
-                'name': comment.user.username,
-                'avatar': f"https://res.cloudinary.com/dhewpzvg9/{comment.user.avatar.image}",
-                'url': request.build_absolute_uri(reverse('user', args=[comment.user.share_code]))
+                'name': comment['username'],
+                'avatar': f"https://res.cloudinary.com/dhewpzvg9/{comment['avatar']}",
+                'url': request.build_absolute_uri(reverse('user', args=[comment['share_code']]))
             },
-            'awards': awards_in_comment,
+            'awards': awards_in_comment if awards_in_comment is not None else [],
         })
 
     return JsonResponse({'comments': json_comments})
@@ -85,7 +76,7 @@ def get_awards(request):
     return JsonResponse({'awards': json_awards})
 
 
-def add_award_to_comment_function(request, comment_id):
+def add_award_to_comment_function(request, share_code, comment_id):  # skipcq: PYL-W0613
     """Función para añadir un premio a un comentario"""
     award_id = request.POST.get('id_award')
     selected_comment = get_comment(comment_id)
