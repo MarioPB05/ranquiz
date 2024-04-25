@@ -123,9 +123,9 @@ def add_award_to_comment(comment_id, selected_user, award_id):
 
 def get_followers(user):
     """Obtiene los seguidores de un usuario"""
-    return UserFollow.objects.filter(follower=user)
+    return UserFollow.objects.filter(user_followed=user)
 
 
 def get_following(user):
     """Obtiene los usuarios que sigue un usuario"""
-    return UserFollow.objects.filter(user_followed=user)
+    return UserFollow.objects.filter(follower=user)
