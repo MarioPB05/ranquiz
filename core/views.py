@@ -6,7 +6,8 @@ from django.http import Http404, HttpResponseForbidden
 from django.shortcuts import render, redirect, get_object_or_404
 
 from api.models import List, ListCategory, ListFavorite, ListLike, ListAnswer
-from api.services.category_service import edit_list_categories
+from api.services import PAGINATION_ITEMS_PER_PAGE
+from api.services.category_service import edit_list_categories, get_category
 from api.services.item_service import (
     create_item_form,
     create_item,
@@ -17,7 +18,7 @@ from api.services.list_service import (
     create_list_form,
     create_list,
     get_list,
-    get_list_counts,
+    get_list_counts, get_lists,
 )
 from api.services.user_service import (
     user_login,
@@ -220,4 +221,9 @@ def search(request):
 
 
 def category_lists(request, share_code):
-    return render(request, 'pages/category_lists.html', {'share_code': share_code})
+    page = request.GET.get('page', 1)
+    search_category = request.GET.get('search', '')
+    order = request.GET.get('order', 'default')
+    category_object = get_category(share_code=share_code)
+    lists = get_lists(PAGINATION_ITEMS_PER_PAGE, page, search_category, request.user, order, category_object)
+    return render(request, 'pages/category_lists.html', {'share_code': share_code, 'lists': lists})
