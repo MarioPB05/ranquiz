@@ -104,6 +104,7 @@
             </div>
             <!--end::Filter menu-->
         </div>
+
         {% if card_data_empty %}
             <!--begin::Notice-->
             <div class="notice d-flex bg-light-warning rounded border-warning border border-dashed p-6">
@@ -130,7 +131,8 @@
             <!--end::Notice-->
         {% else %}
             {% for list in card_data.data %}
-                <div class="d-flex gap-10 border border-2 border-gray-400 shadow-sm rounded p-4 mb-6">
+                <div class="d-flex gap-10 border border-2 border-gray-400 shadow-sm rounded p-4 mb-6 cursor-pointer"
+                    onclick="window.location.href = '{% url 'list_details' share_code=list.share_code %}'">
                     {% cloudinary list.image format="webp" style="object-fit:cover" class="mw-200px w-100 mh-100px h-100 rounded" %}
 
                     <div class="w-100">
