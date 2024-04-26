@@ -57,6 +57,39 @@ function initializeFlatpickr(elementSelector, mode = 'single', minDate = '1900-0
     });
 }
 
+/**
+ * Esta función se encarga de dar formato a la fecha y hora de creación de una publicación
+ * @param dateTime
+ * @returns {string}
+ */
+function formatElapsedTime(dateTime) {
+    const currentDate = new Date();
+    const elapsedTime = currentDate - dateTime;
+    const elapsedSeconds = Math.floor(elapsedTime / 1000);
+
+    if (elapsedSeconds < 60) {
+        return `Hace ${elapsedSeconds} s`;
+    }
+
+    const elapsedMinutes = Math.floor(elapsedSeconds / 60);
+    if (elapsedMinutes < 60) {
+        return `Hace ${elapsedMinutes} min`;
+    }
+
+    const elapsedHours = Math.floor(elapsedMinutes / 60);
+    if (elapsedHours < 24) {
+        return `Hace ${elapsedHours} h`;
+    }
+
+    const elapsedDays = Math.floor(elapsedHours / 24);
+    if (elapsedDays < 30) {
+        return `Hace ${elapsedDays} d`;
+    }
+
+    // If it has been more than a month, return the original date
+    return dateTime.toLocaleDateString();
+}
+
 
 /***
 * Esta función se encarga de realizar una petición AJAX
@@ -90,6 +123,42 @@ function toastMessage(icon, message) {
 }
 
 /**
+ * Esta función se encarga de mostrar un mensaje de tipo info en la consola
+ * @param message
+ */
+function infoLog(message) {
+    console.log(  // skipcq: JS-0002
+        '%c INFO ',
+        'background-color: #BD20E9;color: white;font-weight: bold;border-radius:2px;padding: 2px 6px;',
+        message
+    );
+}
+
+/**
+ * Esta función se encarga de mostrar un mensaje de tipo warning en la consola
+ * @param message
+ */
+function warningLog(message) {
+    console.log( // skipcq: JS-0002
+        '%c WARNING ',
+        'background-color: #f1bc00;color: white;font-weight: bold;border-radius:2px;padding: 2px 6px;',
+        message
+    );
+}
+
+/**
+ * Esta función se encarga de mostrar un mensaje de tipo error en la consola
+ * @param message
+ */
+function errorLog(message) {
+    console.log( // skipcq: JS-0002
+        '%c ERROR ',
+        'background-color: #d9214e;color: white;font-weight: bold;border-radius:2px;padding: 2px 6px;',
+        message
+    );
+}
+
+/**
  * Esta función se encarga de recargar la información del usuario
  */
 function reloadUserData() {
@@ -108,4 +177,40 @@ function reloadUserData() {
         });
 }
 
-export { removePageLoader, initializeFlatpickr, promiseAjax, toastMessage, addPageLoader, reloadUserData };
+/**
+ * Esta función tiene como objetivo transformar un número de segundos en un formato de cantidades de tiempo.
+ */
+function secondsToTime(seconds, digits) {
+    const time = {
+        "d": 86400,
+        "h": 3600,
+        "m": 60,
+        "s": 1
+    };
+
+    let timeString = "";
+    let count = 0;
+
+    if (seconds > 2592000) {
+        return new Date(seconds * 1000).toLocaleDateString();
+    }
+
+    for (const key in time) {
+        if (Object.prototype.hasOwnProperty.call(time, key) === false) continue;
+
+        const value = time[key];
+        const timeCount = Math.floor(seconds / value);
+
+        if (timeCount > 0) {
+            if (count < digits) {
+                timeString += `${timeCount} ${key} `;
+                count++;
+            }
+            seconds -= timeCount * value;
+        }
+    }
+
+    return timeString;
+}
+
+export { removePageLoader, initializeFlatpickr, promiseAjax, toastMessage, addPageLoader, reloadUserData, formatElapsedTime, secondsToTime, infoLog, warningLog, errorLog };

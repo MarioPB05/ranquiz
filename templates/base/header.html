@@ -60,7 +60,7 @@
             <!--begin::Toolbar wrapper-->
             <div class="d-flex align-items-center ms-1 ms-lg-3">
                 {% if user.is_authenticated %}
-                    <a class="btn btn-icon btn-icon-muted btn-active-light btn-active-color-primary px-2 w-auto h-30px h-md-40px text-white text-hover-primary me-4">
+                    <a href="{% url 'shop' %}" class="btn btn-icon btn-icon-muted btn-active-light btn-active-color-primary px-2 w-auto h-30px h-md-40px text-white text-hover-primary me-4">
                         <i class="bi bi-gem fs-2 text-white"></i>
                         <span class="fw-bolder ms-2 user_money">{{ user.money }}</span>
                     </a>
@@ -71,7 +71,7 @@
                 {% endif %}
 
                 <!--begin::Menu wrapper-->
-                <div class="cursor-pointer symbol symbol-30px symbol-md-40px user-avatar" data-kt-menu-trigger="click" data-kt-menu-attach=".user_avatar" data-kt-menu-placement="bottom-end" data-kt-menu-offset="0,05">
+                <div class="cursor-pointer symbol symbol-30px symbol-md-40px user-avatar" data-kt-menu-trigger="click" data-kt-menu-attach=".{% if user.is_authenticated %}user_avatar{% else %}user-avatar{% endif %}" data-kt-menu-placement="bottom-end" data-kt-menu-offset="0,05">
                     <div class="symbol symbol-30px symbol-md-40px symbol-circle">
                         {% if user.is_authenticated %}
                             {% cloudinary user.avatar.image class="user_avatar" %}
