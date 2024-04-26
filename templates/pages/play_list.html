@@ -16,41 +16,34 @@
     <div class="progress mb-7" style="height: 20px" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
         <div class="progress-bar fw-bolder bg-primary" style="width: 25%">25%</div>
     </div>
-    <div class="row mt-4" style="height: 67vh">
-        <div class="position-relative col-lg-8 h-100 d-grid gap-4 bg-primary text-center rounded-25px border border-10 border-primary-400 p-12" style="grid-template-rows: auto 1fr">
+    
+    <div class="mt-4 row" style="min-height: 67vh">
+        <div class="position-relative col-lg-8 text-center d-md-grid d-flex flex-column justify-content-center align-items-center gap-4 bg-primary rounded-25px h-100 pb-12 border border-10 border-primary-400 p-7 p-md-12" style="grid-template-rows: auto 1fr">
             <div class="text-primary bg-white position-absolute end-0 m-5 top-0 fw-boldest fs-3 p-2 rounded-2 shadow flex-md-column" id="play_time">0s</div> {#Testing#}
 
-            <h1 class="text-white">¿Cuál prefieres?</h1>
+            <h1 class="text-white w-100">¿Cuál prefieres?</h1>
 
-            <div class="row two-items h-100 overflow-hidden" id="items_container">
-                <div class="p-5 col-sm-6 h-100">
-                    <div class="h-100 w-100 align-items-center selected_item gap-3 bg-white rounded hover-scale hover-bg-primary-200 cursor-pointer d-flex flex-column justify-content-around p-5">
-                        <img src="https://images.pexels.com/photos/719396/pexels-photo-719396.jpeg?cs=srgb&dl=pexels-gabriel-peter-719396.jpg&fm=jpg" class="w-75 h-75" style="object-fit: contain">
-                        <h1 class="m-0 overflow-hidden w-100">Medalla de oro</h1>
-                    </div>
+            <div class="gap-4 w-100 h-auto h-md-100 d-flex flex-column d-md-grid mw-500px" id="items_container" style="grid-template-columns: 1fr 1fr;">
+                <div class="bg-white w-100 rounded d-flex justify-content-around flex-column hover-bg-primary-200 hover-scale selected_item cursor-pointer p-5 align-items-center gap-4">
+                    <img src="{% static 'assets/media/placeholders/list_mix2.png' %}" class="mw-50 mh-50 d-none d-md-flex" style="object-fit: contain;">
+                    <h1 class="m-0 fs-2">Item xd</h1>
                 </div>
 
-                <div class="p-5 col-sm-6 h-100">
-                    <div class="h-100 w-100 align-items-center gap-3 bg-white rounded hover-scale hover-bg-primary-200 cursor-pointer d-flex flex-column justify-content-around p-5">
-                        <img src="https://w0.peakpx.com/wallpaper/163/338/HD-wallpaper-top-full-nature-full-for-pc-deskto-fondos-de-pantalla-naturaleza-hermosos-fondos-de-pantalla-fondo-de-pantalla-tropical-1600x900-nature.jpg" class="w-75 h-75" style="object-fit: contain">
-                        <h1 class="m-0 overflow-hidden w-100">Medalla de oro</h1>
-                    </div>
+                <div class="bg-white w-100 overflow-hidden mw-100 rounded d-flex justify-content-around flex-column hover-bg-primary-200 hover-scale cursor-pointer p-5 align-items-center gap-4">
+                    <img src="https://almacen.do/wp-content/uploads/2018/05/Agua-Planeta-Azul-16.9-oz-Caja-20-uds-Front-1.jpg" class="mw-50 mh-50 d-none d-md-flex" style="object-fit: contain;">
+                    <h1 class="m-0 fs-2 text-nowrap overflow-hidden w-100" style="text-overflow: ellipsis">Item xd sfdgh dsh dsfg dshg sdhg</h1>
+                </div>
+                
+                <div class="bg-white w-100 rounded d-flex justify-content-around flex-column hover-bg-primary-200 hover-scale cursor-pointer p-5 align-items-center gap-4">
+                    <img src="https://static.wikia.nocookie.net/brawlstars/images/c/cf/Squeak_Skin-Default.png/revision/latest?cb=20230127144034" class="mw-50 mh-50 d-none d-md-flex" style="object-fit: contain;">
+                    <h1 class="m-0 fs-2" >Item xd</h1>
                 </div>
 
-{#                <div class="p-5 col-sm-6">#}
-{#                    <div class="h-100 w-100 align-items-center gap-3 bg-white rounded hover-scale hover-bg-primary-200 cursor-pointer d-flex flex-column justify-content-around p-5">#}
-{#                        <img src="https://w0.peakpx.com/wallpaper/163/338/HD-wallpaper-top-full-nature-full-for-pc-deskto-fondos-de-pantalla-naturaleza-hermosos-fondos-de-pantalla-fondo-de-pantalla-tropical-1600x900-nature.jpg" class="w-75 h-75" style="object-fit: contain">#}
-{#                        <h1 class="m-0 overflow-hidden w-100">Medalla de oro asjkodskjd hijsd huj suidh s usdh jsd  jshd jsd hui shd</h1>#}
-{#                    </div>#}
-{#                </div>#}
-{##}
-{#                <div class="p-5 col-sm-6">#}
-{#                    <div class="h-100 w-100 align-items-center gap-3 bg-white rounded hover-scale hover-bg-primary-200 cursor-pointer d-flex flex-column justify-content-around p-5">#}
-{#                        <img src="https://w0.peakpx.com/wallpaper/163/338/HD-wallpaper-top-full-nature-full-for-pc-deskto-fondos-de-pantalla-naturaleza-hermosos-fondos-de-pantalla-fondo-de-pantalla-tropical-1600x900-nature.jpg" class="w-75 h-75" style="object-fit: contain">#}
-{#                        <h1 class="m-0 overflow-hidden w-100">Medalla de oro</h1>#}
-{#                    </div>#}
-{#                </div>#}
-
+                <div class="bg-white w-100 rounded d-flex justify-content-around flex-column hover-bg-primary-200 hover-scale cursor-pointer p-5 align-items-center gap-4">
+                    <img src="https://almacen.do/wp-content/uploads/2018/05/Agua-Planeta-Azul-16.9-oz-Caja-20-uds-Front-1.jpg" class="mw-50 mh-50 d-none d-md-flex" style="object-fit: contain;">
+                    <h1 class="m-0 fs-2">Item xd</h1>
+                </div>
+                
             </div>
 
 
@@ -60,7 +53,7 @@
             </button>
         </div>
 
-        <div class="col-lg-4 h-100 h-100 p-3 overflow-hidden d-lg-flex d-none">
+        <div class="col-lg-4 p-3 overflow-hidden d-lg-flex d-none">
             <div class="d-flex w-100 border border-gray-900 rounded d-flex flex-column align-items-center p-2 scrolleable h-100">
                 <div class="d-grid border-bottom border-2 border-gray-500 w-90 py-3 align-items-center " style="grid-template-columns: 45px 1fr">
                     <div>
