@@ -41,13 +41,21 @@ def get_notifications(user):
 
 
 def send_notification(user, notification):
-    """Envía una notificación a un usuario"""
+    """Envía una notificación a un usuario o usuarios"""
     channel_layer = get_channel_layer()
 
+    if notification.target == 1:
+        channel_name = user.share_code
+    elif notification.target == 2:
+        channel_name = f'followers_{user.share_code}'
+    else:
+        channel_name = 'global'
+
     async_to_sync(channel_layer.group_send)(
-        user.share_code,
+        channel_name,
         {
             'type': 'send_notification',
+            'target': notification.target,
             'icon': notification.type.icon,
             'title': notification.type.title,
             'description': notification.type.description,
