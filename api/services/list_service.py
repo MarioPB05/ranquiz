@@ -1,6 +1,6 @@
 from api.forms.list_form import CreateListForm
 from api.services.query_service import execute_query
-from api.models import List, ListCategory, ListFavorite, ListLike, ListAnswer
+from api.models import List, ListCategory, ListFavorite, ListLike, ListAnswer, ListComment
 
 
 def create_list_form(request, instance=None):
@@ -90,8 +90,9 @@ def get_list_counts(list_obj):
     favorites_count = ListFavorite.objects.filter(list=list_obj).count()
     likes_count = ListLike.objects.filter(list=list_obj).count()
     play_count = ListAnswer.objects.filter(list=list_obj).count()
+    comments_count = ListComment.objects.filter(list=list_obj).count()
 
-    return favorites_count, likes_count, play_count
+    return favorites_count, likes_count, play_count, comments_count
 
 
 def count_lists(search='', category=None):

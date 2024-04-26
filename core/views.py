@@ -62,7 +62,7 @@ def list_details(request, share_code):
     categories = [list_category.category for list_category in list_categories]
 
     # Obtener la cantidad de favoritos, likes, partidas de la lista
-    favorites_count, likes_count, play_count = get_list_counts(list_data)
+    favorites_count, likes_count, play_count, comments_count = get_list_counts(list_data)
 
     # Verificar si el usuario ha dado like, favorito o jugado a la lista específica
     user_has_liked = False
