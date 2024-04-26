@@ -1,3 +1,4 @@
+{% load static %}
 <!--
 Clases:
     - list: Contenedor de la lista
@@ -12,25 +13,25 @@ Clases:
 -->
 
 <!-- Begin List Template -->
-<div class="list bg-white d-none w-100 overflow-hidden bg-hover-light-dark h-250px p-5 cursor-pointer pb-2 position-relative border-secondary-dark border-1 border rounded d-grid gap-4" style="grid-template-rows: 1fr auto auto" id="template_list">
+<div class="list bg-white {% if not data %} d-none {% endif %} w-100 overflow-hidden bg-hover-light-dark h-250px p-5 cursor-pointer pb-2 position-relative border-secondary-dark border-1 border rounded d-grid gap-4" style="grid-template-rows: 1fr auto auto" {% if not data %}id="template_list" {% else %}data-id="{{ data.id }}"{% endif %} href="{% if data %}{% url 'list_details' share_code=data.share_code %}{% endif %}">
     <div class="overflow-hidden rounded mb-3">
-        <img src="https://images.wikidexcdn.net/mwuploads/wikidex/thumb/a/a7/latest/20220715200149/EP1206_Dragonite_de_Iris.png/640px-EP1206_Dragonite_de_Iris.png" class="h-100 w-100 list_image" style="object-fit: cover">
+        <img src="{% if data and data.image %}https://res.cloudinary.com/dhewpzvg9/{{ data.image }}{% elif data and not data.image %}{% static 'assets/media/placeholders/list_mix2.png' %}{% endif %}" class="h-100 w-100 list_image" style="object-fit: cover" alt="Imagen de la lista">
     </div>
     <div class="w-100">
-        <h2 class="m-0 text-primary fw-bolder list_name text-break">Titulo de la lista</h2>
+        <h2 class="m-0 text-primary fw-bolder list_name text-break">{% if data %}{{ data.name }}{% endif %}</h2>
     </div>
-    <a class="d-flex gap-3 align-items-center list_author_group text-secondary-dark fw-light text-hover-primary hover-fw-600" href="/static">
-        <img src="http://res.cloudinary.com/dhewpzvg9/image/upload/c_fill/v1712514744/avatars/kidcithbb1ogolsssdma.png" class="h-30px w-30px rounded-circle author_image">
-        <span class="m-0 fs-4 text-break author_name transition-duration-0-3s">Usuario</span>
+    <a class="d-flex gap-3 align-items-center list_author_group text-secondary-dark fw-light text-hover-primary hover-fw-600" href="{% if data %}{% url 'user' share_code=data.owner_share_code %}{% endif %}">
+        <img src="https://res.cloudinary.com/dhewpzvg9/{% if data %}{{ data.owner_avatar }}{% endif %}" class="h-30px w-30px rounded-circle author_image" alt="avatar del autor">
+        <span class="m-0 fs-4 text-break author_name transition-duration-0-3s">{% if data %}{{ data.owner_username }}{% endif %}</span>
     </a>
     <div class="rounded-circle p-3 pb-2 border border-secondary bg-white shadow position-absolute end-0 top-0 m-2 cursor-pointer border-hover-danger text-hover-danger">
-        <i class="bi bi-heart fs-1 list_like"></i>
+        <i class="bi {% if data and data.liked %}bi-heart-fill text-danger{% elif data and not data.liked %}bi-heart{% endif %} fs-1 list_like"></i>
     </div>
     <div class="position-absolute bottom-0 end-0 m-2 me-5 d-flex gap-2 align-items-center">
-        <p class="m-0 fs-3 fw-bolder text-secondary-dark list_plays_number">0</p>
+        <p class="m-0 fs-3 fw-bolder text-secondary-dark list_plays_number">{% if data %}{{ data.plays }}{% endif %}</p>
         <i class="bi bi-controller fs-1"></i>
     </div>
-    <div class="position-absolute bg-primary text-white fs-5 fw-bolder ps-20 p-1 pe-20 highlight_list" style="transform: rotate(-45deg); top: 30px; left: -55px ">
+    <div class="position-absolute {% if data and not data.highlighted %}d-none{% endif %} bg-primary text-white fs-5 fw-bolder ps-20 p-1 pe-20 highlight_list" style="transform: rotate(-45deg); top: 30px; left: -55px ">
         Destacado
     </div>
 </div>
