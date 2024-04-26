@@ -33,7 +33,7 @@ def append_channel(channel):
 
 def remove_channel(share_code):
     """Elimina un canal para los seguidores"""
-    global channels_for_followers
+    global channels_for_followers  # skipcq: PYL-W0603
     channels_for_followers = list(filter(
         lambda channel: channel['share_code'] != share_code,
         channels_for_followers
