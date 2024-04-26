@@ -60,7 +60,7 @@ def get_categories(limit=None, page=1, search='', user=None, order='default'):
     elif order == 'newest':
         order_by = "max(al.edit_date) DESC"
 
-    query = """SELECT c.id, c.name, c.share_code, COUNT(lc.list_id) as lists, COUNT(cs.user_id) as followers,
+    query = f"""SELECT c.id, c.name, c.share_code, COUNT(lc.list_id) as lists, COUNT(cs.user_id) as followers,
                 if(cs.user_id = %s, TRUE, FALSE) as followed
                 FROM api_category c
                 LEFT JOIN api_listcategory lc on c.id = lc.category_id
@@ -68,10 +68,10 @@ def get_categories(limit=None, page=1, search='', user=None, order='default'):
                 JOIN ranquiz.api_list al on lc.list_id = al.id
                 WHERE c.name LIKE %s
                 GROUP BY c.id
-                ORDER BY %s
+                ORDER BY {order_by}
                 LIMIT %s OFFSET %s;"""
 
-    params = [user.id if user is not None else 0, f"%{search}%", order_by, limit, (page - 1) * limit]
+    params = [user.id if user is not None else 0, f"%{search}%", limit, (page - 1) * limit]
 
     return execute_query(query, params)
 
