@@ -213,4 +213,27 @@ function secondsToTime(seconds, digits) {
     return timeString;
 }
 
+// Función para cambiar los estilos del botón y llamar al backend
+function toggleListLike(event) {
+    // Obtener el botón y el estado actual
+    const button = $(event.target).closest('.rounded-circle');
+    const isLiked = button.find('i').hasClass('heart-selected');
+
+    // Cambiar los estilos del botón
+    button.find('i').toggleClass('heart-selected');
+
+    // Llamar al backend
+    const ListURL = button.parent().attr('href');
+    promiseAjax(`/api/list/${shareCode}/like?isLiked=${!isLiked}`, "GET").then(response => {
+        if (response.status === "success") {
+            // Éxito
+        } else if (response.status === "error") {
+            // Error
+            toastMessage("error", response.message);
+            // Revertir los estilos del botón en caso de error
+            button.find('i').toggleClass('heart-selected');
+        }
+    });
+}
+
 export { removePageLoader, initializeFlatpickr, promiseAjax, toastMessage, addPageLoader, reloadUserData, formatElapsedTime, secondsToTime, infoLog, warningLog, errorLog };
