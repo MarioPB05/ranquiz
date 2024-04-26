@@ -5,6 +5,7 @@ from django.views.decorators.http import require_GET
 from api.decorators.api_decorators import require_authenticated
 from api.models import ListLike, ListFavorite
 from api.models.list import List
+from api.services import PAGINATION_ITEMS_PER_PAGE
 from api.services.list_service import get_lists
 
 
@@ -27,12 +28,11 @@ def get_list_types(request):
 def get_lists_filtered(request):
     """Controlador que devuelve las listas"""
     page = int(request.GET.get('page', '1'))
-    limit = 30
     sort = request.GET.get('sort', 'default')
     search = request.GET.get('search', '')
     result = []
 
-    lists = get_lists(limit, page, search, request.user, sort)
+    lists = get_lists(PAGINATION_ITEMS_PER_PAGE, page, search, request.user, sort)
 
     for list_obj in lists:
         result.append({

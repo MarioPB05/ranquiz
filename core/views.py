@@ -6,7 +6,8 @@ from django.http import Http404, HttpResponseForbidden
 from django.shortcuts import render, redirect, get_object_or_404
 
 from api.models import List, ListCategory, ListFavorite, ListLike, ListAnswer
-from api.services.category_service import edit_list_categories
+from api.services import PAGINATION_ITEMS_PER_PAGE
+from api.services.category_service import edit_list_categories, get_category, user_followed_category
 from api.services.item_service import (
     create_item_form,
     create_item,
@@ -17,7 +18,7 @@ from api.services.list_service import (
     create_list_form,
     create_list,
     get_list,
-    get_list_counts,
+    get_list_counts, get_lists, count_lists,
 )
 from api.services.user_service import (
     user_login,
@@ -72,20 +73,20 @@ def list_details(request, share_code):
         user_has_played = ListAnswer.objects.filter(user=request.user, list=list_data).exists()
 
     data = {
-            "name": list_data.name,
-            "owner": list_data.owner.username,
-            "owner_sharecode": list_data.owner.share_code,
-            "elements": len(items_data),
-            "creation_date": list_data.creation_date,
-            "edit_date": list_data.edit_date,
-            "avatar": list_data.owner.avatar.image,
-            "categories": categories,
-            "favorites_count": favorites_count,
-            "likes_count": likes_count,
-            "play_count": play_count,
-            "user_has_liked": user_has_liked,
-            "user_has_favorited": user_has_favorited,
-            "user_has_played": user_has_played,
+        "name": list_data.name,
+        "owner": list_data.owner.username,
+        "owner_sharecode": list_data.owner.share_code,
+        "elements": len(items_data),
+        "creation_date": list_data.creation_date,
+        "edit_date": list_data.edit_date,
+        "avatar": list_data.owner.avatar.image,
+        "categories": categories,
+        "favorites_count": favorites_count,
+        "likes_count": likes_count,
+        "play_count": play_count,
+        "user_has_liked": user_has_liked,
+        "user_has_favorited": user_has_favorited,
+        "user_has_played": user_has_played,
     }
 
     return render(request, 'pages/list_details.html', {'share_code': share_code, 'list': list_data, "data": data})
@@ -217,3 +218,33 @@ def shop(request):
 def search(request):
     """Vista que permite a un usuario buscar en la aplicación"""
     return render(request, 'pages/search.html')
+
+
+def category_lists(request, share_code):
+    """Vista que renderiza las listas de una categoría específica"""
+    page = int(request.GET.get('page', 1))
+    order = request.GET.get('order', 'default')
+    category_object = get_category(share_code=share_code)
+    lists = get_lists(PAGINATION_ITEMS_PER_PAGE, page, user=request.user, order=order, category=category_object)
+    list_count = count_lists(category=category_object)[0]['count']
+    page_numbers = list(range(page - 1, list_count // PAGINATION_ITEMS_PER_PAGE + 2))
+
+    if 0 in page_numbers:
+        page_numbers.remove(0)
+
+    if len(page_numbers) > 6:
+        page_numbers = page_numbers[:6]
+
+    return render(request, 'pages/category_lists.html', {
+         'share_code': share_code,
+         'lists': lists,
+         'category': category_object,
+         'followed': user_followed_category(request.user, category_object),
+         'order': order,
+         'pagination': {
+             'total_pages': list_count // PAGINATION_ITEMS_PER_PAGE + 1,
+             'current_page': page,
+             'items_per_page': PAGINATION_ITEMS_PER_PAGE,
+             'page_numbers': page_numbers
+         }
+    })

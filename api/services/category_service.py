@@ -27,13 +27,16 @@ def edit_list_categories(categories_names, list_obj):
                 set_category(list_obj, category)
 
 
-def get_category(category_id=None, category_name=None):
+def get_category(category_id=None, category_name=None, share_code=None):
     """Función para obtener una categoría"""
     if category_id is not None:
         return Category.objects.get(id=category_id)
 
     if category_name is not None:
         return Category.objects.get(name=category_name)
+
+    if share_code is not None:
+        return Category.objects.get(share_code=share_code)
 
     return None
 
@@ -107,3 +110,8 @@ def similarity(s1, s2):
     if longer_length == 0:
         return 1.0
     return (longer_length - edit_distance(longer, shorter)) / float(longer_length)
+
+
+def user_followed_category(user, category):
+    """Función para comprobar si un usuario sigue una categoría"""
+    return user.categorysubscription_set.filter(category=category).exists()
