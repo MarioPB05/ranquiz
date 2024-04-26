@@ -235,15 +235,16 @@ def category_lists(request, share_code):
     if len(page_numbers) > 6:
         page_numbers = page_numbers[:6]
 
-    return render(request, 'pages/category_lists.html', {'share_code': share_code,
-                                                         'lists': lists,
-                                                         'category': category_object,
-                                                         'followed': user_followed_category(request.user, category_object),
-                                                         'order': order,
-                                                         'pagination': {
-                                                             'total_pages': list_count // PAGINATION_ITEMS_PER_PAGE + 1,
-                                                             'current_page': page,
-                                                             'items_per_page': PAGINATION_ITEMS_PER_PAGE,
-                                                             'page_numbers': page_numbers
-                                                         }
-                                                         })
+    return render(request, 'pages/category_lists.html', {
+         'share_code': share_code,
+         'lists': lists,
+         'category': category_object,
+         'followed': user_followed_category(request.user, category_object),
+         'order': order,
+         'pagination': {
+             'total_pages': list_count // PAGINATION_ITEMS_PER_PAGE + 1,
+             'current_page': page,
+             'items_per_page': PAGINATION_ITEMS_PER_PAGE,
+             'page_numbers': page_numbers
+         }
+    })
