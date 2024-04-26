@@ -24,6 +24,7 @@ class List(TimeStamped):
     public = models.BooleanField(default=False)
     image = CloudinaryField('image', null=True, blank=True)
     type = models.IntegerField(choices=TYPE_CHOICES, default=0)
+    question = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name + ' (' + self.share_code + ')'

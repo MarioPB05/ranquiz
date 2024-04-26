@@ -1,4 +1,4 @@
-import {removePageLoader, initializeFlatpickr, promiseAjax, toastMessage} from "/static/assets/js/ranquiz/utils.js";
+import {removePageLoader, initializeFlatpickr, promiseAjax, toastMessage, addPageLoader} from "/static/assets/js/ranquiz/utils.js";
 
 const minItems = 5;
 let items_prefix = [];
@@ -8,7 +8,6 @@ const maxCategories = 5;
 const maxCategoryLength = 25;
 let allCategories = [];
 const flatpickrInstance = initializeFlatpickr("#range_date_highlight", 'range', moment().format('YYYY-MM-DD')); // skipcq: JS-0125
-
 
 /**
  * Cambiar la imagen de la lista
@@ -24,6 +23,34 @@ function removeListImage() {
     $('label[for="id_image"]').show();
 }
 
+/**
+ * Actualizar el precio del destacado en base a las fechas seleccionadas
+ */
+function updateHighlightPrice() {
+    const dates = $("#range_date_highlight").val().split(" hasta ");
+
+    if (dates.length === 2) {
+        promiseAjax(`/api/shop/highlight/calculator?start_date=${dates[0]}&end_date=${dates[1]}`)
+            .then(response => {
+                $('#highlight_price').text(response.price);
+            })
+            .catch(() => {
+                toastMessage('error', 'Ha ocurrido un error al calcular el precio del destacado')
+            });
+    }
+}
+
+/**
+ * Cancelar el destacado
+ */
+function cancelHighlight() {
+    flatpickrInstance.clear();
+    $('#highlight_price').text('0');
+}
+
+/**
+ * Crear un item
+ */
 function createItem() {
     // Verificar que no haya ningun item vacio
     if (anyItemInputEmpty() && items_prefix.length > minItems - 1) {
@@ -37,6 +64,9 @@ function createItem() {
 
     // Remover el ID de la plantilla
     item.removeAttr('id');
+
+    // Vaciar los inputs
+    // item.find('input[type="text"]').val('');
 
     // Obtener el prefijo del item
     const prefix = `${item_last_prefix + 1}-`;
@@ -77,6 +107,10 @@ function createItem() {
     focusOnFirstEmptyItem();
 }
 
+/**
+ * Eliminar un item
+ * @param event
+ */
 function removeItem(event) {
     // Comprobar que haya más de 5 items
     if (items_prefix.length <= minItems) {
@@ -100,6 +134,10 @@ function removeItem(event) {
     actualizeItemNumber();
 }
 
+/**
+ * Mostrar el modal de vista previa de la imagen
+ * @param target
+ */
 function showItemPreviewModal(target) {
     // Obtenemos el padre
     const parent = $(target).parent();
@@ -120,9 +158,13 @@ function showItemPreviewModal(target) {
     $('#image_previewer').modal('show');
 }
 
+/**
+ * Cambiar la imagen del item
+ * @param event
+ */
 function itemImageChanged(event) {
     // Obtener el archivo seleccionado
-    const file = event.target.files[0];
+    const file = $(event.target).prop('files')[0];
 
     // Verificar si se seleccionó un archivo
     if (file) {
@@ -151,6 +193,10 @@ function getModalInputTarget(event) {
     return $($(event.target).parent().attr('data-target'));
 }
 
+/**
+ * Cambiar la imagen del item
+ * @param event
+ */
 function changeItemImage(event) {
     // Obtener el target (Input)
     /*const target = $(event.target).attr('data-target');
@@ -167,6 +213,10 @@ function changeItemImage(event) {
     $(event.target).blur();
 }
 
+/**
+ * Establecer la imagen del item
+ * @param event
+ */
 function setItemImage(event) {
     // Obtener el target (Input)
     const input = getModalInputTarget(event);
@@ -176,6 +226,10 @@ function setItemImage(event) {
         .removeClass('text-primary-800').addClass('text-white');
 }
 
+/**
+ * Cancelar la selección de la imagen del item
+ * @param event
+ */
 function cancelItemImage(event) {
     // Obtener el target (Input)
     const input = getModalInputTarget(event);
@@ -189,90 +243,92 @@ function cancelItemImage(event) {
 }
 
 /**
- * Actualizar el precio del destacado en base a las fechas seleccionadas
+ * Comprobar si el item tiene una imagen
+ * @param event
  */
-function updateHighlightPrice() {
-    const dates = $("#range_date_highlight").val().split(" hasta ");
-
-    if (dates.length === 2) {
-        promiseAjax(`/api/shop/highlight/calculator?start_date=${dates[0]}&end_date=${dates[1]}`)
-            .then(response => {
-                $('#highlight_price').text(response.price);
-            })
-            .catch(() => {
-                toastMessage('error', 'Ha ocurrido un error al calcular el precio del destacado')
-            });
-    }
-}
-
-/**
- * Cancelar el destacado
- */
-function cancelHighlight() {
-    flatpickrInstance.clear();
-    $('#highlight_price').text('0');
-}
-
 function itemHasImage(event) {
     // Obtener el target (Input)
     const input = $(`#${$(this).attr('for')}`);
 
-    // Comprobar si ya se ha seleccionado una imagen para mosrar el modal directamente
-    if (input[0] && input[0].files.length > 0) {
+    // Comprobar si ya se ha seleccionado una imagen para mostrar el modal directamente
+    if (input[0] && input.prop('files').length > 0) {
         event.preventDefault();
+
+        itemImageChanged({target: input});
+
         showItemPreviewModal(input[0]);
     }
 }
 
+/**
+ * Comprobar si hay algún input de item vacío
+ * @returns {boolean}
+ */
 function anyItemInputEmpty() {
     // Comprueba si hay algún input de item vacío
     let empty = false;
 
-    $('#items_container .list_item:not(#item_template)').find('input[type="text"]').each(() => {
-        if ($(this).val() === '') {
+    $('#items_container').find('.list_item:not(#item_template) .item-name').each((index, element) => {
+        if (!$(element).val() && $(element).val() !== '0') {
             empty = true;
-            return false;
         }
+        return !empty;
     });
 
     return empty;
 }
 
+/**
+ * Enfocar en el primer item vacío
+ */
 function focusOnFirstEmptyItem() {
+    let found = false;
+
     // Enfoca en el primer item vacío
     $('#items_container .list_item:not(#item_template)').find('input[type="text"]').each(function () {
 
         if ($(this).val() === '') {
             $(this).focus();
-            return false;
+            found = true;
         }
 
+        return !found;
     });
 }
 
+/**
+ * Actualizar el número de items
+ */
 function actualizeItemNumber() {
     // Actualiza el número de items
     let i = 0;
 
-    $('#items_container').find('.list_item:not(#item_template)').each(function () {
-        i++;
-    });
+    $('#items_container').find('.list_item:not(#item_template)').each(() => i++);
 
     $("#item_number").text(i);
 }
 
-async function addCategory(name) {
-    // Verificar que la categoría sea válida
-    if (!validateCategory(name)) {
-        return;
-    }
+/**
+ * Añadir una categoría
+ * @param name
+ * @param skipValidation
+ * @returns {Promise<void>}
+ */
+async function addCategory(name, skipValidation = false) {
 
-    // Verificar si la categoría no existe y si es similar a alguna
-    if (allCategories.indexOf(name) === -1) {
-        if (await acceptSimilarCategory(name)) {
+    if (!skipValidation) {
+        // Verificar que la categoría sea válida
+        if (!validateCategory(name)) {
             return;
-        }else {
-            uploadCategory(name);
+        }
+
+        // Verificar si la categoría no existe y si es similar a alguna
+        if (allCategories.indexOf(name) === -1) {
+            if (await acceptSimilarCategory(name)) {
+                return;
+            }else {
+                uploadCategory(name);
+            }
         }
     }
 
@@ -280,7 +336,7 @@ async function addCategory(name) {
     categories.push(name);
     $('#add_category').val('');
 
-    // Añaadir la categoría al contenedor
+    // Añadir la categoría al contenedor
     const category = $('#category_template').clone();
 
     category.removeAttr('id');
@@ -386,7 +442,108 @@ function uploadCategory(name) {
     });
 }
 
-function beforeSendForm() {
+/**
+ * Convertir una URL a un archivo Blob
+ * @param url
+ * @param target
+ */
+function convertToBlob(url, target) {
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', url);
+    xhr.responseType = 'blob';
+    xhr.onload = () => {
+        const blob = xhr.response;
+        const fileName = url.substring(url.lastIndexOf('/') + 1); // Extraemos el nombre del archivo de la URL
+        const file = new File([blob], fileName);
+        const input = $(`#${target}`)[0];
+
+        const container = new DataTransfer();
+        container.items.add(file);
+        input.files = container.files;
+
+        input.dispatchEvent(new Event('change'));
+    };
+    xhr.send();
+}
+
+/**
+ * Añadir las imágenes de los items al input
+ */
+function addItemImagesToInput() {
+    $('#items_container').find('.list_item:not(#item_template) input[type="file"]').each((index, element) => {
+        const url = $(element).parent().find(".item-image-url").val();
+        const item_prefix = parseInt($(element).parent().attr('id'));
+
+        $(element).attr('id', `id_${item_prefix}-image`);
+        $(element).parent().find('.item-name').attr('id', `id_${item_prefix}-name`);
+
+        if (url) {
+            convertToBlob(url, $(element).attr('id'));
+        }
+
+        items_prefix.push(item_prefix);
+    });
+
+    item_last_prefix = items_prefix[items_prefix.length - 1];
+}
+
+/**
+ * Poner la imagen de la lista por URL
+ */
+function putListImageByURL() {
+    const url = $('#image_url').val();
+    const target = 'image';
+    convertToBlob(url, target);
+}
+
+/**
+ * Recargar las categorías
+ */
+function reloadCategories() {
+    let text_categories = $("#categories").val();
+    text_categories = text_categories.split(",");
+
+    $.each(text_categories, (index, element) => {
+        addCategory(element, true);
+    });
+}
+
+/**
+ * Esta función se llama antes de enviar el formulario
+ * @param event
+ */
+function beforeSendForm(event) {
+    // Verificar que el nombre no esté vacío
+    if (!$('#id_name').val().trim()) {
+        toastMessage('error', 'El nombre de la lista no puede estar vacío');
+        $('#id_name').focus();
+        event.preventDefault();
+        return;
+    }
+
+    // Verificar que la pregunta no esté vacía
+    if (!$('#question').val().trim()) {
+        toastMessage('error', 'La pregunta no puede estar vacía');
+        $('#id_question').focus();
+        event.preventDefault();
+        return;
+    }
+
+    // Verificar que no haya ningun item vacio
+    if (anyItemInputEmpty()) {
+        focusOnFirstEmptyItem();
+        toastMessage('error', 'Hay elementos vacíos, rellénelos todos antes de crear la lista');
+        event.preventDefault();
+        return;
+    }
+
+    // Verificar que haya alguna categoría seleccionada
+    if (categories.length === 0) {
+        toastMessage('error', 'Debes seleccionar al menos una categoría');
+        event.preventDefault();
+        return;
+    }
+
     // Eliminar el template
     $('#item_template').remove();
 
@@ -395,6 +552,9 @@ function beforeSendForm() {
 
     // Agregar las categorías seleccionadas
     $('#categories').val(categories);
+
+    // Mostrar el loader
+    addPageLoader();
 }
 
 /**
@@ -449,9 +609,17 @@ function onDocumentReady() {
 
     $("#categories_container").on('click', '.category', removeCategory);
 
-    // Añadir los items mínimos
-    for (let i = 0; i < minItems; i++) {
-        createItem();
+    if (!edit_mode) { // skipcq: JS-0125
+        // Añadir los items mínimos
+        for (let i = 0; i < minItems; i++) {
+            createItem();
+        }
+    }else {
+        $("#submit_list").text("Guardar cambios");
+        addItemImagesToInput();
+        putListImageByURL();
+        reloadCategories();
+        actualizeItemNumber();
     }
 
     $('button[type=submit]').on('click', beforeSendForm);

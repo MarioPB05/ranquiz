@@ -1,0 +1,53 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="w-100">
+        <div class="w-75 p-5 pt-6 m-auto mb-20">
+            <div class="d-flex gap-10 align-items-center w-100 justify-content-center pb-6">
+                <img src="{% static '/assets/media/logo/ranquiz.png' %}" class="w-auto h-40px d-none d-sm-flex">
+                <h1 class="text-center text-primary fw-boldest fs-40px fs-sm-60px m-0">RANQUIZ</h1>
+                <img src="{% static '/assets/media/logo/ranquiz.png' %}" class="w-auto h-40px d-none d-sm-flex">
+            </div>
+
+            <div class="d-flex align-items-center gap-3">
+                <button class="btn btn-outline-primary p-2 rounded-4 text-hover-white" id="search_button">
+                    <i class="bi bi-search text-primary fs-2"></i>
+                </button>
+                <input id="search" class="form-control border-active-secondary text-black border-secondary-dark" data-bs-toggle="tooltip" data-bs-custom-class="tooltip-dark" data-bs-placement="right" title="Pulsa intro para buscar" placeholder="Buscar en ranquiz">
+            </div>
+        </div>
+        
+        <nav class="d-grid gap-10 mb-10" style="grid-template-columns: repeat(auto-fit, minmax(100px, 1fr))">
+            <button class="btn btn-primary p-2 border-bottom border-bottom-1 border-secondary-dark text-white text-hover-white nav_selected fs-3" id="list_nav">Listas</button>
+            <button class="btn btn-outline-primary p-2 border-bottom border-bottom-1 border-secondary-dark text-secondary-dark text-hover-white fs-3" id="category_nav">Categorias</button>
+            <button class="btn btn-outline-primary p-2 border-bottom border-bottom-1 border-secondary-dark text-secondary-dark text-hover-white fs-3" id="user_nav">Usuarios</button>
+        </nav>
+        
+        <div class="d-flex gap-5 mb-5" id="sort_container">
+            <button class="btn btn-outline-primary p-1 btn-outline btn-active-primary fs-7" id="newest">Recientes</button>
+            <button class="btn btn-outline-primary p-1 btn-outline btn-active-primary fs-7" id="popular">Populares</button>
+        </div>
+        
+        <div data-page="1" class="w-100 align-items-center d-md-grid d-flex flex-column bg-light-primary rounded p-5 gap-7 min-h-250px" id="content" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr))">
+            {% include 'components/list_template.html' %}
+            {% include 'components/category_template.html' %}
+            {% include 'components/user_template.html' %}
+            
+            <!-- Begin not found results -->
+            <div class="text-white h-md-100 w-100 h-250px text-center flex-column gap-5 rounded bg-primary d-none justify-content-center align-items-center" id="notFoundResults">
+                <i class="bi bi-exclamation-diamond-fill text-white fs-60px"></i>
+                <span class="fs-3 fw-light">No se han encontrado resultados para la búsqueda</span>
+            </div>
+            <!-- End not found results -->
+        </div>
+        
+        <div class="d-none w-100 justify-content-center mt-8" id="load_more">
+            <button class="btn btn-primary p-2 border border-1 border-primary text-white text-hover-white fs-3 m-auto" >Cargar más</button>
+        </div>
+    </div>
+{% endblock %}
+
+{% block custom_scripts %}
+<script src="{% static '/scripts/pages/search.js' %}" type="module"></script>
+{% endblock %}

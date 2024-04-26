@@ -1,4 +1,4 @@
-import { removePageLoader, toastMessage, promiseAjax } from "/static/assets/js/ranquiz/utils.js";
+import { removePageLoader, toastMessage, promiseAjax, reloadUserData } from "/static/assets/js/ranquiz/utils.js";
 
 const avatarTemplate = $("#avatar_template");
 const avatarBlockUI = new KTBlockUI($("#avatar_container").parent()[0], {  // skipcq: JS-0125
@@ -80,10 +80,11 @@ function getAvatars(mode="rarity") {
  * @param avatarId
  */
 function buyAvatar(avatarId) {
-    promiseAjax(`/api/shop/avatar/${avatarId}/buy`, "POST").then((response) => {
+    promiseAjax(`/api/shop/avatar/${avatarId}/buy`, "GET").then((response) => {
        if (response.status  === "success") {
            changeButtonToBought($(`div[data-id=${avatarId}]`));
            toastMessage("success", response.message);
+              reloadUserData();
        } else {
            toastMessage("error", response.message);
        }
@@ -102,6 +103,7 @@ function equipAvatar(avatarId) {
             changeButtonToBought($(".equipped_avatar").parent().parent());
             changeButtonToEquipped($(`div[data-id=${avatarId}]`));
             toastMessage("success", response.message);
+            reloadUserData();
         } else {
             toastMessage("error", response.message);
         }
@@ -111,7 +113,7 @@ function equipAvatar(avatarId) {
 }
 
 /**
- * Función que se ejecuta cuando el documento está listo
+ * Función que se ejecuta cuando el docuento está listom
  */
 function onDocumentReady() {
   getAvatars();

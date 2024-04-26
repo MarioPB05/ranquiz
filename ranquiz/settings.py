@@ -100,6 +100,9 @@ AUTH_USER_MODEL = 'api.User'
 # Custom Login URL
 LOGIN_URL = '/login/'
 
+# Session settings
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
@@ -123,11 +126,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'es'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Madrid'
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
@@ -161,3 +164,10 @@ EMAIL_PORT = os.getenv('EMAIL_PORT')
 EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS')
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+
+# Configuración de Channels
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer'
+    }
+}

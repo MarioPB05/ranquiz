@@ -11,4 +11,4 @@ class NotificationType(ModelTemplate):
     description = models.TextField(null=True, blank=True)
 
     def __str__(self):
-        return self.tittle
+        return self.title
