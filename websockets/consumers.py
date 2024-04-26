@@ -28,7 +28,6 @@ channels_for_followers = []
 
 def append_channel(channel):
     """Añade un canal para los seguidores"""
-    global channels_for_followers
     channels_for_followers.append(channel)
 
 
