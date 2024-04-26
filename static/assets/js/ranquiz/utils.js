@@ -123,6 +123,42 @@ function toastMessage(icon, message) {
 }
 
 /**
+ * Esta función se encarga de mostrar un mensaje de tipo info en la consola
+ * @param message
+ */
+function infoLog(message) {
+    console.log(  // skipcq: JS-0002
+        '%c INFO ',
+        'background-color: #BD20E9;color: white;font-weight: bold;border-radius:2px;padding: 2px 6px;',
+        message
+    );
+}
+
+/**
+ * Esta función se encarga de mostrar un mensaje de tipo warning en la consola
+ * @param message
+ */
+function warningLog(message) {
+    console.log( // skipcq: JS-0002
+        '%c WARNING ',
+        'background-color: #f1bc00;color: white;font-weight: bold;border-radius:2px;padding: 2px 6px;',
+        message
+    );
+}
+
+/**
+ * Esta función se encarga de mostrar un mensaje de tipo error en la consola
+ * @param message
+ */
+function errorLog(message) {
+    console.log( // skipcq: JS-0002
+        '%c ERROR ',
+        'background-color: #d9214e;color: white;font-weight: bold;border-radius:2px;padding: 2px 6px;',
+        message
+    );
+}
+
+/**
  * Esta función se encarga de recargar la información del usuario
  */
 function reloadUserData() {
@@ -177,5 +213,4 @@ function secondsToTime(seconds, digits) {
     return timeString;
 }
 
-export { removePageLoader, initializeFlatpickr, promiseAjax, toastMessage, addPageLoader, reloadUserData, formatElapsedTime, secondsToTime };
-
+export { removePageLoader, initializeFlatpickr, promiseAjax, toastMessage, addPageLoader, reloadUserData, formatElapsedTime, secondsToTime, infoLog, warningLog, errorLog };

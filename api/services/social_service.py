@@ -1,6 +1,6 @@
 from django.db.models import Count
 
-from api.models import ListComment, CommentAward, Award
+from api.models import ListComment, CommentAward, Award, UserFollow
 from api.services.list_service import get_list
 from api.services.query_service import execute_query
 
@@ -119,3 +119,13 @@ def add_award_to_comment(comment_id, selected_user, award_id):
         return True
 
     return False
+
+
+def get_followers(user):
+    """Obtiene los seguidores de un usuario"""
+    return UserFollow.objects.filter(user_followed=user)
+
+
+def get_following(user):
+    """Obtiene los usuarios que sigue un usuario"""
+    return UserFollow.objects.filter(follower=user)

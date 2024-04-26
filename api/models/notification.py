@@ -16,6 +16,7 @@ class Notification(ModelTemplate):
     target = models.IntegerField(choices=TARGET_CHOICES)
     user = models.ForeignKey('User', on_delete=models.DO_NOTHING)
     type = models.ForeignKey('NotificationType', on_delete=models.DO_NOTHING)
+    date = models.DateTimeField(auto_now_add=True)
     share_code = ShortUUIDField(
         length=18,
         max_length=20,
