@@ -178,6 +178,10 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 
     async def send_notification(self, event):
         """Función para enviar una notificación al cliente"""
+        if event['target'] == 2 and self.scope['user'].share_code == event['share_code']:
+            # Es una notificación para los seguidores, el dueño también está en el grupo, pero no la debe recibir
+            return
+
         await self.send(text_data=json.dumps({
             'icon': event['icon'],
             'title': event['title'],
