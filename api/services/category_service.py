@@ -110,3 +110,8 @@ def similarity(s1, s2):
     if longer_length == 0:
         return 1.0
     return (longer_length - edit_distance(longer, shorter)) / float(longer_length)
+
+
+def user_followed_category(user, category):
+    """Función para comprobar si un usuario sigue una categoría"""
+    return user.categorysubscription_set.filter(category=category).exists()
