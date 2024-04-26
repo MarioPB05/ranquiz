@@ -13,6 +13,11 @@
         </div>
     
         <div class="card-body" id="">
+            <div class="d-flex gap-5 mb-5" id="sort_container">
+                <button class="btn btn-outline-primary p-1 btn-outline btn-active-primary fs-7" id="newest">Recientes</button>
+                <button class="btn btn-outline-primary p-1 btn-outline btn-active-primary fs-7" id="popular">Populares</button>
+            </div>
+        
             <div id="list_container"  class="w-100 align-items-center d-md-grid d-flex flex-column rounded p-5 gap-7 min-h-250px" id="content" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr))">
                 {% for list in lists %}
                     {% include 'components/list_template.html' with data=list %}
