@@ -51,14 +51,16 @@ def find_channel_for_followers(share_code):
 
 def debug_show_channels():
     """Función para mostrar los canales de los seguidores"""
-    print("+" + "-"*20 + "+" + "-"*30 + "+")
-    print("| Canal               | Share code                        |")
-    print("+" + "-"*20 + "+" + "-"*30 + "+")
+    print(f"CANALES DE LOS SEGUIDORES ({len(channels_for_followers)})")
+
     for channel in channels_for_followers:
+        print("+" + "-" * 40 + "+")
         channel_name = channel["channel_name"]
         share_code = channel["share_code"]
-        print(f"| {channel_name.ljust(20)} | {share_code.ljust(30)} |")
-    print("+" + "-"*20 + "+" + "-"*30 + "+")
+        print(f"Canal: {channel_name}")
+        print(f"Share code: {share_code}")
+
+    print("+" + "-"*40 + "+")
 
 
 class NotificationsConsumer(AsyncWebsocketConsumer):
