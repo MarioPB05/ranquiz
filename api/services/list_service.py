@@ -88,3 +88,25 @@ def get_list_counts(list_obj):
     play_count = ListAnswer.objects.filter(list=list_obj).count()
 
     return favorites_count, likes_count, play_count
+
+
+def count_lists(search='', category=None):
+    """Función que devuelve la cantidad de listas públicas con filtros"""
+    where = ""
+
+    if category is not None:
+        where = "AND lc.category_id = %s "
+
+    query = f"""SELECT COUNT(l.id) as count
+                FROM api_list l
+                JOIN ranquiz.api_user au on l.owner_id = au.id
+                JOIN ranquiz.api_avatar aa on au.avatar_id = aa.id
+                LEFT JOIN ranquiz.api_listcategory lc on l.id = lc.list_id
+                WHERE l.public = TRUE AND l.name LIKE %s {where};"""
+
+    params = [f"%{search}%"]
+
+    if category is not None:
+        params.insert(1, category.id)
+
+    return execute_query(query, params)
