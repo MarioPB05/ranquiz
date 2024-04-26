@@ -115,6 +115,20 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
                     self.channel_name
                 )
 
+    async def join_global_channel(self):
+        """Función para unirse al canal global"""
+        await self.channel_layer.group_add(
+            'global',
+            self.channel_name
+        )
+
+    async def leave_global_channel(self):
+        """Función para salir del canal global"""
+        await self.channel_layer.group_discard(
+            'global',
+            self.channel_name
+        )
+
     async def connect(self):
         """Función que se ejecuta cuando se conecta el cliente"""
         await self.accept()
@@ -130,6 +144,7 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 
             await self.create_channel_for_followers(user)
             await self.join_followers_channel(user)
+            await self.join_global_channel()
         else:
             await self.send(text_data=json.dumps({
                 'status': 'Usuario no autenticado'
@@ -151,6 +166,7 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
 
             await self.remove_channel_for_followers(user)
             await self.leave_followers_channel(user)
+            await self.leave_global_channel()
 
         debug_show_channels()
 
