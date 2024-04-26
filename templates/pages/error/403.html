@@ -1,0 +1,19 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="d-flex flex-column align-items-center justify-content-center align-content-center full-height" >
+        <img class="mw-550px w-100 mt-5" src="../../../static/assets/media/errors/403.png" alt="Error 403">
+        <p class="fs-2x fw-boldest mb-13 mt-10 text-center">No estas autorizado para entrar en esta página</p>
+        <button class="btn btn-primary">Volver al inicio</button>
+    </div>
+{% endblock %}
+
+{% block custom_scripts %}
+<script type="module">
+    import { removePageLoader } from "/static/assets/js/ranquiz/utils.js"
+
+    removePageLoader();
+
+</script>
+{% endblock %}
