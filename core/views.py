@@ -204,10 +204,19 @@ def profile(request, share_code=None):
         user_lists = get_user_lists(user_data)
 
         for user_list in user_lists:
+            favorites_count, likes_count, play_count, comments_count = get_list_counts(user_list)
+
             card_data['data'].append({
                 'name': user_list.name,
+                'image': user_list.image,
                 'public': user_list.public,
-                'share_code': user_list.share_code
+                'deleted': user_list.deleted,
+                'date': user_list.creation_date,
+                'share_code': user_list.share_code,
+                'play_count': play_count,
+                'likes_count': likes_count,
+                'comments_count': comments_count,
+                'favorites_count': favorites_count
             })
 
     return render(request, 'pages/profile.html', {
@@ -216,7 +225,8 @@ def profile(request, share_code=None):
         'is_own_profile': is_own_profile,
         'card_template': card_template,
         'current_card': current_card,
-        'card_data': card_data
+        'card_data': card_data,
+        'card_data_empty': len(card_data['data']) == 0
     })
 
 
