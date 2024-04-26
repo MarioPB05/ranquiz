@@ -3,7 +3,9 @@ from django.urls import reverse
 from django.views.decorators.http import require_GET
 
 from api.decorators.api_decorators import require_authenticated
+from api.models import user
 from api.services.user_service import get_user, get_users
+from api.models.user import User
 
 
 @require_GET
@@ -41,3 +43,23 @@ def get_users_filtered(request):
         })
 
     return JsonResponse({'users': result})
+
+
+@require_authenticated
+def follow_user(request):
+    """Controlador que permite seguir a un usuario"""
+    # Obtener el ID del usuario al que se quiere seguir o dejar de seguir
+    followed_user_id = request.GET.get('followedUserId')
+
+    # Verificar si el usuario ya sigue al usuario objetivo
+    is_following = User.objects.filter(follower=request.user, followed_id=followed_user_id).exists()
+
+    # Si el usuario ya sigue al usuario objetivo, dejar de seguirlo.
+    if is_following:
+        User.objects.filter(follower=request.user, followed_id=followed_user_id).delete()
+        return JsonResponse({'status': 'success', 'message': 'Unfollowed successfully'})
+    else:
+        # Si el usuario no sigue al usuario objetivo, seguirlo
+        followed_user = User.objects.get(pk=followed_user_id)
+        User.objects.create(follower=request.user, followed=followed_user)
+        return JsonResponse({'status': 'success', 'message': 'Followed successfully'})
