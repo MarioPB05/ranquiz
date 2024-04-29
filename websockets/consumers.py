@@ -24,6 +24,8 @@ class DefaultConsumer(AsyncWebsocketConsumer):
 
 
 class ChannelManager:
+    """Clase para gestionar los canales de los seguidores"""
+
     def __init__(self):
         self.channels_for_followers = []
 
