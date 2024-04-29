@@ -114,9 +114,15 @@ def similarity(s1, s2):
 
 def user_followed_category(user, category):
     """Función para comprobar si un usuario sigue una categoría"""
-    return user.categorysubscription_set.filter(category=category).exists()
+    if user.is_authenticated and category is not None:
+        return user.categorysubscription_set.filter(category=category).exists()
+
+    return False
 
 
 def user_follow_category_and_receive_notifications(user, category):
     """Función para comprobar si un usuario sigue una categoría y recibe notificaciones"""
-    return user.categorysubscription_set.filter(category=category, notification=True).exists()
+    if user.is_authenticated and category is not None:
+        return user.categorysubscription_set.filter(category=category, notification=True).exists()
+
+    return False
