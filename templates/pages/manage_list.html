@@ -191,10 +191,11 @@
                 {% endif %}
             </div>
         </div>
-
-        <div class="d-flex justify-content-center mt-10 position-fixed bottom-0 w-100 start-0 z-index-3 p-5 bg-white shadow">
-            <button type="submit" class="btn btn-primary btn-lg fs-3" id="submit_list">Crear lista</button>
-        </div>
+        <div>
+            <div class="d-flex justify-content-center mt-10 position-fixed bottom-0 w-100 start-0 z-index-3 p-5 bg-white shadow gap-10">
+                <button type="submit" onclick="window.history.back()" class="btn btn-danger btn-lg fs-3" id="cancel_button">Cancelar</button>
+                <button type="submit" class="btn btn-primary btn-lg fs-3" id="submit_list">Crear lista</button>
+            </div>
     </form>
 
     <div id="image_previewer" class="modal fade" tabindex="-1" aria-modal="true" role="dialog" data-bs-backdrop="static"
