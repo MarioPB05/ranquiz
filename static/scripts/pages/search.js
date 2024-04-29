@@ -1,4 +1,4 @@
-import {promiseAjax, removePageLoader, toastMessage} from "/static/assets/js/ranquiz/utils.js";
+import {promiseAjax, removePageLoader, toastMessage, toggleListLike} from "/static/assets/js/ranquiz/utils.js";
 
 const elementsPerPage = 30;
 let previousSearch = "";
@@ -317,6 +317,9 @@ function emptyContent() {
  * Función que se ejecuta cuando el documento está listo
  */
 function onDocumentReady() {
+
+    // Evento para dar like a una lista
+    content.on("click", ".list_like", toggleListLike);
 
     // Evento para cambiar lo que el usuario está buscando
     allNavs.on("click", (event) => {
