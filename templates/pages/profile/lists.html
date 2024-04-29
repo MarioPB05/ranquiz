@@ -204,6 +204,30 @@
                     </div>
                 </div>
             {% endfor %}
+
+            {% if card_data.pagination.has_other_pages %}
+                <div class="text-center">
+                    <ul class="pagination">
+                        {% if card_data.pagination.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?card=lists&page={{ card_data.pagination.previous_page_number }}">Anterior</a>
+                            </li>
+                        {% endif %}
+                    
+                        {% for i in card_data.pagination.page_range %}
+                            <li class="page-item {% if card_data.pagination.number == i %}active{% endif %}">
+                                <a class="page-link" href="?card=lists&page={{ i }}">{{ i }}</a>
+                            </li>
+                        {% endfor %}
+                    
+                        {% if card_data.pagination.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?card=lists&page={{ card_data.pagination.next_page_number }}">Siguiente</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            {% endif %}
         {% endif %}
     </div>
     <!--end::Card body-->
