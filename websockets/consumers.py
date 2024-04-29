@@ -65,6 +65,7 @@ channel_manager = ChannelManager()
 
 
 async def get_share_code_async(following):
+    """Función para obtener el share_code de un usuario de forma asíncrona"""
     share_code = await sync_to_async(lambda f: f.user_followed.share_code)(following)
     return share_code
 
