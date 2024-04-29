@@ -72,9 +72,44 @@ def get_lists(limit=None, page=1, search='', user=None, order='default', categor
     return execute_query(query, params)
 
 
-def get_user_lists(user):
-    """Función que devuelve todas las listas de un usuario"""
-    return List.objects.filter(owner=user)
+def get_user_lists(user, page_number, items_per_page):
+    """Función que devuelve todas las listas de un usuario con paginación"""
+    query = """SELECT l.id, l.name, l.share_code, l.image, l.public, l.edit_date, l.creation_date, l.deleted,
+                    (
+                        SELECT COUNT(*)
+                        FROM api_listlike sll
+                        WHERE sll.list_id = l.id
+                    ) AS likes,
+                    (
+                        SELECT COUNT(*)
+                        FROM api_listfavorite slf
+                        WHERE slf.list_id = l.id
+                    ) AS favorites,
+                    (
+                        SELECT COUNT(*)
+                        FROM api_listanswer sla
+                        WHERE sla.list_id = l.id
+                    ) AS plays,
+                    (
+                        SELECT COUNT(*)
+                        FROM api_listcomment slc
+                        WHERE slc.list_id = l.id
+                    ) AS comments,
+                    IF(hl.id IS NOT NULL AND hl.start_date <= NOW() AND hl.end_date >= NOW(), TRUE, FALSE)
+                    AS highlighted
+                FROM api_list l
+                JOIN ranquiz.api_user au on l.owner_id = au.id
+                JOIN ranquiz.api_avatar aa on au.avatar_id = aa.id
+                LEFT JOIN ranquiz.api_highlightedlist hl on l.id = hl.list_id
+                LEFT JOIN ranquiz.api_listcategory lc on l.id = lc.list_id
+                WHERE l.deleted = 0 AND l.owner_id = %s
+                GROUP BY l.id, l.edit_date, l.creation_date
+                ORDER BY l.edit_date, l.creation_date
+                LIMIT %s OFFSET %s;"""
+
+    params = [user.id, int(items_per_page), int((page_number - 1) * items_per_page)]
+
+    return execute_query(query, params)
 
 
 def set_category(list_obj, category):
