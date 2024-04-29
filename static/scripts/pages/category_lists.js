@@ -31,16 +31,6 @@ function onDocumentReady() {
     // Evento de cambio de botón de seguir
     followButton.on("click", toggleFollowButton);
 
-    sendFollowCategory().then((response) => {
-        if (response.following) {
-            followButton.addClass("btn-primary");
-            followButton.text("Siguiendo");
-        } else {
-            followButton.addClass("btn-outline-primary");
-            followButton.text("Seguir");
-        }
-    });
-
     removePageLoader();
 }
 
