@@ -202,22 +202,21 @@ def profile(request, share_code=None):
 
     card_data = {'data': []}
     if current_card == 'lists':
-        user_lists = get_user_lists(user_data)
+        page_number = int(request.GET.get('page', 1))
+        user_lists = get_user_lists(user_data, page_number, PAGINATION_ITEMS_PER_PAGE / 2)
 
         for user_list in user_lists:
-            favorites_count, likes_count, play_count, comments_count = get_list_counts(user_list)
-
             card_data['data'].append({
-                'name': user_list.name,
-                'image': user_list.image,
-                'public': user_list.public,
-                'deleted': user_list.deleted,
-                'date': user_list.creation_date,
-                'share_code': user_list.share_code,
-                'play_count': play_count,
-                'likes_count': likes_count,
-                'comments_count': comments_count,
-                'favorites_count': favorites_count
+                'name': user_list['name'],
+                'image': user_list['image'],
+                'public': user_list['public'],
+                'deleted': user_list['deleted'],
+                'date': user_list['creation_date'],
+                'share_code': user_list['share_code'],
+                'play_count': user_list['plays'],
+                'likes_count': user_list['likes'],
+                'comments_count': user_list['comments'],
+                'favorites_count': user_list['favorites']
             })
 
     return render(request, 'pages/profile.html', {
