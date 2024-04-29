@@ -18,7 +18,7 @@ from api.services.list_service import (
     create_list_form,
     create_list,
     get_list,
-    get_list_counts, get_lists, count_lists,
+    get_list_counts, get_lists, count_lists, get_user_lists_pagination,
 )
 from api.services.list_service import get_user_lists
 from api.services.user_service import (
@@ -203,7 +203,12 @@ def profile(request, share_code=None):
     card_data = {'data': []}
     if current_card == 'lists':
         page_number = int(request.GET.get('page', 1))
-        user_lists = get_user_lists(user_data, page_number, PAGINATION_ITEMS_PER_PAGE / 2)
+        show_deleted = request.GET.get('show_deleted', 'false') == 'true'
+
+        user_lists = get_user_lists(user_data, show_deleted, page_number)
+        count_user_lists = get_user_lists_pagination(user_data, show_deleted, page_number)
+
+        card_data['pagination'] = count_user_lists
 
         for user_list in user_lists:
             card_data['data'].append({
