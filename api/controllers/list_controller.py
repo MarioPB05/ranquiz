@@ -37,6 +37,7 @@ def get_lists_filtered(request):
     for list_obj in lists:
         result.append({
             'id': list_obj['id'],
+            'share_code': list_obj['share_code'],
             'name': list_obj['name'],
             'image':  f"https://res.cloudinary.com/dhewpzvg9/{list_obj['image']}" if list_obj['image'] else None,
             'url': request.build_absolute_uri(reverse('list_details', args=[list_obj['share_code']])),

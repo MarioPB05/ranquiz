@@ -216,22 +216,19 @@ function secondsToTime(seconds, digits) {
 // Función para cambiar los estilos del botón y llamar al backend
 function toggleListLike(event) {
     // Obtener el botón y el estado actual
-    const button = $(event.target).closest('.rounded-circle');
-    const isLiked = button.find('i').hasClass('heart-selected');
+    const button = $(event.target)
+    const isLiked = button.find('i').hasClass('text-danger');
 
     // Cambiar los estilos del botón
-    button.find('i').toggleClass('heart-selected');
+    button.find('i').toggleClass('text-danger');
 
     // Llamar al backend
-    const ListURL = button.parent().attr('href');
+    const shareCode = button.parent().attr('data-share-code');
     promiseAjax(`/api/list/${shareCode}/like?isLiked=${!isLiked}`, "GET").then(response => {
         if (response.status === "success") {
-            // Éxito
-        } else if (response.status === "error") {
-            // Error
-            toastMessage("error", response.message);
-            // Revertir los estilos del botón en caso de error
             button.find('i').toggleClass('heart-selected');
+        } else if (response.status === "error") {
+            toastMessage("error", response.message);
         }
     });
 }
