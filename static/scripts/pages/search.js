@@ -82,7 +82,7 @@ function addList(list) {
     newList.removeAttr("id");
     newList.removeClass("d-none");
 
-    newList.attr("data-id", list.id);
+    newList.attr("data-share-code", list.share_code);
     newList.find(".list_name").text(list.name);
     newList.find(".list_image").attr("src", list.image);
     !list.image ? newList.find(".list_image").attr("src", "/static/assets/media/placeholders/list_mix2.png") : "";
@@ -109,7 +109,7 @@ function addCategory(category) {
     newCategory.removeAttr("id");
     newCategory.removeClass("d-none");
 
-    newCategory.attr("data-id", category.id);
+    newCategory.attr("data-share-code", category.share_code);
     newCategory.find(".category_name").text(category.name);
     newCategory.find(".category_list_number").text(category.lists);
     newCategory.attr("href", category.url);
