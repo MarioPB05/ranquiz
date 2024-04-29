@@ -97,7 +97,8 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
         following_users = await sync_to_async(get_following)(user)
 
         async for following in following_users:
-            if find_channel_for_followers(following.user_followed.share_code):
+            share_code = await sync_to_async(lambda: following.user_followed.share_code)()
+
             if await channel_manager.find_channel_for_followers(share_code) is not None:
                 await self.channel_layer.group_add(
                     f'followers_{following.user_followed.share_code}',
