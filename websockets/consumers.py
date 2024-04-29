@@ -62,6 +62,11 @@ class ChannelManager:
 channel_manager = ChannelManager()
 
 
+async def get_share_code_async(following):
+    share_code = await sync_to_async(lambda f: f.user_followed.share_code)(following)
+    return share_code
+
+
 class NotificationsConsumer(AsyncWebsocketConsumer):
     """Consumidor de WebSockets para notificaciones"""
 
@@ -97,7 +102,7 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
         following_users = await sync_to_async(get_following)(user)
 
         async for following in following_users:
-            share_code = await sync_to_async(lambda: following.user_followed.share_code)()
+            share_code = await get_share_code_async(following)
 
             if await channel_manager.find_channel_for_followers(share_code) is not None:
                 await self.channel_layer.group_add(
