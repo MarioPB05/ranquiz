@@ -1,4 +1,7 @@
+import math
+
 from api.forms.list_form import CreateListForm
+from api.services import PAGINATION_ITEMS_PER_PAGE
 from api.services.query_service import execute_query
 from api.models import List, ListCategory, ListFavorite, ListLike, ListAnswer, ListComment
 
@@ -72,9 +75,10 @@ def get_lists(limit=None, page=1, search='', user=None, order='default', categor
     return execute_query(query, params)
 
 
-def get_user_lists(user, page_number, items_per_page):
+def get_user_lists(user, show_deleted, page_number):
     """Función que devuelve todas las listas de un usuario con paginación"""
-    query = """SELECT l.id, l.name, l.share_code, l.image, l.public, l.edit_date, l.creation_date, l.deleted,
+    where = "AND l.deleted = 0" if not show_deleted else ""
+    query = f"""SELECT l.id, l.name, l.share_code, l.image, l.public, l.edit_date, l.creation_date, l.deleted,
                     (
                         SELECT COUNT(*)
                         FROM api_listlike sll
@@ -102,14 +106,37 @@ def get_user_lists(user, page_number, items_per_page):
                 JOIN ranquiz.api_avatar aa on au.avatar_id = aa.id
                 LEFT JOIN ranquiz.api_highlightedlist hl on l.id = hl.list_id
                 LEFT JOIN ranquiz.api_listcategory lc on l.id = lc.list_id
-                WHERE l.deleted = 0 AND l.owner_id = %s
+                WHERE l.owner_id = %s {where}
                 GROUP BY l.id, l.edit_date, l.creation_date
                 ORDER BY l.edit_date, l.creation_date
                 LIMIT %s OFFSET %s;"""
 
+    items_per_page = PAGINATION_ITEMS_PER_PAGE / 2
     params = [user.id, int(items_per_page), int((page_number - 1) * items_per_page)]
 
     return execute_query(query, params)
+
+
+def get_user_lists_pagination(user, show_deleted, page_number):
+    """Función que devuelve la cantidad de listas de un usuario"""
+    if show_deleted:
+        count = List.objects.filter(owner=user).count()
+    else:
+        count = List.objects.filter(owner=user, deleted=False).count()
+
+    pages = math.ceil(count / (PAGINATION_ITEMS_PER_PAGE / 2))
+
+    return {
+        'total': count,
+        'pages': pages,
+        'number': page_number,
+        'page_range': [i for i in range(1, int(pages) + 1)],
+        'has_previous': page_number > 1,
+        'has_next': page_number < pages,
+        'has_other_pages': pages > 1,
+        'previous_page_number': page_number - 1,
+        'next_page_number': page_number + 1,
+    }
 
 
 def set_category(list_obj, category):
