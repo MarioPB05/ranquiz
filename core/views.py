@@ -190,7 +190,8 @@ def profile(request, share_code=None):
     card_template = 'pages/profile/' + current_card + '.html'
     cards = ('resume', 'lists', 'quests', 'notifications', 'settings')
 
-    is_own_profile = share_code is None or request.user.share_code == share_code
+    user_share_code = request.user.share_code if request.user.is_authenticated else None
+    is_own_profile = share_code is None or user_share_code == share_code
     user_data = request.user if is_own_profile else get_user(share_code=share_code)
 
     if user_data is None:
@@ -221,7 +222,7 @@ def profile(request, share_code=None):
 
     return render(request, 'pages/profile.html', {
         'user_data': user_data,
-        'share_code': request.user.share_code if is_own_profile else share_code,
+        'share_code': user_share_code if is_own_profile else share_code,
         'is_own_profile': is_own_profile,
         'card_template': card_template,
         'current_card': current_card,
