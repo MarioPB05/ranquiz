@@ -29,7 +29,7 @@
 
                             <p class="fw-bolder">Code: <label id="share_code" data-clipboard-text="{{ share_code }}" data-bs-toggle="tooltip" data-bs-custom-class="tooltip-dark" data-bs-placement="right" title="Copiar el Share Code" class="fw-normal cursor-pointer text-muted text-hover-info">{{ share_code }}</label></p>
 
-                            {% if not is_own_profile %}
+                            {% if not is_own_profile and user.is_authenticated %}
                                 <a href="#" class="btn btn-sm btn-primary me-2 mb-4">Seguir</a>
                             {% endif %}
                         </div>
