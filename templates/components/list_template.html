@@ -13,7 +13,7 @@ Clases:
 -->
 
 <!-- Begin List Template -->
-<div class="list bg-white {% if not data %} d-none {% endif %} w-100 overflow-hidden bg-hover-light-dark h-250px p-5 cursor-pointer pb-2 position-relative border-secondary-dark border-1 border rounded d-grid gap-4" style="grid-template-rows: 1fr auto auto" {% if not data %}id="template_list" {% else %}data-id="{{ data.id }}"{% endif %} href="{% if data %}{% url 'list_details' share_code=data.share_code %}{% endif %}">
+<div class="list bg-white {% if not data %} d-none {% endif %} w-100 overflow-hidden bg-hover-light-dark h-250px p-5 cursor-pointer pb-2 position-relative border-secondary-dark border-1 border rounded d-grid gap-4" style="grid-template-rows: 1fr auto auto" {% if not data %}id="template_list" {% else %}data-id="{{ data.id }}" data-share-code="{{ data.share_code }}"{% endif %} href="{% if data %}{% url 'list_details' share_code=data.share_code %}{% endif %}">
     <div class="overflow-hidden rounded mb-3">
         <img src="{% if data and data.image %}https://res.cloudinary.com/dhewpzvg9/{{ data.image }}{% elif data and not data.image %}{% static 'assets/media/placeholders/list_mix2.png' %}{% endif %}" class="h-100 w-100 list_image" style="object-fit: cover" alt="Imagen de la lista">
     </div>
