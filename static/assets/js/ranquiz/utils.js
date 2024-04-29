@@ -215,22 +215,28 @@ function secondsToTime(seconds, digits) {
 
 // Función para cambiar los estilos del botón y llamar al backend
 function toggleListLike(event) {
-    // Obtener el botón y el estado actual
-    const button = $(event.target)
-    const isLiked = button.find('i').hasClass('text-danger');
+    event.stopPropagation()
 
-    // Cambiar los estilos del botón
-    button.find('i').toggleClass('text-danger');
+    // Obtener el botón y el estado actual
+    const button = $(event.target);
+    const isLiked = button.hasClass('text-danger');
 
     // Llamar al backend
-    const shareCode = button.parent().attr('data-share-code');
+    const shareCode = button.parent().parent().attr('data-share-code');
+    console.log(button)
     promiseAjax(`/api/list/${shareCode}/like?isLiked=${!isLiked}`, "GET").then(response => {
         if (response.status === "success") {
-            button.find('i').toggleClass('heart-selected');
+            if (isLiked) {
+                button.addClass("bi-heart").removeClass("bi-heart-fill");
+                button.removeClass("text-danger");
+            }else {
+                button.addClass("bi-heart-fill").removeClass("bi-heart");
+                button.addClass("text-danger");
+            }
         } else if (response.status === "error") {
             toastMessage("error", response.message);
         }
     });
 }
 
-export { removePageLoader, initializeFlatpickr, promiseAjax, toastMessage, addPageLoader, reloadUserData, formatElapsedTime, secondsToTime, infoLog, warningLog, errorLog };
+export { removePageLoader, initializeFlatpickr, promiseAjax, toastMessage, addPageLoader, reloadUserData, formatElapsedTime, secondsToTime, infoLog, warningLog, errorLog, toggleListLike };
