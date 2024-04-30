@@ -30,7 +30,8 @@ def edit_list_items(items_prefix, list_obj, request):
         if str(item.id) not in items_prefix:
             # Si el elemento existe en la base de datos pero no en la lista actual, elimínalo
             uploader.destroy(item.image.public_id, invalidate=True)
-            item.delete()
+            item.deleted = True
+            item.save()
 
     # Itera sobre cada prefijo de elemento recibido del formulario
     for prefix in items_prefix:
