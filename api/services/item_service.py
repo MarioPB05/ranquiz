@@ -68,15 +68,18 @@ def get_item(item_id):
         return None
 
 
-def get_items(share_code):
+def get_items(share_code, get_deleted=False):
     """Función para obtener los items de una lista"""
     # Obtenemos la lista
-    required_list = get_list(share_code)
+    list_obj = get_list(share_code)
 
-    if required_list is None:
+    if list_obj is None:
         return None
 
     # Obtenemos los items de la lista
-    items = Item.objects.filter(list=required_list)
+    if get_deleted:
+        items = Item.objects.filter(list=list_obj)
+    else:
+        items = Item.objects.filter(list=list_obj, deleted=False)
 
     return items
