@@ -60,7 +60,7 @@ def get_categories(limit=None, page=1, search='', user=None, order='default'):
     elif order == 'newest':
         order_by = "max(al.edit_date) DESC"
 
-    query = f"""SELECT c.id, c.name, c.share_code, COUNT(lc.list_id) as lists, COUNT(cs.user_id) as followers,
+    query = f"""SELECT c.id, c.name, c.share_code, COUNT(lc.list_id) as lists, COUNT(distinct cs.user_id) as followers,
                 if(cs.user_id = %s, TRUE, FALSE) as followed
                 FROM api_category c
                 LEFT JOIN api_listcategory lc on c.id = lc.category_id
