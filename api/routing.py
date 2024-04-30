@@ -1,6 +1,7 @@
 from django.urls import path
 
-from api.controllers.category_controller import validate_category, get_categories, add_category, get_categories_filtered
+from api.controllers.category_controller import validate_category, get_categories, add_category, \
+    get_categories_filtered, follow_category
 from api.controllers.list_controller import get_list_types, like_list, favorite_list, get_lists_filtered, \
     visibility_list
 from api.controllers.social_controller import get_comments, create_and_return_comment, add_award_to_comment_function, \
@@ -14,6 +15,7 @@ urlpatterns = [
     path('category/', get_categories, name='api_categories'),
     path('category/filter', get_categories_filtered, name='api_categories_filtered'),
     path('category/create/', add_category, name='api_category_create'),
+    path('category/<str:share_code>/follow', follow_category, name='api_category_follow'),
     path('category/validate/<str:category_name>', validate_category, name='api_category_validator'),
     path('list/<str:share_code>/comments', get_comments, name='api_list_comments'),
     path('list/<str:share_code>/comment/create', create_and_return_comment, name='api_new_comment'),
