@@ -184,3 +184,17 @@ def toggle_visibility_list(share_code):
     list_obj = get_list(share_code)
     list_obj.public = not list_obj.public
     list_obj.save()
+
+
+def delete_list(share_code):
+    """Función que elimina una lista"""
+    list_obj = get_list(share_code)
+
+    if list_obj is None:
+        return False
+
+    list_obj.deleted = True
+    list_obj.public = False
+    list_obj.save()
+
+    return True
