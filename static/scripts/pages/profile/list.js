@@ -4,19 +4,25 @@ function toggleVisibility(event) {
     const share_code = $(this).data('share_code');
     const parent = $(this).closest('.list_item');
 
-    console.log(parent)
+    $(this).prop('disabled', true);
 
     promiseAjax(`/api/list/${share_code}/visibility`, 'GET').then((data) => {
         if (data.status === 'success') {
             const icon = $(this).find('i');
+            const badge = parent.find('.list_visibility');
 
             if (icon.hasClass('bi-eye-slash-fill')) {
+                badge.text('Privado');
+                badge.removeClass('badge-success').addClass('badge-secondary');
                 icon.removeClass('bi-eye-slash-fill').addClass('bi-eye-fill');
             } else {
+                badge.text('Público');
+                badge.removeClass('badge-secondary').addClass('badge-success');
                 icon.removeClass('bi-eye-fill').addClass('bi-eye-slash-fill');
             }
 
             $(this).blur();
+            $(this).prop('disabled', false);
         }
     });
 
