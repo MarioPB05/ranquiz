@@ -103,7 +103,7 @@ function onDocumentReady() {
         const follow = !followButton.hasClass("btn-primary");
         const notification = !bellButton.hasClass("btn-primary");
 
-        followCategory(share_code, follow, notification);
+        followCategory(share_code, follow, notification); // skipcq: JS-0125
     });
 
     // Evento de cambio de botón de notificaciones
@@ -111,7 +111,7 @@ function onDocumentReady() {
         const follow = followButton.hasClass("btn-primary");
         const notification = !bellButton.hasClass("btn-primary");
 
-        followCategory(share_code, follow, notification);
+        followCategory(share_code, follow, notification); // skipcq: JS-0125
     });
 
     // Evento de click en la lista
