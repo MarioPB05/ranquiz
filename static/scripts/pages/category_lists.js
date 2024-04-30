@@ -71,10 +71,7 @@ function toggleTwoButtons(follow, notification) {
  * @param notification
  */
 function followCategory(category_share_code, follow, notification) {
-    const url = "/api/category/follow?" +
-          "category_share_code=" + category_share_code + "&" +
-          "follow=" + follow + "&" +
-          "notification=" + notification;
+    const url = (`/api/category/${category_share_code}/follow?follow=${follow}&notification=${notification}`);
 
     followButton.prop("disabled", true);
     bellButton.prop("disabled", true);

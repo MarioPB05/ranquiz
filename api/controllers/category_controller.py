@@ -85,12 +85,11 @@ def add_category(request):
     return JsonResponse({'id': None})
 
 
-def follow_category(request):
+def follow_category(request, share_code):
     """Función para seguir una categoría"""
     follow = request.GET.get('follow', 'true') == 'true'
-    category_share_code = request.GET.get('category_share_code', None)
     notification = request.GET.get('notification', 'true') == 'true'
-    category = category_service.get_category(share_code=category_share_code)
+    category = category_service.get_category(share_code=share_code)
 
     if category is not None:
         user_follow_category(request.user, category, follow, notification)
