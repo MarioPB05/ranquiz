@@ -40,6 +40,7 @@ def get_lists_filtered(request):
             'name': list_obj['name'],
             'image':  f"https://res.cloudinary.com/dhewpzvg9/{list_obj['image']}" if list_obj['image'] else None,
             'url': request.build_absolute_uri(reverse('list_details', args=[list_obj['share_code']])),
+            'share_code': list_obj['share_code'],
             'liked': list_obj['liked'],
             'plays': list_obj['plays'],
             'highlighted': list_obj['highlighted'],
