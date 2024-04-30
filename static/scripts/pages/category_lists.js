@@ -54,7 +54,6 @@ function toggleBellButton(state = null) {
  * @param notification
  */
 function toggleTwoButtons(follow, notification) {
-    console.log(follow, notification)
     toggleFollowButton(follow);
     toggleBellButton(notification);
 
