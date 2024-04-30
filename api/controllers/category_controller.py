@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.views.decorators.http import require_GET, require_POST
 
 from api.services import category_service, PAGINATION_ITEMS_PER_PAGE
-from api.services.category_service import get_all_categories, similarity, create_category
+from api.services.category_service import get_all_categories, similarity, create_category, user_follow_category
 
 
 @require_GET
@@ -66,6 +66,7 @@ def get_categories_filtered(request):
             'id': category['id'],
             'name': category['name'],
             'url': request.build_absolute_uri(reverse('category_lists', args=[category['share_code']])),
+            'share_code': category['share_code'],
             'lists': category['lists'],
             'followers': category['followers'],
             'followed': category['followed']
@@ -83,3 +84,17 @@ def add_category(request):
         return JsonResponse({'id': category.id})
 
     return JsonResponse({'id': None})
+
+
+def follow_category(request, share_code):
+    """Función para seguir una categoría"""
+    follow = request.GET.get('follow', 'true') == 'true'
+    notification = request.GET.get('notification', 'true') == 'true'
+    category = category_service.get_category(share_code=share_code)
+
+    if category is not None:
+        user_follow_category(request.user, category, follow, notification)
+
+        return JsonResponse({'status': 'success', 'followed': follow, 'notification': notification})
+
+    return JsonResponse({'status': 'error'})
