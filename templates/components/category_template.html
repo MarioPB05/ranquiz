@@ -8,21 +8,21 @@ Clases:
 -->
 
 <!-- Begin category template -->
-<div id="template_category" class="bg-white d-none category_element flex-column w-100 overflow-hidden bg-hover-light-dark h-225px p-5 cursor-pointer position-relative border-secondary-dark border-1 border rounded d-grid gap-2" style="grid-template-rows: 3fr 1fr auto">
-    <span class="text-primary fs-1 category_name fw-bolder text-center w-100 d-flex overflow-auto justify-content-center align-items-center text-break">Brawl Stars ChampionsShip</span>
+<div {% if not data %}id="template_category"{% endif %} class="bg-white {% if not data %}d-none{% endif %} category_element flex-column w-100 overflow-hidden bg-hover-light-dark h-225px p-5 cursor-pointer position-relative border-secondary-dark border-1 border rounded d-grid gap-2" style="grid-template-rows: 3fr 1fr auto">
+    <span class="text-primary fs-1 category_name fw-bolder text-center w-100 d-flex overflow-auto justify-content-center align-items-center text-break">{% if data %}{{ data.username }}{% endif %}</span>
     
     <div class="d-flex flex-column w-100 gap-1">
         <div class="d-flex align-items-center justify-content-center gap-3">
-            <span class="category_list_number text-secondary-dark fs-3">56</span>
+            <span class="category_list_number text-secondary-dark fs-3">{% if data %}{{ data.lists }}{% endif %}</span>
             <i class="bi bi-bar-chart-line-fill"></i>
         </div>
         
         <div class="d-flex align-items-center justify-content-center gap-3">
-            <span class="category_follower_number text-secondary-dark fs-3">4</span>
+            <span class="category_follower_number text-secondary-dark fs-3">{% if data %}{{ data.followers }}{% endif %}</span>
             <i class="bi bi-people-fill fs-3"></i>
         </div>
     </div>
     
-    <button class="btn mt-2 btn-outline btn-active-primary btn-outline-primary w-100 category_follow">Seguir</button>
+    <button class="btn mt-2 {% if not data or not data.followed %}btn-outline btn-active-primary btn-outline-primary{% elif data %}btn-primary{% endif %} w-100 category_follow">{% if not data or not data.followed %}Seguir{% elif data %}Siguiendo{% endif %}</button>
 </div>
 <!-- End category template -->

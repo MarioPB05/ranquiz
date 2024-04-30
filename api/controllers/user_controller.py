@@ -34,6 +34,7 @@ def get_users_filtered(request):
             'id': user["id"],
             'username': user["username"],
             'avatar': f"https://res.cloudinary.com/dhewpzvg9/{user['avatar']}",
+            'share_code': user['share_code'],
             'followers': user['followers'],
             'followed': user['followed'],
             'lists': user['lists'],

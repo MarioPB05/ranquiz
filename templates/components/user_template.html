@@ -10,29 +10,35 @@ Clases:
 -->
 
 <!-- Begin user template -->
-<div id="template_user" class="bg-white d-none user flex-column w-100 pb-2 overflow-hidden bg-hover-light-dark h-250px p-5 cursor-pointer position-relative border-secondary-dark border-1 border rounded d-grid gap-2" style="grid-template-rows: auto 1fr">
+<div {% if not data %}id="template_user"{% endif %} 
+     class="bg-white {% if not data %}d-none{% endif %} user flex-column w-100 pb-2 overflow-hidden bg-hover-light-dark h-250px p-5 cursor-pointer position-relative border-secondary-dark border-1 border rounded d-grid gap-2" 
+     style="grid-template-rows: auto 1fr">
+
     <div class="d-flex justify-content-center align-items-center">
-        <img src="http://res.cloudinary.com/dhewpzvg9/image/upload/v1713118989/udmrxlavtwguxnbdyucw.png" alt="Imagen del usuario" class="mh-100 mw-100 user_avatar" style="height: 140px">
+        <img src="{% if data and data.image %}https://res.cloudinary.com/dhewpzvg9/{{ data.image }}{% else %}http://res.cloudinary.com/dhewpzvg9/image/upload/v1713118989/udmrxlavtwguxnbdyucw.png{% endif %}" 
+             alt="Imagen del usuario" class="mh-100 mw-100 user_avatar" style="height: 140px">
     </div>
     
     <div class="w-100 d-grid gap-2" style="grid-template-rows: 1fr auto">
-        <span class="text-primary mh-40px align-items-center lh-1 overflow-hidden text-center fs-2 text-break fw-bolder w-100 d-flex justify-content-center user_name">Enzo señor de la guerra dominguez</span>
+        <span class="text-primary mh-40px align-items-center lh-1 overflow-hidden text-center fs-2 text-break fw-bolder w-100 d-flex justify-content-center user_name">
+            {% if data %}{{ data.name }}{% endif %}
+        </span>
         
         <div class="d-flex w-100 justify-content-center gap-6">
             <div class="d-flex gap-2 align-items-center">
-                <span class="text-secondary-dark fw-bold fs-5 user_follower_number">334</span>
+                <span class="text-secondary-dark fw-bold fs-5 user_follower_number">{% if data %}{{ data.followers }}{% endif %}</span>
                 <i class="bi bi-people-fill fs-5"></i>
             </div>
             
             <div class="d-flex gap-2 align-items-center">
-                <span class="text-secondary-dark fw-bold fs-5 user_list_number">4</span>
+                <span class="text-secondary-dark fw-bold fs-5 user_list_number">{% if data %}{{ data.lists }}{% endif %}</span>
                 <i class="bi bi-bar-chart-line-fill"></i>
             </div>
         </div>
     </div>
     
     <button class="user_follow p-3 bg-white shadow position-absolute end-0 top-0 m-2 rounded-circle border border-1 border-secondary">
-        <i class="bi bi-person-plus-fill user_follow_icon fs-1 hover-text-primary-400"></i>
+        <i class="bi {% if not data or not data.followed %}bi-person-plus-fill{% else %}bi-person-check-fill text-primary{% endif %} user_follow_icon fs-1 hover-text-primary-400"></i>
     </button>
 </div>
 <!-- End user template -->

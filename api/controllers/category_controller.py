@@ -66,6 +66,7 @@ def get_categories_filtered(request):
             'id': category['id'],
             'name': category['name'],
             'url': request.build_absolute_uri(reverse('category_lists', args=[category['share_code']])),
+            'share_code': category['share_code'],
             'lists': category['lists'],
             'followers': category['followers'],
             'followed': category['followed']
