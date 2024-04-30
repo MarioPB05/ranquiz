@@ -250,8 +250,8 @@
 <div class="modal fade" tabindex="-1" id="highlight_modal">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Destacar <span class="text-primary">Nombre de la lista</span></h3>
+            <div class="modal-header justify-content-start">
+                <h3 class="modal-title d-flex w-100">Destacar <span class="text-primary ms-2 overflow-hidden text-nowrap" style="text-overflow: ellipsis">Nombre de la lista</span></h3>
             </div>
 
             <div class="modal-body p-10">
@@ -262,10 +262,10 @@
                 </div>
                 
                 <label class="form-label fw-bolder fs-6 mb-5">Duraciones predeterminadas</label>
-                <div class="d-flex w-100 justify-content-evenly gap-2 mb-3">
-                    <button type="button" class="btn btn-outline btn-outline-primary btn-active-primary">1 día</button>
-                    <button type="button" class="btn btn-outline btn-outline-primary btn-active-primary">3 días</button>
-                    <button type="button" class="btn btn-outline btn-outline-primary btn-active-primary">1 semana</button>
+                <div class="d-flex w-100 justify-content-evenly gap-2 mb-3" id="highlight_days_buttons">
+                    <button type="button" class="btn btn-outline btn-outline-primary btn-active-primary" id="highlight_1_day" data-days="1">1 día</button>
+                    <button type="button" class="btn btn-outline btn-outline-primary btn-active-primary" id="highlight_3_day" data-days="3">3 días</button>
+                    <button type="button" class="btn btn-outline btn-outline-primary btn-active-primary" id="highlight_7_day" data-days="7">1 semana</button>
                 </div>
             </div>
 
