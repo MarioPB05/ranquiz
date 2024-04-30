@@ -25,7 +25,7 @@ from api.services.list_service import get_user_lists
 from api.services.user_service import (
     user_login,
     user_register,
-    get_user,
+    get_user, get_user_stats,
 )
 from core.decorators.decorators import partial_login_required
 
@@ -194,6 +194,7 @@ def profile(request, share_code=None):
     user_share_code = request.user.share_code if request.user.is_authenticated else None
     is_own_profile = share_code is None or user_share_code == share_code
     user_data = request.user if is_own_profile else get_user(share_code=share_code)
+    user_stats = get_user_stats(user_data)
 
     if user_data is None:
         raise Http404('User not found')
@@ -227,6 +228,7 @@ def profile(request, share_code=None):
 
     return render(request, 'pages/profile.html', {
         'user_data': user_data,
+        'user_stats': user_stats,
         'share_code': user_share_code if is_own_profile else share_code,
         'is_own_profile': is_own_profile,
         'card_template': card_template,

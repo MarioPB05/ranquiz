@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 
-from api.models import User
+from api.models import User, UserFollow, List
 from api.services.email_service import send_register_email
 from api.services.query_service import execute_query
 from api.services.shop_service import get_avatar
@@ -108,6 +108,16 @@ def get_user(user_id=None, share_code=None):
         return None
     except User.DoesNotExist:
         return None
+
+
+def get_user_stats(user):
+    """Función que obtiene las estadísticas de un usuario"""
+    return {
+        'money': user.money,
+        'followers': UserFollow.objects.filter(user_followed=user).count(),
+        'following': UserFollow.objects.filter(follower=user).count(),
+        'lists': List.objects.filter(owner=user, public=True).count()
+    }
 
 
 def get_users(limit=None, page=1, search='', order='default', user=None):
