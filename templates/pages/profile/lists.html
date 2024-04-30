@@ -1,3 +1,4 @@
+{% load static %}
 {% load cloudinary %}
 <!--begin::Lists View-->
 <div class="card shadow mb-5 mb-xl-10">
@@ -137,8 +138,11 @@
             {% for list in card_data.data %}
                 <div class="d-flex gap-10 border border-2 border-gray-400 shadow-sm rounded p-4 mb-6 cursor-pointer"
                     onclick="window.location.href = '{% url 'list_details' share_code=list.share_code %}'">
-                    {% cloudinary list.image format="webp" style="object-fit:cover" class="mw-200px w-100 mh-100px h-100 rounded" %}
-
+                    {% if list.image %}
+                        {% cloudinary list.image format="webp" style="object-fit:cover" class="mw-200px w-100 mh-100px h-100 rounded" %}
+                    {% else %}
+                        <img src="{% static 'assets/media/placeholders/list_mix2.png' %}" class="mw-200px w-100 mh-100px h-100 rounded" alt="image">
+                    {% endif %}
                     <div class="w-100">
                         <h1 class="fw-boldest text-primary mw-400px overflow-hidden text-nowrap"
                             style="text-overflow: ellipsis;">{{ list.name }}</h1>
