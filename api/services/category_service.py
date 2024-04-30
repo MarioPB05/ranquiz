@@ -121,10 +121,10 @@ def user_follow_category(user, category, follow=False, notification=False):
             if not follow:
                 user.categorysubscription_set.filter(category=category).delete()
                 return True
+
             # Si queremos seguir la categoría, actualizamos la notificación
-            else:
-                user.categorysubscription_set.filter(category=category).update(notification=notification)
-                return True
+            user.categorysubscription_set.filter(category=category).update(notification=notification)
+            return True
 
         # Creamos la suscripción
         if follow:
