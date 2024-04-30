@@ -1,4 +1,4 @@
-import {promiseAjax} from "/static/assets/js/ranquiz/utils.js";
+import { promiseAjax, toastMessage } from "/static/assets/js/ranquiz/utils.js";
 
 function toggleVisibility(event) {
     const share_code = $(this).data('share_code');
@@ -15,10 +15,14 @@ function toggleVisibility(event) {
                 badge.text('Privado');
                 badge.removeClass('badge-success').addClass('badge-secondary');
                 icon.removeClass('bi-eye-slash-fill').addClass('bi-eye-fill');
+
+                toastMessage('success', 'Lista marcada como privada');
             } else {
                 badge.text('Público');
                 badge.removeClass('badge-secondary').addClass('badge-success');
                 icon.removeClass('bi-eye-fill').addClass('bi-eye-slash-fill');
+
+                toastMessage('success', 'Lista marcada como pública');
             }
 
             $(this).blur();
