@@ -112,6 +112,29 @@ def similarity(s1, s2):
     return (longer_length - edit_distance(longer, shorter)) / float(longer_length)
 
 
+def user_follow_category(user, category, follow=False, notification=False):
+    """Función para que un usuario siga o des siga una categoría"""
+    if user.is_authenticated and category is not None:
+        # Comprobamos si el usuario ya sigue la categoría
+        if user.categorysubscription_set.filter(category=category).exists():
+            # Si no queremos seguir la categoría, la eliminamos
+            if not follow:
+                user.categorysubscription_set.filter(category=category).delete()
+                return True
+            # Si queremos seguir la categoría, actualizamos la notificación
+            else:
+                user.categorysubscription_set.filter(category=category).update(notification=notification)
+                return True
+
+        # Creamos la suscripción
+        if follow:
+            user.categorysubscription_set.create(category=category, notification=notification)
+
+        return True
+
+    return False
+
+
 def user_followed_category(user, category):
     """Función para comprobar si un usuario sigue una categoría"""
     if user.is_authenticated and category is not None:
