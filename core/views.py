@@ -243,6 +243,7 @@ def category_lists(request, share_code):
          'followed': user_followed_category(request.user, category_object),
          'notifications': user_follow_category_and_receive_notifications(request.user, category_object),
          'order': order,
+         'user': request.user,
          'pagination': {
              'total_pages': list_count // PAGINATION_ITEMS_PER_PAGE + 1,
              'current_page': page,
