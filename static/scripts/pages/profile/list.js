@@ -36,6 +36,50 @@ function toggleVisibility(event) {
     event.stopPropagation();
 }
 
+function highlightDays() {
+    const dates = $("#range_date_highlight").val().split(" hasta ");
+
+    if (dates.length === 2) {
+        const start_date = moment(dates[0], 'YYYY-MM-DD');
+        const end_date = moment(dates[1], 'YYYY-MM-DD');
+
+        return end_date.diff(start_date, 'days');
+    }
+
+    return 0;
+}
+
+function toogleHighLightButtons() {
+    const days = highlightDays();
+    const buttons = $("#highlight_days_buttons button");
+    const selected_button = $(`#highlight_${days}_day`);
+
+    buttons.removeClass("btn-primary");
+    buttons.addClass("btn-outline-primary");
+    buttons.addClass("btn-outline");
+
+    if (selected_button.length > 0) {
+        selected_button.addClass("btn-primary");
+        selected_button.removeClass("btn-outline-primary");
+        selected_button.removeClass("btn-outline");
+    }
+}
+
+function updateHighlightPrice() {
+    const dates = $("#range_date_highlight").val().split(" hasta ");
+
+    if (dates.length === 2) {
+        promiseAjax(`/api/shop/highlight/calculator?start_date=${dates[0]}&end_date=${dates[1]}`)
+            .then(response => {
+                $('#highlight_price').text(response.price);
+                toogleHighLightButtons();
+            })
+            .catch(() => {
+                toastMessage('error', 'Ha ocurrido un error al calcular el precio del destacado')
+            });
+    }
+}
+
 function highlightList(event) {
     highlight_modal.modal('show');
 
@@ -52,6 +96,17 @@ function loadEvents() {
         .on('click', '.highlight_list', highlightList)
         .on('click', '.list_item', redirectToList);
 
+    $("#range_date_highlight").on("change", updateHighlightPrice);
+
+    $("#highlight_days_buttons button").on("click", (event) => {
+        const days = parseInt($(event.target).data("days"), 10);
+        const startDate = new Date();
+        const endDate =  new Date();
+        endDate.setDate(startDate.getDate() + days);
+
+        flatpickrInstance.setDate([startDate, endDate]);
+        updateHighlightPrice();
+    });
 }
 
 $(document).ready(loadEvents);
