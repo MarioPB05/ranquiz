@@ -23,44 +23,51 @@ class DefaultConsumer(AsyncWebsocketConsumer):
         }))
 
 
-channels_for_followers = []
+class ChannelManager:
+    """Clase para gestionar los canales de los seguidores"""
 
+    def __init__(self):
+        self.channels_for_followers = []
 
-def append_channel(channel):
-    """Añade un canal para los seguidores"""
-    channels_for_followers.append(channel)
+    async def append_channel(self, channel):
+        """Añade un canal para los seguidores"""
+        self.channels_for_followers.append(channel)
 
+    async def remove_channel(self, share_code):
+        """Elimina un canal para los seguidores"""
+        self.channels_for_followers = [
+            channel for channel in self.channels_for_followers
+            if channel['share_code'] != share_code
+        ]
 
-def remove_channel(share_code):
-    """Elimina un canal para los seguidores"""
-    global channels_for_followers  # skipcq: PYL-W0603
-    channels_for_followers = list(filter(
-        lambda channel: channel['share_code'] != share_code,
-        channels_for_followers
-    ))
+    async def find_channel_for_followers(self, share_code):
+        """Busca un canal para los seguidores"""
+        for channel in self.channels_for_followers:
+            if channel['share_code'] == share_code:
+                return channel['channel_name']
+        return None
 
+    async def debug_show_channels(self):
+        """Función para mostrar los canales de los seguidores"""
+        print(f"CANALES DE LOS SEGUIDORES ({len(self.channels_for_followers)})")
 
-def find_channel_for_followers(share_code):
-    """Busca un canal para los seguidores"""
-    for channel in channels_for_followers:
-        if channel['share_code'] == share_code:
-            return channel['channel_name']
+        for channel in self.channels_for_followers:
+            print("+" + "-" * 40 + "+")
+            channel_name = channel["channel_name"]
+            share_code = channel["share_code"]
+            print(f"Canal: {channel_name}")
+            print(f"Share code: {share_code}")
 
-    return None
-
-
-def debug_show_channels():
-    """Función para mostrar los canales de los seguidores"""
-    print(f"CANALES DE LOS SEGUIDORES ({len(channels_for_followers)})")
-
-    for channel in channels_for_followers:
         print("+" + "-" * 40 + "+")
-        channel_name = channel["channel_name"]
-        share_code = channel["share_code"]
-        print(f"Canal: {channel_name}")
-        print(f"Share code: {share_code}")
 
-    print("+" + "-"*40 + "+")
+
+channel_manager = ChannelManager()
+
+
+async def get_share_code_async(following):
+    """Función para obtener el share_code de un usuario de forma asíncrona"""
+    share_code = await sync_to_async(lambda f: f.user_followed.share_code)(following)
+    return share_code
 
 
 class NotificationsConsumer(AsyncWebsocketConsumer):
@@ -76,7 +83,7 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
 
-        append_channel({
+        await channel_manager.append_channel({
             'share_code': user.share_code,
             'channel_name': channel_name
         })
@@ -91,14 +98,16 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
 
-        remove_channel(user.share_code)
+        await channel_manager.remove_channel(user.share_code)
 
     async def join_followers_channel(self, user):
         """Función para unirse al canal de los seguidores de los usuarios que sigue el usuario"""
         following_users = await sync_to_async(get_following)(user)
 
         async for following in following_users:
-            if find_channel_for_followers(following.user_followed.share_code):
+            share_code = await get_share_code_async(following)
+
+            if await channel_manager.find_channel_for_followers(share_code) is not None:
                 await self.channel_layer.group_add(
                     f'followers_{following.user_followed.share_code}',
                     self.channel_name
@@ -109,7 +118,7 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
         following_users = await sync_to_async(get_following)(user)
 
         async for following_user in following_users:
-            if find_channel_for_followers(following_user):
+            if await channel_manager.find_channel_for_followers(following_user):
                 await self.channel_layer.group_discard(
                     f'followers_{following_user.share_code}',
                     self.channel_name
@@ -151,7 +160,7 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
             }))
             await self.close()
 
-        debug_show_channels()
+        await channel_manager.debug_show_channels()
 
     async def disconnect(self, close_code):  # skipcq: PYL-W0613
         """Función que se ejecuta cuando se desconecta el cliente"""
@@ -168,7 +177,7 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
             await self.leave_followers_channel(user)
             await self.leave_global_channel()
 
-        debug_show_channels()
+        await channel_manager.debug_show_channels()
 
     async def receive(self, text_data=None, bytes_data=None):
         """Función que se ejecuta cuando se recibe un mensaje del cliente"""
