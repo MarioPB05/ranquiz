@@ -1,4 +1,7 @@
-import { promiseAjax, toastMessage } from "/static/assets/js/ranquiz/utils.js";
+import {initializeFlatpickr, promiseAjax, toastMessage} from "/static/assets/js/ranquiz/utils.js";
+
+const highlight_modal = $('#highlight_modal');
+const flatpickrInstance = initializeFlatpickr("#range_date_highlight", 'range', moment().format('YYYY-MM-DD')); // skipcq: JS-0125
 
 function toggleVisibility(event) {
     const share_code = $(this).data('share_code');
@@ -33,6 +36,12 @@ function toggleVisibility(event) {
     event.stopPropagation();
 }
 
+function highlightList(event) {
+    highlight_modal.modal('show');
+
+    event.stopPropagation();
+}
+
 function redirectToList() {
     window.location.href = $(this).data('url');
 }
@@ -40,6 +49,7 @@ function redirectToList() {
 function loadEvents() {
     $('#list_container')
         .on('click', '.toggle_visibility_list', toggleVisibility)
+        .on('click', '.highlight_list', highlightList)
         .on('click', '.list_item', redirectToList);
 
 }
