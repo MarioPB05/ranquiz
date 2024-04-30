@@ -135,77 +135,79 @@
             </div>
             <!--end::Notice-->
         {% else %}
-            {% for list in card_data.data %}
-                <div class="d-flex gap-10 border border-2 border-gray-400 shadow-sm rounded p-4 mb-6 cursor-pointer"
-                    onclick="window.location.href = '{% url 'list_details' share_code=list.share_code %}'">
-                    <img class="mw-200px w-100 mh-100px h-100 rounded" alt="image" style="object-fit:cover"
-                        src="{% if list.image %}{{ list.image }}{% else %}{% static 'assets/media/placeholders/list_mix2.png' %}{% endif %}">
-                    
-                    <div class="w-100">
-                        <h1 class="fw-boldest text-primary mw-400px overflow-hidden text-nowrap"
-                            style="text-overflow: ellipsis;">{{ list.name }}</h1>
-                        <span class="fw-bolder text-muted">{{ list.date|date:"d/m/Y" }}</span>
+            <div id="list_container">
+                {% for list in card_data.data %}
+                    <div class="d-flex gap-10 border border-2 border-gray-400 shadow-sm rounded p-4 mb-6 cursor-pointer list_item"
+                        data-url="{% url 'list_details' share_code=list.share_code %}">
+                        <img class="mw-200px w-100 mh-100px h-100 rounded" alt="image" style="object-fit:cover"
+                            src="{% if list.image %}{{ list.image }}{% else %}{% static 'assets/media/placeholders/list_mix2.png' %}{% endif %}">
 
-                        <div class="d-flex gap-3 mt-4">
-                            {% if list.public %}
-                                <span class="badge badge-success">Público</span>
-                            {% else %}
-                                <span class="badge badge-secondary">Privado</span>
-                            {% endif %}
+                        <div class="w-100">
+                            <h1 class="fw-boldest text-primary mw-400px overflow-hidden text-nowrap"
+                                style="text-overflow: ellipsis;">{{ list.name }}</h1>
+                            <span class="fw-bolder text-muted">{{ list.date|date:"d/m/Y" }}</span>
 
-                            {% if list.deleted %}
-                                <span class="badge badge-danger">Eliminado</span>
-                            {% endif %}
-                        </div>
-                    </div>
+                            <div class="d-flex gap-3 mt-4">
+                                {% if list.public %}
+                                    <span class="badge badge-success">Público</span>
+                                {% else %}
+                                    <span class="badge badge-secondary">Privado</span>
+                                {% endif %}
 
-                    <div class="d-flex">
-                        <div class="d-flex flex-column h-100 justify-content-between">
-                            <span class="d-flex justify-content-end fw-bolder text-muted min-w-60px gap-4">
-                                {{ list.play_count }}
-                                <i class="bi bi-controller fs-4"></i>
-                            </span>
-
-                            <span class="d-flex justify-content-end fw-bolder text-muted min-w-60px gap-4">
-                                {{ list.likes_count }}
-                                <i class="bi bi-heart fs-4"></i>
-                            </span>
-
-                            <span class="d-flex justify-content-end fw-bolder text-muted min-w-60px gap-4">
-                                {{ list.favorites_count }}
-                                <i class="bi bi-star fs-4"></i>
-                            </span>
-
-                            <span class="d-flex justify-content-end fw-bolder text-muted min-w-60px gap-4">
-                                {{ list.comments_count }}
-                                <i class="bi bi-chat fs-4"></i>
-                            </span>
-                        </div>
-
-                        <div class="d-flex gap-2 ms-8">
-                            <div class="d-flex flex-column justify-content-center gap-2">
-                                <a href="{% url 'edit_list' share_code=list.share_code %}" class="btn btn-icon btn-primary" style="background-color: #E06DFF;">
-                                    <i class="bi bi-pencil-square fs-4"></i>
-                                </a>
-
-                                <a href="#" class="btn btn-icon btn-primary" style="background-color: #E06DFF;">
-                                    <i class="bi bi-eye-{% if list.public %}slash-{% endif %}fill fs-4"></i>
-                                </a>
-                            </div>
-
-                            <div class="d-flex flex-column justify-content-center gap-2">
-                                <a href="#" class="btn btn-icon btn-primary" style="background-color: #E06DFF;">
-                                    <i class="bi bi-trash-fill fs-4"></i>
-                                </a>
-
-                                <a href="#" class="btn btn-icon btn-primary" style="background-color: #E06DFF;">
-                                    <i class="bi bi-share-fill fs-4"></i>
-                                </a>
+                                {% if list.deleted %}
+                                    <span class="badge badge-danger">Eliminado</span>
+                                {% endif %}
                             </div>
                         </div>
+
+                        <div class="d-flex">
+                            <div class="d-flex flex-column h-100 justify-content-between">
+                                <span class="d-flex justify-content-end fw-bolder text-muted min-w-60px gap-4">
+                                    {{ list.play_count }}
+                                    <i class="bi bi-controller fs-4"></i>
+                                </span>
+
+                                <span class="d-flex justify-content-end fw-bolder text-muted min-w-60px gap-4">
+                                    {{ list.likes_count }}
+                                    <i class="bi bi-heart fs-4"></i>
+                                </span>
+
+                                <span class="d-flex justify-content-end fw-bolder text-muted min-w-60px gap-4">
+                                    {{ list.favorites_count }}
+                                    <i class="bi bi-star fs-4"></i>
+                                </span>
+
+                                <span class="d-flex justify-content-end fw-bolder text-muted min-w-60px gap-4">
+                                    {{ list.comments_count }}
+                                    <i class="bi bi-chat fs-4"></i>
+                                </span>
+                            </div>
+
+                            <div class="d-flex gap-2 ms-8">
+                                <div class="d-flex flex-column justify-content-center gap-2">
+                                    <a href="{% url 'edit_list' share_code=list.share_code %}" class="btn btn-icon btn-primary" style="background-color: #E06DFF;">
+                                        <i class="bi bi-pencil-square fs-4"></i>
+                                    </a>
+
+                                    <a href="#" class="btn btn-icon btn-primary toggle_visibility_list" style="background-color: #E06DFF;">
+                                        <i class="bi bi-eye-{% if list.public %}slash-{% endif %}fill fs-4"></i>
+                                    </a>
+                                </div>
+
+                                <div class="d-flex flex-column justify-content-center gap-2 delete_list">
+                                    <a href="#" class="btn btn-icon btn-primary" style="background-color: #E06DFF;">
+                                        <i class="bi bi-trash-fill fs-4"></i>
+                                    </a>
+
+                                    <button class="btn btn-icon btn-primary share_list" style="background-color: #E06DFF;">
+                                        <i class="bi bi-share-fill fs-4"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            {% endfor %}
+                {% endfor %}
+            </div>
 
             {% if card_data.pagination.has_other_pages %}
                 <div class="text-center">
@@ -235,3 +237,5 @@
     <!--end::Card body-->
 </div>
 <!--end::Lists View-->
+
+<script src="{% static 'scripts/pages/profile/list.js' %}" defer></script>
