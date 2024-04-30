@@ -247,4 +247,34 @@
 </div>
 <!--end::Lists View-->
 
+<div class="modal fade" tabindex="-1" id="highlight_modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Destacar <span class="text-primary">Nombre de la lista</span></h3>
+            </div>
+
+            <div class="modal-body p-10">
+                <div class="mb-14 d-flex justify-content-center flex-column">
+                    <label class="form-label fw-bolder fs-6 w-100 mb-3">Rango de fechas</label>
+                    <input class="form-control position-relative mw-300px" placeholder="Selecciona un rango de fechas"
+                                   id="range_date_highlight">
+                </div>
+                
+                <label class="form-label fw-bolder fs-6 mb-5">Duraciones predeterminadas</label>
+                <div class="d-flex w-100 justify-content-evenly gap-2 mb-3">
+                    <button type="button" class="btn btn-outline btn-outline-primary btn-active-primary">1 día</button>
+                    <button type="button" class="btn btn-outline btn-outline-primary btn-active-primary">3 días</button>
+                    <button type="button" class="btn btn-outline btn-outline-primary btn-active-primary">1 semana</button>
+                </div>
+            </div>
+
+            <div class="modal-footer justify-content-center gap-5">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary d-flex align-items-center">Destacar<span class="mx-3">|</span><span id="highlight_price">0</span><i class="bi bi-gem ms-2"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="{% static 'scripts/pages/profile/list.js' %}" type="module" defer></script>
