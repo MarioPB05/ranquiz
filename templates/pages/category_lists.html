@@ -3,7 +3,7 @@
 
 {% block content %}
     <div class="card shadow-sm border border-secondary border-1">
-        <div class="card-header align-items-center">
+        <div class="card-header align-items-center p-5 gap-5">
             <h1 class="text-primary m-0" id="category_name">{{ category.name }}</h1>
             
         {% if user.is_authenticated %}
@@ -17,7 +17,7 @@
         {% endif %}
         </div>
     
-        <div class="card-body" id="">
+        <div class="card-body p-7 pt-10 p-sm-10" id="">
             <div class="d-flex gap-5 mb-5" id="sort_container">
                 <a class="btn {% if order != 'newest' %}btn-outline-primary btn-outline btn-active-primary{% else %}btn-primary{% endif %} p-1 fs-7" 
                    href="{% url 'category_lists' share_code=share_code %}?{% if page %}page={{ page }}&{% endif %}order={% if order == 'newest' %}default{% else %}newest{% endif %}" id="newest">Recientes</a>
@@ -26,7 +26,7 @@
                    href="{% url 'category_lists' share_code=share_code %}?{% if page %}page={{ page }}&{% endif %}order={% if order == 'popular' %}default{% else %}popular{% endif %}" id="popular">Populares</a>
             </div>
         
-            <div id="list_container"  class="w-100 align-items-center d-md-grid d-flex flex-column rounded p-5 gap-7 min-h-250px" id="content" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr))">
+            <div id="list_container"  class="w-100 align-items-center d-md-grid d-flex flex-column rounded p-1 p-sm-5 gap-7 min-h-250px" id="content" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr))">
                 {% for list in lists %}
                     {% include 'components/list_template.html' with data=list %}
                 {% endfor %}
