@@ -3,22 +3,30 @@
 
 {% block content %}
     <div class="card shadow-sm border border-secondary border-1">
-        <div class="card-header align-items-center">
+        <div class="card-header align-items-center p-5 gap-5">
             <h1 class="text-primary m-0" id="category_name">{{ category.name }}</h1>
             
+        {% if user.is_authenticated %}
             <div>
-                <button class="btn btn-outline btn-outline-primary btn-active-primary p-2 ps-6 pe-6" id="follow_category">Seguir</button>
-                <button class="btn btn-outline btn-outline-primary btn-active-primary p-2 ps-3 {% if not followed %}d-none{% endif %}" id="follow_category"><i class="bi bi-bell-fill fs-3"></i></button>
+                <button class="btn {% if not followed %}btn-outline btn-outline-primary btn-active-primary{% else %}btn-primary{% endif %} p-2 ps-6 pe-6" id="follow_category">{% if not followed %}Seguir{% else %}Siguiendo{% endif %}</button>
+                <button class="btn {% if not notifications %}btn-outline btn-outline-primary btn-active-primary{% else %}btn-primary{% endif %} p-2 ps-3 {% if not followed %}d-none{% endif %}" id="follow_category_bell" 
+                        data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-custom-class="tooltip-dark" title="{% if notifications %}Desactivar{% else %}Activar{% endif %} notificaciones">
+                    <i class="bi {% if not notifications %}bi-bell-slash-fill{% else %}bi-bell-fill{% endif %} fs-3"></i>
+                </button>
             </div>
+        {% endif %}
         </div>
     
-        <div class="card-body" id="">
+        <div class="card-body p-7 pt-10 p-sm-10" id="">
             <div class="d-flex gap-5 mb-5" id="sort_container">
-                <button class="btn btn-outline-primary p-1 btn-outline btn-active-primary fs-7" id="newest">Recientes</button>
-                <button class="btn btn-outline-primary p-1 btn-outline btn-active-primary fs-7" id="popular">Populares</button>
+                <a class="btn {% if order != 'newest' %}btn-outline-primary btn-outline btn-active-primary{% else %}btn-primary{% endif %} p-1 fs-7" 
+                   href="{% url 'category_lists' share_code=share_code %}?{% if page %}page={{ page }}&{% endif %}order={% if order == 'newest' %}default{% else %}newest{% endif %}" id="newest">Recientes</a>
+            
+                <a class="btn {% if order != 'popular' %}btn-outline-primary btn-outline btn-active-primary{% else %}btn-primary{% endif %} p-1 fs-7" 
+                   href="{% url 'category_lists' share_code=share_code %}?{% if page %}page={{ page }}&{% endif %}order={% if order == 'popular' %}default{% else %}popular{% endif %}" id="popular">Populares</a>
             </div>
         
-            <div id="list_container"  class="w-100 align-items-center d-md-grid d-flex flex-column rounded p-5 gap-7 min-h-250px" id="content" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr))">
+            <div id="list_container"  class="w-100 align-items-center d-md-grid d-flex flex-column rounded p-1 p-sm-5 gap-7 min-h-250px" id="content" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr))">
                 {% for list in lists %}
                     {% include 'components/list_template.html' with data=list %}
                 {% endfor %}
@@ -26,15 +34,15 @@
             
             <ul class="pagination mt-5">
                 <li class="page-item previous {% if pagination.current_page == 1 %}disabled{% endif %}">
-                    <a class="page-link page-text" href="{% url 'category_lists' share_code=share_code %}?page={{ pagination.current_page|add:"-1" }}">Previous</a>
+                    <a class="page-link page-text" href="{% url 'category_lists' share_code=share_code %}?page={{ pagination.current_page|add:"-1" }}&order={{ order }}">Anterior</a>
                 </li>
                 {% for page in pagination.page_numbers %}
                     <li class="page-item {% if page == pagination.current_page %}active{% endif %}">
-                        <a class="page-link page-text" href="{% url 'category_lists' share_code=share_code %}?page={{ page }}">{{ page }}</a>
+                        <a class="page-link page-text" href="{% url 'category_lists' share_code=share_code %}?page={{ page }}&order={{ order }}">{{ page }}</a>
                     </li>
                 {% endfor %}
                 <li class="page-item next {% if pagination.current_page >= pagination.total_pages %}disabled{% endif %}">
-                    <a class="page-link page-text" href="{% url 'category_lists' share_code=share_code %}?page={{ pagination.current_page|add:"1" }}">Next</a>
+                    <a class="page-link page-text" href="{% url 'category_lists' share_code=share_code %}?page={{ pagination.current_page|add:"1" }}&order={{ order }}">Siguiente</a>
                 </li>
             </ul>
         </div>

@@ -60,7 +60,7 @@ def get_categories(limit=None, page=1, search='', user=None, order='default'):
     elif order == 'newest':
         order_by = "max(al.edit_date) DESC"
 
-    query = """SELECT c.id, c.name, c.share_code, COUNT(lc.list_id) as lists, COUNT(cs.user_id) as followers,
+    query = f"""SELECT c.id, c.name, c.share_code, COUNT(lc.list_id) as lists, COUNT(cs.user_id) as followers,
                 if(cs.user_id = %s, TRUE, FALSE) as followed
                 FROM api_category c
                 LEFT JOIN api_listcategory lc on c.id = lc.category_id
@@ -68,10 +68,10 @@ def get_categories(limit=None, page=1, search='', user=None, order='default'):
                 JOIN ranquiz.api_list al on lc.list_id = al.id
                 WHERE c.name LIKE %s
                 GROUP BY c.id
-                ORDER BY %s
+                ORDER BY {order_by}
                 LIMIT %s OFFSET %s;"""
 
-    params = [user.id if user is not None else 0, f"%{search}%", order_by, limit, (page - 1) * limit]
+    params = [user.id if user is not None else 0, f"%{search}%", limit, (page - 1) * limit]
 
     return execute_query(query, params)
 
@@ -112,6 +112,40 @@ def similarity(s1, s2):
     return (longer_length - edit_distance(longer, shorter)) / float(longer_length)
 
 
+def user_follow_category(user, category, follow=False, notification=False):
+    """Función para que un usuario siga o des siga una categoría"""
+    if user.is_authenticated and category is not None:
+        # Comprobamos si el usuario ya sigue la categoría
+        if user.categorysubscription_set.filter(category=category).exists():
+            # Si no queremos seguir la categoría, la eliminamos
+            if not follow:
+                user.categorysubscription_set.filter(category=category).delete()
+                return True
+
+            # Si queremos seguir la categoría, actualizamos la notificación
+            user.categorysubscription_set.filter(category=category).update(notification=notification)
+            return True
+
+        # Creamos la suscripción
+        if follow:
+            user.categorysubscription_set.create(category=category, notification=notification)
+
+        return True
+
+    return False
+
+
 def user_followed_category(user, category):
     """Función para comprobar si un usuario sigue una categoría"""
-    return user.categorysubscription_set.filter(category=category).exists()
+    if user.is_authenticated and category is not None:
+        return user.categorysubscription_set.filter(category=category).exists()
+
+    return False
+
+
+def user_follow_category_and_receive_notifications(user, category):
+    """Función para comprobar si un usuario sigue una categoría y recibe notificaciones"""
+    if user.is_authenticated and category is not None:
+        return user.categorysubscription_set.filter(category=category, notification=True).exists()
+
+    return False
