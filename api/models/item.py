@@ -1,10 +1,10 @@
 from cloudinary.models import CloudinaryField
 from django.db import models
 
-from api.models.model_template import ModelTemplate
+from api.models.time_stamp import TimeStamped
 
 
-class Item(ModelTemplate):
+class Item(TimeStamped):
     """Modelo que representa un item de una lista"""
 
     list = models.ForeignKey('List', on_delete=models.DO_NOTHING)
