@@ -10,7 +10,7 @@
             <div>
                 <button class="btn {% if not followed %}btn-outline btn-outline-primary btn-active-primary{% else %}btn-primary{% endif %} p-2 ps-6 pe-6" id="follow_category">{% if not followed %}Seguir{% else %}Siguiendo{% endif %}</button>
                 <button class="btn {% if not notifications %}btn-outline btn-outline-primary btn-active-primary{% else %}btn-primary{% endif %} p-2 ps-3 {% if not followed %}d-none{% endif %}" id="follow_category_bell" 
-                        data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-custom-class="tooltip-dark" title="{% if notifications %}Descativar{% else %}Activar{% endif %} notificaciones">
+                        data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-custom-class="tooltip-dark" title="{% if notifications %}Desactivar{% else %}Activar{% endif %} notificaciones">
                     <i class="bi {% if not notifications %}bi-bell-slash-fill{% else %}bi-bell-fill{% endif %} fs-3"></i>
                 </button>
             </div>
