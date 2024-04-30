@@ -6,7 +6,7 @@ from api.decorators.api_decorators import require_authenticated
 from api.models import ListLike, ListFavorite
 from api.models.list import List
 from api.services import PAGINATION_ITEMS_PER_PAGE
-from api.services.list_service import get_lists
+from api.services.list_service import get_lists, toggle_visibility_list
 
 
 @require_GET
@@ -81,5 +81,14 @@ def favorite_list(request, share_code):
         # Si no está marcada como favorita, agregar el favorito
         list_instance, _ = List.objects.get_or_create(share_code=share_code)
         ListFavorite.objects.create(user=request.user, list=list_instance)
+
+    return JsonResponse({'status': 'success'})
+
+
+@require_GET
+@require_authenticated
+def visibility_list(request, share_code):
+    """Controlador que permite cambiar la visibilidad de una lista"""
+    toggle_visibility_list(share_code)
 
     return JsonResponse({'status': 'success'})

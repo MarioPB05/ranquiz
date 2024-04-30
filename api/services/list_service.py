@@ -177,3 +177,10 @@ def count_lists(search='', category=None):
         params.insert(1, category.id)
 
     return execute_query(query, params)
+
+
+def toggle_visibility_list(share_code):
+    """Función que cambia la visibilidad de una lista"""
+    list_obj = get_list(share_code)
+    list_obj.public = not list_obj.public
+    list_obj.save()
