@@ -1,9 +1,13 @@
-import { removePageLoader } from "/static/assets/js/ranquiz/utils.js";
+import { removePageLoader, toastMessage, promiseAjax } from "/static/assets/js/ranquiz/utils.js";
+
+const twoOptions = $("#item_template_2_options");
+const fourOptions = $("#item_template_4_options");
 
 class Opcion {
-    constructor(nombre, letra) {
+    constructor(id, nombre, image=null) {
+        this.id = id;
         this.nombre = nombre;
-        this.letra = letra;
+        this.image = image;
         this.puntos = 0;
         this.descartes = 0;
     }
@@ -26,22 +30,12 @@ class Enfrentamiento {
     }
 }
 
-let opciones = [
-    new Opcion('Colette', 'A'),
-    new Opcion('Señor P.', 'B'),
-    new Opcion('Mico', 'C'),
-    new Opcion('Carl', 'D'),
-    new Opcion('Tara', 'E'),
-    new Opcion('Mortis', 'F'),
-    new Opcion('Fang', 'G'),
-    new Opcion('Nita', 'H'),
-    new Opcion('Sprout', 'I'),
-    new Opcion('Byron', 'J')
-];
+let opciones = [];
 let enfrentamientos = [];
 let cantidadIteracionesUsuario = 0;
 
 async function main() {
+    console.log(opciones);
     await rondaInicial();
 
     // Ordenar las opciones por menos descartes
@@ -293,10 +287,43 @@ async function generarEnfrentamiento(opcion1, opcion2, opcion3= null, opcion4 = 
     });
 }
 
+function appendOptions(options) {
+    const OptionsMode = options.length === 2 ? twoOptions : fourOptions;
+    console.log(options);
 
+    $.each(options, function(index, option) {
+        const optionElement = OptionsMode.clone();
+        optionElement.find('.item_name').text(option.nombre);
+        optionElement.find('.item_image').attr('src', option.image);
+        option.image == null ? optionElement.find('.item_image').remove() : "";
+        option.image == null ? optionElement.find('.item_name').removeClass("ellipsis-two-lines") : "";
+        optionElement.attr('data-id', option.id);
+        optionElement.removeClass('d-none');
+        OptionsMode.before(optionElement);
+    });
+}
+
+function actualizarTop() {
+    opciones.sort((a, b) => a.puntos - b.puntos);
+    console.log(opciones);
+}
+
+function obtenerOpciones() {
+    return new Promise((resolve, reject) => {
+        promiseAjax(`/api/list/${share_code}/item`, 'GET').then(response => { // skipcq: JS-0125
+            if (response && response.items) {
+                response.items.forEach(item => {
+                    opciones.push(new Opcion(item.id, item.name, item.image));
+                });
+                appendOptions([opciones[0], opciones[1]]);
+                resolve();
+            }
+        });
+    });
+}
 
 function onDocumentReady() {
-    main().then(() => {
+    obtenerOpciones().then(main).then(() => {
         console.log('Opciones ordenadas por descartes');
         opciones.sort((a, b) => a.descartes - b.descartes);
 
