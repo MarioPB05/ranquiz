@@ -24,8 +24,8 @@ Clases:
         <img src="{% if data and data.owner_avatar %}https://res.cloudinary.com/dhewpzvg9/{{ data.owner_avatar }}{% endif %}" class="h-30px w-30px rounded-circle author_image" alt="avatar del autor">
         <span class="m-0 fs-4 text-break author_name transition-duration-0-3s">{% if data %}{{ data.owner_username }}{% endif %}</span>
     </a>
-    <div class="rounded-circle p-3 pb-2 border border-secondary bg-white shadow position-absolute end-0 top-0 m-2 cursor-pointer border-hover-danger text-hover-danger">
-        <i class="bi {% if data and data.liked %}bi-heart-fill text-danger{% else %}bi-heart{% endif %} fs-1 list_like"></i>
+    <div class="rounded-circle p-3 pb-2 border border-secondary bg-white shadow position-absolute end-0 top-0 m-2 list_like cursor-pointer border-hover-danger text-hover-danger">
+        <i class="bi {% if data and data.liked %}bi-heart-fill text-danger{% else %}bi-heart{% endif %} fs-1"></i>
     </div>
     <div class="position-absolute bottom-0 end-0 m-2 me-5 d-flex gap-2 align-items-center">
         <p class="m-0 fs-3 fw-bolder text-secondary-dark list_plays_number">{% if data %}{{ data.plays }}{% endif %}</p>
