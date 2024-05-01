@@ -51,6 +51,9 @@ function toggleSort(selected) {
     const allSorts = $("#sort_container button");
     const selectedSort = $(`#${selected}`);
 
+    // Bloquear todos los navs
+    allNavs.attr("disabled", true);
+
     if (selectedSort.hasClass("btn-primary")) {
         selectedSort.removeClass("btn-primary");
         selectedSort.addClass("btn-outline-primary");
