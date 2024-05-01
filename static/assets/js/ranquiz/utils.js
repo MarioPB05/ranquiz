@@ -218,20 +218,18 @@ function toggleListLike(event) {
     event.stopPropagation()
 
     // Obtener el botón y el estado actual
-    const button = $(event.target);
-    const isLiked = button.hasClass('text-danger');
+    const button = $(event.currentTarget);
+    const icon = button.find('i');
+    const isLiked = button.find('i').hasClass('text-danger');
 
     // Llamar al backend
-    const shareCode = button.parent().parent().attr('data-share-code');
-    console.log(button)
+    const shareCode = button.parent().attr('data-share-code');
     promiseAjax(`/api/list/${shareCode}/like?isLiked=${!isLiked}`, "GET").then(response => {
         if (response.status === "success") {
             if (isLiked) {
-                button.addClass("bi-heart").removeClass("bi-heart-fill");
-                button.removeClass("text-danger");
+               icon.removeClass("bi-heart-fill text-danger").addClass("bi-heart");
             }else {
-                button.addClass("bi-heart-fill").removeClass("bi-heart");
-                button.addClass("text-danger");
+                icon.removeClass("bi-heart").addClass("bi-heart-fill text-danger");
             }
         } else if (response.status === "error") {
             toastMessage("error", response.message);
