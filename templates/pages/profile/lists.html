@@ -208,7 +208,8 @@
 
                                     <button class="btn btn-icon btn-primary highlight_list" style="background-color: #E06DFF;"
                                             data-bs-toggle="tooltip" data-bs-custom-class="tooltip-dark"
-                                            data-bs-placement="bottom" title="Destacar Lista">
+                                            data-bs-placement="bottom" title="Destacar Lista"
+                                            data-share_code="{{ list.share_code }}" data-name="{{ list.name }}">
                                         <i class="bi bi-star-fill fs-4"></i>
                                     </button>
                                 </div>
@@ -251,7 +252,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header justify-content-start">
-                <h3 class="modal-title d-flex w-100">Destacar <span class="text-primary ms-2 overflow-hidden text-nowrap" style="text-overflow: ellipsis">Nombre de la lista</span></h3>
+                <h3 class="modal-title d-flex w-100">Destacar <span class="text-primary ms-2 overflow-hidden text-nowrap" id="highlight_list_name" style="text-overflow: ellipsis"></span></h3>
             </div>
 
             <div class="modal-body p-10">
@@ -271,7 +272,7 @@
 
             <div class="modal-footer justify-content-center gap-5">
                 <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary d-flex align-items-center">Destacar<span class="mx-3">|</span><span id="highlight_price">0</span><i class="bi bi-gem ms-2"></i></button>
+                <button type="button" class="btn btn-primary d-flex align-items-center" id="highlight_submit">Destacar<span class="mx-3">|</span><span id="highlight_price">0</span><i class="bi bi-gem ms-2"></i></button>
             </div>
         </div>
     </div>
