@@ -40,9 +40,8 @@ def get_lists(limit=None, page=1, search='', user=None, order='default', categor
     elif order == 'newest':
         order_by = "l.edit_date DESC, "
 
-    order_by += ("CASE "
-                 "WHEN hl.id IS NOT NULL AND hl.start_date <= NOW() AND hl.end_date >= NOW() "
-                 "THEN hl.start_date END DESC")
+    order_by += ("CASE WHEN "
+                 "hl.id IS NOT NULL THEN hl.start_date ELSE l.creation_date END DESC")
 
     if category is not None:
         where = "AND lc.category_id = %s "
@@ -54,13 +53,14 @@ def get_lists(limit=None, page=1, search='', user=None, order='default', categor
                     (SELECT COUNT(sla.id)
                      FROM api_listanswer sla
                      WHERE sla.list_id = l.id) AS plays,
-                    IF(hl.id IS NOT NULL AND hl.start_date <= NOW() AND hl.end_date >= NOW(), TRUE, FALSE)
+                    IF(hl.id IS NOT NULL, TRUE, FALSE)
                     AS highlighted,
                     au.username as owner_username, au.share_code as owner_share_code, aa.image as owner_avatar
                 FROM api_list l
                 JOIN ranquiz.api_user au on l.owner_id = au.id
                 JOIN ranquiz.api_avatar aa on au.avatar_id = aa.id
-                LEFT JOIN ranquiz.api_highlightedlist hl on l.id = hl.list_id
+                LEFT JOIN ranquiz.api_highlightedlist hl on l.id = hl.list_id AND start_date <= NOW() 
+                    AND end_date >= NOW()
                 LEFT JOIN ranquiz.api_listcategory lc on l.id = lc.list_id
                 WHERE l.public = TRUE AND l.name LIKE %s {where}
                 GROUP BY l.id
