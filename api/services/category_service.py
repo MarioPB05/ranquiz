@@ -54,7 +54,7 @@ def get_categories(limit=None, page=1, search='', user=None, order='default'):
     order_by = "1"
 
     if order == 'default':
-        order_by = "id DESC"
+        order_by = "lists DESC"
     elif order == 'popular':
         order_by = "followers DESC"
     elif order == 'newest':
@@ -65,7 +65,7 @@ def get_categories(limit=None, page=1, search='', user=None, order='default'):
                 FROM api_category c
                 LEFT JOIN api_listcategory lc on c.id = lc.category_id
                 LEFT JOIN api_categorysubscription cs on c.id = cs.category_id
-                JOIN ranquiz.api_list al on lc.list_id = al.id
+                JOIN ranquiz.api_list al on lc.list_id = al.id and al.public = TRUE
                 WHERE c.name LIKE %s
                 GROUP BY c.id
                 ORDER BY {order_by}

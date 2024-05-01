@@ -112,7 +112,7 @@ def get_user(user_id=None, share_code=None):
 
 def get_users(limit=None, page=1, search='', order='default', user=None):
     """Servicio que devuelve los usuarios con filtros"""
-    order_by = "1"
+    order_by = "lists DESC"
 
     if order == 'popular':
         order_by = "followers DESC"
@@ -129,7 +129,7 @@ def get_users(limit=None, page=1, search='', order='default', user=None):
                     COUNT(l.id) AS lists
                 FROM api_user u
                 JOIN ranquiz.api_avatar a on u.avatar_id = a.id
-                LEFT JOIN api_list l on u.id = l.owner_id
+                LEFT JOIN api_list l on u.id = l.owner_id and l.public = TRUE
                 WHERE u.username LIKE %s
                 GROUP BY u.id
                 ORDER BY {order_by}
