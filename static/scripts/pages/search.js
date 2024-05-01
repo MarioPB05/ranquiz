@@ -82,7 +82,7 @@ function addList(list) {
     newList.removeAttr("id");
     newList.removeClass("d-none");
 
-    newList.attr("data-share-code", list.share_code);
+    newList.attr("data-share_code", list.share_code);
     newList.find(".list_name").text(list.name);
     newList.find(".list_image").attr("src", list.image);
     !list.image ? newList.find(".list_image").attr("src", "/static/assets/media/placeholders/list_mix2.png") : "";
@@ -94,8 +94,8 @@ function addList(list) {
 
     newList.find(".list_plays_number").text(list.plays);
     !list.highlighted ? newList.find(".highlight_list").addClass("d-none") : '';
-    list.liked ? newList.find(".list_like").find('i').addClass("bi-heart-fill").removeClass("bi-heart") : "";
-    list.liked ? newList.find(".list_like").find('i').addClass("text-danger") : "";
+    list.liked ? newList.find(".list_like i").addClass("bi-heart-fill").removeClass("bi-heart") : "";
+    list.liked ? newList.find(".list_like i").addClass("text-danger") : "";
 
     content.append(newList);
 }
@@ -109,7 +109,7 @@ function addCategory(category) {
     newCategory.removeAttr("id");
     newCategory.removeClass("d-none");
 
-    newCategory.attr("data-share-code", category.share_code);
+    newCategory.attr("data-share_code", category.share_code);
     newCategory.find(".category_name").text(category.name);
     newCategory.find(".category_list_number").text(category.lists);
     newCategory.attr("href", category.url);

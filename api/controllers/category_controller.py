@@ -2,10 +2,8 @@ from django.http import JsonResponse
 from django.urls import reverse
 from django.views.decorators.http import require_GET, require_POST
 
-from api.models import CategorySubscription
-from api.services import category_service
 from api.services import category_service, PAGINATION_ITEMS_PER_PAGE
-from api.services.category_service import get_all_categories, similarity, create_category
+from api.services.category_service import get_all_categories, similarity, create_category, user_follow_category
 
 
 @require_GET
@@ -68,6 +66,7 @@ def get_categories_filtered(request):
             'id': category['id'],
             'name': category['name'],
             'url': request.build_absolute_uri(reverse('category_lists', args=[category['share_code']])),
+            'share_code': category['share_code'],
             'lists': category['lists'],
             'followers': category['followers'],
             'followed': category['followed']
@@ -87,19 +86,15 @@ def add_category(request):
     return JsonResponse({'id': None})
 
 
-def follow_category(request):
-    """Controlador que permite seguir o dejar de seguir una categoría"""
-    # Obtener el ID de la categoría que se quiere seguir o dejar de seguir
-    category_id = request.GET.get('categoryId')
+def follow_category(request, share_code):
+    """Función para seguir una categoría"""
+    follow = request.GET.get('follow', 'true') == 'true'
+    notification = request.GET.get('notification', 'true') == 'true'
+    category = category_service.get_category(share_code=share_code)
 
-    # Verificar si el usuario ya sigue la categoría
-    is_following = CategorySubscription.objects.filter(user=request.user, category_id=category_id).exists()
+    if category is not None:
+        user_follow_category(request.user, category, follow, notification)
 
-    # Si el usuario ya sigue la categoría, dejar de seguirla
-    if is_following:
-        CategorySubscription.objects.filter(user=request.user, category_id=category_id).delete()
-        return JsonResponse({'status': 'success', 'message': 'Unfollowed category successfully'})
-    else:
-        # Si el usuario no sigue la categoría, seguirla
-        CategorySubscription.objects.create(user=request.user, category_id=category_id)
-        return JsonResponse({'status': 'success', 'message': 'Followed category successfully'})
+        return JsonResponse({'status': 'success', 'followed': follow, 'notification': notification})
+
+    return JsonResponse({'status': 'error'})

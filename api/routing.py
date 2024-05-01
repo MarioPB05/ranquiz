@@ -14,6 +14,7 @@ urlpatterns = [
     path('category/', get_categories, name='api_categories'),
     path('category/filter', get_categories_filtered, name='api_categories_filtered'),
     path('category/create/', add_category, name='api_category_create'),
+    path('category/<str:share_code>/follow', follow_category, name='api_category_follow'),
     path('category/validate/<str:category_name>', validate_category, name='api_category_validator'),
     path('list/<str:share_code>/comments', get_comments, name='api_list_comments'),
     path('list/<str:share_code>/comment/create', create_and_return_comment, name='api_new_comment'),
