@@ -6,7 +6,8 @@ from api.controllers.list_controller import get_list_types, like_list, favorite_
     visibility_list
 from api.controllers.social_controller import get_comments, create_and_return_comment, add_award_to_comment_function, \
     get_awards
-from api.controllers.shop_controller import highlight_calculator, get_avatars, buy_a_avatar, equip_a_avatar
+from api.controllers.shop_controller import highlight_calculator, get_avatars, buy_a_avatar, equip_a_avatar, \
+    highlight_list, list_is_highlighted
 from api.controllers.user_controller import get_user_data, get_users_filtered
 
 urlpatterns = [
@@ -28,7 +29,9 @@ urlpatterns = [
     path('shop/avatar/', get_avatars, name='api_shop_avatars'),
     path('shop/avatar/<int:avatar_id>/buy', buy_a_avatar, name='api_shop_avatar_buy'),
     path('shop/avatar/<int:avatar_id>/equip', equip_a_avatar, name='api_shop_avatar_equip'),
+    path('shop/highlight/<str:share_code>/check', list_is_highlighted, name='api_shop_highlight_check'),
     path('shop/highlight/calculator', highlight_calculator, name='api_shop_highlight_calculator'),
+    path('shop/highlight/<str:share_code>', highlight_list, name='api_shop_highlight_list'),
     path('user/', get_user_data, name='api_user'),
     path('user/filter', get_users_filtered, name='api_users_filtered'),
     path('list/<str:share_code>/like', like_list, name='api_like_list'),
