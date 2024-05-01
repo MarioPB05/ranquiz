@@ -3,7 +3,7 @@ import math
 from api.forms.list_form import CreateListForm
 from api.services import PAGINATION_ITEMS_PER_PAGE
 from api.services.query_service import execute_query
-from api.models import List, ListCategory, ListFavorite, ListLike, ListAnswer, ListComment
+from api.models import List, ListCategory, ListFavorite, ListLike, ListAnswer, ListComment, HighlightedList
 
 
 def create_list_form(request, instance=None):
