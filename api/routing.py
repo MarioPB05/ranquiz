@@ -3,7 +3,7 @@ from django.urls import path
 from api.controllers.category_controller import validate_category, get_categories, add_category, \
     get_categories_filtered, follow_category
 from api.controllers.list_controller import get_list_types, like_list, favorite_list, get_lists_filtered, \
-    visibility_list
+    visibility_list, delete_or_recover_list
 from api.controllers.social_controller import get_comments, create_and_return_comment, add_award_to_comment_function, \
     get_awards
 from api.controllers.shop_controller import highlight_calculator, get_avatars, buy_a_avatar, equip_a_avatar, \
@@ -36,5 +36,6 @@ urlpatterns = [
     path('user/filter', get_users_filtered, name='api_users_filtered'),
     path('list/<str:share_code>/like', like_list, name='api_like_list'),
     path('list/<str:share_code>/favorite', favorite_list, name='api_favorite_list'),
-    path('list/<str:share_code>/visibility', visibility_list, name='api_visibility_list')
+    path('list/<str:share_code>/visibility', visibility_list, name='api_visibility_list'),
+    path('list/<str:share_code>/delete', delete_or_recover_list, name='api_delete_list')
 ]

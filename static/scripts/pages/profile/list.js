@@ -103,6 +103,23 @@ function showHighlightModal(event) {
     event.stopPropagation();
 }
 
+function deleteList(event) {
+    const share_code = $(this).data('share_code');
+    const parent = $(this).closest('.list_item');
+
+    $(this).prop('disabled', true);
+
+    promiseAjax(`/api/list/${share_code}/delete`, 'GET').then((data) => {
+        if (data.status === 'success') {
+            window.location.reload();
+        }
+
+        $(this).prop('disabled', false);
+    });
+
+    event.stopPropagation();
+}
+
 function redirectToList() {
     window.location.href = $(this).data('url');
 }
@@ -111,6 +128,7 @@ function loadEvents() {
     $('#list_container')
         .on('click', '.toggle_visibility_list', toggleVisibility)
         .on('click', '.highlight_list', showHighlightModal)
+        .on('click', '.delete_list', deleteList)
         .on('click', '.list_item', redirectToList);
 
     $("#range_date_highlight").on("change", updateHighlightPrice);
