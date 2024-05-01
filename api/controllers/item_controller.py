@@ -14,6 +14,9 @@ def get_current_items(request, share_code):
     items = get_items(share_code)
     result = []
 
+    if not items:
+        return JsonResponse({'items': result})
+
     for item in items:
         result.append({
             'id': item.id,
