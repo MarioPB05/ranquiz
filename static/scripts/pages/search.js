@@ -94,8 +94,8 @@ function addList(list) {
 
     newList.find(".list_plays_number").text(list.plays);
     !list.highlighted ? newList.find(".highlight_list").addClass("d-none") : '';
-    list.liked ? newList.find(".list_like").addClass("bi-heart-fill").removeClass("bi-heart") : "";
-    list.liked ? newList.find(".list_like").addClass("text-danger") : "";
+    list.liked ? newList.find(".list_like").find('i').addClass("bi-heart-fill").removeClass("bi-heart") : "";
+    list.liked ? newList.find(".list_like").find('i').addClass("text-danger") : "";
 
     content.append(newList);
 }
