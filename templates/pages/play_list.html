@@ -4,12 +4,12 @@
 {% block content %}
     <div class="row">
         <div class="col-md-8 h-100 h-md-auto p-3 text-center order-2 order-md-1">
-           <h1 class="fw-boldest">Brawlers</h1> {#Testing#}
+           <h1 class="fw-boldest">Brawlers</h1>
         </div>
 
         <a href="/" class="col-md-4 h-100 h-md-auto p-3 d-flex text-center align-items-center gap-5 order-1 order-md-2">
             <i class="bi bi-person-circle text-muted fs-2qx user-avatar"></i>
-            <h4 class="text-center text-muted m-0 ">David Pérez Fernandez</h4> {#Testing#}
+            <h4 class="text-center text-muted m-0 ">David Pérez Fernandez</h4>
         </a>
     </div>
 
@@ -23,27 +23,16 @@
 
             <h1 class="text-white w-100">¿Cuál prefieres?</h1>
 
-            <div class="gap-4 w-100 h-auto h-md-100 d-flex flex-column d-md-grid mw-500px" id="items_container" style="grid-template-columns: 1fr 1fr;">
-                <div class="bg-white w-100 rounded d-flex justify-content-around flex-column hover-bg-primary-200 hover-scale selected_item cursor-pointer p-5 align-items-center gap-4">
-                    <img src="{% static 'assets/media/placeholders/list_mix2.png' %}" class="mw-50 mh-50 d-none d-md-flex" style="object-fit: contain;">
-                    <h1 class="m-0 fs-2">Item xd</h1>
-                </div>
-
-                <div class="bg-white w-100 overflow-hidden mw-100 rounded d-flex justify-content-around flex-column hover-bg-primary-200 hover-scale cursor-pointer p-5 align-items-center gap-4">
-                    <img src="https://almacen.do/wp-content/uploads/2018/05/Agua-Planeta-Azul-16.9-oz-Caja-20-uds-Front-1.jpg" class="mw-50 mh-50 d-none d-md-flex" style="object-fit: contain;">
-                    <h1 class="m-0 fs-2 text-nowrap overflow-hidden w-100" style="text-overflow: ellipsis">Item xd sfdgh dsh dsfg dshg sdhg</h1>
+            <div class="gap-4 w-100 h-auto h-md-100 d-flex flex-column d-md-grid w-100 w-sm-500px" id="items_container" style="grid-template-columns: 1fr 1fr;">
+                <div class="bg-white w-100 overflow-hidden mw-100 rounded d-none d-flex justify-content-around flex-column hover-bg-primary-200 hover-scale cursor-pointer p-5 align-items-center gap-4"  id="item_template_2_options">
+                    <img src="" class="mw-75 mh-75 d-none d-md-flex item_image" style="object-fit: contain;">
+                    <h1 class="m-0 fs-2 item_name" style="text-overflow: ellipsis"></h1>
                 </div>
                 
-                <div class="bg-white w-100 rounded d-flex justify-content-around flex-column hover-bg-primary-200 hover-scale cursor-pointer p-5 align-items-center gap-4">
-                    <img src="https://static.wikia.nocookie.net/brawlstars/images/c/cf/Squeak_Skin-Default.png/revision/latest?cb=20230127144034" class="mw-50 mh-50 d-none d-md-flex" style="object-fit: contain;">
-                    <h1 class="m-0 fs-2" >Item xd</h1>
+                <div class="bg-white w-100 overflow-hidden mw-100 rounded d-none d-flex justify-content-around flex-column hover-bg-primary-200 hover-scale cursor-pointer p-5 align-items-center gap-4" id="item_template_4_options">
+                    <img src="" class="mw-50 mh-50 d-none d-md-flex item_image" style="object-fit: contain;">
+                    <h1 class="m-0 fs-2 w-100 item_name ellipsis-two-lines"></h1>
                 </div>
-
-                <div class="bg-white w-100 rounded d-flex justify-content-around flex-column hover-bg-primary-200 hover-scale cursor-pointer p-5 align-items-center gap-4">
-                    <img src="https://almacen.do/wp-content/uploads/2018/05/Agua-Planeta-Azul-16.9-oz-Caja-20-uds-Front-1.jpg" class="mw-50 mh-50 d-none d-md-flex" style="object-fit: contain;">
-                    <h1 class="m-0 fs-2">Item xd</h1>
-                </div>
-                
             </div>
 
 
@@ -55,38 +44,22 @@
 
         <div class="col-lg-4 p-3 overflow-hidden d-lg-flex d-none">
             <div class="d-flex w-100 border border-gray-900 rounded d-flex flex-column align-items-center p-2 scrolleable h-100">
-                <div class="d-grid border-bottom border-2 border-gray-500 w-90 py-3 align-items-center " style="grid-template-columns: 45px 1fr">
-                    <div>
-                        <img class="w-30px h-30px" src="/static/assets/media/medals/gold_medal.png">
-                    </div>
-                    <h1 class="fw-boldest ellipsis m-0 text-nowrap mw-100 overflow-hidden">Crow Sr eustakio señor de los cielos fernandez</h1>
+                <div class="d-grid border-bottom border-2 border-gray-500 w-90 py-3 align-items-center " style="grid-template-columns: 45px 1fr" id="item_top_1">
+                    <img class="w-30px h-30px" src="/static/assets/media/medals/gold_medal.png">
+                    <h1 class="fw-boldest ellipsis m-0 mw-100 top_item_name"></h1>
                 </div>
-                <div class="d-grid border-bottom border-2 border-gray-500 w-90 py-3 align-items-center align-items-center"  style="grid-template-columns: 45px 1fr">
-                    <div>
-                        <img class="w-30px h-30px" src="/static/assets/media/medals/silver_medal.png ">
-                    </div>
-                    <h1 class="fw-boldest ellipsis m-0 text-nowrap mw-100 overflow-hidden">Crow</h1>
+                <div class="d-grid border-bottom border-2 border-gray-500 w-90 py-3 align-items-center align-items-center"  style="grid-template-columns: 45px 1fr" id="item_top_2">
+                    <img class="w-30px h-30px" src="/static/assets/media/medals/silver_medal.png ">
+                    <h1 class="fw-boldest ellipsis m-0 mw-100 top_item_name"></h1>
                 </div>
-                <div class="d-grid border-bottom border-2 border-gray-500 w-90 py-3"  style="grid-template-columns: 45px 1fr">
-                    <div>
-                        <img class="w-30px h-30px" src="/static/assets/media/medals/bronce_medal.png">
-                    </div>
-                    <h1 class="fw-boldest ellipsis m-0 text-nowrap mw-100 overflow-hidden">Crow</h1>
+                <div class="d-grid border-bottom border-2 border-gray-500 w-90 py-3"  style="grid-template-columns: 45px 1fr" id="item_top_3">
+                    <img class="w-30px h-30px" src="/static/assets/media/medals/bronce_medal.png">
+                    <h1 class="fw-boldest ellipsis m-0 mw-100 top_item_name"></h1>
                 </div>
-                <div class="d-grid border-bottom border-2 border-gray-500 w-90 py-3 align-items-center" style="grid-template-columns: 45px 1fr">
-                    <h1 class="fw-boldest px-2 text-muted m-0">4</h1>
-                    <h1 class="fw-boldest ellipsis m-0 text-nowrap mw-100 overflow-hidden">Crow</h1>
+                <div class="d-none d-grid border-bottom border-2 border-gray-500 w-90 py-3 align-items-center" style="grid-template-columns: 45px 1fr" id="template_top_item">
+                    <h1 class="fw-boldest px-2 text-muted m-0 top_number">4</h1>
+                    <h1 class="fw-boldest ellipsis m-0 mw-100 top_item_name"></h1>
                 </div>
-                <div class="d-grid border-bottom border-2 border-gray-500 w-90 py-3 align-items-center" style="grid-template-columns: 45px 1fr">
-                    <h1 class="fw-boldest px-2 text-muted m-0">5</h1>
-                    <h1 class="fw-boldest ellipsis m-0 text-nowrap mw-100 overflow-hidden">Crow</h1>
-                </div>
-                <div class="d-grid border-bottom border-2 border-gray-500 w-90 py-3 align-items-center" style="grid-template-columns: 45px 1fr">
-                    <h1 class="fw-boldest px-2 text-muted m-0">6</h1>
-                    <h1 class="fw-boldest ellipsis m-0 text-nowrap mw-100 overflow-hidden">Crow</h1>
-                </div>
-
-
             </div>
         </div>
 
@@ -95,5 +68,8 @@
 {% endblock %}
 
 {% block custom_scripts %}
+    <script>
+        const share_code = "{{ share_code }}";
+    </script>
     <script src="{% static 'scripts/pages/play_list.js' %}" type="module"></script>
 {% endblock %}
