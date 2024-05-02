@@ -1,4 +1,4 @@
-import {promiseAjax, removePageLoader, toastMessage, toggleListLike} from "/static/assets/js/ranquiz/utils.js";
+import {promiseAjax, removePageLoader, toastMessage, toggleListLike, toggleUserFollow} from "/static/assets/js/ranquiz/utils.js";
 
 const elementsPerPage = 30;
 let previousSearch = "";
@@ -137,9 +137,10 @@ function addUser(user) {
     newUser.removeAttr("id");
     newUser.removeClass("d-none");
 
-    newUser.attr("data-id", user.id);
+    newUser.attr("data-share_code", user.share_code);
     newUser.find(".user_name").text(user.username);
     newUser.attr("href", user.url);
+    newUser.attr("data-is_followed", user.followed);
     newUser.find(".user_list_number").text(user.lists);
     newUser.find(".user_follower_number").text(user.followers);
     newUser.find(".user_avatar").attr("src", user.avatar);
@@ -323,6 +324,9 @@ function onDocumentReady() {
 
     // Evento para dar like a una lista
     content.on("click", ".list_like", toggleListLike);
+
+    // Evento para seguir a un usuario
+    content.on("click", ".user_follow", toggleUserFollow);
 
     // Evento para cambiar lo que el usuario está buscando
     allNavs.on("click", (event) => {
