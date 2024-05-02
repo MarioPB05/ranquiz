@@ -1,7 +1,8 @@
-import { removePageLoader, toastMessage, promiseAjax } from "/static/assets/js/ranquiz/utils.js";
+import { removePageLoader, toastMessage, promiseAjax, secondsToTime } from "/static/assets/js/ranquiz/utils.js";
 
 const twoOptions = $("#item_template_2_options");
 const fourOptions = $("#item_template_4_options");
+const horaInicio = new Date();
 
 class Opcion {
     constructor(id, nombre, image=null) {
@@ -304,8 +305,44 @@ function appendOptions(options) {
 }
 
 function actualizarTop() {
-    opciones.sort((a, b) => a.puntos - b.puntos);
-    console.log(opciones);
+    const opcionesOrdenadas = opciones;
+    opcionesOrdenadas.sort((a, b) => a.puntos - b.puntos);
+
+    const templateTop = $("#template_top_item");
+    $(".top_item").remove();
+
+    let i = 1;
+    for(const opcion of opciones) {
+        console.log(`TOP ${i} | ${opcion.nombre}: ${opcion.descartes} descartes`);
+        i++;
+    }
+
+    $("#item_top_1").find(".top_item_name").text(opcionesOrdenadas[0].nombre);
+    $("#item_top_2").find(".top_item_name").text(opcionesOrdenadas[1].nombre);
+    $("#item_top_3").find(".top_item_name").text(opcionesOrdenadas[2].nombre);
+
+    $.each(opcionesOrdenadas, function(index, option) {
+        if (index > 2) {
+            const optionElement = templateTop.clone();
+            optionElement.attr('data-id', option.id);
+            optionElement.attr('id', '');
+
+            optionElement.find('.top_number').text(index + 1);
+            optionElement.find('.top_item_name').text(option.nombre);
+            optionElement.removeClass('d-none');
+            optionElement.addClass('top_item');
+            templateTop.before(optionElement);
+        }
+    });
+}
+
+function actualizarContador() {
+    const contador = $("#play_time");
+    const horaActual = new Date();
+
+    // Obtener los segundos transcurridos
+    const segundosTranscurridos = parseInt(((horaActual - horaInicio) / 1000), 10);
+    contador.text(secondsToTime(segundosTranscurridos));
 }
 
 function obtenerOpciones() {
@@ -316,6 +353,7 @@ function obtenerOpciones() {
                     opciones.push(new Opcion(item.id, item.name, item.image));
                 });
                 appendOptions([opciones[0], opciones[1]]);
+                actualizarTop();
                 resolve();
             }
         });
@@ -336,6 +374,7 @@ function onDocumentReady() {
         console.log('Cantidad de iteraciones: ' + cantidadIteracionesUsuario)
     });
 
+    setInterval(actualizarContador, 1000);
     removePageLoader();
 }
 
