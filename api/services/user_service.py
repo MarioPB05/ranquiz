@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
 from api.models import User
@@ -138,3 +139,18 @@ def get_users(limit=None, page=1, search='', order='default', user=None):
     params = [user.id if user is not None else 0, f"%{search}%", limit, (page - 1) * limit]
 
     return execute_query(query, params)
+
+
+def toggle_user_follow(user, followed_user):
+    """Función que permite seguir o dejar de seguir a un usuario"""
+    if followed_user is None:
+        raise ValueError('El usuario objetivo no existe')
+
+    is_following = user.following_set.filter(user_followed=followed_user).exists()
+
+    if is_following:
+        user.following_set.filter(user_followed=followed_user).delete()
+        return 'Dejaste de seguir a {}'.format(followed_user.username)
+    else:
+        user.following_set.create(user_followed=followed_user)
+        return 'Ahora sigues a {}'.format(followed_user.username)
