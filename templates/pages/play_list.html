@@ -19,24 +19,24 @@
     
     <div class="mt-4 row h-75" style="min-height: 67vh">
         <div class="position-relative col-lg-8 text-center d-md-grid d-flex flex-column justify-content-center align-items-center gap-4 bg-primary rounded-25px h-100 pb-12 border border-10 border-primary-400 p-7 p-md-12" style="grid-template-rows: auto 1fr">
-            <div class="text-primary bg-white position-absolute end-0 m-5 top-0 fw-boldest fs-3 p-2 rounded-2 shadow flex-md-column" id="play_time">0s</div> {#Testing#}
+            <div class="text-primary bg-white position-absolute end-0 m-5 top-0 fw-boldest fs-3 p-2 rounded-2 shadow flex-md-column" id="play_time">0s</div>
 
             <h1 class="text-white w-100">¿Cuál prefieres?</h1>
 
             <div class="gap-4 w-100 h-auto h-md-100 d-flex flex-column d-md-grid w-100 w-sm-500px" id="items_container" style="grid-template-columns: 1fr 1fr;">
-                <div class="bg-white w-100 overflow-hidden mw-100 rounded d-none d-flex justify-content-around flex-column hover-bg-primary-200 hover-scale cursor-pointer p-5 align-items-center gap-4"  id="item_template_2_options">
+                <div class="bg-white w-100 overflow-hidden mw-100 rounded d-none d-flex justify-content-center flex-column hover-bg-primary-200 hover-scale cursor-pointer p-5 align-items-center gap-10 item_option"  id="item_template_2_options">
                     <img src="" class="mw-75 mh-75 d-none d-md-flex item_image" style="object-fit: contain;">
-                    <h1 class="m-0 fs-2 item_name" style="text-overflow: ellipsis"></h1>
+                    <h1 class="m-0 fs-1 item_name fw-boldest" style="text-overflow: ellipsis"></h1>
                 </div>
                 
-                <div class="bg-white w-100 overflow-hidden mw-100 rounded d-none d-flex justify-content-around flex-column hover-bg-primary-200 hover-scale cursor-pointer p-5 align-items-center gap-4" id="item_template_4_options">
+                <div class="bg-white w-100 overflow-hidden mw-100 rounded d-none d-flex justify-content-center flex-column hover-bg-primary-200 hover-scale cursor-pointer p-5 align-items-center gap-6 item_option" id="item_template_4_options">
                     <img src="" class="mw-50 mh-50 d-none d-md-flex item_image" style="object-fit: contain;">
-                    <h1 class="m-0 fs-2 w-100 item_name ellipsis-two-lines"></h1>
+                    <h1 class="m-0 fs-2 w-100 item_name ellipsis-two-lines fw-boldest"></h1>
                 </div>
             </div>
 
 
-            <button class="shadow position-absolute top-100 start-50 translate-middle btn btn-primary rounded-2 fw-boldest p-3 px-8 fs-6 align-center border border-3 border-primary-400 d-flex center justify-content-between align-items-center gap-1">
+            <button id="next_button" class="shadow position-absolute top-100 start-50 translate-middle btn btn-primary rounded-2 fw-boldest p-3 px-8 fs-6 align-center border border-3 border-primary-400 d-flex center justify-content-between align-items-center gap-1">
                 <h1 class="m-0 text-white">Siguiente</h1>
                 <i class="bi bi-caret-right-fill fs-20px"></i>
             </button>
@@ -46,19 +46,19 @@
             <div class="d-flex w-100 border border-gray-900 rounded d-flex flex-column align-items-center p-2 scrolleable h-100">
                 <div class="d-grid border-bottom border-2 border-gray-500 w-90 py-3 align-items-center " style="grid-template-columns: 45px 1fr" id="item_top_1">
                     <img class="w-30px h-30px" src="/static/assets/media/medals/gold_medal.png">
-                    <h1 class="fw-boldest ellipsis m-0 mw-100 top_item_name"></h1>
+                    <h1 class="fw-bolder ellipsis m-0 mw-100 top_item_name"></h1>
                 </div>
                 <div class="d-grid border-bottom border-2 border-gray-500 w-90 py-3 align-items-center align-items-center"  style="grid-template-columns: 45px 1fr" id="item_top_2">
                     <img class="w-30px h-30px" src="/static/assets/media/medals/silver_medal.png ">
-                    <h1 class="fw-boldest ellipsis m-0 mw-100 top_item_name"></h1>
+                    <h1 class="fw-bolder ellipsis m-0 mw-100 top_item_name"></h1>
                 </div>
                 <div class="d-grid border-bottom border-2 border-gray-500 w-90 py-3"  style="grid-template-columns: 45px 1fr" id="item_top_3">
                     <img class="w-30px h-30px" src="/static/assets/media/medals/bronce_medal.png">
-                    <h1 class="fw-boldest ellipsis m-0 mw-100 top_item_name"></h1>
+                    <h1 class="fw-bolder ellipsis m-0 mw-100 top_item_name"></h1>
                 </div>
                 <div class="d-none d-grid border-bottom border-2 border-gray-500 w-90 py-3 align-items-center" style="grid-template-columns: 45px 1fr" id="template_top_item">
                     <h1 class="fw-boldest px-2 text-muted m-0 top_number">4</h1>
-                    <h1 class="fw-boldest ellipsis m-0 mw-100 top_item_name"></h1>
+                    <h1 class="fw-bolder ellipsis m-0 mw-100 top_item_name"></h1>
                 </div>
             </div>
         </div>
