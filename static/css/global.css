@@ -47,7 +47,8 @@
 }
 
 .selected_item{
-    border: 10px solid #1aa7ff;
+    /*border: 10px solid #1aa7ff;*/
+    box-shadow: inset 0 0 0 10px #1aa7ff;
 }
 
 .hover-scale{
