@@ -51,6 +51,9 @@ function toggleSort(selected) {
     const allSorts = $("#sort_container button");
     const selectedSort = $(`#${selected}`);
 
+    // Bloquear todos los navs
+    allNavs.attr("disabled", true);
+
     if (selectedSort.hasClass("btn-primary")) {
         selectedSort.removeClass("btn-primary");
         selectedSort.addClass("btn-outline-primary");
@@ -82,7 +85,7 @@ function addList(list) {
     newList.removeAttr("id");
     newList.removeClass("d-none");
 
-    newList.attr("data-id", list.id);
+    newList.attr("data-share_code", list.share_code);
     newList.find(".list_name").text(list.name);
     newList.find(".list_image").attr("src", list.image);
     !list.image ? newList.find(".list_image").attr("src", "/static/assets/media/placeholders/list_mix2.png") : "";
@@ -94,8 +97,8 @@ function addList(list) {
 
     newList.find(".list_plays_number").text(list.plays);
     !list.highlighted ? newList.find(".highlight_list").addClass("d-none") : '';
-    list.liked ? newList.find(".list_like").addClass("bi-heart-fill").removeClass("bi-heart") : "";
-    list.liked ? newList.find(".list_like").addClass("text-danger") : "";
+    list.liked ? newList.find(".list_like i").addClass("bi-heart-fill").removeClass("bi-heart") : "";
+    list.liked ? newList.find(".list_like i").addClass("text-danger") : "";
 
     content.append(newList);
 }
@@ -109,7 +112,7 @@ function addCategory(category) {
     newCategory.removeAttr("id");
     newCategory.removeClass("d-none");
 
-    newCategory.attr("data-id", category.id);
+    newCategory.attr("data-share_code", category.share_code);
     newCategory.find(".category_name").text(category.name);
     newCategory.find(".category_list_number").text(category.lists);
     newCategory.attr("href", category.url);
@@ -134,7 +137,7 @@ function addUser(user) {
     newUser.removeAttr("id");
     newUser.removeClass("d-none");
 
-    newUser.attr("data-id", user.id);
+    newUser.attr("data-share_code", user.share_code);
     newUser.find(".user_name").text(user.username);
     newUser.attr("href", user.url);
     newUser.find(".user_list_number").text(user.lists);

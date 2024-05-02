@@ -7,7 +7,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 from api.models import List, ListCategory, ListFavorite, ListLike, ListAnswer
 from api.services import PAGINATION_ITEMS_PER_PAGE
-from api.services.category_service import edit_list_categories, get_category, user_followed_category
+from api.services.category_service import edit_list_categories, get_category, user_followed_category, \
+    user_follow_category_and_receive_notifications
 from api.services.item_service import (
     create_item_form,
     create_item,
@@ -244,7 +245,9 @@ def category_lists(request, share_code):
          'lists': lists,
          'category': category_object,
          'followed': user_followed_category(request.user, category_object),
+         'notifications': user_follow_category_and_receive_notifications(request.user, category_object),
          'order': order,
+         'user': request.user,
          'pagination': {
              'total_pages': list_count // PAGINATION_ITEMS_PER_PAGE + 1,
              'current_page': page,
