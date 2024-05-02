@@ -223,7 +223,7 @@ function toggleListLike(event) {
     const isLiked = button.find('i').hasClass('text-danger');
 
     // Llamar al backend
-    const shareCode = button.parent().attr('data-share-code');
+    const shareCode = button.parent().attr('data-share_code');
     promiseAjax(`/api/list/${shareCode}/like?isLiked=${!isLiked}`, "GET").then(response => {
         if (response.status === "success") {
             if (isLiked) {
