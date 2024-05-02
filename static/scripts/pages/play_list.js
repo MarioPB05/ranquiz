@@ -36,26 +36,20 @@ let enfrentamientos = [];
 let cantidadIteracionesUsuario = 0;
 
 async function main() {
-    console.log(opciones);
     await rondaInicial();
 
     // Ordenar las opciones por menos descartes
     opciones.sort((a, b) => a.descartes - b.descartes);
-    console.log(opciones)
 
     while(comprobarEmpates()) {
         await resolverEmpates();
 
         opciones.sort((a, b) => a.descartes - b.descartes);
-        console.log(opciones)
     }
-
-    rl.close();
 }
 
 async function rondaInicial() {
-    // Agrupar las opciones en grupos de 4, para el ultimo enfrentamiento se relennara cogiendo las opciones de inicio
-    const enfrentamientos = [];
+    // Agrupar las opciones en grupos de 4, para el ultimo enfrentamiento se rellenara cogiendo las opciones de inicio
     let opcionesRestantes = [...opciones];
 
     while (opcionesRestantes.length > 0) {
@@ -136,11 +130,6 @@ async function desempatarPares(opcion1, opcion2) {
             // let tempOrden = [];
 
             for (const contrincante of contrincantes) {
-                if(opcion1.nombre === 'Mico' && opcion2.nombre === 'Sprout') {
-                    // Crear punto de ruptura
-                    console.log('Punto de ruptura')
-                }
-
                 // Comprobamos si opcion1 ha jugado contra ese contrincante, y si ha ganado
                 const enfrentamientoOpcion1 = enfrentamientos.find(enfrentamiento =>
                     (enfrentamiento.opcion1 === opcion1 || enfrentamiento.opcion2 === opcion1 || enfrentamiento.opcion3 === opcion1 || enfrentamiento.opcion4 === opcion1) &&
@@ -185,8 +174,6 @@ async function desempatarPares(opcion1, opcion2) {
                 console.log('La ' + opcion2.nombre + ' ha ganado a la ' + opcion1.nombre);
                 sumarDescarte(opcion1);
             }
-
-            console.log(orden)
         }
 
         return false;
@@ -242,55 +229,62 @@ async function resolverEmpates() {
 }
 
 async function generarEnfrentamiento(opcion1, opcion2, opcion3= null, opcion4 = null) {
-    // TODO: Al usuario se le presentan dos opciones, y tiene que elegir una (INTERFAZ)
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         if(opcion3 === null) {
-            // rl.question(`Cuál prefieres? ${opcion1.nombre} (${opcion1.letra}) o ${opcion2.nombre} (${opcion2.letra}): `, respuesta => {
-            //     const ganador = opciones.filter(opcion => opcion.letra === respuesta.toUpperCase())[0];
-            //
-            //     enfrentamientos.push(new Enfrentamiento(opcion1, opcion2, null, null, ganador));
-            //
-            //     // Buscar el perdedor para sumarle un descarte
-            //     if(ganador === opcion1) {
-            //         sumarDescarte(opcion2);
-            //     } else {
-            //         sumarDescarte(opcion1);
-            //     }
-            //
-            //     // Sumar puntos al ganador
-            //     sumarPuntos(ganador)
-            //
-            //     // Resolver la promesa
-            //     resolve();
-            // });
+            appendOptions([opcion1, opcion2]);
+
+            $("#next_button").one("click", (event) => {
+                $(event.currentTarget).prop("disabled", true);
+                const respuesta = parseInt($(".selected_item").data("id"), 10);
+                const ganador = opciones.filter(opcion => opcion.id === respuesta)[0];
+
+                enfrentamientos.push(new Enfrentamiento(opcion1, opcion2, null, null, ganador));
+
+                // Buscar el perdedor para sumarle un descarte
+                if(ganador === opcion1) {
+                    sumarDescarte(opcion2);
+                } else {
+                    sumarDescarte(opcion1);
+                }
+
+                // Sumar puntos al ganador
+                sumarPuntos(ganador)
+
+                resolve();
+            });
         } else {
-        //     rl.question(`Cuál prefieres? ${opcion1.nombre} (${opcion1.letra}) o ${opcion2.nombre} (${opcion2.letra}) o ${opcion3.nombre} (${opcion3.letra}) o ${opcion4.nombre} (${opcion4.letra}): `, respuesta => {
-        //         const ganador = opciones.filter(opcion => opcion.letra === respuesta.toUpperCase())[0];
-        //
-        //         enfrentamientos.push(new Enfrentamiento(opcion1, opcion2, opcion3, opcion4, ganador));
-        //
-        //         // Buscar a los perdedores para sumarle un descarte
-        //         [opcion1, opcion2, opcion3, opcion4].forEach(opcion => {
-        //             if(ganador !== opcion) {
-        //                 sumarDescarte(opcion);
-        //             }
-        //         });
-        //
-        //         // Sumar puntos al ganador
-        //         sumarPuntos(ganador)
-        //
-        //         // Resolver la promesa
-        //         resolve();
-        //     });
+            appendOptions([opcion1, opcion2, opcion3, opcion4]);
+
+            $("#next_button").one("click", (event) => {
+                $(event.currentTarget).prop("disabled", true);
+
+                const respuesta = parseInt($(".selected_item").data("id"), 10);
+                const ganador = opciones.filter(opcion => opcion.id === respuesta)[0];
+
+                enfrentamientos.push(new Enfrentamiento(opcion1, opcion2, opcion3, opcion4, ganador));
+
+                // Buscar a los perdedores para sumarle un descarte
+                [opcion1, opcion2, opcion3, opcion4].forEach(opcion => {
+                    if(ganador !== opcion) {
+                        sumarDescarte(opcion);
+                    }
+                });
+
+                // Sumar puntos al ganador
+                sumarPuntos(ganador)
+
+                resolve();
+            });
+
         }
-        //
-        // cantidadIteracionesUsuario++;
+        cantidadIteracionesUsuario++;
+        actualizarTop();
     });
 }
 
 function appendOptions(options) {
+    $("#items_container").find(".item_option:not(.d-none)").remove();
     const OptionsMode = options.length === 2 ? twoOptions : fourOptions;
-    console.log(options);
 
     $.each(options, function(index, option) {
         const optionElement = OptionsMode.clone();
@@ -299,29 +293,21 @@ function appendOptions(options) {
         option.image == null ? optionElement.find('.item_image').remove() : "";
         option.image == null ? optionElement.find('.item_name').removeClass("ellipsis-two-lines") : "";
         optionElement.attr('data-id', option.id);
+        optionElement.attr('id', '');
         optionElement.removeClass('d-none');
         OptionsMode.before(optionElement);
     });
 }
 
 function actualizarTop() {
-    const opcionesOrdenadas = opciones;
-    opcionesOrdenadas.sort((a, b) => a.puntos - b.puntos);
-
     const templateTop = $("#template_top_item");
     $(".top_item").remove();
 
-    let i = 1;
-    for(const opcion of opciones) {
-        console.log(`TOP ${i} | ${opcion.nombre}: ${opcion.descartes} descartes`);
-        i++;
-    }
+    $("#item_top_1").find(".top_item_name").text(opciones[0].nombre);
+    $("#item_top_2").find(".top_item_name").text(opciones[1].nombre);
+    $("#item_top_3").find(".top_item_name").text(opciones[2].nombre);
 
-    $("#item_top_1").find(".top_item_name").text(opcionesOrdenadas[0].nombre);
-    $("#item_top_2").find(".top_item_name").text(opcionesOrdenadas[1].nombre);
-    $("#item_top_3").find(".top_item_name").text(opcionesOrdenadas[2].nombre);
-
-    $.each(opcionesOrdenadas, function(index, option) {
+    $.each(opciones, function(index, option) {
         if (index > 2) {
             const optionElement = templateTop.clone();
             optionElement.attr('data-id', option.id);
@@ -342,7 +328,7 @@ function actualizarContador() {
 
     // Obtener los segundos transcurridos
     const segundosTranscurridos = parseInt(((horaActual - horaInicio) / 1000), 10);
-    contador.text(secondsToTime(segundosTranscurridos));
+    contador.text(secondsToTime(segundosTranscurridos, 2));
 }
 
 function obtenerOpciones() {
@@ -352,8 +338,8 @@ function obtenerOpciones() {
                 response.items.forEach(item => {
                     opciones.push(new Opcion(item.id, item.name, item.image));
                 });
-                appendOptions([opciones[0], opciones[1]]);
                 actualizarTop();
+                removePageLoader();
                 resolve();
             }
         });
@@ -361,21 +347,24 @@ function obtenerOpciones() {
 }
 
 function onDocumentReady() {
+    $("#next_button").prop("disabled", true);
+
     obtenerOpciones().then(main).then(() => {
-        console.log('Opciones ordenadas por descartes');
         opciones.sort((a, b) => a.descartes - b.descartes);
 
-        let i = 1;
-        for(const opcion of opciones) {
-            console.log(`TOP ${i} | ${opcion.nombre}: ${opcion.descartes} descartes`);
-            i++;
-        }
+        actualizarTop();
 
         console.log('Cantidad de iteraciones: ' + cantidadIteracionesUsuario)
     });
 
+    // Evento para seleccionar una opción
+    $("#items_container").on("click", ".item_option", (event) => {
+        $(".item_option").removeClass("selected_item");
+        $(event.currentTarget).addClass("selected_item");
+        $("#next_button").prop("disabled", false);
+    });
+
     setInterval(actualizarContador, 1000);
-    removePageLoader();
 }
 
 $(document).ready(onDocumentReady);
