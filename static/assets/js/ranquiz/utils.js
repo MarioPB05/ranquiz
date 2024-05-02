@@ -1,13 +1,13 @@
 const Toast = Swal.mixin({ // skipcq: JS-0125
-  toast: true,
-  position: "top-end",
-  showConfirmButton: false,
-  timer: 3000,
-  timerProgressBar: true,
-  didOpen: (toast) => {
-    toast.onmouseenter = Swal.stopTimer; // skipcq: JS-0125
-    toast.onmouseleave = Swal.resumeTimer; // skipcq: JS-0125
-  }
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer; // skipcq: JS-0125
+        toast.onmouseleave = Swal.resumeTimer; // skipcq: JS-0125
+    }
 });
 
 
@@ -92,11 +92,11 @@ function formatElapsedTime(dateTime) {
 
 
 /***
-* Esta función se encarga de realizar una petición AJAX
-* @param url
-* @param data
-* @param method
-* @returns {Promise<unknown>}
+ * Esta función se encarga de realizar una petición AJAX
+ * @param url
+ * @param data
+ * @param method
+ * @returns {Promise<unknown>}
  */
 function promiseAjax(url, method = 'GET', data = null) {
     return new Promise((resolve, reject) => {
@@ -222,19 +222,46 @@ function toggleListLike(event) {
     const icon = button.find('i');
     const isLiked = button.find('i').hasClass('text-danger');
 
+    if (isLiked) {
+        icon.removeClass("bi-heart-fill text-danger").addClass("bi-heart");
+    } else {
+        icon.removeClass("bi-heart").addClass("bi-heart-fill text-danger");
+    }
+
     // Llamar al backend
     const shareCode = button.parent().attr('data-share_code');
     promiseAjax(`/api/list/${shareCode}/like?isLiked=${!isLiked}`, "GET").then(response => {
         if (response.status === "success") {
-            if (isLiked) {
-               icon.removeClass("bi-heart-fill text-danger").addClass("bi-heart");
-            }else {
-                icon.removeClass("bi-heart").addClass("bi-heart-fill text-danger");
-            }
         } else if (response.status === "error") {
             toastMessage("error", response.message);
+            if (!isLiked) {
+                icon.removeClass("bi-heart-fill text-danger").addClass("bi-heart");
+            } else {
+                icon.removeClass("bi-heart").addClass("bi-heart-fill text-danger");
+            }
         }
-    });
+
+    }).catch(() => {
+        toastMessage("error", "Error al dar like");
+        if (!isLiked) {
+            icon.removeClass("bi-heart-fill text-danger").addClass("bi-heart");
+        } else {
+            icon.removeClass("bi-heart").addClass("bi-heart-fill text-danger");
+        }
+    })
 }
 
-export { removePageLoader, initializeFlatpickr, promiseAjax, toastMessage, addPageLoader, reloadUserData, formatElapsedTime, secondsToTime, infoLog, warningLog, errorLog, toggleListLike };
+export {
+    removePageLoader,
+    initializeFlatpickr,
+    promiseAjax,
+    toastMessage,
+    addPageLoader,
+    reloadUserData,
+    formatElapsedTime,
+    secondsToTime,
+    infoLog,
+    warningLog,
+    errorLog,
+    toggleListLike
+};
