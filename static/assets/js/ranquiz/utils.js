@@ -180,7 +180,7 @@ function reloadUserData() {
 /**
  * Esta función tiene como objetivo transformar un número de segundos en un formato de cantidades de tiempo.
  */
-function secondsToTime(seconds, digits) {
+function secondsToTime(seconds, digits=3) {
     const time = {
         "d": 86400,
         "h": 3600,
