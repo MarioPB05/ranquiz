@@ -251,6 +251,43 @@ function toggleListLike(event) {
     })
 }
 
+function toggleUserFollow(event) {
+    event.stopPropagation()
+
+    // Obtener el botón y el estado actual
+    const button = $(event.currentTarget);
+    const icon = button.find('i');
+    const isFollowed = button.find('i').hasClass('text-danger');
+
+    if (isFollowed) {
+        icon.removeClass("bi-heart-fill text-danger").addClass("bi-heart");
+    } else {
+        icon.removeClass("bi-heart").addClass("bi-heart-fill text-danger");
+    }
+
+    // Llamar al backend
+    const shareCode = button.parent().attr('data-share_code');
+    promiseAjax(`/api/user/${shareCode}/follow?isFollowed=${!isFollowed}`, "GET").then(response => {
+        if (response.status === "success") {
+        } else if (response.status === "error") {
+            toastMessage("error", response.message);
+            if (!isFollowed) {
+                icon.removeClass("bi-heart-fill text-danger").addClass("bi-heart");
+            } else {
+                icon.removeClass("bi-heart").addClass("bi-heart-fill text-danger");
+            }
+        }
+
+    }).catch(() => {
+        toastMessage("error", "Error al dar like");
+        if (!isFollowed) {
+            icon.removeClass("bi-heart-fill text-danger").addClass("bi-heart");
+        } else {
+            icon.removeClass("bi-heart").addClass("bi-heart-fill text-danger");
+        }
+    })
+}
+
 export {
     removePageLoader,
     initializeFlatpickr,
