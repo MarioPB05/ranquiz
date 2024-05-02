@@ -256,14 +256,7 @@ function toggleUserFollow(event) {
 
     // Obtener el botón y el estado actual
     const button = $(event.currentTarget);
-    const icon = button.find('i');
-    const isFollowed = button.find('i').hasClass('text-danger');
-
-    if (isFollowed) {
-        icon.removeClass("bi-heart-fill text-danger").addClass("bi-heart");
-    } else {
-        icon.removeClass("bi-heart").addClass("bi-heart-fill text-danger");
-    }
+    const isFollowed = button.attr('data-is_followed') === 'true';
 
     // Llamar al backend
     const shareCode = button.parent().attr('data-share_code');
@@ -271,20 +264,10 @@ function toggleUserFollow(event) {
         if (response.status === "success") {
         } else if (response.status === "error") {
             toastMessage("error", response.message);
-            if (!isFollowed) {
-                icon.removeClass("bi-heart-fill text-danger").addClass("bi-heart");
-            } else {
-                icon.removeClass("bi-heart").addClass("bi-heart-fill text-danger");
-            }
         }
 
     }).catch(() => {
-        toastMessage("error", "Error al dar like");
-        if (!isFollowed) {
-            icon.removeClass("bi-heart-fill text-danger").addClass("bi-heart");
-        } else {
-            icon.removeClass("bi-heart").addClass("bi-heart-fill text-danger");
-        }
+        toastMessage("error", "Error al seguir usuario");
     })
 }
 
@@ -300,5 +283,6 @@ export {
     infoLog,
     warningLog,
     errorLog,
-    toggleListLike
+    toggleListLike,
+    toggleUserFollow
 };
