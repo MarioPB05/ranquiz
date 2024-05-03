@@ -102,7 +102,9 @@ def list_details(request, share_code):
 
 
 def play_list(request, share_code):
-    return render(request, 'pages/play_list.html', {'share_code': share_code})
+    """Vista que permite a un usuario jugar una lista"""
+    list_obj = get_list(share_code)
+    return render(request, 'pages/play_list.html', {'share_code': share_code, 'list': list_obj})
 
 
 @login_required
