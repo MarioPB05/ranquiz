@@ -1,11 +1,14 @@
+import json
+
 from django.http import JsonResponse
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET
 
 from api.decorators.api_decorators import require_authenticated
 from api.models.list import List
 from api.services import PAGINATION_ITEMS_PER_PAGE
-from api.services.list_service import get_lists, toggle_like_list, toggle_favorite_list
+from api.services.list_service import get_lists, toggle_like_list, toggle_favorite_list, add_result, get_list
 
 
 @require_GET
@@ -64,4 +67,20 @@ def like_list(request, share_code):
 def favorite_list(request, share_code):
     """Controlador que permite marcar una lista como favorita"""
     result = 'success' if toggle_favorite_list(request.user, share_code) else 'error'
+    return JsonResponse({'status': result})
+
+
+@require_authenticated
+@csrf_exempt
+def add_result_to_list(request, share_code):
+    """Controlador que permite añadir un resultado a una lista"""
+    result = request.POST.get('result')
+
+    # Comvertir de JSOn a array
+    result = json.loads(result)
+
+    list_obj = get_list(share_code=share_code)
+    start_date = request.POST.get('startDate')
+    result = 'success' if add_result(request.user, list_obj, result, start_date) else 'error'
+
     return JsonResponse({'status': result})
