@@ -326,7 +326,18 @@ function onDocumentReady() {
     content.on("click", ".list_like", toggleListLike);
 
     // Evento para seguir a un usuario
-    content.on("click", ".user_follow", toggleUserFollow);
+    content.on("click", ".user_follow", (event) => {
+        toggleUserFollow(event).then((is_followed) => {
+            const button = $(event.currentTarget);
+            const icon = button.find('i');
+
+            if (!is_followed) {
+                icon.removeClass("bi-person-plus-fill").addClass("bi-person-check-fill text-primary");
+            } else {
+                icon.removeClass("bi-person-check-fill text-primary").addClass("bi-person-plus-fill");
+            }
+        });
+    });
 
     // Evento para cambiar lo que el usuario está buscando
     allNavs.on("click", (event) => {
