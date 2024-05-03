@@ -280,10 +280,7 @@ function handleLikeClick() {
 
     blockLikeBtn.block();
 
-    // Verificar si el icono tiene la clase 'heart-selected'
-    const isLiked = !$(this).find('i').hasClass('heart-selected');
-
-    promiseAjax(`/api/list/${share_code}/like?isLiked=${isLiked}`, "GET").then(response => {  // skipcq: JS-0125
+    promiseAjax(`/api/list/${share_code}/like`, "GET").then(response => {  // skipcq: JS-0125
         if (response.status === "success") {
             $(this).find('i').toggleClass('heart-selected');
             $(this).trigger("custom_click");
@@ -306,10 +303,7 @@ function handleFavoriteClick() {
 
     blockFavoriteBtn.block();
 
-    // Verificar si el icono tiene la clase 'star-selected'
-    const isFavorited = !$(this).find('i').hasClass('star-selected');
-
-    promiseAjax(`/api/list/${share_code}/favorite?isFavorited=${isFavorited}`, "GET").then(response => {  // skipcq: JS-0125
+    promiseAjax(`/api/list/${share_code}/favorite`, "GET").then(response => {  // skipcq: JS-0125
         if (response.status === "success") {
             $(this).find('i').toggleClass('star-selected');
             $(this).trigger("custom_click");
