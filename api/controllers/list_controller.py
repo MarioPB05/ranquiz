@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 
 from django.http import JsonResponse
 from django.urls import reverse
@@ -75,12 +76,15 @@ def favorite_list(request, share_code):
 def add_result_to_list(request, share_code):
     """Controlador que permite añadir un resultado a una lista"""
     result = request.POST.get('result')
+    list_obj = get_list(share_code=share_code)
+    start_date = request.POST.get('startDate')
 
     # Comvertir de JSOn a array
     result = json.loads(result)
 
-    list_obj = get_list(share_code=share_code)
-    start_date = request.POST.get('startDate')
+    # Combertir de milisegundos a fecha y hora
+    start_date = datetime.fromtimestamp(int(start_date) / 1000)
+
     result = 'success' if add_result(request.user, list_obj, result, start_date) else 'error'
 
     return JsonResponse({'status': result})
