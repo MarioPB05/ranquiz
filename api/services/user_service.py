@@ -1,6 +1,5 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
-from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
 from api.models import User
