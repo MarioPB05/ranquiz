@@ -276,7 +276,7 @@ function toggleUserFollow(event) {
             }
         }).catch(() => {
             toastMessage("error", "Error al seguir usuario");
-            reject("Error al seguir usuario");
+            reject(new Error("Error al seguir usuario"));
         });
     });
 }
@@ -304,7 +304,7 @@ event.stopPropagation()
             }
         }).catch(() => {
             toastMessage("error", "Error al seguir categoría");
-            reject("Error al seguir categoría");
+            reject(new Error("Error al seguir categoría"));
         });
     });
 }
