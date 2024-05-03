@@ -380,6 +380,7 @@ function sendResults() {
     let i = 0;
 
     opciones.forEach(opcion => {
+        i++;
         opcionesFormateadas.push({
             id: opcion.id,
             order: i
@@ -389,9 +390,9 @@ function sendResults() {
     // Comvertir el array de opciones en un JSON
     opcionesFormateadas = JSON.stringify(opcionesFormateadas);
 
-    promiseAjax(`/api/list/${share_code}/play/result/add`, 'POST', { result: opcionesFormateadas, startDate: horaInicio.getMilliseconds() }).then(response => { // skipcq: JS-0125
+    promiseAjax(`/api/list/${share_code}/play/result/add`, 'POST', { result: opcionesFormateadas, startDate: horaInicio.getTime() }).then(response => { // skipcq: JS-0125
         if (response && response.status === "success") {
-            window.location.href = `/list/${share_code}/results`;
+            // window.location.href = `/list/${share_code}/results`;
         } else {
             toastMessage("error", "Ha ocurrido un error al enviar los resultados, por favor, inténtelo de nuevo.");
         }
