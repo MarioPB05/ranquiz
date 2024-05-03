@@ -8,7 +8,7 @@ class ListAnswer(ModelTemplate):
 
     list = models.ForeignKey('List', on_delete=models.DO_NOTHING)
     user = models.ForeignKey('User', on_delete=models.DO_NOTHING)
-    start_date = models.DateTimeField(auto_now_add=True)
+    start_date = models.DateTimeField()
     end_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
