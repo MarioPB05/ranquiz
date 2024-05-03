@@ -1,4 +1,4 @@
-import {promiseAjax, removePageLoader, toastMessage, toggleListLike, toggleUserFollow} from "/static/assets/js/ranquiz/utils.js";
+import {promiseAjax, removePageLoader, toastMessage, toggleListLike, toggleUserFollow, toggleCategoryFollow} from "/static/assets/js/ranquiz/utils.js";
 
 const elementsPerPage = 30;
 let previousSearch = "";
@@ -113,6 +113,7 @@ function addCategory(category) {
     newCategory.removeClass("d-none");
 
     newCategory.attr("data-share_code", category.share_code);
+    newCategory.attr("data-is_followed", category.followed);
     newCategory.find(".category_name").text(category.name);
     newCategory.find(".category_list_number").text(category.lists);
     newCategory.attr("href", category.url);
@@ -343,6 +344,23 @@ function onDocumentReady() {
         });
     });
 
+    content.on("click", ".category_follow", (event) => {
+        $(this).prop("disabled", true);
+
+        toggleCategoryFollow(event).then((is_followed) => {
+            const button = $(event.currentTarget);
+
+            if (!is_followed) {
+                button.removeClass("btn-primary").addClass("btn-outline-primary");
+                button.text("Seguir");
+                button.blur();
+            } else {
+                button.removeClass("btn-outline-primary").addClass("btn-primary");
+                button.text("Siguiendo");
+            }
+        });
+    });
+
     // Evento para cambiar lo que el usuario está buscando
     allNavs.on("click", (event) => {
         // Si el botón ya está seleccionado, no hacer nada
@@ -376,7 +394,7 @@ function onDocumentReady() {
     });
 
     // Evento de clic en un elemento
-    content.on("click", ".list, .category, .user", (event) => {
+    content.on("click", ".list, .category_element, .user", (event) => {
        if (event.target.tagName === "A") return;
 
         const url = $(event.currentTarget).attr("href");
