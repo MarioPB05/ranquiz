@@ -1,16 +1,19 @@
 {% extends 'base/base.html' %}
+{% load cloudinary %}
 {% load static %}
 
 {% block content %}
     <div class="row">
         <div class="col-md-8 h-100 h-md-auto p-3 text-center order-2 order-md-1">
-           <h1 class="fw-boldest">Brawlers</h1>
+           <h1 class="fw-boldest">{{ list.name }}</h1>
         </div>
-
-        <a href="/" class="col-md-4 h-100 h-md-auto p-3 d-flex text-center align-items-center gap-5 order-1 order-md-2">
-            <i class="bi bi-person-circle text-muted fs-2qx user-avatar"></i>
-            <h4 class="text-center text-muted m-0 ">David Pérez Fernandez</h4>
-        </a>
+        
+        <div class="col-md-4 justify-content-center h-100 h-md-auto d-flex text-center align-items-center order-1 order-md-2 ">
+            <a href="{{ request.scheme }}://{{ request.get_host }}{% url 'user' share_code=list.owner.share_code %}" class="d-flex gap-3 align-items-center bg-hover-secondary rounded p-3">
+                {% cloudinary list.owner.avatar.image format="png" crop="fill" class="w-40px h-40px" %}
+                <h4 class="text-center m-0">{{ list.owner.username }}</h4>
+            </a>
+        </div>
     </div>
 
     <div class="progress mb-7" style="height: 20px" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
@@ -21,7 +24,7 @@
         <div class="position-relative col-lg-8 text-center d-md-grid d-flex flex-column justify-content-center align-items-center gap-4 bg-primary rounded-25px h-100 pb-12 border border-10 border-primary-400 p-7 p-md-12" style="grid-template-rows: auto 1fr">
             <div class="text-primary bg-white position-absolute end-0 m-5 top-0 fw-boldest fs-3 p-2 rounded-2 shadow flex-md-column" id="play_time">0s</div>
 
-            <h1 class="text-white w-100">¿Cuál prefieres?</h1>
+            <h1 class="text-white w-100">{{ list.question }}</h1>
 
             <div class="gap-4 w-100 h-auto h-md-100 d-flex flex-column d-md-grid w-100 w-sm-500px" id="items_container" style="grid-template-columns: 1fr 1fr;">
                 <div class="bg-white w-100 overflow-hidden mw-100 rounded d-none d-flex justify-content-center flex-column hover-bg-primary-200 hover-scale cursor-pointer p-5 align-items-center gap-10 item_option"  id="item_template_2_options">
