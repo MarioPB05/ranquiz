@@ -138,3 +138,18 @@ def get_users(limit=None, page=1, search='', order='default', user=None):
     params = [user.id if user is not None else 0, f"%{search}%", limit, (page - 1) * limit]
 
     return execute_query(query, params)
+
+
+def toggle_user_follow(user, followed_user):
+    """Función que permite seguir o dejar de seguir a un usuario"""
+    if followed_user is None:
+        return False
+
+    is_following = user.following_set.filter(user_followed=followed_user).exists()
+
+    if is_following:
+        user.following_set.filter(user_followed=followed_user).delete()
+    else:
+        user.following_set.create(user_followed=followed_user)
+
+    return True
