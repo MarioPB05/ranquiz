@@ -36,6 +36,7 @@ let enfrentamientos = [];
 let cantidadIteracionesUsuario = 0;
 
 async function main() {
+    console.log('Iniciando el proceso de enfrentamientos');
     await rondaInicial();
 
     // Ordenar las opciones por menos descartes
@@ -49,6 +50,7 @@ async function main() {
 }
 
 async function rondaInicial() {
+    console.log('Iniciando la ronda inicial');
     // Agrupar las opciones en grupos de 4, para el ultimo enfrentamiento se rellenara cogiendo las opciones de inicio
     let opcionesRestantes = [...opciones];
 
@@ -72,25 +74,30 @@ async function rondaInicial() {
 }
 
 function sumarPuntos(ganador) {
+    console.log('La ' + ganador.nombre + ' ha ganado');
     opciones.find(opcion => opcion.nombre === ganador.nombre).puntos++;
 }
 
 function sumarDescarte(perdedor) {
+    console.log('La ' + perdedor.nombre + ' ha perdido');
     opciones.find(opcion => opcion.nombre === perdedor.nombre).descartes++;
 }
 
 function contarEmpates() {
     // Contar las opciones que tienen el mismo número de descartes
+    console.log('Contando opciones empatadas')
     const opcionesEmpatadas = opciones.filter(opcion => opciones.filter(op => op.descartes === opcion.descartes).length > 1);
     return opcionesEmpatadas.length;
 }
 
 function comprobarEmpates() {
+    console.log('Comprobando si hay opciones empatadas');
     // Comprobar si hay opciones empatadas
     return contarEmpates() > 0;
 }
 
 function insertOrUpdateObject(orden, nuevoObjeto) {
+    console.log('Insertando o actualizando objeto');
     const index = orden.findIndex(obj => obj.opc === nuevoObjeto.opc);
     if (index !== -1) {
         orden[index].peso += nuevoObjeto.peso;
@@ -100,6 +107,7 @@ function insertOrUpdateObject(orden, nuevoObjeto) {
 }
 
 async function desempatarPares(opcion1, opcion2) {
+    console.log('Desempatando ' + opcion1.nombre + ' y ' + opcion2.nombre);
     // Buscar enfrentamientos en los que hayan participado
     const enfrentamientosComunes = enfrentamientos.filter(enfrentamiento => {
         return (enfrentamiento.opcion1 === opcion1 || enfrentamiento.opcion2 === opcion1 || enfrentamiento.opcion3 === opcion1 || enfrentamiento.opcion4 === opcion1)
@@ -188,10 +196,13 @@ async function desempatarPares(opcion1, opcion2) {
         sumarDescarte(enfrentamiento.ganador === opcion1 ? opcion2 : opcion1)
     });
 
+    console.log('La ' + ganadorEnfrentamientosComunes[0].ganador.nombre + ' ha ganado');
+
     return true
 }
 
 async function resolverEmpates() {
+    console.log('Resolviendo empates');
     for(const opcion of opciones) {
         // Coger las opciones con los mismos descartes
         const opcionesEmpatadas = opciones.filter(opc => opc.descartes === opcion.descartes);
@@ -234,6 +245,7 @@ async function resolverEmpates() {
 }
 
 async function generarEnfrentamiento(opcion1, opcion2, opcion3= null, opcion4 = null) {
+    console.log('Generando enfrentamiento');
     return new Promise((resolve) => {
         if(opcion3 === null) {
             appendOptions([opcion1, opcion2]);
@@ -289,6 +301,7 @@ async function generarEnfrentamiento(opcion1, opcion2, opcion3= null, opcion4 = 
 }
 
 function appendOptions(options) {
+    console.log('Añadiendo opciones');
     $("#items_container").find(".item_option:not(.d-none)").remove();
     const OptionsMode = options.length === 2 ? twoOptions : fourOptions;
 
@@ -362,11 +375,25 @@ function obtenerOpciones() {
 }
 
 function sendResults() {
-    promiseAjax(`/api/list/${share_code}/play`, 'POST', { enfrentamientos: enfrentamientos }).then(response => { // skipcq: JS-0125
-        if (response && response.success) {
+    let opcionesFormateadas = [];
+
+    let i = 0;
+
+    opciones.forEach(opcion => {
+        opcionesFormateadas.push({
+            id: opcion.id,
+            order: i
+        });
+    });
+
+    // Comvertir el array de opciones en un JSON
+    opcionesFormateadas = JSON.stringify(opcionesFormateadas);
+
+    promiseAjax(`/api/list/${share_code}/play/result/add`, 'POST', { result: opcionesFormateadas, startDate: horaInicio.getMilliseconds() }).then(response => { // skipcq: JS-0125
+        if (response && response.status === "success") {
             window.location.href = `/list/${share_code}/results`;
         } else {
-            toastMessage("Error al enviar los resultados, inténtelo de nuevo", "error");
+            toastMessage("error", "Ha ocurrido un error al enviar los resultados, por favor, inténtelo de nuevo.");
         }
     });
 }
@@ -379,6 +406,7 @@ function onDocumentReady() {
 
         actualizarTop();
         actualizarProgreso();
+        sendResults();
 
         console.log('Cantidad de iteraciones: ' + cantidadIteracionesUsuario)
     });
