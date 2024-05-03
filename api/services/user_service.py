@@ -140,11 +140,11 @@ def get_users(limit=None, page=1, search='', order='default', user=None):
                 FROM api_user u
                 JOIN ranquiz.api_avatar a on u.avatar_id = a.id
                 LEFT JOIN api_list l on u.id = l.owner_id
-                WHERE u.username LIKE %s
+                WHERE u.username LIKE %s AND u.id != %s
                 GROUP BY u.id
                 ORDER BY {order_by}
                 LIMIT %s OFFSET %s;"""
 
-    params = [user.id if user is not None else 0, f"%{search}%", limit, (page - 1) * limit]
+    params = [user.id if user is not None else 0, f"%{search}%", user.id, limit, (page - 1) * limit]
 
     return execute_query(query, params)
