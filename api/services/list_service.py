@@ -109,3 +109,37 @@ def count_lists(search='', category=None):
         params.insert(1, category.id)
 
     return execute_query(query, params)
+
+
+def toggle_like_list(user, share_code):
+    """Función que permite dar like o quitar el like a una lista"""
+    list_obj = get_list(share_code)
+
+    if list_obj is None:
+        return False
+
+    try:
+        like = ListLike.objects.get(user=user, list=list_obj)
+        like.delete()
+    except ListLike.DoesNotExist:
+        like = ListLike(user=user, list=list_obj)
+        like.save()
+
+    return True
+
+
+def toggle_favorite_list(user, share_code):
+    """Función que permite añadir o quitar una lista de favoritos"""
+    list_obj = get_list(share_code)
+
+    if list_obj is None:
+        return False
+
+    try:
+        favorite = ListFavorite.objects.get(user=user, list=list_obj)
+        favorite.delete()
+    except ListFavorite.DoesNotExist:
+        favorite = ListFavorite(user=user, list=list_obj)
+        favorite.save()
+
+    return True
