@@ -1,6 +1,10 @@
+from django.db import transaction
+
 from api.forms.list_form import CreateListForm
+from api.services.get_service import get_list
+from api.services.item_service import get_item
 from api.services.query_service import execute_query
-from api.models import List, ListCategory, ListFavorite, ListLike, ListAnswer
+from api.models import List, ListCategory, ListFavorite, ListLike, ListAnswer, ItemOrder
 
 
 def create_list_form(request, instance=None):
@@ -17,14 +21,6 @@ def create_list(list_form):
         return list_form.save(commit=False)
 
     return None
-
-
-def get_list(share_code):
-    """Función que devuelve el objeto "lista" al que pertenece el share code"""
-    try:
-        return List.objects.get(share_code=share_code)
-    except List.DoesNotExist:
-        return None
 
 
 def get_lists(limit=None, page=1, search='', user=None, order='default', category=None):
@@ -141,5 +137,22 @@ def toggle_favorite_list(user, share_code):
     except ListFavorite.DoesNotExist:
         favorite = ListFavorite(user=user, list=list_obj)
         favorite.save()
+
+    return True
+
+
+@transaction.atomic
+def add_result(user, list_obj, results, start_date):
+    """Servicio que añade un resultado a una lista con una transacción"""
+    list_answer = ListAnswer(user=user, list=list_obj, start_date=start_date)
+    list_answer.save()
+
+    for result in results:
+        item = get_item(result['id'])
+        order = int(result['order'])
+
+        if item is not None:
+            item_order = ItemOrder(answer=list_answer, item=item, order=order)
+            item_order.save()
 
     return True

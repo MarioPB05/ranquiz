@@ -2,7 +2,7 @@ from cloudinary import uploader
 
 from api.forms.item_form import CreateItemForm
 from api.models import Item
-from api.services.list_service import get_list
+from api.services.get_service import get_item, get_list
 
 
 def create_item_form(request, prefix=None, instance=None):
@@ -59,14 +59,6 @@ def edit_list_items(items_prefix, list_obj, request):
             if item_form.is_valid() and new_item is not None:
                 new_item.list = list_obj
                 new_item.save()
-
-
-def get_item(item_id):
-    """Función para obtener un item"""
-    try:
-        return Item.objects.get(id=item_id)
-    except Item.DoesNotExist:
-        return None
 
 
 def get_items(share_code, get_deleted=False):

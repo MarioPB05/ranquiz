@@ -1,12 +1,6 @@
 import cloudinary
 from django.http import JsonResponse
-
 from api.services.item_service import get_items
-from api.services.list_service import get_list
-
-
-class Cloudinary:
-    pass
 
 
 def get_current_items(request, share_code):

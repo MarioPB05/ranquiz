@@ -4,7 +4,8 @@ from django.views.decorators.http import require_GET
 
 from api.decorators.api_decorators import require_authenticated
 from api.services import PAGINATION_ITEMS_PER_PAGE
-from api.services.user_service import get_user, get_users
+from api.services.get_service import get_user
+from api.services.user_service import get_users
 
 
 @require_GET
