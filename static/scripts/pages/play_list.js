@@ -79,10 +79,15 @@ function sumarDescarte(perdedor) {
     opciones.find(opcion => opcion.nombre === perdedor.nombre).descartes++;
 }
 
+function contarEmpates() {
+    // Contar las opciones que tienen el mismo número de descartes
+    const opcionesEmpatadas = opciones.filter(opcion => opciones.filter(op => op.descartes === opcion.descartes).length > 1);
+    return opcionesEmpatadas.length;
+}
+
 function comprobarEmpates() {
     // Comprobar si hay opciones empatadas
-    const opcionesEmpatadas = opciones.filter(opcion => opciones.filter(op => op.descartes === opcion.descartes).length > 1);
-    return opcionesEmpatadas.length > 0;
+    return contarEmpates() > 0;
 }
 
 function insertOrUpdateObject(orden, nuevoObjeto) {
@@ -279,6 +284,7 @@ async function generarEnfrentamiento(opcion1, opcion2, opcion3= null, opcion4 = 
         }
         cantidadIteracionesUsuario++;
         actualizarTop();
+        actualizarProgreso();
     });
 }
 
@@ -331,6 +337,15 @@ function actualizarContador() {
     contador.text(secondsToTime(segundosTranscurridos, 2));
 }
 
+function actualizarProgreso() {
+    // Calcular el progreso por los empates
+    const progreso = $(".progress-bar");
+    const progresoPorcentaje = (opciones.length - contarEmpates()) / opciones.length * 100;
+
+    progreso.text(progresoPorcentaje + "%");
+    progreso.css("width", progresoPorcentaje + "%");
+}
+
 function obtenerOpciones() {
     return new Promise((resolve, reject) => {
         promiseAjax(`/api/list/${share_code}/item`, 'GET').then(response => { // skipcq: JS-0125
@@ -346,6 +361,16 @@ function obtenerOpciones() {
     });
 }
 
+function sendResults() {
+    promiseAjax(`/api/list/${share_code}/play`, 'POST', { enfrentamientos: enfrentamientos }).then(response => { // skipcq: JS-0125
+        if (response && response.success) {
+            window.location.href = `/list/${share_code}/results`;
+        } else {
+            toastMessage("Error al enviar los resultados, inténtelo de nuevo", "error");
+        }
+    });
+}
+
 function onDocumentReady() {
     $("#next_button").prop("disabled", true);
 
@@ -353,6 +378,7 @@ function onDocumentReady() {
         opciones.sort((a, b) => a.descartes - b.descartes);
 
         actualizarTop();
+        actualizarProgreso();
 
         console.log('Cantidad de iteraciones: ' + cantidadIteracionesUsuario)
     });
