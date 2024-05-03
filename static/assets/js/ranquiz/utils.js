@@ -260,15 +260,20 @@ function toggleUserFollow(event) {
 
     // Llamar al backend
     const shareCode = button.parent().attr('data-share_code');
-    promiseAjax(`/api/user/${shareCode}/follow?isFollowed=${!isFollowed}`, "GET").then(response => {
-        if (response.status === "success") {
-        } else if (response.status === "error") {
-            toastMessage("error", response.message);
-        }
 
-    }).catch(() => {
-        toastMessage("error", "Error al seguir usuario");
-    })
+    return new Promise((resolve, reject) => {
+        promiseAjax(`/api/user/${shareCode}/follow?isFollowed=${!isFollowed}`, "GET").then(response => {
+            if (response.status === "success") {
+                button.attr('data-is_followed', !isFollowed);
+                resolve(isFollowed);
+            } else if (response.status === "error") {
+                toastMessage("error", response.message);
+            }
+        }).catch(() => {
+            toastMessage("error", "Error al seguir usuario");
+            reject();
+        });
+    });
 }
 
 export {
