@@ -231,8 +231,7 @@ function toggleListLike(event) {
     // Llamar al backend
     const shareCode = button.parent().attr('data-share_code');
     promiseAjax(`/api/list/${shareCode}/like?isLiked=${!isLiked}`, "GET").then(response => {
-        if (response.status === "success") {
-        } else if (response.status === "error") {
+       if (response.status === "error") {
             toastMessage("error", response.message);
             if (!isLiked) {
                 icon.removeClass("bi-heart-fill text-danger").addClass("bi-heart");
@@ -251,6 +250,12 @@ function toggleListLike(event) {
     })
 }
 
+/**
+ * Función para seguir o dejar de seguir a un usuario
+ *
+ * @param event
+ * @returns {Promise<unknown>}
+ */
 function toggleUserFollow(event) {
     event.stopPropagation()
 
@@ -271,11 +276,14 @@ function toggleUserFollow(event) {
             }
         }).catch(() => {
             toastMessage("error", "Error al seguir usuario");
-            reject();
+            reject("Error al seguir usuario");
         });
     });
 }
 
+/**
+ * Esta función se encarga de seguir o dejar de seguir una categoría
+ */
 function toggleCategoryFollow(event) {
 event.stopPropagation()
 
@@ -296,7 +304,7 @@ event.stopPropagation()
             }
         }).catch(() => {
             toastMessage("error", "Error al seguir categoría");
-            reject();
+            reject("Error al seguir categoría");
         });
     });
 }
