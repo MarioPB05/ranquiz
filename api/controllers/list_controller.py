@@ -3,7 +3,6 @@ from django.urls import reverse
 from django.views.decorators.http import require_GET
 
 from api.decorators.api_decorators import require_authenticated
-from api.models import ListLike, ListFavorite
 from api.models.list import List
 from api.services import PAGINATION_ITEMS_PER_PAGE
 from api.services.list_service import get_lists, toggle_like_list, toggle_favorite_list
