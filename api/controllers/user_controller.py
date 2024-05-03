@@ -53,8 +53,5 @@ def follow_user(request, share_code):
     if followed_user is None:
         return JsonResponse({'status': 'error', 'message': 'El usuario al que intentas seguir no existe'}, status=404)
 
-    try:
-        message = toggle_user_follow(request.user, followed_user)
-        return JsonResponse({'status': 'success', 'message': message})
-    except Exception as e:
-        return JsonResponse({'status': 'error', 'message': str(e)})
+    result = 'success' if toggle_user_follow(request.user, followed_user) else 'error'
+    return JsonResponse({'status': result})
