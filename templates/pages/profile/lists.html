@@ -39,7 +39,7 @@
                             onfocus="this.selectionStart = this.selectionEnd = this.value.length;">
                 </div>
 
-                <button id="search_btn" data-url="{% url 'user' share_code=user.share_code %}?card=lists" class="btn btn-sm btn-primary my-4">Buscar</button>
+                <button id="search_btn" class="btn btn-sm btn-primary my-4">Buscar</button>
             </div>
 
             <!--begin::Filter menu-->
@@ -305,4 +305,5 @@
     </div>
 </div>
 
+<script>const baseURL = '{% url 'user' share_code=user.share_code %}?card=lists';</script>
 <script src="{% static 'scripts/pages/profile/list.js' %}" type="module" defer></script>

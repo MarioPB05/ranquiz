@@ -126,16 +126,15 @@ function redirectToList() {
 
 function searchList(event) {
     const search = $('#search_input').val();
-    const url = $('#search_btn').data('url');
 
     if (event.key && event.key !== 'Enter') return; // Si se presionó una tecla y no fue Enter, no se hace nada
 
     if (!search) {
-        window.location.href = url;
+        window.location.href = baseURL;
         return;
     }
 
-    window.location.href = `${url}&search=${search}`;
+    window.location.href = `${baseURL}&search=${search}`;
 }
 
 function loadEvents() {
