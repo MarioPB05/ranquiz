@@ -145,6 +145,26 @@ function searchList(event) {
     window.location.href = `${url.toString()}`;
 }
 
+function filterLists() {
+    const url = getCurrentURL();
+    const visibility = $('#visibility_filter').val();
+    const show_deleted = $('#show_deleted_filter').is(':checked');
+
+    if (visibility === 'all') {
+        url.searchParams.delete('visibility');
+    }else {
+        url.searchParams.set('visibility', visibility);
+    }
+
+    if (!show_deleted) {
+        url.searchParams.delete('show_deleted');
+    }else {
+        url.searchParams.set('show_deleted', show_deleted);
+    }
+
+    window.location.href = url.toString();
+}
+
 function loadEvents() {
     $('#list_container')
         .on('click', '.toggle_visibility_list', toggleVisibility)
@@ -190,6 +210,7 @@ function loadEvents() {
 
     $('#search_input').on('keypress', searchList);
     $('#search_btn').on('click', searchList);
+    $('#apply_filters_btn').on('click', filterLists);
 }
 
 $(document).ready(loadEvents);
