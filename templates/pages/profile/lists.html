@@ -98,9 +98,9 @@
 
                         <!--begin::Actions-->
                         <div class="d-flex justify-content-end">
-                            <button type="reset" class="btn btn-sm btn-light btn-active-light-primary me-2"
-                                    data-kt-menu-dismiss="true">Borrar Filtros
-                            </button>
+                            <a type="reset" class="btn btn-sm btn-light btn-active-light-primary me-2" 
+                               data-kt-menu-dismiss="true" href="{% url 'user' share_code=user.share_code %}?card=lists">Borrar Filtros
+                            </a>
                             <button type="submit" class="btn btn-sm btn-primary" data-kt-menu-dismiss="true">Aplicar
                             </button>
                         </div>
