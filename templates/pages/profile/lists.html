@@ -33,10 +33,11 @@
                     </span>
                     <!--end::Svg Icon-->
 
-                    <input type="text" class="form-control form-control-solid w-250px ps-14" placeholder="Buscar Listas...">
+                    <input id="search_input" type="text" class="form-control form-control-solid w-250px ps-14" 
+                           placeholder="Buscar Listas...">
                 </div>
 
-                <a href="{% url 'user' share_code=user.share_code %}?card=lists" class="btn btn-sm btn-primary my-4">Buscar</a>
+                <button id="search_btn" data-url="{% url 'user' share_code=user.share_code %}?card=lists" class="btn btn-sm btn-primary my-4">Buscar</button>
             </div>
 
             <!--begin::Filter menu-->
