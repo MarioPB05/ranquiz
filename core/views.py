@@ -2,7 +2,7 @@ import cloudinary
 from cloudinary import uploader  # skipcq: PY-W2000
 from django.contrib.auth import logout as django_logout
 from django.contrib.auth.decorators import login_required
-from django.http import Http404, HttpResponseForbidden
+from django.http import Http404, HttpResponseForbidden, HttpResponseNotFound
 from django.shortcuts import render, redirect, get_object_or_404
 
 from api.models import List, ListCategory, ListFavorite, ListLike, ListAnswer
@@ -55,6 +55,14 @@ def list_details(request, share_code):
     """Vista que permite a un usuario ver los detalles de una lista"""
     list_data = get_list(share_code)
     items_data = get_items(share_code)
+
+    # Comprueba si la lista no ha sido eliminada
+    if list_data.deleted:
+        return HttpResponseNotFound()
+
+    # Comprueba si la lista es privada y si el usuario tiene permiso para verla
+    if list_data.public == 0 and list_data.owner != request.user:
+        return HttpResponseForbidden()
 
     # Obtener todas las instancias de ListCategory asociadas a la lista específica
     list_categories = ListCategory.objects.filter(list=list_data)
