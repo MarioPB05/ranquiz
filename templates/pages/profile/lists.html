@@ -34,7 +34,9 @@
                     <!--end::Svg Icon-->
 
                     <input id="search_input" type="text" class="form-control form-control-solid w-250px ps-14" 
-                           placeholder="Buscar Listas...">
+                           placeholder="Buscar Listas..." value="{% if card_data.searching %}{{ card_data.search_query }}{% endif %}"
+                            {% if card_data.searching %}autofocus{% endif %}
+                            onfocus="this.selectionStart = this.selectionEnd = this.value.length;">
                 </div>
 
                 <button id="search_btn" data-url="{% url 'user' share_code=user.share_code %}?card=lists" class="btn btn-sm btn-primary my-4">Buscar</button>
@@ -111,7 +113,7 @@
             <!--end::Filter menu-->
         </div>
 
-        {% if card_data_empty %}
+        {% if card_data_empty and card_data.search_query is None %}
             <!--begin::Notice-->
             <div class="notice d-flex bg-light-warning rounded border-warning border border-dashed p-6">
                 <!--begin::Icon-->
