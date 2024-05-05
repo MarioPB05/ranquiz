@@ -128,8 +128,12 @@ function searchList(event) {
     const search = $('#search_input').val();
     const url = $('#search_btn').data('url');
 
-    if (!search) return; // Si no hay texto de búsqueda, no se hace nada
     if (event.key && event.key !== 'Enter') return; // Si se presionó una tecla y no fue Enter, no se hace nada
+
+    if (!search) {
+        window.location.href = url;
+        return;
+    }
 
     window.location.href = `${url}&search=${search}`;
 }
