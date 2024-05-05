@@ -124,6 +124,16 @@ function redirectToList() {
     window.location.href = $(this).data('url');
 }
 
+function searchList(event) {
+    const search = $('#search_input').val();
+    const url = $('#search_btn').data('url');
+
+    if (!search) return; // Si no hay texto de búsqueda, no se hace nada
+    if (event.key && event.key !== 'Enter') return; // Si se presionó una tecla y no fue Enter, no se hace nada
+
+    window.location.href = `${url}&search=${search}`;
+}
+
 function loadEvents() {
     $('#list_container')
         .on('click', '.toggle_visibility_list', toggleVisibility)
@@ -166,6 +176,9 @@ function loadEvents() {
                 });
         }
     });
+
+    $('#search_input').on('keypress', searchList);
+    $('#search_btn').on('click', searchList);
 }
 
 $(document).ready(loadEvents);
