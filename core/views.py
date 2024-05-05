@@ -212,6 +212,8 @@ def profile(request, share_code=None):
         count_user_lists = get_user_lists_pagination(user_data, show_deleted, search_query, page_number)
 
         card_data['pagination'] = count_user_lists
+        card_data['searching'] = search_query is not None
+        card_data['search_query'] = search_query
 
         for user_list in user_lists:
             card_data['data'].append({
