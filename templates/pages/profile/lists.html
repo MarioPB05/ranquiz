@@ -71,14 +71,15 @@
                         <!--begin::Input group-->
                         <div class="mb-10">
                             <!--begin::Label-->
-                            <label class="form-label fw-bold">Visibilidad:</label>
+                            <label class="form-label fw-bold" for="visibility_filter">Visibilidad:</label>
                             <!--end::Label-->
                             <!--begin::Switch-->
                             <div>
-                                <select class="form-select form-select-solid" data-kt-select2="true"
-                                        data-dropdown-parent="#list_filters" data-hide-search="true" multiple="multiple">
-                                    <option selected="selected" value="1">Pública</option>
-                                    <option selected="selected" value="2">Privada</option>
+                                <select class="form-select form-select-solid" data-kt-select2="true" id="visibility_filter"
+                                        data-dropdown-parent="#list_filters" data-hide-search="true">
+                                    <option value="public">Pública</option>
+                                    <option value="private">Privada</option>
+                                    <option selected="selected" value="all">Cualquiera</option>
                                 </select>
                             </div>
                             <!--end::Switch-->
@@ -89,7 +90,7 @@
                         <div class="mb-10">
                             <!--begin::Label-->
                             <label class="form-check form-check-sm form-check-custom form-check-solid me-5">
-                                <input class="form-check-input" type="checkbox" value="1"/>
+                                <input id="show_deleted_filter" class="form-check-input" type="checkbox" {% if card_data.show_deleted %}checked{% endif %}/>
                                 <span class="form-check-label fw-bold">Mostrar eliminados</span>
                             </label>
                             <!--end::Label-->
@@ -98,10 +99,10 @@
 
                         <!--begin::Actions-->
                         <div class="d-flex justify-content-end">
-                            <a type="reset" class="btn btn-sm btn-light btn-active-light-primary me-2" 
+                            <a type="reset" class="btn btn-sm btn-light btn-active-light-primary me-2"
                                data-kt-menu-dismiss="true" href="{% url 'user' share_code=user.share_code %}?card=lists">Borrar Filtros
                             </a>
-                            <button type="submit" class="btn btn-sm btn-primary" data-kt-menu-dismiss="true">Aplicar
+                            <button id="apply_filters_btn" class="btn btn-sm btn-primary" data-kt-menu-dismiss="true">Aplicar
                             </button>
                         </div>
                         <!--end::Actions-->
