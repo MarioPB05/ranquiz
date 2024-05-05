@@ -124,17 +124,25 @@ function redirectToList() {
     window.location.href = $(this).data('url');
 }
 
+function getCurrentURL() {
+    return new URL(baseURL);
+}
+
 function searchList(event) {
+    const url = getCurrentURL();
     const search = $('#search_input').val();
 
     if (event.key && event.key !== 'Enter') return; // Si se presionó una tecla y no fue Enter, no se hace nada
 
     if (!search) {
-        window.location.href = baseURL;
+        url.searchParams.delete('search');
+
+        window.location.href = url.toString();
         return;
     }
 
-    window.location.href = `${baseURL}&search=${search}`;
+    url.searchParams.set('search', search);
+    window.location.href = `${url.toString()}`;
 }
 
 function loadEvents() {

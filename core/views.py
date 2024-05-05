@@ -237,7 +237,8 @@ def profile(request, share_code=None):
         'card_template': card_template,
         'current_card': current_card,
         'card_data': card_data,
-        'card_data_empty': len(card_data['data']) == 0
+        'card_data_empty': len(card_data['data']) == 0,
+        'current_path': request.get_full_path_info()
     })
 
 
