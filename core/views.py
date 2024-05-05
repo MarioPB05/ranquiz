@@ -213,6 +213,7 @@ def profile(request, share_code=None):
 
         card_data['pagination'] = count_user_lists
         card_data['searching'] = search_query is not None
+        card_data['show_deleted'] = show_deleted
         card_data['search_query'] = search_query
 
         for user_list in user_lists:
