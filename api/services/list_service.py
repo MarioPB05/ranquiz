@@ -1,5 +1,7 @@
 import math
 
+from django.db.models import Q
+
 from api.forms.list_form import CreateListForm
 from api.services import PAGINATION_ITEMS_PER_PAGE
 from api.services.query_service import execute_query
@@ -75,9 +77,15 @@ def get_lists(limit=None, page=1, search='', user=None, order='default', categor
     return execute_query(query, params)
 
 
-def get_user_lists(user, show_deleted, page_number):
+def get_user_lists(user, show_deleted, search_query, page_number):
     """Función que devuelve todas las listas de un usuario con paginación"""
     where = "AND l.deleted = 0" if not show_deleted else ""
+    params = [user.id]
+    
+    if search_query:
+        where += " AND l.name LIKE %s"
+        params.append(f'%{search_query}%')
+    
     query = f"""SELECT l.id, l.name, l.share_code, l.image, l.public, l.edit_date, l.creation_date, l.deleted,
                     (
                         SELECT COUNT(*)
@@ -112,17 +120,22 @@ def get_user_lists(user, show_deleted, page_number):
                 LIMIT %s OFFSET %s;"""
 
     items_per_page = PAGINATION_ITEMS_PER_PAGE / 2
-    params = [user.id, int(items_per_page), int((page_number - 1) * items_per_page)]
+    params.extend([int(items_per_page), int((page_number - 1) * items_per_page)])
 
     return execute_query(query, params)
 
 
-def get_user_lists_pagination(user, show_deleted, page_number):
+def get_user_lists_pagination(user, show_deleted, search_query, page_number):
     """Función que devuelve la cantidad de listas de un usuario"""
-    if show_deleted:
-        count = List.objects.filter(owner=user).count()
-    else:
-        count = List.objects.filter(owner=user, deleted=False).count()
+    query = Q(owner=user)
+
+    if not show_deleted:
+        query &= Q(deleted=False)
+
+    if search_query:
+        query &= Q(name__icontains=search_query)
+
+    count = List.objects.filter(query).count()
 
     pages = math.ceil(count / (PAGINATION_ITEMS_PER_PAGE / 2))
 
