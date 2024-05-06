@@ -56,7 +56,7 @@ def list_details(request, share_code):
     items_data = get_items(share_code)
 
     # Comprueba si la lista no ha sido eliminada
-    if list_data.deleted:
+    if list_data.deleted and list_data.owner != request.user:
         return HttpResponseNotFound()
 
     # Comprueba si la lista es privada y si el usuario tiene permiso para verla
