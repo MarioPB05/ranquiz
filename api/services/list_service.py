@@ -107,12 +107,13 @@ def get_user_lists(user, show_deleted, search_query, page_number):
                         FROM api_listcomment slc
                         WHERE slc.list_id = l.id
                     ) AS comments,
-                    IF(hl.id IS NOT NULL AND hl.start_date <= NOW() AND hl.end_date >= NOW(), TRUE, FALSE)
+                    IF(hl.id IS NOT NULL, TRUE, FALSE)
                     AS highlighted
                 FROM api_list l
                 JOIN ranquiz.api_user au on l.owner_id = au.id
                 JOIN ranquiz.api_avatar aa on au.avatar_id = aa.id
-                LEFT JOIN ranquiz.api_highlightedlist hl on l.id = hl.list_id
+                LEFT JOIN ranquiz.api_highlightedlist hl on l.id = hl.list_id AND start_date <= NOW() 
+                    AND end_date >= NOW()
                 LEFT JOIN ranquiz.api_listcategory lc on l.id = lc.list_id
                 WHERE l.owner_id = %s {where}
                 GROUP BY l.id, l.edit_date, l.creation_date
