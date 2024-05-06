@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.urls import reverse
 from django.views.decorators.http import require_GET, require_POST
 
-from api.services import PAGINATION_ITEMS_PER_PAGE
+from api.services import PAGINATION_ITEMS_PER_PAGE, category_service
 from api.services.category_service import get_all_categories, similarity, create_category, user_follow_category, \
     get_category
 
@@ -60,7 +60,7 @@ def get_categories_filtered(request):
     search = request.GET.get('search', '')
     result = []
 
-    categories = get_categories(PAGINATION_ITEMS_PER_PAGE, page, search, request.user, sort)
+    categories = category_service.get_categories(PAGINATION_ITEMS_PER_PAGE, page, search, request.user, sort)
 
     for category in categories:
         result.append({
