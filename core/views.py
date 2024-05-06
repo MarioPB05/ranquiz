@@ -227,6 +227,7 @@ def profile(request, share_code=None):
         for user_list in user_lists:
             card_data['data'].append({
                 'name': user_list['name'],
+                'highlighted': user_list['highlighted'] == 1,
                 'image': f"https://res.cloudinary.com/dhewpzvg9/{user_list['image']}" if user_list['image'] else None,
                 'public': user_list['public'],
                 'deleted': user_list['deleted'],
