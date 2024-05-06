@@ -6,7 +6,7 @@ from api.decorators.api_decorators import require_authenticated
 from api.models.list import List
 from api.services import PAGINATION_ITEMS_PER_PAGE
 from api.services.list_service import (get_lists, toggle_like_list, toggle_favorite_list, toggle_visibility_list,
-                                       delete_list)
+                                       delete_list, recover_list)
 
 
 @require_GET
@@ -82,5 +82,13 @@ def visibility_list(request, share_code):
 def delete_or_recover_list(request, share_code):
     """Controlador que permite eliminar una lista"""
     result = 'success' if delete_list(share_code) else 'error'
+
+    return JsonResponse({'status': result})
+
+@require_GET
+@require_authenticated
+def recover_list_eliminated(request, share_code):
+    """Controlador que permite recuperar una lista"""
+    result = 'success' if recover_list(share_code) else 'error'
 
     return JsonResponse({'status': result})
