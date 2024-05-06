@@ -214,13 +214,15 @@ def profile(request, share_code=None):
     if current_card == 'lists':
         page_number = int(request.GET.get('page', 1))
         search_query = request.GET.get('search', None)
+        visibility = request.GET.get('visibility', None)
         show_deleted = request.GET.get('show_deleted', 'false') == 'true'
 
-        user_lists = get_user_lists(user_data, show_deleted, search_query, page_number)
-        count_user_lists = get_user_lists_pagination(user_data, show_deleted, search_query, page_number)
+        user_lists = get_user_lists(user_data, show_deleted, visibility, search_query, page_number)
+        count_user_lists = get_user_lists_pagination(user_data, show_deleted, visibility, search_query, page_number)
 
         card_data['pagination'] = count_user_lists
         card_data['searching'] = search_query is not None
+        card_data['visibility'] = visibility
         card_data['show_deleted'] = show_deleted
         card_data['search_query'] = search_query
 
