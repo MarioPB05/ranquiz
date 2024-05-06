@@ -180,6 +180,10 @@
                                 {% else %}
                                     <span class="badge badge-secondary list_visibility">Privado</span>
                                 {% endif %}
+                            
+                                {% if list.highlighted %}
+                                    <span class="badge badge-primary">Destacado</span>
+                                {% endif %}
 
                                 {% if list.deleted %}
                                     <span class="badge badge-danger">Eliminado</span>
