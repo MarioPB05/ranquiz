@@ -77,7 +77,7 @@ def get_lists(limit=None, page=1, search='', user=None, order='default', categor
     return execute_query(query, params)
 
 
-def get_user_lists(user, show_deleted, search_query, page_number):
+def get_user_lists(user, show_deleted, visibility, search_query, page_number):
     """Función que devuelve todas las listas de un usuario con paginación"""
     where = "AND l.deleted = 0" if not show_deleted else ""
     params = [user.id]
@@ -85,6 +85,11 @@ def get_user_lists(user, show_deleted, search_query, page_number):
     if search_query:
         where += " AND l.name LIKE %s"
         params.append(f'%{search_query}%')
+
+    if visibility == 'public':
+        where += " AND l.public = 1"
+    elif visibility == 'private':
+        where += " AND l.public = 0"
     
     query = f"""SELECT l.id, l.name, l.share_code, l.image, l.public, l.edit_date, l.creation_date, l.deleted,
                     (
@@ -126,12 +131,17 @@ def get_user_lists(user, show_deleted, search_query, page_number):
     return execute_query(query, params)
 
 
-def get_user_lists_pagination(user, show_deleted, search_query, page_number):
+def get_user_lists_pagination(user, show_deleted, visibility, search_query, page_number):
     """Función que devuelve la cantidad de listas de un usuario"""
     query = Q(owner=user)
 
     if not show_deleted:
         query &= Q(deleted=False)
+
+    if visibility == 'public':
+        query &= Q(public=True)
+    elif visibility == 'private':
+        query &= Q(public=False)
 
     if search_query:
         query &= Q(name__icontains=search_query)
