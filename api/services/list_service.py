@@ -212,6 +212,17 @@ def delete_list(share_code):
 
     return True
 
+def recover_list(share_code):
+    """Función que recupera una lista"""
+    list_obj = get_list(share_code)
+
+    if list_obj is None:
+        return False
+
+    list_obj.deleted = False
+    list_obj.save()
+
+    return True
 
 def toggle_like_list(user, share_code):
     """Función que permite dar like o quitar el like a una lista"""
