@@ -77,9 +77,9 @@
                             <div>
                                 <select class="form-select form-select-solid" data-kt-select2="true" id="visibility_filter"
                                         data-dropdown-parent="#list_filters" data-hide-search="true">
-                                    <option value="public">Pública</option>
-                                    <option value="private">Privada</option>
-                                    <option selected="selected" value="all">Cualquiera</option>
+                                    <option {% if card_data.visibility == 'public' %}selected="selected"{% endif %} value="public">Pública</option>
+                                    <option {% if card_data.visibility == 'private' %}selected="selected"{% endif %} value="private">Privada</option>
+                                    <option {% if card_data.visibility is None %}selected="selected"{% endif %} value="all">Cualquiera</option>
                                 </select>
                             </div>
                             <!--end::Switch-->
