@@ -3,6 +3,7 @@ import { removePageLoader, toastMessage, promiseAjax, secondsToTime } from "/sta
 const twoOptions = $("#item_template_2_options");
 const fourOptions = $("#item_template_4_options");
 const horaInicio = new Date();
+let contadorAutomatico = 0;
 
 class Opcion {
     constructor(id, nombre, image=null) {
@@ -50,7 +51,6 @@ async function main() {
 }
 
 async function rondaInicial() {
-    console.log('Iniciando la ronda inicial');
     // Agrupar las opciones en grupos de 4, para el ultimo enfrentamiento se rellenara cogiendo las opciones de inicio
     let opcionesRestantes = [...opciones];
 
@@ -85,19 +85,16 @@ function sumarDescarte(perdedor) {
 
 function contarEmpates() {
     // Contar las opciones que tienen el mismo número de descartes
-    console.log('Contando opciones empatadas')
     const opcionesEmpatadas = opciones.filter(opcion => opciones.filter(op => op.descartes === opcion.descartes).length > 1);
     return opcionesEmpatadas.length;
 }
 
 function comprobarEmpates() {
-    console.log('Comprobando si hay opciones empatadas');
     // Comprobar si hay opciones empatadas
     return contarEmpates() > 0;
 }
 
 function insertOrUpdateObject(orden, nuevoObjeto) {
-    console.log('Insertando o actualizando objeto');
     const index = orden.findIndex(obj => obj.opc === nuevoObjeto.opc);
     if (index !== -1) {
         orden[index].peso += nuevoObjeto.peso;
@@ -126,6 +123,7 @@ async function desempatarPares(opcion1, opcion2) {
     if(ganadorEnfrentamientosComunes.length === 0) {
         // Si no hay ganadores, se enfrentan
         // await generarEnfrentamiento(opcion1, opcion2);
+        contadorAutomatico++;
 
         // Obtenemos los contrincantes
         const contrincantes = []; // Byron y Sprout
@@ -218,12 +216,14 @@ async function resolverEmpates() {
         }
 
         // Desempatar las combinaciones
-        for(const combinacion of combinaciones) {
-            await desempatarPares(combinacion[0], combinacion[1]).then((res) => {
-              if(!res) {
-                  combinacionesRestantes.push(combinacion);
-              }
-            });
+        if (contadorAutomatico < 5) {
+            for(const combinacion of combinaciones) {
+                await desempatarPares(combinacion[0], combinacion[1]).then((res) => {
+                  if(!res) {
+                      combinacionesRestantes.push(combinacion);
+                  }
+                });
+            }
         }
 
         // Aplanar las combinaciones restantes y eliminar duplicados
@@ -245,7 +245,8 @@ async function resolverEmpates() {
 }
 
 async function generarEnfrentamiento(opcion1, opcion2, opcion3= null, opcion4 = null) {
-    console.log('Generando enfrentamiento');
+    contadorAutomatico = 0;
+
     return new Promise((resolve) => {
         if(opcion3 === null) {
             appendOptions([opcion1, opcion2]);
@@ -301,7 +302,6 @@ async function generarEnfrentamiento(opcion1, opcion2, opcion3= null, opcion4 = 
 }
 
 function appendOptions(options) {
-    console.log('Añadiendo opciones');
     $("#items_container").find(".item_option:not(.d-none)").remove();
     const OptionsMode = options.length === 2 ? twoOptions : fourOptions;
 
