@@ -5,7 +5,7 @@ from django.views.decorators.http import require_GET
 from api.decorators.api_decorators import require_authenticated
 from api.services import PAGINATION_ITEMS_PER_PAGE
 from api.services.get_service import get_user
-from api.services.user_service import get_users
+from api.services.user_service import get_users, toggle_user_follow
 
 
 @require_GET
@@ -43,3 +43,15 @@ def get_users_filtered(request):
         })
 
     return JsonResponse({'users': result})
+
+
+@require_authenticated
+def follow_user(request, share_code):
+    """Controlador que permite seguir o dejar de seguir a un usuario"""
+    followed_user = get_user(share_code=share_code)
+
+    if followed_user is None:
+        return JsonResponse({'status': 'error', 'message': 'El usuario al que intentas seguir no existe'}, status=404)
+
+    result = 'success' if toggle_user_follow(request.user, followed_user) else 'error'
+    return JsonResponse({'status': result})

@@ -1,13 +1,13 @@
 const Toast = Swal.mixin({ // skipcq: JS-0125
-  toast: true,
-  position: "top-end",
-  showConfirmButton: false,
-  timer: 3000,
-  timerProgressBar: true,
-  didOpen: (toast) => {
-    toast.onmouseenter = Swal.stopTimer; // skipcq: JS-0125
-    toast.onmouseleave = Swal.resumeTimer; // skipcq: JS-0125
-  }
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer; // skipcq: JS-0125
+        toast.onmouseleave = Swal.resumeTimer; // skipcq: JS-0125
+    }
 });
 
 
@@ -92,11 +92,11 @@ function formatElapsedTime(dateTime) {
 
 
 /***
-* Esta función se encarga de realizar una petición AJAX
-* @param url
-* @param data
-* @param method
-* @returns {Promise<unknown>}
+ * Esta función se encarga de realizar una petición AJAX
+ * @param url
+ * @param data
+ * @param method
+ * @returns {Promise<unknown>}
  */
 function promiseAjax(url, method = 'GET', data = null) {
     return new Promise((resolve, reject) => {
@@ -213,4 +213,115 @@ function secondsToTime(seconds, digits=3) {
     return timeString;
 }
 
-export { removePageLoader, initializeFlatpickr, promiseAjax, toastMessage, addPageLoader, reloadUserData, formatElapsedTime, secondsToTime, infoLog, warningLog, errorLog };
+// Función para cambiar los estilos del botón y llamar al backend
+function toggleListLike(event) {
+    event.stopPropagation()
+
+    // Obtener el botón y el estado actual
+    const button = $(event.currentTarget);
+    const icon = button.find('i');
+    const isLiked = button.find('i').hasClass('text-danger');
+
+    if (isLiked) {
+        icon.removeClass("bi-heart-fill text-danger").addClass("bi-heart");
+    } else {
+        icon.removeClass("bi-heart").addClass("bi-heart-fill text-danger");
+    }
+
+    // Llamar al backend
+    const shareCode = button.parent().attr('data-share_code');
+    promiseAjax(`/api/list/${shareCode}/like?isLiked=${!isLiked}`, "GET").then(response => {
+       if (response.status === "error") {
+            toastMessage("error", response.message);
+            if (!isLiked) {
+                icon.removeClass("bi-heart-fill text-danger").addClass("bi-heart");
+            } else {
+                icon.removeClass("bi-heart").addClass("bi-heart-fill text-danger");
+            }
+        }
+
+    }).catch(() => {
+        toastMessage("error", "Error al dar like");
+        if (!isLiked) {
+            icon.removeClass("bi-heart-fill text-danger").addClass("bi-heart");
+        } else {
+            icon.removeClass("bi-heart").addClass("bi-heart-fill text-danger");
+        }
+    })
+}
+
+/**
+ * Función para seguir o dejar de seguir a un usuario
+ *
+ * @param event
+ * @returns {Promise<unknown>}
+ */
+function toggleUserFollow(event) {
+    event.stopPropagation()
+
+    // Obtener el botón y el estado actual
+    const button = $(event.currentTarget);
+    const isFollowed = button.attr('data-is_followed') === 'true';
+
+    // Llamar al backend
+    const shareCode = button.parent().attr('data-share_code');
+
+    return new Promise((resolve, reject) => {
+        promiseAjax(`/api/user/${shareCode}/follow?isFollowed=${!isFollowed}`, "GET").then(response => {
+            if (response.status === "success") {
+                button.attr('data-is_followed', !isFollowed);
+                resolve(isFollowed);
+            } else if (response.status === "error") {
+                toastMessage("error", response.message);
+            }
+        }).catch(() => {
+            toastMessage("error", "Error al seguir usuario");
+            reject(new Error("Error al seguir usuario"));
+        });
+    });
+}
+
+/**
+ * Esta función se encarga de seguir o dejar de seguir una categoría
+ */
+function toggleCategoryFollow(event) {
+event.stopPropagation()
+
+    // Obtener el botón y el estado actual
+    const button = $(event.currentTarget);
+    const isFollowed = button.attr('data-is_followed') === 'true';
+
+    // Llamar al backend
+    const shareCode = button.parent().attr('data-share_code');
+
+    return new Promise((resolve, reject) => {
+        promiseAjax(`/api/category/${shareCode}/follow?isFollowed=${!isFollowed}`, "GET").then(response => {
+            if (response.status === "success") {
+                button.attr('data-is_followed', !isFollowed);
+                resolve(isFollowed);
+            } else if (response.status === "error") {
+                toastMessage("error", response.message);
+            }
+        }).catch(() => {
+            toastMessage("error", "Error al seguir categoría");
+            reject(new Error("Error al seguir categoría"));
+        });
+    });
+}
+
+export {
+    removePageLoader,
+    initializeFlatpickr,
+    promiseAjax,
+    toastMessage,
+    addPageLoader,
+    reloadUserData,
+    formatElapsedTime,
+    secondsToTime,
+    infoLog,
+    warningLog,
+    errorLog,
+    toggleListLike,
+    toggleUserFollow,
+    toggleCategoryFollow
+};
