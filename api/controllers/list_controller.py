@@ -79,12 +79,16 @@ def add_result_to_list(request, share_code):
     list_obj = get_list(share_code=share_code)
     start_date = request.POST.get('startDate')
 
-    # Comvertir de JSOn a array
+    # Convertir de JSON a array
     result = json.loads(result)
 
-    # Combertir de milisegundos a fecha y hora
+    # Convertir de milisegundos a fecha y hora
     start_date = datetime.fromtimestamp(int(start_date) / 1000)
 
-    result = 'success' if add_result(request.user, list_obj, result, start_date) else 'error'
+    result = add_result(request.user, list_obj, result, start_date)
+    status = 'success' if result else 'error'
 
-    return JsonResponse({'status': result})
+    if result:
+        return JsonResponse({'status': status, 'result_id': result.id})
+
+    return JsonResponse({'status': status})
