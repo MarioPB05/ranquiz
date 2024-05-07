@@ -192,6 +192,25 @@ def edit_list_view(request, share_code):
     })
 
 
+def profile_resume(request, user_data, card_data):
+    page_number = int(request.GET.get('page', 1))
+    user_lists = get_user_lists(user_data, False, 'public', None, page_number)
+
+    for user_list in user_lists:
+        card_data['data'].append({
+            'name': user_list['name'],
+            'highlighted': user_list['highlighted'] == 1,
+            'image': user_list['image'] if user_list['image'] else None,
+            'share_code': user_list['share_code'],
+            'plays': user_list['plays'],
+            'owner_username': user_list['owner_username'],
+            'owner_avatar': user_list['owner_avatar'],
+            'owner_share_code': user_list['owner_share_code'],
+            'liked': ListLike.objects.filter(user=request.user, list_id__exact=user_list['id']).exists()
+            if request.user.is_authenticated else False
+        })
+
+
 def profile_lists(request, user_data, card_data):
     page_number = int(request.GET.get('page', 1))
     search_query = request.GET.get('search', None)
@@ -242,7 +261,9 @@ def profile(request, share_code=None):
         raise Http404('Page not found')
 
     card_data = {'data': []}
-    if current_card == 'lists':
+    if current_card == 'resume':
+        profile_resume(request, user_data, card_data)
+    elif current_card == 'lists':
         profile_lists(request, user_data, card_data)
 
     return render(request, 'pages/profile.html', {
