@@ -33,17 +33,21 @@
             </div>
             
             <ul class="pagination mt-5">
-                <li class="page-item previous {% if pagination.current_page == 1 %}disabled{% endif %}">
-                    <a class="page-link page-text" href="{% url 'category_lists' share_code=share_code %}?page={{ pagination.current_page|add:"-1" }}&order={{ order }}">Anterior</a>
-                </li>
+                {% if pagination.current_page < pagination.total_pages %}
+                    <li class="page-item previous {% if pagination.current_page == 1 %}disabled{% endif %}">
+                        <a class="page-link page-text" href="{% url 'category_lists' share_code=share_code %}?page={{ pagination.current_page|add:"-1" }}&order={{ order }}">Anterior</a>
+                    </li>
+                {% endif %}
                 {% for page in pagination.page_numbers %}
                     <li class="page-item {% if page == pagination.current_page %}active{% endif %}">
                         <a class="page-link page-text" href="{% url 'category_lists' share_code=share_code %}?page={{ page }}&order={{ order }}">{{ page }}</a>
                     </li>
                 {% endfor %}
-                <li class="page-item next {% if pagination.current_page >= pagination.total_pages %}disabled{% endif %}">
-                    <a class="page-link page-text" href="{% url 'category_lists' share_code=share_code %}?page={{ pagination.current_page|add:"1" }}&order={{ order }}">Siguiente</a>
-                </li>
+                 {% if pagination.current_page < pagination.total_pages %}
+                     <li class="page-item next">
+                        <a class="page-link page-text" href="{% url 'category_lists' share_code=share_code %}?page={{ pagination.current_page|add:"1" }}&order={{ order }}">Siguiente</a>
+                     </li>
+                 {% endif %}
             </ul>
         </div>
     </div>
