@@ -36,6 +36,10 @@ let opciones = [];
 let enfrentamientos = [];
 let cantidadIteracionesUsuario = 0;
 
+/**
+ * Función principal
+ * @returns {Promise<void>}
+ */
 async function main() {
     await rondaInicial();
 
@@ -49,6 +53,10 @@ async function main() {
     }
 }
 
+/**
+ * Ronda inicial
+ * @returns {Promise<void>}
+ */
 async function rondaInicial() {
     // Agrupar las opciones en grupos de 4, para el ultimo enfrentamiento se rellenara cogiendo las opciones de inicio
     let opcionesRestantes = [...opciones];
@@ -75,25 +83,46 @@ async function rondaInicial() {
     }
 }
 
+/**
+ * Sumar puntos al ganador
+ * @param ganador
+ */
 function sumarPuntos(ganador) {
     opciones.find(opcion => opcion.nombre === ganador.nombre).puntos++;
 }
 
+/**
+ * Sumar descarte al perdedor
+ * @param perdedor
+ */
 function sumarDescarte(perdedor) {
     opciones.find(opcion => opcion.nombre === perdedor.nombre).descartes++;
 }
 
+/**
+ * Contar las opciones empatadas
+ * @returns {number}
+ */
 function contarEmpates() {
     // Contar las opciones que tienen el mismo número de descartes
     const opcionesEmpatadas = opciones.filter(opcion => opciones.filter(op => op.descartes === opcion.descartes).length > 1);
     return opcionesEmpatadas.length;
 }
 
+/**
+ * Comprobar si hay opciones empatadas
+ * @returns {boolean}
+ */
 function comprobarEmpates() {
     // Comprobar si hay opciones empatadas
     return contarEmpates() > 0;
 }
 
+/**
+ * Insertar o actualizar un objeto en la lista
+ * @param orden
+ * @param nuevoObjeto
+ */
 function insertOrUpdateObject(orden, nuevoObjeto) {
     const index = orden.findIndex(obj => obj.opc === nuevoObjeto.opc);
     if (index !== -1) {
@@ -103,6 +132,12 @@ function insertOrUpdateObject(orden, nuevoObjeto) {
     }
 }
 
+/**
+ * Desempatar las opciones
+ * @param opcion1
+ * @param opcion2
+ * @returns {Promise<boolean>}
+ */
 async function desempatarPares(opcion1, opcion2) {
     // Buscar enfrentamientos en los que hayan participado
     const enfrentamientosComunes = enfrentamientos.filter(enfrentamiento => {
@@ -194,6 +229,10 @@ async function desempatarPares(opcion1, opcion2) {
     return true
 }
 
+/**
+ * Resolver los empates
+ * @returns {Promise<void>}
+ */
 async function resolverEmpates() {
     for(const opcion of opciones) {
         // Coger las opciones con los mismos descartes
@@ -244,6 +283,14 @@ async function resolverEmpates() {
     }
 }
 
+/**
+ * Generar un enfrentamiento
+ * @param opcion1
+ * @param opcion2
+ * @param opcion3
+ * @param opcion4
+ * @returns {Promise<unknown>}
+ */
 async function generarEnfrentamiento(opcion1, opcion2, opcion3= null, opcion4 = null) {
     contadorAutomatico = 0;
 
@@ -300,6 +347,10 @@ async function generarEnfrentamiento(opcion1, opcion2, opcion3= null, opcion4 = 
     });
 }
 
+/**
+ * Añadir las opciones al contenedor
+ * @param options
+ */
 function appendOptions(options) {
     $("#items_container").find(".item_option:not(.d-none)").remove();
     const OptionsMode = options.length === 2 ? twoOptions : fourOptions;
@@ -317,6 +368,9 @@ function appendOptions(options) {
     });
 }
 
+/**
+ * Actualizar el top
+ */
 function actualizarTop() {
     const templateTop = $("#template_top_item");
     $(".top_item").remove();
@@ -340,6 +394,9 @@ function actualizarTop() {
     });
 }
 
+/**
+ * Actualizar el contador
+ */
 function actualizarContador() {
     const contador = $("#play_time");
     const horaActual = new Date();
@@ -349,6 +406,9 @@ function actualizarContador() {
     contador.text(secondsToTime(segundosTranscurridos, 2));
 }
 
+/**
+ * Actualizar el progreso
+ */
 function actualizarProgreso() {
     // Calcular el progreso por los empates
     const progreso = $(".progress-bar");
@@ -358,6 +418,10 @@ function actualizarProgreso() {
     progreso.css("width", progresoPorcentaje + "%");
 }
 
+/**
+ * Obtener las opciones
+ * @returns {Promise<unknown>}
+ */
 function obtenerOpciones() {
     return new Promise((resolve, reject) => {
         promiseAjax(`/api/list/${share_code}/item`, 'GET').then(response => { // skipcq: JS-0125
@@ -374,6 +438,9 @@ function obtenerOpciones() {
     });
 }
 
+/**
+ * Enviar los resultados
+ */
 function sendResults() {
     let opcionesFormateadas = [];
 
@@ -421,6 +488,9 @@ function sendResults() {
     });
 }
 
+/**
+ * Función que se ejecuta al cargar el documento
+ */
 function onDocumentReady() {
     $("#next_button").prop("disabled", true);
 
