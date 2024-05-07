@@ -192,6 +192,37 @@ def edit_list_view(request, share_code):
     })
 
 
+def profile_lists(request, user_data, card_data):
+    page_number = int(request.GET.get('page', 1))
+    search_query = request.GET.get('search', None)
+    visibility = request.GET.get('visibility', None)
+    show_deleted = request.GET.get('show_deleted', 'false') == 'true'
+
+    user_lists = get_user_lists(user_data, show_deleted, visibility, search_query, page_number)
+    count_user_lists = get_user_lists_pagination(user_data, show_deleted, visibility, search_query, page_number)
+
+    card_data['pagination'] = count_user_lists
+    card_data['searching'] = search_query is not None
+    card_data['visibility'] = visibility
+    card_data['show_deleted'] = show_deleted
+    card_data['search_query'] = search_query
+
+    for user_list in user_lists:
+        card_data['data'].append({
+            'name': user_list['name'],
+            'highlighted': user_list['highlighted'] == 1,
+            'image': f"https://res.cloudinary.com/dhewpzvg9/{user_list['image']}" if user_list['image'] else None,
+            'public': user_list['public'],
+            'deleted': user_list['deleted'],
+            'date': user_list['creation_date'],
+            'share_code': user_list['share_code'],
+            'play_count': user_list['plays'],
+            'likes_count': user_list['likes'],
+            'comments_count': user_list['comments'],
+            'favorites_count': user_list['favorites']
+        })
+
+
 @partial_login_required
 def profile(request, share_code=None):
     """Vista que renderiza el perfil de un usuario"""
@@ -212,34 +243,7 @@ def profile(request, share_code=None):
 
     card_data = {'data': []}
     if current_card == 'lists':
-        page_number = int(request.GET.get('page', 1))
-        search_query = request.GET.get('search', None)
-        visibility = request.GET.get('visibility', None)
-        show_deleted = request.GET.get('show_deleted', 'false') == 'true'
-
-        user_lists = get_user_lists(user_data, show_deleted, visibility, search_query, page_number)
-        count_user_lists = get_user_lists_pagination(user_data, show_deleted, visibility, search_query, page_number)
-
-        card_data['pagination'] = count_user_lists
-        card_data['searching'] = search_query is not None
-        card_data['visibility'] = visibility
-        card_data['show_deleted'] = show_deleted
-        card_data['search_query'] = search_query
-
-        for user_list in user_lists:
-            card_data['data'].append({
-                'name': user_list['name'],
-                'highlighted': user_list['highlighted'] == 1,
-                'image': f"https://res.cloudinary.com/dhewpzvg9/{user_list['image']}" if user_list['image'] else None,
-                'public': user_list['public'],
-                'deleted': user_list['deleted'],
-                'date': user_list['creation_date'],
-                'share_code': user_list['share_code'],
-                'play_count': user_list['plays'],
-                'likes_count': user_list['likes'],
-                'comments_count': user_list['comments'],
-                'favorites_count': user_list['favorites']
-            })
+        profile_lists(request, user_data, card_data)
 
     return render(request, 'pages/profile.html', {
         'user_data': user_data,
