@@ -26,13 +26,13 @@
 
             <h1 class="text-white w-100">{{ list.question }}</h1>
 
-            <div class="gap-4 w-100 h-auto h-md-100 d-flex flex-column d-md-grid w-100 w-sm-500px" id="items_container" style="grid-template-columns: 1fr 1fr;">
-                <div class="bg-white w-100 overflow-hidden mw-100 rounded d-none d-flex justify-content-center flex-column hover-bg-primary-200 hover-scale cursor-pointer p-5 align-items-center gap-10 item_option"  id="item_template_2_options">
+            <div class="gap-4 w-100 h-75 h-md-100 d-flex flex-column d-md-grid w-100 w-sm-500px" id="items_container" style="grid-template-columns: 1fr 1fr;">
+                <div class="bg-white flex-grow-1 w-100 overflow-hidden mw-100 rounded d-none d-flex justify-content-center flex-column hover-bg-primary-200 hover-scale cursor-pointer p-5 align-items-center gap-10 item_option"  id="item_template_2_options">
                     <img src="" class="mw-75 mh-75 d-none d-md-flex item_image" style="object-fit: contain;">
                     <h1 class="m-0 fs-1 item_name fw-boldest" style="text-overflow: ellipsis"></h1>
                 </div>
                 
-                <div class="bg-white w-100 overflow-hidden mw-100 rounded d-none d-flex justify-content-center flex-column hover-bg-primary-200 hover-scale cursor-pointer p-5 align-items-center gap-6 item_option" id="item_template_4_options">
+                <div class="bg-white flex-grow-1 w-100 overflow-hidden mw-100 rounded d-none d-flex justify-content-center flex-column hover-bg-primary-200 hover-scale cursor-pointer p-5 align-items-center gap-6 item_option" id="item_template_4_options">
                     <img src="" class="mw-50 mh-50 d-none d-md-flex item_image" style="object-fit: contain;">
                     <h1 class="m-0 fs-2 w-100 item_name ellipsis-two-lines fw-boldest"></h1>
                 </div>
@@ -68,26 +68,18 @@
 
     </div>
 
-    <div class="modal fade" tabindex="-1" id="kt_modal_1">
-        <div class="modal-dialog">
+    <div class="modal fade" tabindex="-1" id="final_play_modal" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title">Modal title</h3>
-    
-                    <!--begin::Close-->
-                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
-                        <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
-                    </div>
-                    <!--end::Close-->
+                <div class="modal-body d-flex flex-column justify-content-center">
+                    <h1 class="fw-boldest text-center text-primary mt-5 mb-0 fs-30px">¡Felicidades!</h1>
+                    <img src="{% static 'assets/media/ilustrations/high_five__pana_ilutration.png' %}" alt="¡Choca esos cinco!" class="h-300px" style="object-fit: contain"/>
+                    <h4 class="fw-bolder text-center">Has terminado de jugar la lista ¿Que deseas hacer?</h4>
                 </div>
     
-                <div class="modal-body">
-                    <p>Modal body text goes here.</p>
-                </div>
-    
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-light">Inicio</button>
+                    <button type="button" class="btn btn-primary">Ver resultados</button>
                 </div>
             </div>
         </div>
