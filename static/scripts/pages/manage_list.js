@@ -638,6 +638,13 @@ function onDocumentReady() {
         }
     });
 
+    $(window).keydown(function(event){
+        if(event.keyCode === 13) {
+          event.preventDefault();
+          return false;
+        }
+      });
+
     const imageInput = KTImageInput.getInstance($('#kt_image_input')[0]); // skipcq: JS-0125
     const itemsContainer = $('#items_container');
 
