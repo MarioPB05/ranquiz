@@ -1,9 +1,12 @@
 from django.http import JsonResponse
+from django.template.loader import render_to_string
 from django.urls import reverse
 from django.views.decorators.http import require_GET
 
 from api.decorators.api_decorators import require_authenticated
+from api.models import ListLike
 from api.services import PAGINATION_ITEMS_PER_PAGE
+from api.services.list_service import get_user_lists
 from api.services.user_service import get_user, get_users, toggle_user_follow
 
 
@@ -54,3 +57,29 @@ def follow_user(request, share_code):
 
     result = 'success' if toggle_user_follow(request.user, followed_user) else 'error'
     return JsonResponse({'status': result})
+
+
+def user_lists(request, share_code):
+    """Controlador que devuelve las listas de un usuario"""
+    user_data = get_user(share_code=share_code)
+    page_number = int(request.GET.get('page', 1))
+    lists = get_user_lists(user_data, False, 'public', None, page_number)
+    lists_html = []
+
+    for user_list in lists:
+        list_data = {
+            'name': user_list['name'],
+            'highlighted': user_list['highlighted'] == 1,
+            'image': user_list['image'] if user_list['image'] else None,
+            'share_code': user_list['share_code'],
+            'plays': user_list['plays'],
+            'owner_username': user_list['owner_username'],
+            'owner_avatar': user_list['owner_avatar'],
+            'owner_share_code': user_list['owner_share_code'],
+            'liked': ListLike.objects.filter(user=request.user, list_id__exact=user_list['id']).exists()
+            if request.user.is_authenticated else False
+        }
+
+        lists_html.append(render_to_string('components/list_template.html', {'data': list_data}))
+
+    return JsonResponse({'lists': lists_html})
