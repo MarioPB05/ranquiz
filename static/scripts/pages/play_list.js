@@ -70,6 +70,9 @@ async function rondaInicial() {
         });
 
         await generarEnfrentamiento(opcion1, opcion2, opcion3, opcion4);
+
+        actualizarTop();
+        actualizarProgreso();
     }
 }
 
@@ -223,6 +226,9 @@ async function resolverEmpates() {
                       combinacionesRestantes.push(combinacion);
                   }
                 });
+
+                actualizarTop();
+                actualizarProgreso();
             }
         }
 
@@ -241,6 +247,9 @@ async function resolverEmpates() {
                 }
             }
         }
+
+        actualizarTop();
+        actualizarProgreso();
     }
 }
 
@@ -266,7 +275,7 @@ async function generarEnfrentamiento(opcion1, opcion2, opcion3= null, opcion4 = 
                 }
 
                 // Sumar puntos al ganador
-                sumarPuntos(ganador)
+                sumarPuntos(ganador);
 
                 resolve();
             });
@@ -288,6 +297,7 @@ async function generarEnfrentamiento(opcion1, opcion2, opcion3= null, opcion4 = 
                     }
                 });
 
+
                 // Sumar puntos al ganador
                 sumarPuntos(ganador)
 
@@ -296,8 +306,6 @@ async function generarEnfrentamiento(opcion1, opcion2, opcion3= null, opcion4 = 
 
         }
         cantidadIteracionesUsuario++;
-        actualizarTop();
-        actualizarProgreso();
     });
 }
 
@@ -353,7 +361,7 @@ function actualizarContador() {
 function actualizarProgreso() {
     // Calcular el progreso por los empates
     const progreso = $(".progress-bar");
-    const progresoPorcentaje = (opciones.length - contarEmpates()) / opciones.length * 100;
+    const progresoPorcentaje = parseInt((opciones.length - contarEmpates()) / opciones.length * 100, 10);
 
     progreso.text(progresoPorcentaje + "%");
     progreso.css("width", progresoPorcentaje + "%");
@@ -367,6 +375,7 @@ function obtenerOpciones() {
                     opciones.push(new Opcion(item.id, item.name, item.image));
                 });
                 actualizarTop();
+                actualizarProgreso();
                 removePageLoader();
                 resolve();
             }
@@ -392,6 +401,7 @@ function sendResults() {
 
     promiseAjax(`/api/list/${share_code}/play/result/add`, 'POST', { result: opcionesFormateadas, startDate: horaInicio.getTime() }).then(response => { // skipcq: JS-0125
         if (response && response.status === "success") {
+            $("#final_play_modal").modal("show");
             // window.location.href = `/list/${share_code}/results`;
         } else {
             toastMessage("error", "Ha ocurrido un error al enviar los resultados, por favor, inténtelo de nuevo.");
@@ -409,7 +419,6 @@ function onDocumentReady() {
         actualizarProgreso();
         sendResults();
 
-        $("#final_play_modal").modal("show");
         clearInterval(intervalContador);
 
         console.log('Cantidad de iteraciones: ' + cantidadIteracionesUsuario)
