@@ -155,4 +155,4 @@ def add_result(user, list_obj, results, start_date):
             item_order = ItemOrder(answer=list_answer, item=item, order=order)
             item_order.save()
 
-    return True
+    return list_answer
