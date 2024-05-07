@@ -1,4 +1,4 @@
-import { removePageLoader, promiseAjax, toastMessage } from "/static/assets/js/ranquiz/utils.js";
+import { removePageLoader, promiseAjax, toastMessage, toggleListLike } from "/static/assets/js/ranquiz/utils.js";
 const followButton  = $("#follow_category");
 const bellButton = $("#follow_category_bell");
 const content = $("#list_container");
@@ -98,6 +98,10 @@ function followCategory(category_share_code, follow, notification) {
  * Función que se ejecuta cuando el documento está listo
  */
 function onDocumentReady() {
+    // Evento de dar Like
+    content.on("click", ".list_like", toggleListLike);
+
+
     // Evento de cambio de botón de seguir
     followButton.on("click", () => {
         const follow = !followButton.hasClass("btn-primary");
