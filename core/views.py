@@ -104,6 +104,15 @@ def list_details(request, share_code):
 def play_list(request, share_code):
     """Vista que permite a un usuario jugar una lista"""
     list_obj = get_list(share_code)
+
+    # Comprueba si la lista no ha sido eliminada
+    if list_obj is None or list_obj.deleted:
+        return HttpResponseNotFound()
+
+    # Comprueba si la lista es privada y si el usuario tiene permiso para verla
+    if list_obj.public == 0 and list_obj.owner != request.user:
+        return HttpResponseForbidden()
+
     return render(request, 'pages/play_list.html', {'share_code': share_code, 'list': list_obj})
 
 
