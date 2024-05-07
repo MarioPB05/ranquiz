@@ -128,6 +128,7 @@ def create_list_view(request):
                     item.save()
 
             edit_list_categories(categories_names, list_obj)
+            return redirect('list_details', share_code=list_obj.share_code)
 
     return render(request, 'pages/manage_list.html', {
         'list_form': list_form,
@@ -175,7 +176,7 @@ def edit_list_view(request, share_code):
             edit_list_items(items_prefix, list_obj, request)
             edit_list_categories(categories_names, list_obj)
 
-        return redirect("/", list_id=list_obj.id)
+        return redirect('list_details', share_code=list_obj.share_code)
 
     item_form_set = []
 
