@@ -123,7 +123,7 @@ def get_user_lists(user, show_deleted, visibility, search_query, page_number):
                 LEFT JOIN ranquiz.api_listcategory lc on l.id = lc.list_id
                 WHERE l.owner_id = %s {where}
                 GROUP BY l.id, l.edit_date, l.creation_date
-                ORDER BY l.edit_date, l.creation_date
+                ORDER BY l.edit_date DESC, l.creation_date DESC
                 LIMIT %s OFFSET %s;"""
 
     items_per_page = PAGINATION_ITEMS_PER_PAGE / 2
