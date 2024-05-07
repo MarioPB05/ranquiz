@@ -259,3 +259,7 @@ def category_lists(request, share_code):
              'page_numbers': page_numbers
          }
     })
+
+def result(request, share_code, id):
+    """Vista que renderiza los resultados de una búsqueda"""
+    return render(request, 'pages/list_result.html')
