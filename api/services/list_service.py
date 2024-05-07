@@ -113,7 +113,8 @@ def get_user_lists(user, show_deleted, visibility, search_query, page_number):
                         WHERE slc.list_id = l.id
                     ) AS comments,
                     IF(hl.id IS NOT NULL, TRUE, FALSE)
-                    AS highlighted
+                    AS highlighted, au.share_code as owner_share_code, aa.image as owner_avatar, 
+                    au.username as owner_username
                 FROM api_list l
                 JOIN ranquiz.api_user au on l.owner_id = au.id
                 JOIN ranquiz.api_avatar aa on au.avatar_id = aa.id
