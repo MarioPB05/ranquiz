@@ -96,40 +96,9 @@
                             Ver resultados
                         </a>
                         {% if user.is_authenticated %}
-                            
-
-                            <a data-bs-toggle="modal" data-bs-target="#playModal" class="d-flex align-items-center justify-content-center btn btn-primary border border-dark rounded mh-50px w-25" style="bottom: -20px">
+                            <a href="{% url 'play_list' share_code=share_code %}" class="d-flex align-items-center justify-content-center btn btn-primary border border-dark rounded mh-50px w-25" style="bottom: -20px">
                                 <i class="fs-4x text-white bi bi-play-fill"></i>
                             </a>
-
-                            <!-- Begin modal -->
-                            <div class="modal fade" id="playModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">Jugar</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-
-                                        <div class="modal-body">
-                                            <label class="fs-5 mb-3">Elementos a elegir en cada ronda a la vez</label>
-                                            <select id="duel_elements_selector" class="form-select" data-control="select2" data-placeholder="Select an option" data-hide-search="true" aria-label="Default select example">
-                                              <option value="4">4 Elementos</option>
-                                              <option value="2">2 Elementos</option>
-                                            </select>
-                                            <label class="fs-5 mt-10">Tiempo aproximado de juego:</label>
-                                            <p id="estimated_playtime" class="fs-1 fw-bolder text-success">0m 0s</p>
-                                        </div>
-
-                                        <div class="modal-footer d-flex justify-content-around">
-                                            <!--TODO: Cambiar url por play_list -->
-                                            <a  href="{% url 'user' share_code=list.share_code %}" class="btn btn-primary px-16" id="play_button">Jugar ahora</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- End modal -->
-
                         {% endif %}
                     </div>
                 </div>
