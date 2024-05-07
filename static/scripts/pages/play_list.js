@@ -406,6 +406,27 @@ function sendResults() {
         } else {
             toastMessage("error", "Ha ocurrido un error al enviar los resultados, por favor, inténtelo de nuevo.");
         }
+    }).catch(() => {
+        toastMessage("error", "Ha ocurrido un error al enviar los resultados, por favor, inténtelo de nuevo.");
+
+        Swal.fire({
+          title: "Error al enviar los resultados",
+          text: "Ha ocurrido un error al enviar los resultados, por favor, inténtelo de nuevo.",
+          allowOutsideClick: false,
+          icon: "error",
+          showDenyButton: true,
+          showCancelButton: false,
+          confirmButtonText: "Reintentar",
+          confirmButtonClass: "btn btn-primary",
+          denyButtonText: `Salir`,
+          denyButtonClass: "btn btn-secondary",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            sendResults();
+          } else if (result.isDenied) {
+              window.location.href = `/list/${share_code}/view`;
+          }
+        });
     });
 }
 
