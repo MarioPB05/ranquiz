@@ -97,10 +97,11 @@
                         </a>
                         {% if user.is_authenticated %}
                             
-
+                            {% if list.deleted == 0 %}
                             <a data-bs-toggle="modal" data-bs-target="#playModal" class="d-flex align-items-center justify-content-center btn btn-primary border border-dark rounded mh-50px w-25" style="bottom: -20px">
                                 <i class="fs-4x text-white bi bi-play-fill"></i>
                             </a>
+                            {% endif %}
 
                             <!-- Begin modal -->
                             <div class="modal fade" id="playModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
