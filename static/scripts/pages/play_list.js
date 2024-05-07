@@ -409,6 +409,9 @@ function onDocumentReady() {
         actualizarProgreso();
         sendResults();
 
+        $("#final_play_modal").modal("show");
+        clearInterval(intervalContador);
+
         console.log('Cantidad de iteraciones: ' + cantidadIteracionesUsuario)
     });
 
@@ -419,7 +422,7 @@ function onDocumentReady() {
         $("#next_button").prop("disabled", false);
     });
 
-    setInterval(actualizarContador, 1000);
+    const intervalContador = setInterval(actualizarContador, 1000);
 }
 
 $(document).ready(onDocumentReady);
