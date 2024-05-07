@@ -37,7 +37,6 @@ let enfrentamientos = [];
 let cantidadIteracionesUsuario = 0;
 
 async function main() {
-    console.log('Iniciando el proceso de enfrentamientos');
     await rondaInicial();
 
     // Ordenar las opciones por menos descartes
@@ -77,12 +76,10 @@ async function rondaInicial() {
 }
 
 function sumarPuntos(ganador) {
-    console.log('La ' + ganador.nombre + ' ha ganado');
     opciones.find(opcion => opcion.nombre === ganador.nombre).puntos++;
 }
 
 function sumarDescarte(perdedor) {
-    console.log('La ' + perdedor.nombre + ' ha perdido');
     opciones.find(opcion => opcion.nombre === perdedor.nombre).descartes++;
 }
 
@@ -107,7 +104,6 @@ function insertOrUpdateObject(orden, nuevoObjeto) {
 }
 
 async function desempatarPares(opcion1, opcion2) {
-    console.log('Desempatando ' + opcion1.nombre + ' y ' + opcion2.nombre);
     // Buscar enfrentamientos en los que hayan participado
     const enfrentamientosComunes = enfrentamientos.filter(enfrentamiento => {
         return (enfrentamiento.opcion1 === opcion1 || enfrentamiento.opcion2 === opcion1 || enfrentamiento.opcion3 === opcion1 || enfrentamiento.opcion4 === opcion1)
@@ -182,10 +178,8 @@ async function desempatarPares(opcion1, opcion2) {
 
             // Si la opcion1 tiene más peso que la opcion2 (O la opcion2 no tiene peso), se suman descartes a la opcion2
             if(pesoOpcion1.peso > pesoOpcion2.peso) {
-                console.log('La ' + opcion1.nombre + ' ha ganado a la ' + opcion2.nombre);
                 sumarDescarte(opcion2);
             }else if(pesoOpcion1.peso < pesoOpcion2.peso) {
-                console.log('La ' + opcion2.nombre + ' ha ganado a la ' + opcion1.nombre);
                 sumarDescarte(opcion1);
             }
         }
@@ -197,13 +191,10 @@ async function desempatarPares(opcion1, opcion2) {
         sumarDescarte(enfrentamiento.ganador === opcion1 ? opcion2 : opcion1)
     });
 
-    console.log('La ' + ganadorEnfrentamientosComunes[0].ganador.nombre + ' ha ganado');
-
     return true
 }
 
 async function resolverEmpates() {
-    console.log('Resolviendo empates');
     for(const opcion of opciones) {
         // Coger las opciones con los mismos descartes
         const opcionesEmpatadas = opciones.filter(opc => opc.descartes === opcion.descartes);
@@ -441,8 +432,6 @@ function onDocumentReady() {
         sendResults();
 
         clearInterval(intervalContador);
-
-        console.log('Cantidad de iteraciones: ' + cantidadIteracionesUsuario)
     });
 
     // Evento para seleccionar una opción
