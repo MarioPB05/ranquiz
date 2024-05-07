@@ -402,7 +402,7 @@ function sendResults() {
     promiseAjax(`/api/list/${share_code}/play/result/add`, 'POST', { result: opcionesFormateadas, startDate: horaInicio.getTime() }).then(response => { // skipcq: JS-0125
         if (response && response.status === "success") {
             $("#final_play_modal").modal("show");
-            // window.location.href = `/list/${share_code}/results`;
+            $("#showResultButton").attr("href", `/list/${share_code}/result/${response.result_id}`);
         } else {
             toastMessage("error", "Ha ocurrido un error al enviar los resultados, por favor, inténtelo de nuevo.");
         }
