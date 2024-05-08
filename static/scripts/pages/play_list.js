@@ -35,7 +35,6 @@ class Enfrentamiento {
 
 let opciones = [];
 let enfrentamientos = [];
-let cantidadIteracionesUsuario = 0;
 
 /**
  * Función principal
@@ -189,7 +188,7 @@ async function desempatarPares(opcion1, opcion2) {
                     (enfrentamiento.ganador === opcion2 || enfrentamiento.ganador === contrincante)
                 );
 
-                [enfrentamientoOpcion1, enfrentamientoOpcion2].forEach((enfrentamiento, index) => {
+                [enfrentamientoOpcion1, enfrentamientoOpcion2].forEach((enfrentamiento) => {
                     if(enfrentamiento) {
                         if(enfrentamiento.ganador === opcion1) {
                             insertOrUpdateObject(orden, {opc: opcion1, peso: 10});
@@ -344,7 +343,6 @@ async function generarEnfrentamiento(opcion1, opcion2, opcion3= null, opcion4 = 
             });
 
         }
-        cantidadIteracionesUsuario++;
     });
 }
 
@@ -424,7 +422,7 @@ function actualizarProgreso() {
  * @returns {Promise<unknown>}
  */
 function obtenerOpciones() {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         promiseAjax(`/api/list/${share_code}/item`, 'GET').then(response => { // skipcq: JS-0125
             if (response && response.items) {
                 response.items.forEach(item => {
