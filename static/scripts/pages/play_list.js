@@ -477,7 +477,7 @@ function sendResults() {
           showCancelButton: false,
           confirmButtonText: "Reintentar",
           confirmButtonClass: "btn btn-primary",
-          denyButtonText: `Salir`,
+          denyButtonText: "Salir",
           denyButtonClass: "btn btn-secondary",
         }).then((result) => {
           if (result.isConfirmed) {
