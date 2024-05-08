@@ -1,9 +1,8 @@
 from django.db import transaction
 
 from api.forms.list_form import CreateListForm
-from api.services.item_service import get_item
 from api.services.query_service import execute_query
-from api.models import List, ListCategory, ListFavorite, ListLike, ListAnswer, ItemOrder
+from api.models import List, ListCategory, ListFavorite, ListLike, ListAnswer, ItemOrder, Item
 
 
 def create_list_form(request, instance=None):
@@ -147,7 +146,7 @@ def add_result(user, list_obj, results, start_date):
     list_answer.save()
 
     for result in results:
-        item = get_item(result['id'])
+        item = Item.get(result['item_id'])
         order = int(result['order'])
 
         if item is not None:
