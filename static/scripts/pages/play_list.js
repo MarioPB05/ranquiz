@@ -33,8 +33,8 @@ class Enfrentamiento {
     }
 }
 
-let opciones = [];
-let enfrentamientos = [];
+const opciones = [];
+const enfrentamientos = [];
 
 /**
  * Función principal
@@ -59,7 +59,7 @@ async function main() {
  */
 async function rondaInicial() {
     // Agrupar las opciones en grupos de 4, para el ultimo enfrentamiento se rellenara cogiendo las opciones de inicio
-    let opcionesRestantes = [...opciones];
+    const opcionesRestantes = [...opciones];
 
     while (opcionesRestantes.length > 0) {
         let opcion1 = opcionesRestantes.shift();
@@ -171,8 +171,7 @@ async function desempatarPares(opcion1, opcion2) {
 
         if(contrincantes.length === 2) {
             // Orden sería una lista con esta forma: [{opc: Opcion, peso: 0}]
-            let orden = [{opc: opcion1, peso: 0}, {opc: opcion2, peso: 0}];
-            // let tempOrden = [];
+            const orden = [{opc: opcion1, peso: 0}, {opc: opcion2, peso: 0}];
 
             for (const contrincante of contrincantes) {
                 // Comprobamos si opcion1 ha jugado contra ese contrincante, y si ha ganado
