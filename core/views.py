@@ -9,6 +9,7 @@ from api.models import List, ListCategory, ListFavorite, ListLike, ListAnswer
 from api.services import PAGINATION_ITEMS_PER_PAGE
 from api.services.category_service import edit_list_categories, get_category, user_followed_category, \
     user_follow_category_and_receive_notifications
+from api.services.get_service import get_user
 from api.services.item_service import (
     create_item_form,
     create_item,
@@ -24,7 +25,6 @@ from api.services.list_service import (
 from api.services.user_service import (
     user_login,
     user_register,
-    get_user,
 )
 from core.decorators.decorators import partial_login_required
 
@@ -101,6 +101,21 @@ def list_details(request, share_code):
     return render(request, 'pages/list_details.html', {'share_code': share_code, 'list': list_data, "data": data})
 
 
+def play_list(request, share_code):
+    """Vista que permite a un usuario jugar una lista"""
+    list_obj = get_list(share_code)
+
+    # Comprueba si la lista no ha sido eliminada
+    if list_obj is None or list_obj.deleted:
+        return HttpResponseNotFound()
+
+    # Comprueba si la lista es privada y si el usuario tiene permiso para verla
+    if list_obj.public == 0 and list_obj.owner != request.user:
+        return HttpResponseForbidden()
+
+    return render(request, 'pages/play_list.html', {'share_code': share_code, 'list': list_obj})
+
+
 @login_required
 def create_list_view(request):
     """Vista que permite a un usuario crear una lista"""
@@ -128,6 +143,7 @@ def create_list_view(request):
                     item.save()
 
             edit_list_categories(categories_names, list_obj)
+            return redirect('list_details', share_code=list_obj.share_code)
 
     return render(request, 'pages/manage_list.html', {
         'list_form': list_form,
@@ -175,7 +191,7 @@ def edit_list_view(request, share_code):
             edit_list_items(items_prefix, list_obj, request)
             edit_list_categories(categories_names, list_obj)
 
-        return redirect("/", list_id=list_obj.id)
+        return redirect('list_details', share_code=list_obj.share_code)
 
     item_form_set = []
 
