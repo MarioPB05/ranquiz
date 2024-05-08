@@ -6,6 +6,8 @@ from api.models.model_template import ModelTemplate
 
 
 class NotificationTypes(Enum):
+    """Tipos de notificaciones disponibles en base de datos"""
+
     NEW_LIST = 1
     NEW_LIST_ON_CATEGORY = 2
     NEW_LIST_OPTIONS = 3
