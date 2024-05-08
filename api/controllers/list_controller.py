@@ -71,8 +71,8 @@ def favorite_list(request, share_code):
     return JsonResponse({'status': result})
 
 
-@require_authenticated
 @csrf_exempt
+@require_authenticated
 def add_result_to_list(request, share_code):
     """Controlador que permite añadir un resultado a una lista"""
     result = request.POST.get('result')
