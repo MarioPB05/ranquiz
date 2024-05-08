@@ -16,7 +16,9 @@
             </div>
         {% endif %}
         </div>
-    
+
+
+
         <div class="card-body p-7 pt-10 p-sm-10" id="">
             <div class="d-flex gap-5 mb-5" id="sort_container">
                 <a class="btn {% if order != 'newest' %}btn-outline-primary btn-outline btn-active-primary{% else %}btn-primary{% endif %} p-1 fs-7" 
@@ -25,12 +27,43 @@
                 <a class="btn {% if order != 'popular' %}btn-outline-primary btn-outline btn-active-primary{% else %}btn-primary{% endif %} p-1 fs-7" 
                    href="{% url 'category_lists' share_code=share_code %}?{% if page %}page={{ page }}&{% endif %}order={% if order == 'popular' %}default{% else %}popular{% endif %}" id="popular">Populares</a>
             </div>
-        
-            <div id="list_container"  class="w-100 align-items-center d-md-grid d-flex flex-column rounded p-1 p-sm-5 gap-7 min-h-250px" id="content" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr))">
+            {% if not lists %}
+                <div class="notice d-flex bg-light-warning rounded border-warning border border-dashed p-6 mt-10">
+                    <!--begin::Icon-->
+                    <span class="d-flex align-items-center me-4">
+                        <i class="bi bi-exclamation-circle-fill text-warning fs-2tx"></i>
+                    </span>
+                    <!--end::Icon-->
+
+                    <!--begin::Wrapper-->
+                    <div class="d-flex flex-stack flex-grow-1">
+                        <!--begin::Content-->
+                        <div class="fw-bold">
+                            <h4 class="text-gray-900 fw-bolder">
+
+                                    ¡No hay ninguna lista pública en esta categoría!
+
+                            </h4>
+                            <div class="fs-6 text-gray-700">
+
+                                    Explora otras categorías o crea alguna lista para esta categoría.
+
+                            </div>
+                        </div>
+                        <!--end::Content-->
+                    </div>
+                    <!--end::Wrapper-->
+                </div>
+            {% else %}
+                    <div id="list_container"  class="w-100 align-items-center d-md-grid d-flex flex-column rounded p-1 p-sm-5 gap-7 min-h-250px" id="content" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr))">
+
+
                 {% for list in lists %}
                     {% include 'components/list_template.html' with data=list %}
                 {% endfor %}
-            </div>
+
+        </div>
+
             
             <ul class="pagination mt-5">
                 {% if pagination.current_page < pagination.total_pages %}
@@ -50,6 +83,7 @@
                  {% endif %}
             </ul>
         </div>
+    {% endif %}
     </div>
 {% endblock %}
 
