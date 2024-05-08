@@ -6,6 +6,9 @@ const horaInicio = new Date();
 let contadorAutomatico = 0;
 const intervalContador = setInterval(actualizarContador, 1000);
 
+/**
+ * Clase que representa una opción y guarda los puntos y descartes
+ */
 class Opcion {
     constructor(id, nombre, image=null) {
         this.id = id;
