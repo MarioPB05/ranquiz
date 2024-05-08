@@ -460,14 +460,14 @@ function sendResults() {
     promiseAjax(`/api/list/${share_code}/play/result/add`, 'POST', { result: opcionesFormateadas, startDate: horaInicio.getTime() }).then(response => { // skipcq: JS-0125
         if (response && response.status === "success") {
             $("#final_play_modal").modal("show");
-            $("#showResultButton").attr("href", `/list/${share_code}/result/${response.result_id}`);
+            $("#showResultButton").attr("href", `/list/${share_code}/result/${response.result_id}`); // skipcq: JS-0125
         } else {
             toastMessage("error", "Ha ocurrido un error al enviar los resultados, por favor, inténtelo de nuevo.");
         }
     }).catch(() => {
         toastMessage("error", "Ha ocurrido un error al enviar los resultados, por favor, inténtelo de nuevo.");
 
-        Swal.fire({
+        Swal.fire({ // skipcq: JS-0125
           title: "Error al enviar los resultados",
           text: "Ha ocurrido un error al enviar los resultados, por favor, inténtelo de nuevo.",
           allowOutsideClick: false,
@@ -482,7 +482,7 @@ function sendResults() {
           if (result.isConfirmed) {
             sendResults();
           } else if (result.isDenied) {
-              window.location.href = `/list/${share_code}/view`;
+              window.location.href = `/list/${share_code}/view`; // skipcq: JS-0125
           }
         });
     });
