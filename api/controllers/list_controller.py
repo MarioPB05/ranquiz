@@ -9,7 +9,7 @@ from django.views.decorators.http import require_GET
 from api.decorators.api_decorators import require_authenticated
 from api.models.list import List
 from api.services import PAGINATION_ITEMS_PER_PAGE
-from api.services.list_service import get_lists, toggle_like_list, toggle_favorite_list, add_result, get_list
+from api.services.list_service import get_lists, toggle_like_list, toggle_favorite_list, add_result
 
 
 @require_GET
@@ -76,7 +76,7 @@ def favorite_list(request, share_code):
 def add_result_to_list(request, share_code):
     """Controlador que permite añadir un resultado a una lista"""
     result = request.POST.get('result')
-    list_obj = get_list(share_code=share_code)
+    list_obj = List.get(share_code=share_code)
     start_date = request.POST.get('startDate')
 
     # Convertir de JSON a array

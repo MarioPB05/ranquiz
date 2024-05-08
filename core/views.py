@@ -5,11 +5,10 @@ from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponseForbidden, HttpResponseNotFound
 from django.shortcuts import render, redirect, get_object_or_404
 
-from api.models import List, ListCategory, ListFavorite, ListLike, ListAnswer
+from api.models import List, ListCategory, ListFavorite, ListLike, ListAnswer, User
 from api.services import PAGINATION_ITEMS_PER_PAGE
 from api.services.category_service import edit_list_categories, get_category, user_followed_category, \
     user_follow_category_and_receive_notifications
-from api.services.get_service import get_user
 from api.services.item_service import (
     create_item_form,
     create_item,
@@ -19,7 +18,6 @@ from api.services.item_service import (
 from api.services.list_service import (
     create_list_form,
     create_list,
-    get_list,
     get_list_counts, get_lists, count_lists,
 )
 from api.services.user_service import (
@@ -52,7 +50,7 @@ def logout(request):
 
 def list_details(request, share_code):
     """Vista que permite a un usuario ver los detalles de una lista"""
-    list_data = get_list(share_code)
+    list_data = List.get(share_code)
     items_data = get_items(share_code)
 
     # Comprueba si la lista no ha sido eliminada
@@ -103,7 +101,7 @@ def list_details(request, share_code):
 
 def play_list(request, share_code):
     """Vista que permite a un usuario jugar una lista"""
-    list_obj = get_list(share_code)
+    list_obj = List.get(share_code)
 
     # Comprueba si la lista no ha sido eliminada
     if list_obj is None or list_obj.deleted:
@@ -167,7 +165,7 @@ def edit_list_view(request, share_code):
 
     if request.method == 'POST' and list_form.is_valid():
         # Actualiza los datos de la lista con los datos del formulario
-        list_obj = get_list(share_code)
+        list_obj = List.get(share_code)
         list_obj.name = request.POST.get('name')
         list_obj.question = request.POST.get('question')
         list_obj.public = bool(request.POST.get('visibility') == 'public')
@@ -221,7 +219,7 @@ def profile(request, share_code=None):
     }
 
     is_own_profile = share_code is None or request.user.share_code == share_code
-    user_data = request.user if is_own_profile else get_user(share_code=share_code)
+    user_data = request.user if is_own_profile else User.get(share_code=share_code)
 
     if user_data is None:
         raise Http404('User not found')

@@ -2,8 +2,7 @@ from datetime import datetime
 
 from django.db.models import Count, Q, Case, When, Exists, OuterRef
 
-from api.models import Avatar, HighlightedList, UserAvatar
-from api.services.list_service import get_list
+from api.models import Avatar, HighlightedList, UserAvatar, List
 from api.services.transaction_service import do_transaction
 
 
@@ -118,7 +117,7 @@ def calculate_highlight_price(start_date, end_date):
 def highlight_list(share_code, start_date, end_date):
     """Destaca una lista"""
     # Obtenemos la lista
-    required_list = get_list(share_code)
+    required_list = List.get(share_code)
 
     if required_list is not None:
         transaction = do_transaction(
