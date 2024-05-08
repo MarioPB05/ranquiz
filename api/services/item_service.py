@@ -1,8 +1,8 @@
 from cloudinary import uploader
 
 from api.forms.item_form import CreateItemForm
-from api.models import Item
-from api.services.get_service import get_item, get_list
+from api.models import List, Item
+from api.services.get_service import get_item
 
 
 def create_item_form(request, prefix=None, instance=None):
@@ -64,7 +64,7 @@ def edit_list_items(items_prefix, list_obj, request):
 def get_items(share_code, get_deleted=False):
     """Función para obtener los items de una lista"""
     # Obtenemos la lista
-    list_obj = get_list(share_code)
+    list_obj = List.get(share_code)
 
     if list_obj is None:
         return None

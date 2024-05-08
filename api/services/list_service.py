@@ -1,10 +1,9 @@
 from django.db import transaction
 
 from api.forms.list_form import CreateListForm
-from api.services.get_service import get_list
 from api.services.item_service import get_item
 from api.services.query_service import execute_query
-from api.models import ListCategory, ListFavorite, ListLike, ListAnswer, ItemOrder
+from api.models import List, ListCategory, ListFavorite, ListLike, ListAnswer, ItemOrder
 
 
 def create_list_form(request, instance=None):
@@ -109,7 +108,7 @@ def count_lists(search='', category=None):
 
 def toggle_like_list(user, share_code):
     """Función que permite dar like o quitar el like a una lista"""
-    list_obj = get_list(share_code)
+    list_obj = List.get(share_code)
 
     if list_obj is None:
         return False
@@ -126,7 +125,7 @@ def toggle_like_list(user, share_code):
 
 def toggle_favorite_list(user, share_code):
     """Función que permite añadir o quitar una lista de favoritos"""
-    list_obj = get_list(share_code)
+    list_obj = List.get(share_code)
 
     if list_obj is None:
         return False
