@@ -1,6 +1,5 @@
 from django.urls import path
 
-from api.controllers.category_controller import validate_category, get_categories, add_category, get_categories_filtered
 from api.controllers.item_controller import get_current_items, get_all_items
 from api.controllers.category_controller import validate_category, get_categories, add_category, \
     get_categories_filtered, follow_category
