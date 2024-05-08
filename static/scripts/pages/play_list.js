@@ -44,13 +44,13 @@ const enfrentamientos = [];
  * @returns {Promise<void>}
  */
 async function main() {
-    rondaInicial();
+    await rondaInicial();
 
     // Ordenar las opciones por menos descartes
     opciones.sort((a, b) => a.descartes - b.descartes);
 
     while(comprobarEmpates()) {
-        resolverEmpates();
+        await resolverEmpates();
 
         opciones.sort((a, b) => a.descartes - b.descartes);
     }
@@ -60,7 +60,7 @@ async function main() {
  * Ronda inicial
  * @returns {Promise<void>}
  */
-function rondaInicial() {
+async function rondaInicial() {
     // Agrupar las opciones en grupos de 4, para el ultimo enfrentamiento se rellenara cogiendo las opciones de inicio
     const opcionesRestantes = [...opciones];
 
@@ -79,7 +79,7 @@ function rondaInicial() {
             return opcion;
         });
 
-        generarEnfrentamiento(opcion1, opcion2, opcion3, opcion4);
+        await generarEnfrentamiento(opcion1, opcion2, opcion3, opcion4);
 
         actualizarTop();
         actualizarProgreso();
@@ -141,7 +141,7 @@ function insertOrUpdateObject(orden, nuevoObjeto) {
  * @param opcion2
  * @returns {Promise<boolean>}
  */
-function desempatarPares(opcion1, opcion2) {
+async function desempatarPares(opcion1, opcion2) {
     // Buscar enfrentamientos en los que hayan participado
     const enfrentamientosComunes = enfrentamientos.filter(enfrentamiento => {
         return (enfrentamiento.opcion1 === opcion1 || enfrentamiento.opcion2 === opcion1 || enfrentamiento.opcion3 === opcion1 || enfrentamiento.opcion4 === opcion1)
@@ -235,7 +235,7 @@ function desempatarPares(opcion1, opcion2) {
  * Resolver los empates
  * @returns {Promise<void>}
  */
-function resolverEmpates() {
+async function resolverEmpates() {
     for(const opcion of opciones) {
         // Coger las opciones con los mismos descartes
         const opcionesEmpatadas = opciones.filter(opc => opc.descartes === opcion.descartes);
@@ -253,7 +253,7 @@ function resolverEmpates() {
         // Desempatar las combinaciones
         if (contadorAutomatico < 5) {
             for(const combinacion of combinaciones) {
-                desempatarPares(combinacion[0], combinacion[1]).then((res) => {
+                await desempatarPares(combinacion[0], combinacion[1]).then((res) => {
                   if(!res) {
                       combinacionesRestantes.push(combinacion);
                   }
@@ -270,12 +270,12 @@ function resolverEmpates() {
 
         if(combinacionesAplanadas.length >= 4) {
             // Si hay 4 o más opciones empatadas, se enfrentan entre ellas
-            generarEnfrentamiento(combinacionesAplanadas[0], combinacionesAplanadas[1], combinacionesAplanadas[2], combinacionesAplanadas[3]);
+            await generarEnfrentamiento(combinacionesAplanadas[0], combinacionesAplanadas[1], combinacionesAplanadas[2], combinacionesAplanadas[3]);
         }else {
             // Si no, se enfrentan en parejas
             for(let i = 0; i < combinacionesAplanadas.length; i += 2) {
                 if(combinacionesAplanadas[i + 1] !== undefined) {
-                    generarEnfrentamiento(combinacionesAplanadas[i], combinacionesAplanadas[i + 1]);
+                    await generarEnfrentamiento(combinacionesAplanadas[i], combinacionesAplanadas[i + 1]);
                 }
             }
         }
@@ -293,7 +293,7 @@ function resolverEmpates() {
  * @param opcion4
  * @returns {Promise<unknown>}
  */
-function generarEnfrentamiento(opcion1, opcion2, opcion3= null, opcion4 = null) {
+async function generarEnfrentamiento(opcion1, opcion2, opcion3= null, opcion4 = null) {
     contadorAutomatico = 0;
 
     return new Promise((resolve) => {
