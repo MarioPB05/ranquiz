@@ -412,8 +412,8 @@ function actualizarProgreso() {
     const progreso = $(".progress-bar");
     const progresoPorcentaje = parseInt((opciones.length - contarEmpates()) / opciones.length * 100, 10);
 
-    progreso.text(progresoPorcentaje + "%");
-    progreso.css("width", progresoPorcentaje + "%");
+    progreso.text(`${progresoPorcentaje}%`);
+    progreso.css("width", `${progresoPorcentaje}%`);
 }
 
 /**
