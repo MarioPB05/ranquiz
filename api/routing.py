@@ -1,9 +1,10 @@
 from django.urls import path
 
+from api.controllers.item_controller import get_current_items, get_all_items
 from api.controllers.category_controller import validate_category, get_categories, add_category, \
     get_categories_filtered, follow_category
 from api.controllers.list_controller import get_list_types, like_list, favorite_list, get_lists_filtered, \
-    visibility_list, delete_or_recover_list, recover_list_eliminated
+    visibility_list, delete_or_recover_list, recover_list_eliminated, add_result_to_list
 from api.controllers.social_controller import get_comments, create_and_return_comment, add_award_to_comment_function, \
     get_awards
 from api.controllers.shop_controller import highlight_calculator, get_avatars, buy_a_avatar, equip_a_avatar, \
@@ -22,6 +23,9 @@ urlpatterns = [
     path('list/<str:share_code>/comment/create', create_and_return_comment, name='api_new_comment'),
     path('list/<str:share_code>/comment/<int:comment_id>/awards', create_and_return_comment,
          name='get_awards_from_comment'),
+    path('list/<str:share_code>/item/', get_current_items, name='get_list_items'),
+    path('list/<str:share_code>/item/all', get_all_items, name='get_all_items'),
+    path('list/<str:share_code>/play/result/add', add_result_to_list, name='add_result_to_list'),
     path('list/<str:share_code>/comment/<int:comment_id>/add_award', add_award_to_comment_function,
          name='add_award_to_comment'),
     path('social/awards', get_awards, name='get_all_awards'),

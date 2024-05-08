@@ -7,7 +7,8 @@ from api.decorators.api_decorators import require_authenticated
 from api.models import ListLike
 from api.services import PAGINATION_ITEMS_PER_PAGE
 from api.services.list_service import get_user_lists
-from api.services.user_service import get_user, get_users, toggle_user_follow
+from api.services.get_service import get_user
+from api.services.user_service import get_users, toggle_user_follow
 
 
 @require_GET

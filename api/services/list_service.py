@@ -2,10 +2,13 @@ import math
 
 from django.db.models import Q
 
+from django.db import transaction
+
 from api.forms.list_form import CreateListForm
 from api.services import PAGINATION_ITEMS_PER_PAGE
+from api.services.get_service import get_list, get_item
 from api.services.query_service import execute_query
-from api.models import List, ListCategory, ListFavorite, ListLike, ListAnswer, ListComment, HighlightedList
+from api.models import ListCategory, ListFavorite, ListLike, ListAnswer, ItemOrder, ListComment, List
 
 
 def create_list_form(request, instance=None):
@@ -22,14 +25,6 @@ def create_list(list_form):
         return list_form.save(commit=False)
 
     return None
-
-
-def get_list(share_code):
-    """Función que devuelve el objeto "lista" al que pertenece el share code"""
-    try:
-        return List.objects.get(share_code=share_code)
-    except List.DoesNotExist:
-        return None
 
 
 def get_lists(limit=None, page=1, search='', user=None, order='default', category=None):
@@ -81,7 +76,7 @@ def get_user_lists(user, show_deleted, visibility, search_query, page_number):
     """Función que devuelve todas las listas de un usuario con paginación"""
     where = "AND l.deleted = 0" if not show_deleted else ""
     params = [user.id]
-    
+
     if search_query:
         where += " AND l.name LIKE %s"
         params.append(f'%{search_query}%')
@@ -90,7 +85,7 @@ def get_user_lists(user, show_deleted, visibility, search_query, page_number):
         where += " AND l.public = 1"
     elif visibility == 'private':
         where += " AND l.public = 0"
-    
+
     query = f"""SELECT l.id, l.name, l.share_code, l.image, l.public, l.edit_date, l.creation_date, l.deleted,
                     (
                         SELECT COUNT(*)
@@ -236,6 +231,7 @@ def recover_list(share_code):
 
     return True
 
+
 def toggle_like_list(user, share_code):
     """Función que permite dar like o quitar el like a una lista"""
     list_obj = get_list(share_code)
@@ -268,3 +264,20 @@ def toggle_favorite_list(user, share_code):
         favorite.save()
 
     return True
+
+
+@transaction.atomic
+def add_result(user, list_obj, results, start_date):
+    """Servicio que añade un resultado a una lista con una transacción"""
+    list_answer = ListAnswer(user=user, list=list_obj, start_date=start_date)
+    list_answer.save()
+
+    for result in results:
+        item = get_item(result['id'])
+        order = int(result['order'])
+
+        if item is not None:
+            item_order = ItemOrder(answer=list_answer, item=item, order=order)
+            item_order.save()
+
+    return list_answer

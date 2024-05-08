@@ -66,7 +66,7 @@ function createItem() {
     item.removeAttr('id');
 
     // Vaciar los inputs
-    // item.find('input[type="text"]').val('');
+    item.find('input[type="text"]').val('');
 
     // Obtener el prefijo del item
     const prefix = `${item_last_prefix + 1}-`;
@@ -261,6 +261,14 @@ function itemHasImage(event) {
 }
 
 /**
+ * Recibe un elemento y le añade un border rojo durante un segundo
+ */
+function temporalRedBorder(element) {
+    element.addClass('border border-danger');
+    setTimeout(() => element.removeClass('border border-danger'), 1000);
+}
+
+/**
  * Comprobar si hay algún input de item vacío
  * @returns {boolean}
  */
@@ -279,7 +287,47 @@ function anyItemInputEmpty() {
 }
 
 /**
- * Enfocar en el primer item vacío
+ * Enfocar en el primer item con mas de 50 caracteres
+ */
+function focusOnFirstTooLongInput() {
+    let found = false;
+
+    // Enfoca en el primer item con más de 50 caracteres
+    $('#items_container').find('.list_item:not(#item_template)').find('.item-name').each(function () {
+
+        if ($(this).val().length > 50) {
+            $(this).focus();
+            found = true;
+            temporalRedBorder($(this));
+        }
+
+        return !found;
+    });
+
+}
+
+/**
+ * Al crear o editar una lista, el nombre de todos sus ítems no superen los 50 caracteres.
+ */
+function AnyInputTooLong() {
+    // Comprueba si hay algún input con mas de 50 caracteres
+    let invalid = false;
+
+    $('#items_container').find('.list_item:not(#item_template) .item-name').each((index, element) => {
+        if ($(element).val().length > 50) {
+            invalid = true;
+        }
+        return !invalid;
+
+    });
+
+    return invalid;
+}
+
+
+
+/**
+ * Enfocar en el primer item vacio
  */
 function focusOnFirstEmptyItem() {
     let found = false;
@@ -290,6 +338,7 @@ function focusOnFirstEmptyItem() {
         if ($(this).val() === '') {
             $(this).focus();
             found = true;
+            temporalRedBorder($(this));
         }
 
         return !found;
@@ -537,6 +586,14 @@ function beforeSendForm(event) {
         return;
     }
 
+    // Verificar que no haya ningún item con más de 50 caracteres
+    if (AnyInputTooLong()) {
+        focusOnFirstTooLongInput();
+        toastMessage('error', 'Ningún item puede tener más de 50 caracteres');
+        event.preventDefault();
+        return;
+    }
+
     // Verificar que haya alguna categoría seleccionada
     if (categories.length === 0) {
         toastMessage('error', 'Debes seleccionar al menos una categoría');
@@ -580,6 +637,15 @@ function onDocumentReady() {
             }
         }
     });
+
+    $(window).keydown((event) => {
+        if(event.keyCode === 13) {
+          event.preventDefault();
+          return false;
+        }
+
+        return true;
+      });
 
     const imageInput = KTImageInput.getInstance($('#kt_image_input')[0]); // skipcq: JS-0125
     const itemsContainer = $('#items_container');

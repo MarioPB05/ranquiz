@@ -1,5 +1,4 @@
 from django.db import models
-from shortuuid.django_fields import ShortUUIDField
 
 from api.models.model_template import ModelTemplate
 
@@ -17,11 +16,7 @@ class Notification(ModelTemplate):
     user = models.ForeignKey('User', on_delete=models.DO_NOTHING)
     type = models.ForeignKey('NotificationType', on_delete=models.DO_NOTHING)
     date = models.DateTimeField(auto_now_add=True)
-    share_code = ShortUUIDField(
-        length=18,
-        max_length=20,
-        prefix="NT",
-    )
+    share_code = models.CharField(max_length=20)
 
     def __str__(self):
         return self.share_code

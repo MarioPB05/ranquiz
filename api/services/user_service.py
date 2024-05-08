@@ -2,8 +2,9 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 
-from api.models import User, UserFollow, List
+from api.models import UserFollow, List
 from api.services.email_service import send_register_email
+from api.services.middle_service import call_create_notification
 from api.services.query_service import execute_query
 from api.services.shop_service import get_avatar
 from api.forms.user_form import LoginUserForm, CreateUserForm
@@ -96,20 +97,6 @@ def user_register(request):
     }})
 
 
-def get_user(user_id=None, share_code=None):
-    """Función que obtiene un usuario por su id o su share_code"""
-    try:
-        if user_id is not None:
-            return User.objects.get(id=user_id)
-
-        if share_code is not None:
-            return User.objects.get(share_code=share_code)
-
-        return None
-    except User.DoesNotExist:
-        return None
-
-
 def get_user_stats(user):
     """Función que obtiene las estadísticas de un usuario"""
     return {
@@ -161,5 +148,6 @@ def toggle_user_follow(user, followed_user):
         user.following_set.filter(user_followed=followed_user).delete()
     else:
         user.following_set.create(user_followed=followed_user)
+        call_create_notification(1, 7, followed_user, user.share_code)
 
     return True

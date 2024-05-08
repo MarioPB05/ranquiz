@@ -1,12 +1,17 @@
+import json
+from datetime import datetime
+
 from django.http import JsonResponse
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET
 
 from api.decorators.api_decorators import require_authenticated
 from api.models.list import List
 from api.services import PAGINATION_ITEMS_PER_PAGE
 from api.services.list_service import (get_lists, toggle_like_list, toggle_favorite_list, toggle_visibility_list,
-                                       delete_list, recover_list)
+                                        delete_list, recover_list)
+from api.services.list_service import get_lists, toggle_like_list, toggle_favorite_list, toggle_visibility_list, add_result, get_list, delete_list, recover_list
 
 
 @require_GET
@@ -66,6 +71,29 @@ def favorite_list(request, share_code):
     """Controlador que permite marcar una lista como favorita"""
     result = 'success' if toggle_favorite_list(request.user, share_code) else 'error'
     return JsonResponse({'status': result})
+
+
+@csrf_exempt
+@require_authenticated
+def add_result_to_list(request, share_code):
+    """Controlador que permite añadir un resultado a una lista"""
+    result = request.POST.get('result')
+    list_obj = get_list(share_code=share_code)
+    start_date = request.POST.get('startDate')
+
+    # Convertir de JSON a array
+    result = json.loads(result)
+
+    # Convertir de milisegundos a fecha y hora
+    start_date = datetime.fromtimestamp(int(start_date) / 1000)
+
+    result = add_result(request.user, list_obj, result, start_date)
+    status = 'success' if result else 'error'
+
+    if result:
+        return JsonResponse({'status': status, 'result_id': result.id})
+
+    return JsonResponse({'status': status})
 
 
 @require_GET
