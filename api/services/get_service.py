@@ -1,4 +1,4 @@
-from api.models import Item, List, User
+from api.models import Item, User
 
 
 def get_item(item_id=None):
@@ -7,14 +7,6 @@ def get_item(item_id=None):
         return Item.objects.get(id=item_id)
 
     return None
-
-
-def get_list(share_code):
-    """Función que devuelve el objeto "lista" al que pertenece el share code"""
-    try:
-        return List.objects.get(share_code=share_code)
-    except List.DoesNotExist:
-        return None
 
 
 def get_user(user_id=None, share_code=None):
