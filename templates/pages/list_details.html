@@ -15,14 +15,21 @@
                             {% cloudinary data.avatar class="rounded-circle" width="50" height="50" crop="fill" %}
                         </a>
                     </div>
-                    <div class="w-100 h-lg-100 min-h-lg-10px rounded overflow-hidden position-lg-relative bgi-position-center bg-center min-h-300px"
+                    <div class="w-100 h-lg-100 min-h-lg-10px rounded overflow-hidden position-lg-relative bgi-position-center bg-center min-h-300px position-relative"
                          style="{% if not list.image %}
                                     background-image: url('{% static 'assets/media/placeholders/list_mix2.png' %}');
                                 {% else %}
                                     background-image: url('https://res.cloudinary.com/dhewpzvg9/{{ list.image }}');
                                 {% endif %}
                                  background-size: cover;
-                                 "></div>
+                                 ">
+                    <div class="position-absolute bottom-0 m-2">
+                        <a href="{% url 'user' share_code=list.share_code %}" class="h-25 btn btn-outline btn-outline-primary btn-active-primary bg-white w-25 min-w-150px text-center">
+                            Ver resultados
+                        </a>
+                    </div>
+                         
+                    </div>
                     <div class="d-flex flex-wrap align-center justify-content-center gap-lg-20 gap-10">
                         <div class="d-flex flex-column gap-3 align-items-center">
                             <div class="bg-white p-4 rounded-circle">
@@ -92,11 +99,7 @@
                     </a>
 
                     <div class="position-absolute w-100 d-flex flex-wrap justify-content-center gap-4 align-items-center" style="bottom: -20px">
-                        <a href="{% url 'user' share_code=list.share_code %}" class="h-100 btn btn-info w-25 min-w-150px">
-                            Ver resultados
-                        </a>
                         {% if user.is_authenticated %}
-                            
                             {% if list.deleted == 0 %}
                                 <a href="{% url 'play_list' share_code=share_code %}" class="d-flex align-items-center justify-content-center btn btn-primary border border-dark rounded mh-50px w-25" style="bottom: -20px">
                                     <i class="fs-4x text-white bi bi-play-fill"></i>
