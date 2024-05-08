@@ -3,14 +3,16 @@ from channels.layers import get_channel_layer
 
 from api.models import Notification, NotificationType
 from api.services.social_service import get_following
+from api.services.user_service import get_user
 
 
-def create_notification(target, notification_type, user):
+def create_notification(target, notification_type, user, share_code):
     """Crea una notificación"""
     notification = Notification(
         target=target,
         user=user,
         type=notification_type,
+        share_code=share_code
     )
 
     notification.save()
