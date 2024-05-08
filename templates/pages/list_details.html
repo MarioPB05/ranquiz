@@ -87,7 +87,7 @@
                             {% if data.categories %}
                                 <div class="d-flex gap-3 flex-wrap w-100 justify-content-center justify-content-md-end">
                                     {% for category in data.categories %}
-                                        <span class="badge bg-white text-primary-800 fs-6">{{ category }}</span>
+                                        <a href="{% url 'category_lists' share_code=category.share_code %}" class="badge bg-white text-primary-800 fs-6">{{ category }}</a>
                                     {% endfor %}
                                 </div>
                             {% else %}
