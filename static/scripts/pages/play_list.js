@@ -353,7 +353,7 @@ function appendOptions(options) {
     $("#items_container").find(".item_option:not(.d-none)").remove();
     const OptionsMode = options.length === 2 ? twoOptions : fourOptions;
 
-    $.each(options, function(index, option) {
+    $.each(options, (index, option) => {
         const optionElement = OptionsMode.clone();
         optionElement.find('.item_name').text(option.nombre);
         optionElement.find('.item_image').attr('src', option.image);
@@ -377,7 +377,7 @@ function actualizarTop() {
     $("#item_top_2").find(".top_item_name").text(opciones[1].nombre);
     $("#item_top_3").find(".top_item_name").text(opciones[2].nombre);
 
-    $.each(opciones, function(index, option) {
+    $.each(opciones, (index, option) => {
         if (index > 2) {
             const optionElement = templateTop.clone();
             optionElement.attr('data-id', option.id);
