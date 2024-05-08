@@ -44,13 +44,13 @@ const enfrentamientos = [];
  * @returns {Promise<void>}
  */
 async function main() {
-    await rondaInicial();
+    rondaInicial();
 
     // Ordenar las opciones por menos descartes
     opciones.sort((a, b) => a.descartes - b.descartes);
 
     while(comprobarEmpates()) {
-        await resolverEmpates();
+        resolverEmpates();
 
         opciones.sort((a, b) => a.descartes - b.descartes);
     }
@@ -60,7 +60,7 @@ async function main() {
  * Ronda inicial
  * @returns {Promise<void>}
  */
-async function rondaInicial() {
+function rondaInicial() {
     // Agrupar las opciones en grupos de 4, para el ultimo enfrentamiento se rellenara cogiendo las opciones de inicio
     const opcionesRestantes = [...opciones];
 
@@ -235,7 +235,7 @@ function desempatarPares(opcion1, opcion2) {
  * Resolver los empates
  * @returns {Promise<void>}
  */
-async function resolverEmpates() {
+function resolverEmpates() {
     for(const opcion of opciones) {
         // Coger las opciones con los mismos descartes
         const opcionesEmpatadas = opciones.filter(opc => opc.descartes === opcion.descartes);
