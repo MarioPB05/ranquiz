@@ -2,7 +2,6 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 
-from api.models import User
 from api.services.email_service import send_register_email
 from api.services.query_service import execute_query
 from api.services.shop_service import get_avatar

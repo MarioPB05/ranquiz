@@ -4,7 +4,7 @@ from api.forms.list_form import CreateListForm
 from api.services.get_service import get_list
 from api.services.item_service import get_item
 from api.services.query_service import execute_query
-from api.models import List, ListCategory, ListFavorite, ListLike, ListAnswer, ItemOrder
+from api.models import ListCategory, ListFavorite, ListLike, ListAnswer, ItemOrder
 
 
 def create_list_form(request, instance=None):
