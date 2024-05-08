@@ -71,3 +71,17 @@ class User(AbstractBaseUser, TimeStamped):
 
     def __str__(self):
         return self.username + ' (' + self.share_code + ')'
+
+    @classmethod
+    def get(cls, user_id=None, share_code=None):
+        """Función que obtiene un usuario por su id o su share_code"""
+        try:
+            if user_id is not None:
+                return cls.objects.get(id=user_id)
+
+            if share_code is not None:
+                return cls.objects.get(share_code=share_code)
+
+            return None
+        except cls.DoesNotExist:
+            return None
