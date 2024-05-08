@@ -5,11 +5,10 @@ from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponseForbidden, HttpResponseNotFound
 from django.shortcuts import render, redirect, get_object_or_404
 
-from api.models import List, ListCategory, ListFavorite, ListLike, ListAnswer
+from api.models import List, ListCategory, ListFavorite, ListLike, ListAnswer, User
 from api.services import PAGINATION_ITEMS_PER_PAGE
 from api.services.category_service import edit_list_categories, get_category, user_followed_category, \
     user_follow_category_and_receive_notifications
-from api.services.get_service import get_user
 from api.services.item_service import (
     create_item_form,
     create_item,
@@ -220,7 +219,7 @@ def profile(request, share_code=None):
     }
 
     is_own_profile = share_code is None or request.user.share_code == share_code
-    user_data = request.user if is_own_profile else get_user(share_code=share_code)
+    user_data = request.user if is_own_profile else User.get(share_code=share_code)
 
     if user_data is None:
         raise Http404('User not found')
