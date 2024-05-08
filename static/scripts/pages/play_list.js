@@ -4,6 +4,7 @@ const twoOptions = $("#item_template_2_options");
 const fourOptions = $("#item_template_4_options");
 const horaInicio = new Date();
 let contadorAutomatico = 0;
+const intervalContador = setInterval(actualizarContador, 1000);
 
 class Opcion {
     constructor(id, nombre, image=null) {
@@ -510,8 +511,6 @@ function onDocumentReady() {
         $(event.currentTarget).addClass("selected_item");
         $("#next_button").prop("disabled", false);
     });
-
-    const intervalContador = setInterval(actualizarContador, 1000);
 }
 
 $(document).ready(onDocumentReady);
