@@ -3,7 +3,6 @@ from api.models import Item, List, User
 
 def get_item(item_id=None):
     """Función para obtener un item"""
-
     if item_id is not None:
         return Item.objects.get(id=item_id)
 
