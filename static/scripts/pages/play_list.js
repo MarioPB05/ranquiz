@@ -76,7 +76,7 @@ async function rondaInicial() {
             return opcion;
         });
 
-        await generarEnfrentamiento(opcion1, opcion2, opcion3, opcion4);
+        generarEnfrentamiento(opcion1, opcion2, opcion3, opcion4);
 
         actualizarTop();
         actualizarProgreso();
@@ -138,7 +138,7 @@ function insertOrUpdateObject(orden, nuevoObjeto) {
  * @param opcion2
  * @returns {Promise<boolean>}
  */
-async function desempatarPares(opcion1, opcion2) {
+function desempatarPares(opcion1, opcion2) {
     // Buscar enfrentamientos en los que hayan participado
     const enfrentamientosComunes = enfrentamientos.filter(enfrentamiento => {
         return (enfrentamiento.opcion1 === opcion1 || enfrentamiento.opcion2 === opcion1 || enfrentamiento.opcion3 === opcion1 || enfrentamiento.opcion4 === opcion1)
@@ -250,7 +250,7 @@ async function resolverEmpates() {
         // Desempatar las combinaciones
         if (contadorAutomatico < 5) {
             for(const combinacion of combinaciones) {
-                await desempatarPares(combinacion[0], combinacion[1]).then((res) => {
+                desempatarPares(combinacion[0], combinacion[1]).then((res) => {
                   if(!res) {
                       combinacionesRestantes.push(combinacion);
                   }
@@ -267,12 +267,12 @@ async function resolverEmpates() {
 
         if(combinacionesAplanadas.length >= 4) {
             // Si hay 4 o más opciones empatadas, se enfrentan entre ellas
-            await generarEnfrentamiento(combinacionesAplanadas[0], combinacionesAplanadas[1], combinacionesAplanadas[2], combinacionesAplanadas[3]);
+            generarEnfrentamiento(combinacionesAplanadas[0], combinacionesAplanadas[1], combinacionesAplanadas[2], combinacionesAplanadas[3]);
         }else {
             // Si no, se enfrentan en parejas
             for(let i = 0; i < combinacionesAplanadas.length; i += 2) {
                 if(combinacionesAplanadas[i + 1] !== undefined) {
-                    await generarEnfrentamiento(combinacionesAplanadas[i], combinacionesAplanadas[i + 1]);
+                    generarEnfrentamiento(combinacionesAplanadas[i], combinacionesAplanadas[i + 1]);
                 }
             }
         }
@@ -290,7 +290,7 @@ async function resolverEmpates() {
  * @param opcion4
  * @returns {Promise<unknown>}
  */
-async function generarEnfrentamiento(opcion1, opcion2, opcion3= null, opcion4 = null) {
+function generarEnfrentamiento(opcion1, opcion2, opcion3= null, opcion4 = null) {
     contadorAutomatico = 0;
 
     return new Promise((resolve) => {
