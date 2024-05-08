@@ -1,12 +1,4 @@
-from api.models import Item, User
-
-
-def get_item(item_id=None):
-    """Función para obtener un item"""
-    if item_id is not None:
-        return Item.objects.get(id=item_id)
-
-    return None
+from api.models import User
 
 
 def get_user(user_id=None, share_code=None):
