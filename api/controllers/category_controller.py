@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from django.urls import reverse
 from django.views.decorators.http import require_GET, require_POST
 
+from api.decorators.api_decorators import require_authenticated
 from api.services import PAGINATION_ITEMS_PER_PAGE, category_service
 from api.services.category_service import get_all_categories, similarity, create_category, user_follow_category, \
     get_category
@@ -87,6 +88,8 @@ def add_category(request):
     return JsonResponse({'id': None})
 
 
+@require_GET
+@require_authenticated
 def follow_category(request, share_code):
     """Función para seguir una categoría"""
     follow = request.GET.get('follow', 'true') == 'true'
@@ -94,8 +97,9 @@ def follow_category(request, share_code):
     category = get_category(share_code=share_code)
 
     if category is not None:
-        user_follow_category(request.user, category, follow, notification)
+        result = user_follow_category(request.user, category, follow, notification)
 
-        return JsonResponse({'status': 'success', 'followed': follow, 'notification': notification})
+        if result:
+            return JsonResponse({'status': 'success', 'followed': follow, 'notification': notification})
 
-    return JsonResponse({'status': 'error'})
+    return JsonResponse({'status': 'error', 'message': 'Categoría no encontrada'})

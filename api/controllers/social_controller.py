@@ -1,15 +1,21 @@
 from django.http import JsonResponse
 from django.urls import reverse
+from django.views.decorators.http import require_GET, require_POST
 
+from api.decorators.api_decorators import require_authenticated
 from api.services.social_service import (get_comments_from_list, create_comment, get_awards_from_comments, get_comment,
                                          get_award, add_award_to_comment, check_user_award_in_comment, get_all_awards)
 from api.services.transaction_service import do_transaction
 
 
+@require_GET
 def get_comments(request, share_code):
     """Función para obtener todos los comentarios de una lista"""
     mode = request.GET.get('mode')  # featured, recent
     comments = get_comments_from_list(share_code, mode)
+
+    if comments is None:
+        return JsonResponse({'status': 'error', 'message': 'Lista no encontrada'})
 
     json_comments = []
     comments_award = get_awards_from_comments(comments, True)
@@ -36,6 +42,8 @@ def get_comments(request, share_code):
     return JsonResponse({'comments': json_comments})
 
 
+@require_POST
+@require_authenticated
 def create_and_return_comment(request, share_code):
     """Función para crear un comentario"""
     content = request.POST.get('content')
@@ -76,6 +84,8 @@ def get_awards(request):
     return JsonResponse({'awards': json_awards})
 
 
+@require_GET
+@require_authenticated
 def add_award_to_comment_function(request, share_code, comment_id):  # skipcq: PYL-W0613
     """Función para añadir un premio a un comentario"""
     award_id = request.POST.get('id_award')
