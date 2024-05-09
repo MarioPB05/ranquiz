@@ -29,16 +29,19 @@ def edit_list_categories(categories_names, list_obj):
 
 def get_category(category_id=None, category_name=None, share_code=None):
     """Función para obtener una categoría"""
-    if category_id is not None:
-        return Category.objects.get(id=category_id)
+    try:
+        if category_id is not None:
+            return Category.objects.get(id=category_id)
 
-    if category_name is not None:
-        return Category.objects.get(name=category_name)
+        if category_name is not None:
+            return Category.objects.get(name=category_name)
 
-    if share_code is not None:
-        return Category.objects.get(share_code=share_code)
+        if share_code is not None:
+            return Category.objects.get(share_code=share_code)
 
-    return None
+        return None
+    except Category.DoesNotExist:
+        return None
 
 
 def get_all_categories():

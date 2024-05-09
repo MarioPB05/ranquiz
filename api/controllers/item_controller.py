@@ -26,6 +26,9 @@ def get_all_items(request, share_code):
     items = get_items(share_code, True)
     result = []
 
+    if items is None:
+        return JsonResponse({'status': 'error', 'message': 'Lista no encontrada'})
+
     for item in items:
         result.append({
             'id': item.id,
