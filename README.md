@@ -4,7 +4,7 @@
 
 ¡Bienvenido a Ranquiz, la red social donde tus listas cobran vida!
 
-Ranquiz es una plataforma única que te permite explorar, crear y compartir listas sobre una amplia variedad de temas, desde personajes de videojuegos hasta tus comidas favoritas. Ya sea que estés buscando descubrir nuevas recomendaciones, compartir tus intereses o simplemente divertirte explorando listas curadas por otros usuarios, Ranquiz tiene algo para ti.
+Ranquiz es una plataforma única que te permite explorar, crear y compartir listas sobre una amplia variedad de temas, desde personajes de videojuegos hasta tus comidas favoritas. Ya sea que estés buscando descubrir nuevas recomendaciones, compartir tus intereses o simplemente divertirte explorando listas creadas por otros usuarios, Ranquiz tiene algo para ti.
 
 ## Características principales
 - **Explora listas**: Sumérgete en una variedad de listas creadas por otros usuarios y descubre nuevos temas que te apasionen.
