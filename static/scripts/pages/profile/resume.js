@@ -1,3 +1,5 @@
+/*global $, share_code*/
+
 import { toggleListLike } from "/static/assets/js/ranquiz/utils.js";
 
 let page = 2;
