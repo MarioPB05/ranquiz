@@ -18,11 +18,13 @@ from api.services.item_service import (
 from api.services.list_service import (
     create_list_form,
     create_list,
-    get_list_counts, get_lists, count_lists,
+    get_list_counts, get_lists, count_lists, get_user_lists_pagination
 )
+from api.services.list_service import get_user_lists
 from api.services.user_service import (
     user_login,
     user_register,
+    get_user_stats
 )
 from core.decorators.decorators import partial_login_required
 
@@ -54,6 +56,7 @@ def list_details(request, share_code):
         list_data = List.get(share_code)
     except List.DoesNotExist:
         return HttpResponseNotFound()
+
     items_data = get_items(share_code)
 
     # Comprueba si la lista no ha sido eliminada
@@ -71,7 +74,7 @@ def list_details(request, share_code):
     categories = [list_category.category for list_category in list_categories]
 
     # Obtener la cantidad de favoritos, likes, partidas de la lista
-    favorites_count, likes_count, play_count = get_list_counts(list_data)
+    favorites_count, likes_count, play_count, comments_count = get_list_counts(list_data)  # skipcq: PYL-W0612
 
     # Verificar si el usuario ha dado like, favorito o jugado a la lista específica
     user_has_liked = False
@@ -208,31 +211,92 @@ def edit_list_view(request, share_code):
     })
 
 
+def profile_resume(request, user_data, card_data):
+    """Vista que renderiza el resumen de un usuario"""
+    page_number = int(request.GET.get('page', 1))
+    user_lists = get_user_lists(user_data, False, 'public', None, page_number)
+
+    for user_list in user_lists:
+        card_data['data'].append({
+            'name': user_list['name'],
+            'highlighted': user_list['highlighted'] == 1,
+            'image': user_list['image'] if user_list['image'] else None,
+            'share_code': user_list['share_code'],
+            'plays': user_list['plays'],
+            'owner_username': user_list['owner_username'],
+            'owner_avatar': user_list['owner_avatar'],
+            'owner_share_code': user_list['owner_share_code'],
+            'liked': ListLike.objects.filter(user=request.user, list_id__exact=user_list['id']).exists()
+            if request.user.is_authenticated else False
+        })
+
+
+def profile_lists(request, user_data, card_data):
+    """Vista que renderiza las listas de un usuario"""
+    page_number = int(request.GET.get('page', 1))
+    search_query = request.GET.get('search', None)
+    visibility = request.GET.get('visibility', None)
+    show_deleted = request.GET.get('show_deleted', 'false') == 'true'
+
+    user_lists = get_user_lists(user_data, show_deleted, visibility, search_query, page_number)
+    count_user_lists = get_user_lists_pagination(user_data, show_deleted, visibility, search_query, page_number)
+
+    card_data['pagination'] = count_user_lists
+    card_data['searching'] = search_query is not None
+    card_data['visibility'] = visibility
+    card_data['show_deleted'] = show_deleted
+    card_data['search_query'] = search_query
+
+    for user_list in user_lists:
+        card_data['data'].append({
+            'name': user_list['name'],
+            'highlighted': user_list['highlighted'] == 1,
+            'image': f"https://res.cloudinary.com/dhewpzvg9/{user_list['image']}" if user_list['image'] else None,
+            'public': user_list['public'],
+            'deleted': user_list['deleted'],
+            'date': user_list['creation_date'],
+            'share_code': user_list['share_code'],
+            'play_count': user_list['plays'],
+            'likes_count': user_list['likes'],
+            'comments_count': user_list['comments'],
+            'favorites_count': user_list['favorites']
+        })
+
+
 @partial_login_required
 def profile(request, share_code=None):
     """Vista que renderiza el perfil de un usuario"""
     current_card = request.GET.get('card', 'resume')
     card_template = 'pages/profile/' + current_card + '.html'
-    cards_info = {
-        'resume': bool(current_card == 'resume'),
-        'lists': bool(current_card == 'lists'),
-        'quests': bool(current_card == 'quests'),
-        'notifications': bool(current_card == 'notifications'),
-        'settings': bool(current_card == 'settings'),
-    }
+    cards = ('resume', 'lists', 'quests', 'notifications', 'settings')
 
-    is_own_profile = share_code is None or request.user.share_code == share_code
+    user_share_code = request.user.share_code if request.user.is_authenticated else None
+    is_own_profile = share_code is None or user_share_code == share_code
     user_data = request.user if is_own_profile else User.get(share_code=share_code)
+    user_stats = get_user_stats(user_data)
 
     if user_data is None:
         raise Http404('User not found')
 
+    if current_card not in cards:
+        raise Http404('Page not found')
+
+    card_data = {'data': []}
+    if current_card == 'resume':
+        profile_resume(request, user_data, card_data)
+    elif current_card == 'lists':
+        profile_lists(request, user_data, card_data)
+
     return render(request, 'pages/profile.html', {
         'user_data': user_data,
-        'share_code': request.user.share_code if is_own_profile else share_code,
+        'user_stats': user_stats,
+        'share_code': user_share_code if is_own_profile else share_code,
         'is_own_profile': is_own_profile,
         'card_template': card_template,
-        'cards_info': cards_info,
+        'current_card': current_card,
+        'card_data': card_data,
+        'card_data_empty': len(card_data['data']) == 0,
+        'current_path': request.get_full_path_info()
     })
 
 
@@ -263,17 +327,17 @@ def category_lists(request, share_code):
         page_numbers = page_numbers[:6]
 
     return render(request, 'pages/category_lists.html', {
-         'share_code': share_code,
-         'lists': lists,
-         'category': category_object,
-         'followed': user_followed_category(request.user, category_object),
-         'notifications': user_follow_category_and_receive_notifications(request.user, category_object),
-         'order': order,
-         'user': request.user,
-         'pagination': {
-             'total_pages': list_count // PAGINATION_ITEMS_PER_PAGE + 1,
-             'current_page': page,
-             'items_per_page': PAGINATION_ITEMS_PER_PAGE,
-             'page_numbers': page_numbers
-         }
+        'share_code': share_code,
+        'lists': lists,
+        'category': category_object,
+        'followed': user_followed_category(request.user, category_object),
+        'notifications': user_follow_category_and_receive_notifications(request.user, category_object),
+        'order': order,
+        'user': request.user,
+        'pagination': {
+            'total_pages': list_count // PAGINATION_ITEMS_PER_PAGE + 1,
+            'current_page': page,
+            'items_per_page': PAGINATION_ITEMS_PER_PAGE,
+            'page_numbers': page_numbers
+        }
     })

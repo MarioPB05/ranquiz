@@ -5,7 +5,7 @@ from django.views.decorators.http import require_GET, require_POST
 from api.decorators.api_decorators import require_authenticated
 from api.services.social_service import (get_comments_from_list, create_comment, get_awards_from_comments, get_comment,
                                          get_award, add_award_to_comment, check_user_award_in_comment, get_all_awards)
-from api.services.transaction_service import do_transaction
+from api.services.transaction_service import do_transaction, refund_transaction
 
 
 @require_GET
@@ -110,7 +110,7 @@ def add_award_to_comment_function(request, share_code, comment_id):  # skipcq: P
     transaction_received = do_transaction(selected_comment.user, final_price, "Premio recibido")
     if transaction_received is None:
         # Reembolsar al usuario si hay un error al recibir el premio
-        do_transaction(request.user, selected_award.price, "Premio reembolsado por error al otorgar el premio")
+        refund_transaction(transaction_paid)
         return JsonResponse({'status': 'Error', 'message': 'Error al otorgar el premio'})
 
     try:
@@ -120,7 +120,7 @@ def add_award_to_comment_function(request, share_code, comment_id):  # skipcq: P
 
     except Exception:
         # Reembolsar a los usuarios si hay un error al agregar el premio al comentario
-        do_transaction(request.user, selected_award.price, "Premio reembolsado por error al otorgar el premio")
-        do_transaction(selected_comment.user, -final_price, "Premio reembolsado por error al otorgar el premio")
+        refund_transaction(transaction_paid)
+        refund_transaction(transaction_received)
 
     return JsonResponse({'status': 'Error', 'message': 'Error al otorgar el premio'})

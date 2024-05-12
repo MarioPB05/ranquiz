@@ -9,7 +9,8 @@ from django.views.decorators.http import require_GET
 from api.decorators.api_decorators import require_authenticated
 from api.models.list import List
 from api.services import PAGINATION_ITEMS_PER_PAGE
-from api.services.list_service import get_lists, toggle_like_list, toggle_favorite_list, add_result
+from api.services.list_service import (get_lists, toggle_like_list, toggle_favorite_list, toggle_visibility_list,
+                                       add_result, delete_list, recover_list)
 
 
 @require_GET
@@ -92,3 +93,30 @@ def add_result_to_list(request, share_code):
         return JsonResponse({'status': status, 'result_id': result.id})
 
     return JsonResponse({'status': status})
+
+
+@require_GET
+@require_authenticated
+def visibility_list(request, share_code):
+    """Controlador que permite cambiar la visibilidad de una lista"""
+    toggle_visibility_list(share_code)
+
+    return JsonResponse({'status': 'success'})
+
+
+@require_GET
+@require_authenticated
+def delete_or_recover_list(request, share_code):
+    """Controlador que permite eliminar una lista"""
+    result = 'success' if delete_list(share_code) else 'error'
+
+    return JsonResponse({'status': result})
+
+
+@require_GET
+@require_authenticated
+def recover_list_eliminated(request, share_code):
+    """Controlador que permite recuperar una lista"""
+    result = 'success' if recover_list(share_code) else 'error'
+
+    return JsonResponse({'status': result})

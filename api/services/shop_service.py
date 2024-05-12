@@ -114,26 +114,32 @@ def calculate_highlight_price(start_date, end_date):
     return total_price
 
 
-def highlight_list(share_code, start_date, end_date):
-    """Destaca una lista"""
-    # Obtenemos la lista
-    required_list = List.get(share_code)
+def list_is_highlighted(share_code):
+    """Servicio que comprueba si una lista está destacada"""
+    start_date = datetime.now()
+    end_date = datetime.now()
+    lit_obj = List.get(share_code)
 
-    if required_list is not None:
-        transaction = do_transaction(
-            required_list.user,
-            -(calculate_highlight_price(start_date, end_date)),
-            'Destacar lista')
-
-        if transaction is not None:
-            highlighted_list = HighlightedList()
-            highlighted_list.list = required_list
-            highlighted_list.start_date = start_date
-            highlighted_list.end_date = end_date
-            highlighted_list.save()
-            return highlighted_list
-
-        # TODO: Administrar errores
+    if lit_obj is None:
         return None
 
-    return None
+    return HighlightedList.objects.filter(list=lit_obj,
+                                          start_date__lte=start_date,
+                                          end_date__gte=end_date).exists()
+
+
+def highlight_list(share_code, start_date, end_date, transaction):
+    """Servicio que destaca una lista"""
+    list_obj = List.get(share_code)
+
+    if list_obj is None or start_date is None or end_date is None or\
+            start_date > end_date or not list_obj.public:
+        return False
+
+    # Para que la fecha de fin a las 23:59:59
+    end_date = datetime.strptime(end_date, "%Y-%m-%d").replace(hour=23, minute=59, second=59)
+
+    highlighted_list = HighlightedList(list=list_obj, start_date=start_date, end_date=end_date, transaction=transaction)
+    highlighted_list.save()
+
+    return True
