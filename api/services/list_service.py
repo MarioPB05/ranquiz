@@ -27,7 +27,7 @@ def create_list(list_form):
 
 
 def get_lists(limit=None, page=1, search='', user=None, order='default', category=None):
-    """Función que devuelve las listas públicas con filtros"""
+    """Función que devuelve las listas públicas con los filtros especificados"""
     order_by = ""
     where = ""
 
