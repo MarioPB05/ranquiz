@@ -235,6 +235,7 @@ def profile(request, share_code=None):
         'cards_info': cards_info,
     })
 
+
 @login_required
 def shop(request):
     """Vista que renderiza la tienda de la aplicación"""
