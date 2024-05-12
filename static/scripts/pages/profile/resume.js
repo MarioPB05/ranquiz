@@ -50,7 +50,7 @@ function loadMoreData() {
             isLoadingData = false;
             const newData = data.lists;
 
-            newData.forEach(function(item) {
+            newData.forEach((item) => {
                 const listItem = $('<div class="min-w-375px"></div>').html(item);
                 $('.scroll').append(listItem);
             });
