@@ -335,12 +335,12 @@ function onDocumentReady() {
 
         toggleUserFollow(event).then((is_followed) => {
             const button = $(event.currentTarget);
-            const icon = button.find('i');
+            const iconButton = button.find('i');
 
             if (!is_followed) {
-                icon.removeClass("bi-person-plus-fill").addClass("bi-person-check-fill text-primary");
+                iconButton.removeClass("bi-person-plus-fill").addClass("bi-person-check-fill text-primary");
             } else {
-                icon.removeClass("bi-person-check-fill text-primary").addClass("bi-person-plus-fill");
+                iconButton.removeClass("bi-person-check-fill text-primary").addClass("bi-person-plus-fill");
             }
 
             $(this).prop("disabled", false);
