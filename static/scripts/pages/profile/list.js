@@ -1,3 +1,5 @@
+/*global $, baseURL, moment*/
+
 import {initializeFlatpickr, promiseAjax, toastMessage} from "/static/assets/js/ranquiz/utils.js";
 
 const highlight_modal = $('#highlight_modal');
