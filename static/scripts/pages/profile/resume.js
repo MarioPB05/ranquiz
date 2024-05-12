@@ -24,7 +24,13 @@ function loadMoreData() {
     $.ajax({
         url: `/api/user/${share_code}/lists?page=${page}`,
         type: 'GET',
-        success: function(data) {
+        /**
+         * Función que se ejecuta si la petición AJAX fue exitosa
+         *
+         * @param data
+         * @param {Array} data.lists
+         */
+        success(data) {
             if (data.lists.length === 0) return;
 
             page++;
