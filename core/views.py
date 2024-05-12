@@ -50,7 +50,10 @@ def logout(request):
 
 def list_details(request, share_code):
     """Vista que permite a un usuario ver los detalles de una lista"""
-    list_data = List.get(share_code)
+    try:
+        list_data = List.get(share_code)
+    except List.DoesNotExist:
+        return HttpResponseNotFound()
     items_data = get_items(share_code)
 
     # Comprueba si la lista no ha sido eliminada
@@ -233,6 +236,7 @@ def profile(request, share_code=None):
     })
 
 
+@login_required
 def shop(request):
     """Vista que renderiza la tienda de la aplicación"""
     return render(request, 'pages/shop.html')
