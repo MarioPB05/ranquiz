@@ -13,3 +13,11 @@ class Item(TimeStamped):
 
     def __str__(self):
         return self.name
+
+    @classmethod
+    def get(cls, item_id):
+        """Función para obtener un item"""
+        try:
+            return cls.objects.get(id=item_id)
+        except cls.DoesNotExist:
+            return None

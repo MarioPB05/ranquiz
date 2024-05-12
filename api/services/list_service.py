@@ -6,9 +6,8 @@ from django.db import transaction
 
 from api.forms.list_form import CreateListForm
 from api.services import PAGINATION_ITEMS_PER_PAGE
-from api.services.get_service import get_list, get_item
 from api.services.query_service import execute_query
-from api.models import ListCategory, ListFavorite, ListLike, ListAnswer, ItemOrder, ListComment, List
+from api.models import ListCategory, ListFavorite, ListLike, ListAnswer, ItemOrder, ListComment, List, Item
 
 
 def create_list_form(request, instance=None):
@@ -201,14 +200,14 @@ def count_lists(search='', category=None):
 
 def toggle_visibility_list(share_code):
     """Función que cambia la visibilidad de una lista"""
-    list_obj = get_list(share_code)
+    list_obj = List.get(share_code)
     list_obj.public = not list_obj.public
     list_obj.save()
 
 
 def delete_list(share_code):
     """Función que elimina una lista"""
-    list_obj = get_list(share_code)
+    list_obj = List.get(share_code)
 
     if list_obj is None:
         return False
@@ -219,9 +218,10 @@ def delete_list(share_code):
 
     return True
 
+
 def recover_list(share_code):
     """Función que recupera una lista"""
-    list_obj = get_list(share_code)
+    list_obj = List.get(share_code)
 
     if list_obj is None:
         return False
@@ -234,7 +234,7 @@ def recover_list(share_code):
 
 def toggle_like_list(user, share_code):
     """Función que permite dar like o quitar el like a una lista"""
-    list_obj = get_list(share_code)
+    list_obj = List.get(share_code)
 
     if list_obj is None:
         return False
@@ -251,7 +251,7 @@ def toggle_like_list(user, share_code):
 
 def toggle_favorite_list(user, share_code):
     """Función que permite añadir o quitar una lista de favoritos"""
-    list_obj = get_list(share_code)
+    list_obj = List.get(share_code)
 
     if list_obj is None:
         return False
@@ -273,7 +273,7 @@ def add_result(user, list_obj, results, start_date):
     list_answer.save()
 
     for result in results:
-        item = get_item(result['id'])
+        item = Item.get(result['id'])
         order = int(result['order'])
 
         if item is not None:

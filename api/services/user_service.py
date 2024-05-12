@@ -2,9 +2,9 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 
-from api.models import UserFollow, List
+from api.models import Notification, UserFollow, List
+from api.models.notification_type import NotificationTypes
 from api.services.email_service import send_register_email
-from api.services.middle_service import call_create_notification
 from api.services.query_service import execute_query
 from api.services.shop_service import get_avatar
 from api.forms.user_form import LoginUserForm, CreateUserForm
@@ -148,6 +148,6 @@ def toggle_user_follow(user, followed_user):
         user.following_set.filter(user_followed=followed_user).delete()
     else:
         user.following_set.create(user_followed=followed_user)
-        call_create_notification(1, 7, followed_user, user.share_code)
+        Notification.create(1, NotificationTypes.NEW_FOLLOWER.object, followed_user, user.share_code)
 
     return True

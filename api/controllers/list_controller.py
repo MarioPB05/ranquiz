@@ -10,8 +10,7 @@ from api.decorators.api_decorators import require_authenticated
 from api.models.list import List
 from api.services import PAGINATION_ITEMS_PER_PAGE
 from api.services.list_service import (get_lists, toggle_like_list, toggle_favorite_list, toggle_visibility_list,
-                                        delete_list, recover_list)
-from api.services.list_service import get_lists, toggle_like_list, toggle_favorite_list, toggle_visibility_list, add_result, get_list, delete_list, recover_list
+                                       add_result, delete_list, recover_list)
 
 
 @require_GET
@@ -78,7 +77,7 @@ def favorite_list(request, share_code):
 def add_result_to_list(request, share_code):
     """Controlador que permite añadir un resultado a una lista"""
     result = request.POST.get('result')
-    list_obj = get_list(share_code=share_code)
+    list_obj = List.get(share_code=share_code)
     start_date = request.POST.get('startDate')
 
     # Convertir de JSON a array
@@ -112,6 +111,7 @@ def delete_or_recover_list(request, share_code):
     result = 'success' if delete_list(share_code) else 'error'
 
     return JsonResponse({'status': result})
+
 
 @require_GET
 @require_authenticated

@@ -1,7 +1,6 @@
 from django.db.models import Count
 
-from api.models import ListComment, CommentAward, Award, UserFollow
-from api.services.list_service import get_list
+from api.models import List, ListComment, CommentAward, Award, UserFollow
 from api.services.query_service import execute_query
 
 
@@ -15,7 +14,7 @@ def get_comment(comment_id):
 
 def get_comments_from_list(share_code, order='featured'):
     """Servicio para obtener todos los comentarios de una lista"""
-    list_element = get_list(share_code)
+    list_element = List.get(share_code)
 
     if order == 'recent':
         order_by = "lc.date DESC"
@@ -42,7 +41,7 @@ def get_comments_from_list(share_code, order='featured'):
 
 def create_comment(content, author, share_code):
     """Servicio para crear un comentario"""
-    list_element = get_list(share_code)
+    list_element = List.get(share_code)
 
     if list_element is not None and content is not None and author is not None:
         return ListComment.objects.create(list=list_element, user=author, comment=content)

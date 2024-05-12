@@ -2,8 +2,7 @@ from datetime import datetime
 
 from django.db.models import Count, Q, Case, When, Exists, OuterRef
 
-from api.models import Avatar, HighlightedList, UserAvatar
-from api.services.list_service import get_list
+from api.models import Avatar, HighlightedList, UserAvatar, List
 from api.services.transaction_service import do_transaction
 
 
@@ -119,7 +118,7 @@ def list_is_highlighted(share_code):
     """Servicio que comprueba si una lista está destacada"""
     start_date = datetime.now()
     end_date = datetime.now()
-    lit_obj = get_list(share_code)
+    lit_obj = List.get(share_code)
 
     if lit_obj is None:
         return None
@@ -129,10 +128,9 @@ def list_is_highlighted(share_code):
                                           end_date__gte=end_date).exists()
 
 
-
 def highlight_list(share_code, start_date, end_date, transaction):
     """Servicio que destaca una lista"""
-    list_obj = get_list(share_code)
+    list_obj = List.get(share_code)
 
     if list_obj is None or start_date is None or end_date is None or\
             start_date > end_date or not list_obj.public:
@@ -145,3 +143,4 @@ def highlight_list(share_code, start_date, end_date, transaction):
     highlighted_list.save()
 
     return True
+

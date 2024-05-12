@@ -5,11 +5,10 @@ from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponseForbidden, HttpResponseNotFound
 from django.shortcuts import render, redirect, get_object_or_404
 
-from api.models import List, ListCategory, ListFavorite, ListLike, ListAnswer
+from api.models import List, ListCategory, ListFavorite, ListLike, ListAnswer, User
 from api.services import PAGINATION_ITEMS_PER_PAGE
 from api.services.category_service import edit_list_categories, get_category, user_followed_category, \
     user_follow_category_and_receive_notifications
-from api.services.get_service import get_user, get_list
 from api.services.item_service import (
     create_item_form,
     create_item,
@@ -19,7 +18,7 @@ from api.services.item_service import (
 from api.services.list_service import (
     create_list_form,
     create_list,
-    get_list_counts, get_lists, count_lists, get_user_lists_pagination,
+    get_list_counts, get_lists, count_lists, get_user_lists_pagination
 )
 from api.services.list_service import get_user_lists
 from api.services.user_service import (
@@ -53,7 +52,11 @@ def logout(request):
 
 def list_details(request, share_code):
     """Vista que permite a un usuario ver los detalles de una lista"""
-    list_data = get_list(share_code)
+    try:
+        list_data = List.get(share_code)
+    except List.DoesNotExist:
+        return HttpResponseNotFound()
+
     items_data = get_items(share_code)
 
     # Comprueba si la lista no ha sido eliminada
@@ -104,7 +107,7 @@ def list_details(request, share_code):
 
 def play_list(request, share_code):
     """Vista que permite a un usuario jugar una lista"""
-    list_obj = get_list(share_code)
+    list_obj = List.get(share_code)
 
     # Comprueba si la lista no ha sido eliminada
     if list_obj is None or list_obj.deleted:
@@ -168,7 +171,7 @@ def edit_list_view(request, share_code):
 
     if request.method == 'POST' and list_form.is_valid():
         # Actualiza los datos de la lista con los datos del formulario
-        list_obj = get_list(share_code)
+        list_obj = List.get(share_code)
         list_obj.name = request.POST.get('name')
         list_obj.question = request.POST.get('question')
         list_obj.public = bool(request.POST.get('visibility') == 'public')
@@ -267,7 +270,7 @@ def profile(request, share_code=None):
 
     user_share_code = request.user.share_code if request.user.is_authenticated else None
     is_own_profile = share_code is None or user_share_code == share_code
-    user_data = request.user if is_own_profile else get_user(share_code=share_code)
+    user_data = request.user if is_own_profile else User.get(share_code=share_code)
     user_stats = get_user_stats(user_data)
 
     if user_data is None:
@@ -295,6 +298,7 @@ def profile(request, share_code=None):
     })
 
 
+@login_required
 def shop(request):
     """Vista que renderiza la tienda de la aplicación"""
     return render(request, 'pages/shop.html')

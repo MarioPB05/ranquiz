@@ -329,15 +329,18 @@ function onDocumentReady() {
     // Evento para seguir a un usuario
     content.on("click", ".user_follow", (event) => {
         $(this).prop("disabled", true);
+        const icon = $(event.currentTarget).find('i');
+
+        icon.toggleClass("bi-person-plus-fill").toggleClass("bi-person-check-fill text-primary");
 
         toggleUserFollow(event).then((is_followed) => {
             const button = $(event.currentTarget);
-            const icon = button.find('i');
+            const iconButton = button.find('i');
 
             if (!is_followed) {
-                icon.removeClass("bi-person-plus-fill").addClass("bi-person-check-fill text-primary");
+                iconButton.removeClass("bi-person-plus-fill").addClass("bi-person-check-fill text-primary");
             } else {
-                icon.removeClass("bi-person-check-fill text-primary").addClass("bi-person-plus-fill");
+                iconButton.removeClass("bi-person-check-fill text-primary").addClass("bi-person-plus-fill");
             }
 
             $(this).prop("disabled", false);

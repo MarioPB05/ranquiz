@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.views.decorators.http import require_GET
 
 from api.decorators.api_decorators import require_authenticated
-from api.models import ListLike
+from api.models import ListLike, User
 from api.services import PAGINATION_ITEMS_PER_PAGE
 from api.services.list_service import get_user_lists
 from api.services.get_service import get_user
@@ -15,7 +15,7 @@ from api.services.user_service import get_users, toggle_user_follow
 @require_authenticated
 def get_user_data(request):
     """Controlador que devuelve los datos del usuario"""
-    user = get_user(request.user.id)
+    user = User.get(user_id=request.user.id)
 
     return JsonResponse({'user': {
         'money': user.money,
@@ -51,7 +51,7 @@ def get_users_filtered(request):
 @require_authenticated
 def follow_user(request, share_code):
     """Controlador que permite seguir o dejar de seguir a un usuario"""
-    followed_user = get_user(share_code=share_code)
+    followed_user = User.get(share_code=share_code)
 
     if followed_user is None:
         return JsonResponse({'status': 'error', 'message': 'El usuario al que intentas seguir no existe'}, status=404)
