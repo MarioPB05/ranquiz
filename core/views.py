@@ -212,6 +212,7 @@ def edit_list_view(request, share_code):
 
 
 def profile_resume(request, user_data, card_data):
+    """Vista que renderiza el resumen de un usuario"""
     page_number = int(request.GET.get('page', 1))
     user_lists = get_user_lists(user_data, False, 'public', None, page_number)
 
@@ -231,6 +232,7 @@ def profile_resume(request, user_data, card_data):
 
 
 def profile_lists(request, user_data, card_data):
+    """Vista que renderiza las listas de un usuario"""
     page_number = int(request.GET.get('page', 1))
     search_query = request.GET.get('search', None)
     visibility = request.GET.get('visibility', None)
