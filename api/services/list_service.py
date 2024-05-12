@@ -55,7 +55,7 @@ def get_lists(limit=None, page=1, search='', user=None, order='default', categor
                 FROM api_list l
                 JOIN ranquiz.api_user au on l.owner_id = au.id
                 JOIN ranquiz.api_avatar aa on au.avatar_id = aa.id
-                LEFT JOIN ranquiz.api_highlightedlist hl on l.id = hl.list_id AND start_date <= NOW() 
+                LEFT JOIN ranquiz.api_highlightedlist hl on l.id = hl.list_id AND start_date <= NOW()
                     AND end_date >= NOW()
                 LEFT JOIN ranquiz.api_listcategory lc on l.id = lc.list_id
                 WHERE l.public = TRUE AND l.name LIKE %s %s
@@ -113,12 +113,12 @@ def get_user_lists(user, show_deleted, visibility, search_query, page_number):
                         WHERE slc.list_id = l.id
                     ) AS comments,
                     IF(hl.id IS NOT NULL, TRUE, FALSE)
-                    AS highlighted, au.share_code as owner_share_code, aa.image as owner_avatar, 
+                    AS highlighted, au.share_code as owner_share_code, aa.image as owner_avatar,
                     au.username as owner_username
                 FROM api_list l
                 JOIN ranquiz.api_user au on l.owner_id = au.id
                 JOIN ranquiz.api_avatar aa on au.avatar_id = aa.id
-                LEFT JOIN ranquiz.api_highlightedlist hl on l.id = hl.list_id AND start_date <= NOW() 
+                LEFT JOIN ranquiz.api_highlightedlist hl on l.id = hl.list_id AND start_date <= NOW()
                     AND end_date >= NOW()
                 LEFT JOIN ranquiz.api_listcategory lc on l.id = lc.list_id
                 WHERE {where_clause}
