@@ -107,7 +107,6 @@ function showHighlightModal(event) {
 
 function deleteList(event) {
     const share_code = $(this).data('share_code');
-    const parent = $(this).closest('.list_item');
 
     $(this).prop('disabled', true);
 
@@ -124,7 +123,6 @@ function deleteList(event) {
 
 function recoverList(event) {
     const share_code = $(this).data('share_code');
-    const parent = $(this).closest('.list_item');
 
     $(this).prop('disabled', true);
 
@@ -205,7 +203,7 @@ function loadEvents() {
         updateHighlightPrice();
     });
 
-    highlight_submit.on("click", (event) => {
+    highlight_submit.on("click", () => {
         const dates = $("#range_date_highlight").val().split(" hasta ");
         const share_code = highlight_submit.data('share_code');
 
