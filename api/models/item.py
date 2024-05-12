@@ -18,6 +18,6 @@ class Item(TimeStamped):
     def get(cls, item_id):
         """Función para obtener un item"""
         try:
-            return cls.objects.get(share_code=item_id)
+            return cls.objects.get(id=item_id)
         except cls.DoesNotExist:
             return None
