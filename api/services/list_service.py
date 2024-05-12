@@ -146,7 +146,7 @@ def add_result(user, list_obj, results, start_date):
     list_answer.save()
 
     for result in results:
-        item = Item.get(result['item_id'])
+        item = Item.get(result['id'])
         order = int(result['order'])
 
         if item is not None:
