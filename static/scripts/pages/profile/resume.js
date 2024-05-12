@@ -5,6 +5,11 @@ import { toggleListLike } from "/static/assets/js/ranquiz/utils.js";
 let page = 2;
 let isLoadingData = false;
 
+/**
+ * Redirige a la lista seleccionada
+ *
+ * @param event
+ */
 function redirectToList(event) {
     if (event.target.tagName === "A") return;
 
@@ -12,11 +17,19 @@ function redirectToList(event) {
     if (url) window.location.href = url;
 }
 
+/**
+ * Verifica si el scroll está cerca del final del contenedor
+ *
+ * @returns {boolean}
+ */
 function isScrollNearEnd() {
     const element = $('.scroll');
     return element.scrollLeft() + element.outerWidth() >= element[0].scrollWidth - 100;
 }
 
+/**
+ * Carga más datos en la sección de listas del perfil
+ */
 function loadMoreData() {
     if (isLoadingData) return;
     isLoadingData = true;
@@ -47,6 +60,11 @@ function loadMoreData() {
 
 }
 
+/**
+ * Realiza un scroll infinito en la sección de listas del perfil
+ *
+ * @param scroll
+ */
 function infiniteScroll(scroll = false) {
     if (isScrollNearEnd()) loadMoreData();
 
@@ -56,6 +74,9 @@ function infiniteScroll(scroll = false) {
     }
 }
 
+/**
+ * Carga los eventos de la página
+ */
 function loadEvents() {
     $('.list').on('click', redirectToList);
     $('.list_like').on('click', toggleListLike);

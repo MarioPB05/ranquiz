@@ -6,6 +6,11 @@ const highlight_modal = $('#highlight_modal');
 const highlight_submit = $('#highlight_submit');
 const flatpickrInstance = initializeFlatpickr("#range_date_highlight", 'range', moment().format('YYYY-MM-DD')); // skipcq: JS-0125
 
+/**
+ * Cambia la visibilidad de una lista
+ *
+ * @param event
+ */
 function toggleVisibility(event) {
     const share_code = $(this).data('share_code');
     const parent = $(this).closest('.list_item');
@@ -39,6 +44,11 @@ function toggleVisibility(event) {
     event.stopPropagation();
 }
 
+/**
+ * Calcula la cantidad de días entre las fechas seleccionadas
+ *
+ * @returns {number|*}
+ */
 function highlightDays() {
     const dates = $("#range_date_highlight").val().split(" hasta ");
 
@@ -52,6 +62,9 @@ function highlightDays() {
     return 0;
 }
 
+/**
+ * Cambia el estilo de los botones para el destacado de listas
+ */
 function toogleHighLightButtons() {
     const days = highlightDays();
     const buttons = $("#highlight_days_buttons button");
@@ -68,6 +81,9 @@ function toogleHighLightButtons() {
     }
 }
 
+/**
+ * Actualiza el precio del destacado de listas
+ */
 function updateHighlightPrice() {
     const dates = $("#range_date_highlight").val().split(" hasta ");
 
@@ -84,6 +100,11 @@ function updateHighlightPrice() {
     }
 }
 
+/**
+ * Muestra el modal para destacar una lista
+ *
+ * @param event
+ */
 function showHighlightModal(event) {
     $("#highlight_list_name").text($(this).data('name'));
     highlight_submit.data('share_code', $(this).data('share_code'));
@@ -105,6 +126,11 @@ function showHighlightModal(event) {
     event.stopPropagation();
 }
 
+/**
+ * Elimina una lista
+ *
+ * @param event
+ */
 function deleteList(event) {
     const share_code = $(this).data('share_code');
 
@@ -121,6 +147,11 @@ function deleteList(event) {
     event.stopPropagation();
 }
 
+/**
+ * Recupera una lista eliminada
+ *
+ * @param event
+ */
 function recoverList(event) {
     const share_code = $(this).data('share_code');
 
@@ -138,14 +169,27 @@ function recoverList(event) {
 
 }
 
+/**
+ * Redirige a la lista seleccionada
+ */
 function redirectToList() {
     window.location.href = $(this).data('url');
 }
 
+/**
+ * Obtiene la URL actual
+ *
+ * @returns {URL}
+ */
 function getCurrentURL() {
     return new URL(baseURL);
 }
 
+/**
+ * Busca listas por el nombre de la lista sin quitar los filtros actuales
+ *
+ * @param event
+ */
 function searchList(event) {
     const url = getCurrentURL();
     const search = $('#search_input').val();
@@ -163,6 +207,9 @@ function searchList(event) {
     window.location.href = `${url.toString()}`;
 }
 
+/**
+ * Filtra las listas por visibilidad y si se muestran las eliminadas
+ */
 function filterLists() {
     const url = getCurrentURL();
     const visibility = $('#visibility_filter').val();
@@ -183,6 +230,9 @@ function filterLists() {
     window.location.href = url.toString();
 }
 
+/**
+ * Carga los eventos de la página
+ */
 function loadEvents() {
     $('#list_container')
         .on('click', '.toggle_visibility_list', toggleVisibility)
