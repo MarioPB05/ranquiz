@@ -58,12 +58,12 @@ def get_lists(limit=None, page=1, search='', user=None, order='default', categor
                 LEFT JOIN ranquiz.api_highlightedlist hl on l.id = hl.list_id AND start_date <= NOW() 
                     AND end_date >= NOW()
                 LEFT JOIN ranquiz.api_listcategory lc on l.id = lc.list_id
-                WHERE l.public = TRUE AND l.name LIKE %s {where}
+                WHERE l.public = TRUE AND l.name LIKE %s %s
                 GROUP BY l.id
-                ORDER BY {order_by}
+                ORDER BY %s
                 LIMIT %s OFFSET %s;"""
 
-    params = [user.id if user is not None else 0, f"%{search}%", limit, (page - 1) * limit]
+    params = [user.id if user is not None else 0, f"%{search}%", where, order_by, limit, (page - 1) * limit]
 
     if category is not None:
         params.insert(2, category.id)
