@@ -42,7 +42,7 @@ def get_lists(limit=None, page=1, search='', user=None, order='default', categor
     if category is not None:
         where = "AND lc.category_id = %s "
 
-    query = f"""SELECT l.id, l.name, l.share_code, l.image,
+    query = """SELECT l.id, l.name, l.share_code, l.image,
                     (SELECT IF(COUNT(sll.id) > 0, TRUE, FALSE)
                      FROM api_listlike sll
                      WHERE sll.list_id = l.id AND sll.user_id = %s) AS liked,
