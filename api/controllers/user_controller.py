@@ -7,7 +7,6 @@ from api.decorators.api_decorators import require_authenticated
 from api.models import ListLike, User
 from api.services import PAGINATION_ITEMS_PER_PAGE
 from api.services.list_service import get_user_lists
-from api.services.get_service import get_user
 from api.services.user_service import get_users, toggle_user_follow
 
 
@@ -62,7 +61,7 @@ def follow_user(request, share_code):
 
 def user_lists(request, share_code):
     """Controlador que devuelve las listas de un usuario"""
-    user_data = get_user(share_code=share_code)
+    user_data = User.get(share_code=share_code)
     page_number = int(request.GET.get('page', 1))
     lists = get_user_lists(user_data, False, 'public', None, page_number)
     lists_html = []
