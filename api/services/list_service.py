@@ -73,17 +73,23 @@ def get_lists(limit=None, page=1, search='', user=None, order='default', categor
 
 def get_user_lists(user, show_deleted, visibility, search_query, page_number):
     """Función que devuelve todas las listas de un usuario con paginación"""
-    where = "AND l.deleted = 0" if not show_deleted else ""
+    where_conditions = ["l.owner_id = %s"]
     params = [user.id]
 
+    if not show_deleted:
+        where_conditions.append("l.deleted = 0")
+
     if search_query:
-        where += " AND l.name LIKE %s"
-        params.append(f'%{search_query}%')
+        where_conditions.append("l.name LIKE %s")
+        search_query = f'%{search_query}%'
+        params.append(search_query)
 
     if visibility == 'public':
-        where += " AND l.public = 1"
+        where_conditions.append("l.public = 1")
     elif visibility == 'private':
-        where += " AND l.public = 0"
+        where_conditions.append("l.public = 0")
+
+    where_clause = " AND ".join(where_conditions)
 
     query = f"""SELECT l.id, l.name, l.share_code, l.image, l.public, l.edit_date, l.creation_date, l.deleted,
                     (
@@ -115,7 +121,7 @@ def get_user_lists(user, show_deleted, visibility, search_query, page_number):
                 LEFT JOIN ranquiz.api_highlightedlist hl on l.id = hl.list_id AND start_date <= NOW() 
                     AND end_date >= NOW()
                 LEFT JOIN ranquiz.api_listcategory lc on l.id = lc.list_id
-                WHERE l.owner_id = %s {where}
+                WHERE {where_clause}
                 GROUP BY l.id, l.edit_date, l.creation_date
                 ORDER BY l.edit_date DESC, l.creation_date DESC
                 LIMIT %s OFFSET %s;"""
