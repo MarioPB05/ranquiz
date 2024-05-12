@@ -329,6 +329,9 @@ function onDocumentReady() {
     // Evento para seguir a un usuario
     content.on("click", ".user_follow", (event) => {
         $(this).prop("disabled", true);
+        const icon = $(event.currentTarget).find('i');
+
+        icon.toggleClass("bi-person-plus-fill").toggleClass("bi-person-check-fill text-primary");
 
         toggleUserFollow(event).then((is_followed) => {
             const button = $(event.currentTarget);
