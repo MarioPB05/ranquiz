@@ -143,4 +143,3 @@ def highlight_list(share_code, start_date, end_date, transaction):
     highlighted_list.save()
 
     return True
-
