@@ -155,7 +155,7 @@ def get_user_lists_pagination(user, show_deleted, visibility, search_query, page
         'total': count,
         'pages': pages,
         'number': page_number,
-        'page_range': [i for i in range(1, int(pages) + 1)],
+        'page_range': list(range(1, int(pages) + 1)),
         'has_previous': page_number > 1,
         'has_next': page_number < pages,
         'has_other_pages': pages > 1,
