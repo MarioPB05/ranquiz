@@ -1,3 +1,4 @@
+
 import cloudinary
 from cloudinary import uploader  # skipcq: PY-W2000
 from django.contrib.auth import logout as django_logout
@@ -5,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponseForbidden, HttpResponseNotFound
 from django.shortcuts import render, redirect, get_object_or_404
 
+from api import sec_to_time
 from api.models import List, ListCategory, ListFavorite, ListLike, ListAnswer, User
 from api.services import PAGINATION_ITEMS_PER_PAGE
 from api.services.category_service import edit_list_categories, get_category, user_followed_category, \
@@ -18,7 +20,7 @@ from api.services.item_service import (
 from api.services.list_service import (
     create_list_form,
     create_list,
-    get_list_counts, get_lists, count_lists, get_user_lists_pagination
+    get_list_counts, get_lists, count_lists, get_user_lists_pagination, get_user_results, get_user_results_pagination
 )
 from api.services.list_service import get_user_lists
 from api.services.user_service import (
@@ -263,12 +265,42 @@ def profile_lists(request, user_data, card_data):
         })
 
 
+def profile_results(request, user_data, card_data):
+    """Vista que renderiza los resultados de un usuario"""
+    page_number = int(request.GET.get('page', 1))
+    search_query = request.GET.get('search', None)
+    list_share_code = request.GET.get('list', None)
+    list_obj = None
+
+    if list_share_code is not None:
+        list_obj = List.get(list_share_code)
+        if list_obj is None:
+            raise Http404('List not found')
+
+    user_results = get_user_results(user_data, list_obj, page_number, search_query)
+    count_user_results = get_user_results_pagination(user_data, list_obj, page_number, search_query)
+
+    card_data['pagination'] = count_user_results
+    card_data['searching'] = search_query is not None
+    card_data['search_query'] = search_query
+    card_data['list'] = list_obj.share_code if list_obj is not None else None
+
+    for user_result in user_results:
+        card_data['data'].append({
+            'list_name': user_result['list_name'],
+            'list_image': f"https://res.cloudinary.com/dhewpzvg9/{user_result['list_image']}" if user_result['list_image'] else None,
+            'start_date': user_result['start_date'],
+            'items': user_result['items'],
+            'duration': sec_to_time(user_result['duration'])
+        })
+
+
 @partial_login_required
 def profile(request, share_code=None):
     """Vista que renderiza el perfil de un usuario"""
     current_card = request.GET.get('card', 'resume')
     card_template = 'pages/profile/' + current_card + '.html'
-    cards = ('resume', 'lists', 'quests', 'notifications', 'settings')
+    cards = ('resume', 'lists', 'quests', 'results', 'notifications', 'settings')
 
     user_share_code = request.user.share_code if request.user.is_authenticated else None
     is_own_profile = share_code is None or user_share_code == share_code
@@ -286,6 +318,8 @@ def profile(request, share_code=None):
         profile_resume(request, user_data, card_data)
     elif current_card == 'lists':
         profile_lists(request, user_data, card_data)
+    elif current_card == 'results':
+        profile_results(request, user_data, card_data)
 
     return render(request, 'pages/profile.html', {
         'user_data': user_data,
