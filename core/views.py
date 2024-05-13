@@ -289,7 +289,8 @@ def profile_results(request, user_data, card_data):
     for user_result in user_results:
         card_data['data'].append({
             'list_name': user_result['list_name'],
-            'list_image': f"https://res.cloudinary.com/dhewpzvg9/{user_result['list_image']}" if user_result['list_image'] else None,
+            'list_image': f"https://res.cloudinary.com/dhewpzvg9/{user_result['list_image']}"
+            if user_result['list_image'] else None,
             'start_date': user_result['start_date'],
             'items': user_result['items'],
             'duration': sec_to_time(user_result['duration']),
