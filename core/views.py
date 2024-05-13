@@ -284,6 +284,7 @@ def profile_results(request, user_data, card_data):
     card_data['searching'] = search_query is not None
     card_data['search_query'] = search_query
     card_data['list'] = list_obj.share_code if list_obj is not None else None
+    card_data['selected_list'] = list_obj
 
     for user_result in user_results:
         card_data['data'].append({
@@ -291,7 +292,7 @@ def profile_results(request, user_data, card_data):
             'list_image': f"https://res.cloudinary.com/dhewpzvg9/{user_result['list_image']}" if user_result['list_image'] else None,
             'start_date': user_result['start_date'],
             'items': user_result['items'],
-            'duration': sec_to_time(user_result['duration'])
+            'duration': sec_to_time(user_result['duration']),
         })
 
 
@@ -330,7 +331,7 @@ def profile(request, share_code=None):
         'current_card': current_card,
         'card_data': card_data,
         'card_data_empty': len(card_data['data']) == 0,
-        'current_path': request.get_full_path_info()
+        'current_path': request.get_full_path_info(),
     })
 
 
