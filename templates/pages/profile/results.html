@@ -98,7 +98,7 @@
         {% else %}
             <div id="result_container" class="d-md-grid d-flex flex-column gap-10" style="grid-template-columns: repeat(auto-fill, minmax(300px, 1fr))">
                 {% for result in card_data.data %}
-                    <div class="d-flex align-items-center flex-column gap-7 border border-1 border-gray-400 rounded p-4 cursor-pointer list_item"
+                    <div class="d-flex justify-content-between align-items-center flex-column gap-7 border border-1 border-gray-400 rounded p-4 cursor-pointer list_item"
                         data-url=""> <!-- TODO: Poner URL de la pantalla de resultados -->
                         <img class="w-100 mh-100px h-100 rounded" alt="image" style="object-fit:cover"
                             src="{% if result.list_image %}{{ result.list_image }}{% else %}{% static 'assets/media/placeholders/list_mix2.png' %}{% endif %}">
