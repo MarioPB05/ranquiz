@@ -111,48 +111,6 @@
                                 </span>
                                 
                             </div>
-
-{#                            <div class="d-flex gap-2 ms-8">#}
-{#                                <div class="d-flex flex-column justify-content-center gap-2">#}
-{#                                    <a href="{% url 'edit_list' share_code=result.share_code %}" class="btn btn-icon btn-primary" style="background-color: #E06DFF;"#}
-{#                                        data-bs-toggle="tooltip" data-bs-custom-class="tooltip-dark"#}
-{#                                        data-bs-placement="top" title="Editar Lista">#}
-{#                                        <i class="bi bi-pencil-square fs-4"></i>#}
-{#                                    </a>#}
-{##}
-{#                                    <button class="btn btn-icon btn-primary toggle_visibility_list"#}
-{#                                            data-share_code="{{ result.share_code }}" style="background-color: #E06DFF;"#}
-{#                                            data-bs-toggle="tooltip" data-bs-custom-class="tooltip-dark"#}
-{#                                            data-bs-placement="bottom" title="Cambiar Visibilidad">#}
-{#                                        <i class="bi bi-eye-{% if result.public %}slash-{% endif %}fill fs-4"></i>#}
-{#                                    </button>#}
-{#                                </div>#}
-{##}
-{#                                <div class="d-flex flex-column justify-content-center gap-2 delete_list">#}
-{#                                    {% if result.deleted %}#}
-{#                                        <button class="btn btn-icon btn-primary restore_list" style="background-color: #E06DFF;"#}
-{#                                                data-bs-toggle="tooltip" data-bs-custom-class="tooltip-dark"#}
-{#                                                data-share_code="{{ result.share_code }}"#}
-{#                                                data-bs-placement="top" title="Restaurar Lista">#}
-{#                                                <i class="bi bi-arrow-counterclockwise fs-4"></i>#}
-{#                                            </button>#}
-{#                                    {% else %}#}
-{#                                        <button class="btn btn-icon btn-primary delete_list" style="background-color: #E06DFF;"#}
-{#                                            data-bs-toggle="tooltip" data-bs-custom-class="tooltip-dark"#}
-{#                                            data-share_code="{{ result.share_code }}"#}
-{#                                            data-bs-placement="top" title="Eliminar Lista">#}
-{#                                            <i class="bi bi-trash-fill fs-4"></i>#}
-{#                                        </button>#}
-{#                                    {% endif %}#}
-{##}
-{#                                    <button class="btn btn-icon btn-primary highlight_list" style="background-color: #E06DFF;"#}
-{#                                            data-bs-toggle="tooltip" data-bs-custom-class="tooltip-dark"#}
-{#                                            data-bs-placement="bottom" title="Destacar Lista"#}
-{#                                            data-share_code="{{ result.share_code }}" data-name="{{ result.name }}">#}
-{#                                        <i class="bi bi-star-fill fs-4"></i>#}
-{#                                    </button>#}
-{#                                </div>#}
-{#                            </div>#}
                         </div>
                     </div>
                 {% endfor %}
