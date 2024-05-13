@@ -310,14 +310,12 @@ def get_user_results(user, list_obj, page_number, search_query):
                 ORDER BY sla.start_date DESC
                 LIMIT %s OFFSET %s;"""
 
-
     items_per_page = PAGINATION_ITEMS_PER_PAGE / 2
     params = [user.id, f"%{search_query}%", list_obj.id if list_obj is not None else 0, int(items_per_page),
               int((page_number - 1) * items_per_page)]
 
     if list_obj is None:
         params.pop(2)
-
 
     return execute_query(query, params)
 
