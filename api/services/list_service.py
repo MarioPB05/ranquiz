@@ -42,7 +42,7 @@ def get_lists(limit=None, page=1, search='', user=None, order='default', categor
     if category is not None:
         where = "AND lc.category_id = %s "
 
-    query = """SELECT l.id, l.name, l.share_code, l.image,
+    query = f"""SELECT l.id, l.name, l.share_code, l.image,
                     (SELECT IF(COUNT(sll.id) > 0, TRUE, FALSE)
                      FROM api_listlike sll
                      WHERE sll.list_id = l.id AND sll.user_id = %s) AS liked,
@@ -58,12 +58,12 @@ def get_lists(limit=None, page=1, search='', user=None, order='default', categor
                 LEFT JOIN ranquiz.api_highlightedlist hl on l.id = hl.list_id AND start_date <= NOW()
                     AND end_date >= NOW()
                 LEFT JOIN ranquiz.api_listcategory lc on l.id = lc.list_id
-                WHERE l.public = TRUE AND l.name LIKE %s %s
+                WHERE l.public = TRUE AND l.name LIKE %s {where}
                 GROUP BY l.id
                 ORDER BY %s
                 LIMIT %s OFFSET %s;"""
 
-    params = [user.id if user is not None else 0, f"%{search}%", where, order_by, limit, (page - 1) * limit]
+    params = [user.id if user is not None else 0, f"%{search}%", order_by, limit, (page - 1) * limit]
 
     if category is not None:
         params.insert(2, category.id)
@@ -149,8 +149,27 @@ def get_user_lists_pagination(user, show_deleted, visibility, search_query, page
 
     count = List.objects.filter(query).count()
 
-    pages = math.ceil(count / (PAGINATION_ITEMS_PER_PAGE / 2))
+    return get_pagination_data(count, page_number)
 
+
+def get_user_results_pagination(user, list_obj, page_number, search_query):
+    """Función que devuelve la cantidad de resultados de un usuario"""
+    query = Q(list__owner=user)
+
+    if search_query:
+        query &= Q(list__name__icontains=search_query)
+
+    if list_obj is not None:
+        query &= Q(list=list_obj)
+
+    count = ListAnswer.objects.filter(query).count()
+
+    return get_pagination_data(count, page_number)
+
+
+def get_pagination_data(count, page_number):
+    """Función que devuelve los datos de paginación"""
+    pages = math.ceil(count / (PAGINATION_ITEMS_PER_PAGE / 2))
     return {
         'total': count,
         'pages': pages,
@@ -270,6 +289,36 @@ def toggle_favorite_list(user, share_code):
         favorite.save()
 
     return True
+
+
+def get_user_results(user, list_obj, page_number, search_query):
+    """Función que devuelve los resultados de un usuario en una lista"""
+    where = "AND sla.list_id = %s"
+
+    if list_obj is None:
+        where = ""
+
+    if search_query is None:
+        search_query = ""
+
+    query = f"""SELECT sla.id, sla.start_date, sla.end_date, COUNT(ai.id) as items, al.name as list_name, al.share_code,
+                al.image as list_image,  timestampdiff(SECOND, sla.start_date, sla.end_date) as duration
+                FROM api_listanswer sla
+                LEFT JOIN ranquiz.api_itemorder ai on sla.id = ai.answer_id
+                INNER JOIN ranquiz.api_list al on sla.list_id = al.id
+                WHERE sla.user_id = %s AND al.name LIKE %s {where}
+                GROUP BY sla.id, sla.start_date
+                ORDER BY sla.start_date DESC
+                LIMIT %s OFFSET %s;"""
+
+    items_per_page = PAGINATION_ITEMS_PER_PAGE / 2
+    params = [user.id, f"%{search_query}%", list_obj.id if list_obj is not None else 0, int(items_per_page),
+              int((page_number - 1) * items_per_page)]
+
+    if list_obj is None:
+        params.pop(2)
+
+    return execute_query(query, params)
 
 
 @transaction.atomic
