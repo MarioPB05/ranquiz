@@ -168,6 +168,7 @@ def get_user_results_pagination(user, list_obj, page_number, search_query):
 
 
 def get_pagination_data(count, page_number):
+    """Función que devuelve los datos de paginación"""
     pages = math.ceil(count / (PAGINATION_ITEMS_PER_PAGE / 2))
     return {
         'total': count,

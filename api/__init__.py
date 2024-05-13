@@ -2,6 +2,7 @@ import datetime
 
 
 def sec_to_time(seconds):
+    """Convierte segundos a formato HH:MM:SS"""
     # Calcular las horas, minutos y segundos
     hours, seconds = divmod(seconds, 3600)
     minutes, seconds = divmod(seconds, 60)
