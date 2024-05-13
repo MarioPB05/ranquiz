@@ -42,7 +42,7 @@ def get_lists(limit=None, page=1, search='', user=None, order='default', categor
     if category is not None:
         where = "AND lc.category_id = %s "
 
-    query = """SELECT l.id, l.name, l.share_code, l.image,
+    query = f"""SELECT l.id, l.name, l.share_code, l.image,
                     (SELECT IF(COUNT(sll.id) > 0, TRUE, FALSE)
                      FROM api_listlike sll
                      WHERE sll.list_id = l.id AND sll.user_id = %s) AS liked,
@@ -58,12 +58,12 @@ def get_lists(limit=None, page=1, search='', user=None, order='default', categor
                 LEFT JOIN ranquiz.api_highlightedlist hl on l.id = hl.list_id AND start_date <= NOW()
                     AND end_date >= NOW()
                 LEFT JOIN ranquiz.api_listcategory lc on l.id = lc.list_id
-                WHERE l.public = TRUE AND l.name LIKE %s %s
+                WHERE l.public = TRUE AND l.name LIKE %s {where}
                 GROUP BY l.id
                 ORDER BY %s
                 LIMIT %s OFFSET %s;"""
 
-    params = [user.id if user is not None else 0, f"%{search}%", where, order_by, limit, (page - 1) * limit]
+    params = [user.id if user is not None else 0, f"%{search}%", order_by, limit, (page - 1) * limit]
 
     if category is not None:
         params.insert(2, category.id)
