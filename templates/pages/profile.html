@@ -160,6 +160,13 @@
                             href="{% url 'user' share_code=share_code %}?card=quests">Misiones</a>
                     </li>
                     <!--end::Nav item-->
+                    
+                    <!--begin::Nav item-->
+                    <li class="nav-item mt-2">
+                        <a class="nav-link text-active-primary ms-0 me-10 py-5 {% if current_card == 'results' %}active{% endif %}"
+                            href="{% url 'user' share_code=share_code %}?card=results">Resultados</a>
+                    </li>
+                    <!--end::Nav item-->
     
                     <!--begin::Nav item-->
                     <li class="nav-item mt-2">
