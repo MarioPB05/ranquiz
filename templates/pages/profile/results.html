@@ -1,0 +1,191 @@
+{% load static %}
+{% load cloudinary %}
+<!--begin::Lists View-->
+<div class="card shadow mb-5 mb-xl-10">
+    <!--begin::Card header-->
+    <div class="card-header">
+        <!--begin::Card title-->
+        <div class="card-title m-0">
+            <h3 class="fw-bolder m-0">Resultados de las listas</h3>
+        </div>
+        <!--end::Card title-->
+    </div>
+    <!--begin::Card header-->
+
+    <!--begin::Card body-->
+    <div class="card-body p-9">
+        <div class="d-flex flex-stack mb-10">
+            <div class="d-flex gap-4">
+                <div class="d-flex align-items-center position-relative my-1">
+                    <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
+                    <span class="svg-icon svg-icon-1 position-absolute ms-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1"
+                                  transform="rotate(45 17.0365 15.1223)" fill="currentColor"></rect>
+                            <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z"
+                                  fill="currentColor"></path>
+                        </svg>
+                    </span>
+                    <!--end::Svg Icon-->
+
+                    <input id="search_input" type="text" class="form-control form-control-solid w-250px ps-14"
+                           placeholder="Buscar Listas..." value="{% if card_data.searching %}{{ card_data.search_query }}{% endif %}"
+                            {% if card_data.searching %}autofocus{% endif %}
+                            onfocus="this.selectionStart = this.selectionEnd = this.value.length;">
+                </div>
+
+                <button id="search_btn" class="btn btn-sm btn-primary my-4">Buscar</button>
+            </div>
+        </div>
+
+        {% if card_data_empty and card_data.search_query is None %}
+            <!--begin::Notice-->
+            <div class="notice d-flex bg-light-warning rounded border-warning border border-dashed p-6">
+                <!--begin::Icon-->
+                <span class="d-flex align-items-center me-4">
+                    <i class="bi bi-exclamation-circle-fill text-warning fs-2tx"></i>
+                </span>
+                <!--end::Icon-->
+
+                <!--begin::Wrapper-->
+                <div class="d-flex flex-stack flex-grow-1">
+                    <!--begin::Content-->
+                    <div class="fw-bold">
+                        <h4 class="text-gray-900 fw-bolder">No has jugado a ninguna lista!</h4>
+                        <div class="fs-6 text-gray-700">
+                            Aún no has jugado ninguna lista, prueba a explorar las listas de otros usuarios.
+                        </div>
+                    </div>
+                    <!--end::Content-->
+                </div>
+                <!--end::Wrapper-->
+            </div>
+            <!--end::Notice-->
+        {% elif card_data_empty and card_data.searching %}
+            <!--begin::Notice-->
+            <div class="notice d-flex bg-light-danger rounded border-danger border border-dashed p-6">
+                <!--begin::Icon-->
+                <span class="d-flex align-items-center me-4">
+                    <i class="bi bi-exclamation-circle-fill text-danger fs-2tx"></i>
+                </span>
+                <!--end::Icon-->
+
+                <!--begin::Wrapper-->
+                <div class="d-flex flex-stack flex-grow-1">
+                    <!--begin::Content-->
+                    <div class="fw-bold">
+                        <h4 class="text-gray-900 fw-bolder">No se han encontrado resultados!</h4>
+                        <div class="fs-6 text-gray-700">
+                            No se han encontrado listas con el término de búsqueda '{{ card_data.search_query }}'.
+                        </div>
+                    </div>
+                    <!--end::Content-->
+                </div>
+                <!--end::Wrapper-->
+            </div>
+            <!--end::Notice-->
+        {% else %}
+            <div id="result_container">
+                {% for result in card_data.data %}
+                    <div class="d-flex gap-10 border border-2 border-gray-400 shadow-sm rounded p-4 mb-6 cursor-pointer list_item"
+                        data-url=""> <!-- TODO: Poner URL de la pantalla de resultados -->
+                        <img class="mw-200px w-100 mh-100px h-100 rounded" alt="image" style="object-fit:cover"
+                            src="{% if result.list_image %}{{ result.list_image }}{% else %}{% static 'assets/media/placeholders/list_mix2.png' %}{% endif %}">
+
+                        <div class="w-100">
+                            <h1 class="fw-boldest text-primary mw-400px overflow-hidden text-nowrap"
+                                style="text-overflow: ellipsis;">{{ result.list_name }}</h1>
+                            <span class="fw-bolder text-muted">{{ result.start_date }}</span>
+                        </div>
+
+                        <div class="d-flex">
+                            <div class="d-flex flex-column h-100 justify-content-around">
+                                <span class="d-flex justify-content-end fw-bolder text-muted min-w-60px gap-4 align-items-center">
+                                    {{ result.items }}
+                                    <i class="bi bi-box"></i>
+                                </span>
+
+                                <span class="d-flex justify-content-end fw-bolder text-muted min-w-60px gap-4 align-items-center">
+                                    {{ result.duration }}
+                                    <i class="bi bi-clock"></i>
+                                </span>
+                                
+                            </div>
+
+{#                            <div class="d-flex gap-2 ms-8">#}
+{#                                <div class="d-flex flex-column justify-content-center gap-2">#}
+{#                                    <a href="{% url 'edit_list' share_code=result.share_code %}" class="btn btn-icon btn-primary" style="background-color: #E06DFF;"#}
+{#                                        data-bs-toggle="tooltip" data-bs-custom-class="tooltip-dark"#}
+{#                                        data-bs-placement="top" title="Editar Lista">#}
+{#                                        <i class="bi bi-pencil-square fs-4"></i>#}
+{#                                    </a>#}
+{##}
+{#                                    <button class="btn btn-icon btn-primary toggle_visibility_list"#}
+{#                                            data-share_code="{{ result.share_code }}" style="background-color: #E06DFF;"#}
+{#                                            data-bs-toggle="tooltip" data-bs-custom-class="tooltip-dark"#}
+{#                                            data-bs-placement="bottom" title="Cambiar Visibilidad">#}
+{#                                        <i class="bi bi-eye-{% if result.public %}slash-{% endif %}fill fs-4"></i>#}
+{#                                    </button>#}
+{#                                </div>#}
+{##}
+{#                                <div class="d-flex flex-column justify-content-center gap-2 delete_list">#}
+{#                                    {% if result.deleted %}#}
+{#                                        <button class="btn btn-icon btn-primary restore_list" style="background-color: #E06DFF;"#}
+{#                                                data-bs-toggle="tooltip" data-bs-custom-class="tooltip-dark"#}
+{#                                                data-share_code="{{ result.share_code }}"#}
+{#                                                data-bs-placement="top" title="Restaurar Lista">#}
+{#                                                <i class="bi bi-arrow-counterclockwise fs-4"></i>#}
+{#                                            </button>#}
+{#                                    {% else %}#}
+{#                                        <button class="btn btn-icon btn-primary delete_list" style="background-color: #E06DFF;"#}
+{#                                            data-bs-toggle="tooltip" data-bs-custom-class="tooltip-dark"#}
+{#                                            data-share_code="{{ result.share_code }}"#}
+{#                                            data-bs-placement="top" title="Eliminar Lista">#}
+{#                                            <i class="bi bi-trash-fill fs-4"></i>#}
+{#                                        </button>#}
+{#                                    {% endif %}#}
+{##}
+{#                                    <button class="btn btn-icon btn-primary highlight_list" style="background-color: #E06DFF;"#}
+{#                                            data-bs-toggle="tooltip" data-bs-custom-class="tooltip-dark"#}
+{#                                            data-bs-placement="bottom" title="Destacar Lista"#}
+{#                                            data-share_code="{{ result.share_code }}" data-name="{{ result.name }}">#}
+{#                                        <i class="bi bi-star-fill fs-4"></i>#}
+{#                                    </button>#}
+{#                                </div>#}
+{#                            </div>#}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            {% if card_data.pagination.has_other_pages %}
+                <div class="text-center">
+                    <ul class="pagination">
+                        {% if card_data.pagination.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?card=lists&page={{ card_data.pagination.previous_page_number }}">Anterior</a>
+                            </li>
+                        {% endif %}
+
+                        {% for i in card_data.pagination.page_range %}
+                            <li class="page-item {% if card_data.pagination.number == i %}active{% endif %}">
+                                <a class="page-link" href="?card=lists&page={{ i }}">{{ i }}</a>
+                            </li>
+                        {% endfor %}
+
+                        {% if card_data.pagination.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?card=lists&page={{ card_data.pagination.next_page_number }}">Siguiente</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+    <!--end::Card body-->
+</div>
+<!--end::Lists View-->
+
+<script>const baseURL = '{{ request.scheme }}://{{ request.get_host }}{{ current_path|safe }}';</script>
+<script src="{% static 'scripts/pages/profile/list.js' %}" type="module" defer></script>
