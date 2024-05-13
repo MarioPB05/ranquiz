@@ -6,7 +6,11 @@
     <div class="card-header">
         <!--begin::Card title-->
         <div class="card-title m-0">
-            <h3 class="fw-bolder m-0">Resultados de las listas</h3>
+            {% if card_data.selected_list is None %}
+                <h3 class="fw-bolder m-0">Resultados de las listas</h3>
+            {% else %}
+                <h3 class="fw-bolder m-0">Resultados de la lista {{ card_data.selected_list.name }}</h3>
+            {% endif %}
         </div>
         <!--end::Card title-->
     </div>
@@ -14,29 +18,36 @@
 
     <!--begin::Card body-->
     <div class="card-body p-9">
-        <div class="d-flex flex-stack mb-10">
-            <div class="d-flex gap-4">
-                <div class="d-flex align-items-center position-relative my-1">
-                    <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
-                    <span class="svg-icon svg-icon-1 position-absolute ms-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                            <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1"
-                                  transform="rotate(45 17.0365 15.1223)" fill="currentColor"></rect>
-                            <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z"
-                                  fill="currentColor"></path>
-                        </svg>
-                    </span>
-                    <!--end::Svg Icon-->
-
-                    <input id="search_input" type="text" class="form-control form-control-solid w-250px ps-14"
-                           placeholder="Buscar Listas..." value="{% if card_data.searching %}{{ card_data.search_query }}{% endif %}"
-                            {% if card_data.searching %}autofocus{% endif %}
-                            onfocus="this.selectionStart = this.selectionEnd = this.value.length;">
+        {% if  card_data.selected_list is None %}
+            <div class="d-flex flex-stack mb-10">
+                <div class="d-flex gap-4">
+                    <div class="d-flex align-items-center position-relative my-1">
+                        <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
+                        <span class="svg-icon svg-icon-1 position-absolute ms-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1"
+                                      transform="rotate(45 17.0365 15.1223)" fill="currentColor"></rect>
+                                <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z"
+                                      fill="currentColor"></path>
+                            </svg>
+                        </span>
+                        <!--end::Svg Icon-->
+    
+                        <input id="search_input" type="text" class="form-control form-control-solid mw-250px w-100 ps-14"
+                               placeholder="Buscar Listas..." value="{% if card_data.searching %}{{ card_data.search_query }}{% endif %}"
+                                {% if card_data.searching %}autofocus{% endif %}
+                                onfocus="this.selectionStart = this.selectionEnd = this.value.length;">
+                    </div>
+                
+    
+                    <button id="search_btn" class="btn btn-sm btn-primary my-4">
+                        <span class="d-none d-sm-flex">Buscar</span>
+                        <i class="bi bi-search d-flex d-sm-none fs-3"></i>
+                    </button>
                 </div>
-
-                <button id="search_btn" class="btn btn-sm btn-primary my-4">Buscar</button>
+                
             </div>
-        </div>
+        {% endif %}
 
         {% if card_data_empty and card_data.search_query is None %}
             <!--begin::Notice-->
@@ -85,21 +96,21 @@
             </div>
             <!--end::Notice-->
         {% else %}
-            <div id="result_container">
+            <div id="result_container" class="d-md-grid d-flex flex-column gap-10" style="grid-template-columns: repeat(auto-fill, minmax(300px, 1fr))">
                 {% for result in card_data.data %}
-                    <div class="d-flex gap-10 border border-2 border-gray-400 shadow-sm rounded p-4 mb-6 cursor-pointer list_item"
+                    <div class="d-flex align-items-center flex-column gap-7 border border-1 border-gray-400 rounded p-4 cursor-pointer list_item"
                         data-url=""> <!-- TODO: Poner URL de la pantalla de resultados -->
-                        <img class="mw-200px w-100 mh-100px h-100 rounded" alt="image" style="object-fit:cover"
+                        <img class="w-100 mh-100px h-100 rounded" alt="image" style="object-fit:cover"
                             src="{% if result.list_image %}{{ result.list_image }}{% else %}{% static 'assets/media/placeholders/list_mix2.png' %}{% endif %}">
 
-                        <div class="w-100">
-                            <h1 class="fw-boldest text-primary mw-400px overflow-hidden text-nowrap"
+                        <div class="text-center">
+                            <h1 class="fw-boldest text-primary mw-400px overflow-hidden"
                                 style="text-overflow: ellipsis;">{{ result.list_name }}</h1>
                             <span class="fw-bolder text-muted">{{ result.start_date }}</span>
                         </div>
 
-                        <div class="d-flex">
-                            <div class="d-flex flex-column h-100 justify-content-around">
+                        <div class="d-flex w-100">
+                            <div class="d-flex w-100 h-100 justify-content-around">
                                 <span class="d-flex justify-content-end fw-bolder text-muted min-w-60px gap-4 align-items-center">
                                     {{ result.items }}
                                     <i class="bi bi-box"></i>
