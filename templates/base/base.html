@@ -15,6 +15,9 @@
     <link href="{% static 'assets/plugins/global/plugins.bundle.css' %}" rel="stylesheet" type="text/css" />
     <link href="{% static 'assets/css/style.bundle.css' %}" rel="stylesheet" type="text/css" />
 
+    <!-- Global Styles -->
+    <link href="{% static 'css/global.css' %}" rel="stylesheet" type="text/css">
+
     <!-- Icon -->
     <link rel="icon" href="{% static 'assets/media/logo/favicon.ico' %}" type="image/x-icon" />
 
@@ -75,7 +78,23 @@
 
     <!-- Metronic Scripts -->
     <script src="{% static 'assets/js/scripts.bundle.js' %}"></script>
-    <script src="{% static 'assets/plugins/global/plugins.bundle.js' %}"></script>
+    <script src="{% static 'assets/plugins/global/plugins.bundle.js' %}">
+
+    <!-- sweet alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Notificaciones -->
+    <script src="{% static 'assets/js/ranquiz/notify.js' %}" type="module"></script>
+
+    <script>
+        console.log(
+            `\n\n%c ranquiz `,
+            `background-color: #BD20E9; color: white; font-weight: bold; border-radius: 8px; padding: 10px;
+             font-size: 40px; text-align: center; text-transform: uppercase;
+             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);`,
+            '\n\n\n'
+        );
+    </script>
 
     <!-- Template-specific scripts -->
     {% block custom_scripts %}

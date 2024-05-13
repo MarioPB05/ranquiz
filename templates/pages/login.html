@@ -1,0 +1,73 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+
+    <div class="card primary-shadow mw-400px m-auto mt-5">
+        <div class="card-body">
+            <div class="text-center mb-12">
+                <h1 class="text-center fw-boldest">Iniciar Sesión</h1>
+                <p class="text-muted">¿No tienes cuenta?, <a href="{% url 'register' %}" class="text-primary fw-bolder">Registrate ahora</a></p>
+            </div>
+
+            {% for message in messages %}
+                {% if message.tags == 'register success' %}
+                    <div class="alert alert-info d-flex align-items-center p-5 mb-10">
+                        <div class="d-flex flex-column">
+                            <h4 class="mb-1 text-primary">Registro Exitoso</h4>
+                            <span style="text-align: justify">{{ message }}</span>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+            <form method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+
+                <input type="hidden" name="next" value="{{ next }}">
+
+                <div class="mb-8">
+                    <label for="email" class="form-label fw-bolder">Nombre de Usuario</label>
+                    {{ form.username }}
+                </div>
+
+                <div class="mb-8" data-kt-password-meter="true">
+                    <label for="password" class="form-label fw-bolder">Contraseña</label>
+
+                    <!--begin::Input wrapper-->
+                    <div class="position-relative mb-3">
+                        {{ form.password }}
+
+                        <!--begin::Visibility toggle-->
+                        <span class="btn btn-sm btn-icon position-absolute translate-middle top-50 end-0 me-n2"
+                            data-kt-password-meter-control="visibility">
+                                <i class="ki-duotone bi bi-eye-slash fs-1"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span></i>
+                                <i class="ki-duotone bi bi-eye d-none fs-1"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
+                        </span>
+                        <!--end::Visibility toggle-->
+                    </div>
+                    <!--end::Input wrapper-->
+                </div>
+
+                {% if form.errors %}
+                    {% for error in form.non_field_errors %}
+                        <p class="mb-10 text-danger">{{ error }}</p>
+                    {% endfor %}
+                {% endif %}
+
+                <div class="w-100 d-flex justify-content-center">
+                    <button type="submit" class="btn btn-primary fw-bolder">Entrar</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+
+
+{% endblock %}
+
+{% block custom_scripts %}
+    <script src="{% static 'scripts/pages/login.js' %}" type="module"></script>
+{% endblock %}
+

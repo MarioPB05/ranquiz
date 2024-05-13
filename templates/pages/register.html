@@ -1,0 +1,165 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="stepper stepper-pills" id="register_stepper">
+        <div class="stepper-nav flex-center flex-wrap mb-10">
+            <div class="stepper-item mx-8 my-4 current" data-kt-stepper-element="nav">
+                <div class="stepper-wrapper d-flex align-items-center">
+                    <div class="stepper-icon w-40px h-40px">
+                        <i class=" stepper-check bi bi-check-lg"></i>
+                        <span class="stepper-number">1</span>
+                    </div>
+                    <div class="stepper-label">
+                        <h3 class="stepper-title">
+                            Crear usuario
+                        </h3>
+                    </div>
+                </div>
+                <div class="stepper-line h-40px"></div>
+            </div>
+            <div class="stepper-item mx-8 my-4" data-kt-stepper-element="nav">
+                <div class="stepper-wrapper d-flex align-items-center">
+                    <div class="stepper-icon w-40px h-40px">
+                        <i class=" stepper-check bi bi-check-lg"></i>
+                        <span class="stepper-number">2</span>
+                    </div>
+                    <div class="stepper-label">
+                        <h3 class="stepper-title">
+                            Rellenar datos
+                        </h3>
+                    </div>
+                </div>
+                <div class="stepper-line h-40px"></div>
+            </div>
+        </div>
+        <form method="post" class="form mx-auto mw-500px bg-white primary-shadow p-8 rounded" novalidate="novalidate"
+              id="register_stepper_form" onkeydown="return event.key !== 'Enter';">
+            {% csrf_token %}
+
+            <div class="mb-5">
+                <div class="flex-column current align-items-center" data-kt-stepper-element="content">
+                    <div class=" w-100">
+                        <div class="text-center mb-12">
+                            <h1 class="text-center fw-boldest">Crear usuario</h1>
+                            <p class="text-muted">¿Ya tienes cuenta?,<a href="{% url 'login' %}" class="text-primary fw-bolder">Inicia
+                                sesión</a>
+                            </p>
+                        </div>
+
+                        <div class="fv-row mb-10">
+                            <label class="form-label">Nombre de usuario</label>
+                            {{ forms.user_form.username }}
+                            {% if forms.user_form.username.errors %}
+                                {% for error in forms.user_form.username.errors %}
+                                    <p class="mt-2 ms-2 text-danger">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <div class="fv-row mb-10">
+                            <label class="form-label">Contraseña</label>
+                            {{ forms.user_form.password }}
+                            {% if forms.user_form.password.errors %}
+                                {% for error in forms.user_form.password.errors %}
+                                    <p class="mt-2 ms-2 text-danger">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <div class="fv-row mb-10">
+                            <label class="form-label">Repita la contraseña</label>
+                            {{ forms.user_form.confirm_password }}
+                            {% if forms.user_form.confirm_password.errors %}
+                                {% for error in forms.user_form.confirm_password.errors %}
+                                    <p class="mt-2 ms-2 text-danger">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex-column align-items-center" data-kt-stepper-element="content">
+                    <div class=" mw-600px ">
+                        <div class="text-center mb-12">
+                            <h1 class="text-center fw-boldest">Datos</h1>
+                            <p class="text-muted">¿Ya tienes cuenta?,<a href="#" class="text-primary fw-bolder">Inicia
+                                sesión</a>
+                            </p>
+                        </div>
+
+                        <div class="d-flex gap-8">
+                            <div class="fv-row w-100 mb-10">
+                                <label class="form-label">Nombre</label>
+                                {{ forms.client_form.name }}
+                                {% if forms.client_form.name.errors %}
+                                    {% for error in forms.client_form.name.errors %}
+                                        <p class="mt-2 ms-2 text-danger">{{ error }}</p>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                            <div class="fv-row w-100 mb-10">
+                                <label class="form-label">Apellidos</label>
+                                {{ forms.client_form.surnames }}
+                                {% if forms.client_form.surnames.errors %}
+                                    {% for error in forms.client_form.surnames.errors %}
+                                        <p class="mt-2 ms-2 text-danger">{{ error }}</p>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="fv-row mb-10">
+                            <label class="form-label">Correo</label>
+                            {{ forms.client_form.email }}
+                            {% if forms.client_form.email.errors %}
+                                {% for error in forms.client_form.email.errors %}
+                                    <p class="mt-2 ms-2 text-danger">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <div class="fv-row mb-10">
+                            <label for="id_country" class="form-label d-block">País</label>
+                            <select id="id_country" name="country" class="form-select form-select-solid" data-control="select2"
+                                    data-placeholder="Selecciona un país" required>
+                                <option></option>
+                            </select>
+                            {% if forms.client_form.country.errors %}
+                                {% for error in forms.client_form.country.errors %}
+                                    <p class="mt-2 ms-2 text-danger">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <div class="fv-row mb-10">
+                            <label for="id_birthdate" class="form-label">Fecha de nacimiento</label>
+                            <input class="form-control form-control-solid" id="id_birthdate" name="birthdate" placeholder="21/01/2000"/>
+                            {% if forms.client_form.birthdate.errors %}
+                                {% for error in forms.client_form.birthdate.errors %}
+                                    <p class="mt-2 ms-2 text-danger">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex flex-stack">
+                <div class="me-2">
+                    <button type="button" class="btn btn-light btn-active-light-primary"
+                            data-kt-stepper-action="previous">
+                        Volver
+                    </button>
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-primary" data-kt-stepper-action="submit">
+                        Enviar
+                    </button>
+
+                    <button type="button" class="btn btn-primary" data-kt-stepper-action="next">
+                        Siguiente
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block custom_scripts %}
+    <script src="{% static 'scripts/pages/register.js' %}" type="module"></script>
+{% endblock %}
