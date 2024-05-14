@@ -132,7 +132,8 @@ def get_users(limit=None, page=1, search='', order='default', user=None):
                 ORDER BY {order_by}
                 LIMIT %s OFFSET %s;"""
 
-    params = [user.id if user.id is not None else 0, f"%{search}%", user.id if user.id is not None else 0, limit, (page - 1) * limit]
+    params = [user.id if user.id is not None else 0, f"%{search}%", user.id if user.id is not None else 0, limit,
+              (page - 1) * limit]
 
     return execute_query(query, params)
 
