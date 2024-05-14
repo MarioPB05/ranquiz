@@ -114,7 +114,7 @@
             <!--end::Filter menu-->
         </div>
 
-        {% if card_data_empty and card_data.search_query is None %}
+        {% if card_data_empty and card_data.search_query is None and card_data.pagination.number == 1 %}
             <!--begin::Notice-->
             <div class="notice d-flex bg-light-warning rounded border-warning border border-dashed p-6">
                 <!--begin::Icon-->
@@ -161,6 +161,8 @@
                 <!--end::Wrapper-->
             </div>
             <!--end::Notice-->
+        {% elif card_data.pagination.number != 1 and card_data_empty %}
+            <a id="auto_redirect" class="page-link cursor-pointer" data-page="1">Volver a la primera página</a>
         {% else %}
             <div id="list_container">
                 {% for list in card_data.data %}
