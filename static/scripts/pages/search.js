@@ -118,7 +118,7 @@ function addCategory(category) {
     newCategory.find(".category_list_number").text(category.lists);
     newCategory.attr("href", category.url);
 
-    if (category.followed) {
+    if (category.followed === 1) {
         newCategory.find(".category_follow").addClass("btn-primary");
         newCategory.find(".category_follow").removeClass("btn-outline-primary");
         newCategory.find(".category_follow").text("Siguiendo");
