@@ -1,7 +1,8 @@
 from cloudinary import uploader
 
 from api.forms.item_form import CreateItemForm
-from api.models import List, Item
+from api.models import List, Item, Notification
+from api.models.notification_type import NotificationTypes
 
 
 def create_item_form(request, prefix=None, instance=None):
@@ -28,9 +29,14 @@ def edit_list_items(items_prefix, list_obj, request):
         # Verifica si el prefijo del elemento existe en los elementos recibidos del formulario
         if str(item.id) not in items_prefix:
             # Si el elemento existe en la base de datos pero no en la lista actual, elimínalo
-            uploader.destroy(item.image.public_id, invalidate=True)
-            item.deleted = True
-            item.save()
+            if item.image is not None:
+                uploader.destroy(item.image.public_id, invalidate=True)
+                item.deleted = True
+                item.save()
+
+    if len(existing_items) != len(items_prefix) and len(items_prefix) > len(existing_items):
+        # Se crearon nuevos elementos en la lista
+        Notification.create(2, NotificationTypes.NEW_LIST_OPTIONS.object, list_obj.owner, list_obj.share_code)
 
     # Itera sobre cada prefijo de elemento recibido del formulario
     for prefix in items_prefix:
