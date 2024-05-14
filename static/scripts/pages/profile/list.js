@@ -230,6 +230,17 @@ function filterLists() {
     window.location.href = url.toString();
 }
 
+function changePage(event) {
+    event.preventDefault();
+
+    const page = $(this).data('page');
+    const url = getCurrentURL();
+
+    url.searchParams.set('page', page);
+
+    window.location.href = url.toString();
+}
+
 /**
  * Carga los eventos de la página
  */
@@ -280,6 +291,7 @@ function loadEvents() {
     $('#search_input').on('keypress', searchList);
     $('#search_btn').on('click', searchList);
     $('#apply_filters_btn').on('click', filterLists);
+    $('.page-link').on('click', changePage);
 }
 
 $(document).ready(loadEvents);
