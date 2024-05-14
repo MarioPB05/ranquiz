@@ -23,6 +23,7 @@ from api.services.list_service import (
     get_list_counts, get_lists, count_lists, get_user_lists_pagination, get_user_results, get_user_results_pagination
 )
 from api.services.list_service import get_user_lists
+from api.services.shop_service import highlight_list
 from api.services.user_service import (
     user_login,
     user_register,
@@ -139,6 +140,13 @@ def create_list_view(request):
         if list_obj is not None and len(items_prefix) > 0:
             list_obj.type = 0
             list_obj.save()
+
+            if request.POST.get('range_date_highlight') is not None:
+                dates = request.POST.get('range_date_highlight').split(' hasta ')
+                start_date = dates[0]
+                end_date = dates[0] if len(dates) == 1 else dates[1]
+
+                highlight_list(request.user, list_obj.share_code, start_date, end_date)
 
             for prefix in items_prefix:
                 item_form = create_item_form(request, prefix=prefix)
@@ -307,13 +315,14 @@ def profile(request, share_code=None):
     user_share_code = request.user.share_code if request.user.is_authenticated else None
     is_own_profile = share_code is None or user_share_code == share_code
     user_data = request.user if is_own_profile else User.get(share_code=share_code)
-    user_stats = get_user_stats(user_data)
 
     if user_data is None:
         raise Http404('User not found')
 
     if current_card not in cards:
         raise Http404('Page not found')
+
+    user_stats = get_user_stats(user_data)
 
     card_data = {'data': []}
     if current_card == 'resume':

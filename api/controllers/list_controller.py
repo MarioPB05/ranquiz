@@ -4,7 +4,7 @@ from datetime import datetime
 from django.http import JsonResponse
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_GET
+from django.views.decorators.http import require_GET, require_POST
 
 from api.decorators.api_decorators import require_authenticated
 from api.models.list import List
@@ -73,6 +73,7 @@ def favorite_list(request, share_code):
 
 
 @csrf_exempt
+@require_POST
 @require_authenticated
 def add_result_to_list(request, share_code):
     """Controlador que permite añadir un resultado a una lista"""

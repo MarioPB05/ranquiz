@@ -3,7 +3,7 @@ from datetime import datetime
 from django.db.models import Count, Q, Case, When, Exists, OuterRef
 
 from api.models import Avatar, HighlightedList, UserAvatar, List
-from api.services.transaction_service import do_transaction
+from api.services.transaction_service import do_transaction, refund_transaction
 
 
 def get_avatar(avatar_id):
@@ -128,7 +128,7 @@ def list_is_highlighted(share_code):
                                           end_date__gte=end_date).exists()
 
 
-def highlight_list(share_code, start_date, end_date, transaction):
+def highlight_list(user, share_code, start_date, end_date):
     """Servicio que destaca una lista"""
     list_obj = List.get(share_code)
 
@@ -136,10 +136,24 @@ def highlight_list(share_code, start_date, end_date, transaction):
             start_date > end_date or not list_obj.public:
         return False
 
+    value = calculate_highlight_price(start_date, end_date)
+
+    if value <= 0:
+        return False
+
+    transaction = do_transaction(user, -value, "Destacar lista")
+
+    if transaction is None:
+        return False
+
     # Para que la fecha de fin a las 23:59:59
     end_date = datetime.strptime(end_date, "%Y-%m-%d").replace(hour=23, minute=59, second=59)
 
     highlighted_list = HighlightedList(list=list_obj, start_date=start_date, end_date=end_date, transaction=transaction)
     highlighted_list.save()
+
+    if highlighted_list is None:
+        refund_transaction(transaction)
+        return False
 
     return True

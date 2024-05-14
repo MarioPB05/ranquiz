@@ -41,7 +41,7 @@ class CreateListForm(ModelForm):
             'class': 'form-control text-black',
             'id': 'question',
             'maxlength': '70',
-            'value': '¿Cúal prefieres?',
+            'value': '¿Cuál prefieres?',
             'required': True
         })
     )

@@ -60,10 +60,10 @@ def get_lists(limit=None, page=1, search='', user=None, order='default', categor
                 LEFT JOIN ranquiz.api_listcategory lc on l.id = lc.list_id
                 WHERE l.public = TRUE AND l.name LIKE %s {where}
                 GROUP BY l.id
-                ORDER BY %s
+                ORDER BY {order_by}
                 LIMIT %s OFFSET %s;"""
 
-    params = [user.id if user is not None else 0, f"%{search}%", order_by, limit, (page - 1) * limit]
+    params = [user.id if user is not None else 0, f"%{search}%", limit, (page - 1) * limit]
 
     if category is not None:
         params.insert(2, category.id)

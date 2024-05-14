@@ -114,7 +114,7 @@
             <!--end::Filter menu-->
         </div>
 
-        {% if card_data_empty and card_data.search_query is None %}
+        {% if card_data_empty and card_data.search_query is None and card_data.pagination.number == 1 %}
             <!--begin::Notice-->
             <div class="notice d-flex bg-light-warning rounded border-warning border border-dashed p-6">
                 <!--begin::Icon-->
@@ -161,6 +161,8 @@
                 <!--end::Wrapper-->
             </div>
             <!--end::Notice-->
+        {% elif card_data.pagination.number != 1 and card_data_empty %}
+            <a id="auto_redirect" class="page-link cursor-pointer" data-page="1">Volver a la primera página</a>
         {% else %}
             <div id="list_container">
                 {% for list in card_data.data %}
@@ -265,19 +267,19 @@
                     <ul class="pagination">
                         {% if card_data.pagination.has_previous %}
                             <li class="page-item">
-                                <a class="page-link" href="?card=lists&page={{ card_data.pagination.previous_page_number }}">Anterior</a>
+                                <a class="page-link cursor-pointer" data-page="{{ card_data.pagination.previous_page_number }}">Anterior</a>
                             </li>
                         {% endif %}
 
                         {% for i in card_data.pagination.page_range %}
                             <li class="page-item {% if card_data.pagination.number == i %}active{% endif %}">
-                                <a class="page-link" href="?card=lists&page={{ i }}">{{ i }}</a>
+                                <a class="page-link cursor-pointer" data-page="{{ i }}">{{ i }}</a>
                             </li>
                         {% endfor %}
 
                         {% if card_data.pagination.has_next %}
                             <li class="page-item">
-                                <a class="page-link" href="?card=lists&page={{ card_data.pagination.next_page_number }}">Siguiente</a>
+                                <a class="page-link cursor-pointer" data-page="{{ card_data.pagination.next_page_number }}">Siguiente</a>
                             </li>
                         {% endif %}
                     </ul>
