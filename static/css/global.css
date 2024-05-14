@@ -22,12 +22,16 @@
     background-color: var(--primary-300);
 }
 
+.bg-primary-400 {
+    background-color: var(--primary-400);
+}
+
 .text-primary-800 {
     color: var(--primary-800);
 }
 
 .hover-text-primary-400:hover {
-    color: var(--primary-400)!important;
+    color: var(--primary-400) !important;
 }
 
 .category {
@@ -88,7 +92,7 @@
 
 @media (min-width: 768px) {
     .fs-sm-60px {
-        font-size: 60px!important;
+        font-size: 60px !important;
     }
 
 }
@@ -104,35 +108,35 @@
 }
 
 .border-secondary-dark {
-    border-color: var(--secondary-dark)!important;
+    border-color: var(--secondary-dark) !important;
 }
 
 .bg-secondary-dark {
-    background-color: var(--secondary-dark)!important;
+    background-color: var(--secondary-dark) !important;
 }
 
 .text-secondary-dark {
-    color: var(--secondary-dark)!important;
+    color: var(--secondary-dark) !important;
 }
 
 .hover-text-secondary-dark:hover {
-    color: var(--secondary-dark)!important;
+    color: var(--secondary-dark) !important;
 }
 
 .hover-fw-600:hover {
-    font-weight: 600!important;
+    font-weight: 600 !important;
 }
 
 .transition-duration-0-3s {
-    transition-duration: 0.3s!important;
+    transition-duration: 0.3s !important;
 }
 
 .transition-duration-0-1s {
-    transition-duration: 0.1s!important;
+    transition-duration: 0.1s !important;
 }
 
 .hover-fs-25px:hover {
-    font-size: 25px!important;
+    font-size: 25px !important;
 }
 
 .hover-text-white:hover {
@@ -169,11 +173,12 @@
 }
 
 .play-selected {
-    color: #0c6af3; !important;
+    color: #0c6af3;
+!important;
 }
 
 .badge-outline-primary-selected {
-    color: white!important;
+    color: white !important;
     background-color: var(--primary-600);
 }
 
@@ -189,4 +194,9 @@
 
 .btn-primary-500:hover {
     background-color: #d44bff !important;
+}
+
+.divider {
+    width: 1px;
+    background-color: black;
 }
