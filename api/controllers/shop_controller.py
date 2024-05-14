@@ -5,7 +5,6 @@ from api.decorators.api_decorators import require_authenticated
 from api.services import shop_service
 from api.services.shop_service import calculate_highlight_price, get_all_avatars, get_avatars_by_popularity, \
     get_avatars_by_purchased, buy_avatar, equip_avatar
-from api.services.transaction_service import do_transaction, refund_transaction
 
 
 @require_GET
