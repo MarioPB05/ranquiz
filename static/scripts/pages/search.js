@@ -336,23 +336,28 @@ function onDocumentReady() {
         toggleUserFollow(event).then((is_followed) => {
             const button = $(event.currentTarget);
             $(this).prop("disabled", false);
+        }).catch(() => {
+            icon.toggleClass("bi-person-plus-fill").toggleClass("bi-person-check-fill text-primary");
+            $(this).prop("disabled", false);
         });
     });
 
     content.on("click", ".category_follow", (event) => {
         $(this).prop("disabled", true);
+        const button = $(event.currentTarget);
+
+        if (button.hasClass("btn-primary")) {
+            button.removeClass("btn-primary").addClass("btn-outline-primary");
+            button.text("Seguir");
+            button.blur();
+        } else {
+            button.removeClass("btn-outline-primary").addClass("btn-primary");
+            button.text("Siguiendo");
+        }
 
         toggleCategoryFollow(event).then((is_followed) => {
             const button = $(event.currentTarget);
-
-            if (!is_followed) {
-                button.removeClass("btn-primary").addClass("btn-outline-primary");
-                button.text("Seguir");
-                button.blur();
-            } else {
-                button.removeClass("btn-outline-primary").addClass("btn-primary");
-                button.text("Siguiendo");
-            }
+            $(this).prop("disabled", false);
         });
     });
 
