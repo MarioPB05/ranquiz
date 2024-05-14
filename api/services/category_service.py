@@ -29,16 +29,19 @@ def edit_list_categories(categories_names, list_obj):
 
 def get_category(category_id=None, category_name=None, share_code=None):
     """Función para obtener una categoría"""
-    if category_id is not None:
-        return Category.objects.get(id=category_id)
+    try:
+        if category_id is not None:
+            return Category.objects.get(id=category_id)
 
-    if category_name is not None:
-        return Category.objects.get(name=category_name)
+        if category_name is not None:
+            return Category.objects.get(name=category_name)
 
-    if share_code is not None:
-        return Category.objects.get(share_code=share_code)
+        if share_code is not None:
+            return Category.objects.get(share_code=share_code)
 
-    return None
+        return None
+    except Category.DoesNotExist:
+        return None
 
 
 def get_all_categories():
@@ -60,7 +63,8 @@ def get_categories(limit=None, page=1, search='', user=None, order='default'):
     elif order == 'newest':
         order_by = "max(al.edit_date) DESC"
 
-    query = f"""SELECT c.id, c.name, c.share_code, COUNT(lc.list_id) as lists, COUNT(distinct cs.user_id) as followers,
+    query = f"""SELECT c.id, c.name, c.share_code, COUNT(distinct lc.list_id) as lists,
+                COUNT(distinct cs.user_id) as followers,
                 if(cs.user_id = %s, TRUE, FALSE) as followed
                 FROM api_category c
                 LEFT JOIN api_listcategory lc on c.id = lc.category_id

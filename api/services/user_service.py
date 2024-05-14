@@ -2,7 +2,8 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 
-from api.models import User
+from api.models import Notification, UserFollow, List
+from api.models.notification_type import NotificationTypes
 from api.services.email_service import send_register_email
 from api.services.query_service import execute_query
 from api.services.shop_service import get_avatar
@@ -96,18 +97,14 @@ def user_register(request):
     }})
 
 
-def get_user(user_id=None, share_code=None):
-    """Función que obtiene un usuario por su id o su share_code"""
-    try:
-        if user_id is not None:
-            return User.objects.get(id=user_id)
-
-        if share_code is not None:
-            return User.objects.get(share_code=share_code)
-
-        return None
-    except User.DoesNotExist:
-        return None
+def get_user_stats(user):
+    """Función que obtiene las estadísticas de un usuario"""
+    return {
+        'money': user.money,
+        'followers': UserFollow.objects.filter(user_followed=user).count(),
+        'following': UserFollow.objects.filter(follower=user).count(),
+        'lists': List.objects.filter(owner=user, public=True).count()
+    }
 
 
 def get_users(limit=None, page=1, search='', order='default', user=None):
@@ -130,12 +127,13 @@ def get_users(limit=None, page=1, search='', order='default', user=None):
                 FROM api_user u
                 JOIN ranquiz.api_avatar a on u.avatar_id = a.id
                 LEFT JOIN api_list l on u.id = l.owner_id and l.public = TRUE
-                WHERE u.username LIKE %s
+                WHERE u.username LIKE %s AND u.id != %s
                 GROUP BY u.id
                 ORDER BY {order_by}
                 LIMIT %s OFFSET %s;"""
 
-    params = [user.id if user is not None else 0, f"%{search}%", limit, (page - 1) * limit]
+    params = [user.id if user.id is not None else 0, f"%{search}%", user.id if user.id is not None else 0, limit,
+              (page - 1) * limit]
 
     return execute_query(query, params)
 
@@ -151,5 +149,6 @@ def toggle_user_follow(user, followed_user):
         user.following_set.filter(user_followed=followed_user).delete()
     else:
         user.following_set.create(user_followed=followed_user)
+        Notification.create(1, NotificationTypes.NEW_FOLLOWER.object, followed_user, user.share_code)
 
     return True

@@ -15,19 +15,32 @@
                             {% cloudinary data.avatar class="rounded-circle" width="50" height="50" crop="fill" %}
                         </a>
                     </div>
-                    <div class="w-100 h-lg-100 min-h-lg-10px rounded overflow-hidden position-lg-relative bgi-position-center bg-center min-h-300px"
+                    <div class="w-100 h-lg-100 min-h-lg-10px rounded overflow-hidden position-lg-relative bgi-position-center bg-center min-h-300px position-relative"
                          style="{% if not list.image %}
                                     background-image: url('{% static 'assets/media/placeholders/list_mix2.png' %}');
                                 {% else %}
                                     background-image: url('https://res.cloudinary.com/dhewpzvg9/{{ list.image }}');
                                 {% endif %}
                                  background-size: cover;
-                                 "></div>
+                                 ">
+                    <div class="position-absolute bottom-0 p-2 w-100 d-flex justify-content-between flex-wrap gap-2">
+                        {% if data.user_has_played %}
+                            <a href="{% url 'user' share_code=user.share_code %}?card=results&list={{ list.share_code }}" class="h-25 btn btn-outline btn-outline-primary btn-active-primary bg-white w-25 min-w-150px text-center">
+                                Ver resultados
+                            </a>
+                        {% endif %}
+                        <a href="/" class="h-25 btn btn-outline btn-outline-primary btn-active-primary bg-white w-25 min-w-150px text-center">
+                            <i class="bi bi-bar-chart-fill"></i>
+                            Estadísticas
+                        </a>
+                    </div>
+
+                    </div>
                     <div class="d-flex flex-wrap align-center justify-content-center gap-lg-20 gap-10">
                         <div class="d-flex flex-column gap-3 align-items-center">
                             <div class="bg-white p-4 rounded-circle">
                                 {% if data.user_has_played %}
-                                    <i class="fs-2x text-muted bi bi-controller play-selected"></i>
+                                    <i class="fs-2x bi bi-controller text-info"></i>
                                 {% else %}
                                     <i class="fs-2x text-muted bi bi-controller"></i>
                                 {% endif %}
@@ -76,7 +89,7 @@
                             {% if data.categories %}
                                 <div class="d-flex gap-3 flex-wrap w-100 justify-content-center justify-content-md-end">
                                     {% for category in data.categories %}
-                                        <span class="badge bg-white text-primary-800 fs-6">{{ category }}</span>
+                                        <a href="{% url 'category_lists' share_code=category.share_code %}" class="badge bg-white text-primary-800 fs-6">{{ category }}</a>
                                     {% endfor %}
                                 </div>
                             {% else %}
@@ -92,15 +105,11 @@
                     </a>
 
                     <div class="position-absolute w-100 d-flex flex-wrap justify-content-center gap-4 align-items-center" style="bottom: -20px">
-                        <a href="{% url 'user' share_code=list.share_code %}" class="h-100 btn btn-info w-25 min-w-150px">
-                            Ver resultados
-                        </a>
                         {% if user.is_authenticated %}
-                            
                             {% if list.deleted == 0 %}
-                            <a data-bs-toggle="modal" data-bs-target="#playModal" class="d-flex align-items-center justify-content-center btn btn-primary border border-dark rounded mh-50px w-25" style="bottom: -20px">
-                                <i class="fs-4x text-white bi bi-play-fill"></i>
-                            </a>
+                                <a href="{% url 'play_list' share_code=share_code %}" class="d-flex align-items-center justify-content-center btn btn-primary border border-dark rounded mh-50px w-25" style="bottom: -20px">
+                                    <i class="fs-4x text-white bi bi-play-fill"></i>
+                                </a>
                             {% endif %}
 
                             <!-- Begin modal -->
@@ -123,7 +132,6 @@
                                         </div>
 
                                         <div class="modal-footer d-flex justify-content-around">
-                                            <!--TODO: Cambiar url por play_list -->
                                             <a  href="{% url 'user' share_code=list.share_code %}" class="btn btn-primary px-16" id="play_button">Jugar ahora</a>
                                         </div>
                                     </div>
@@ -145,7 +153,7 @@
                 <p class="fs-2 text-muted" id="comment_counter">0</p>
             </div>
 
-            <div class="d-flex h-100 mh-600px gap-7 flex-column scrolleable" id="comments_container">
+            <div class="d-flex h-100 mh-600px mh-lg-100 gap-7 flex-column scrolleable" id="comments_container">
                 <!-- Begin template comment -->
                 <div class="d-none flex-column border border-1 border-gray-400 rounded p-5 gap-4 comment mb-1"
                      id="template_comment">

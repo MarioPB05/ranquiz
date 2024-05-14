@@ -28,3 +28,11 @@ class List(TimeStamped):
 
     def __str__(self):
         return self.name + ' (' + self.share_code + ')'
+
+    @classmethod
+    def get(cls, share_code):
+        """Función que devuelve el objeto "lista" al que pertenece el share code"""
+        try:
+            return cls.objects.get(share_code=share_code)
+        except cls.DoesNotExist:
+            return None

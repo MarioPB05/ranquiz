@@ -24,3 +24,9 @@ def validate_transaction(user, value):
         return user_money >= (-value)
 
     return False
+
+
+def refund_transaction(transaction):
+    """Reembolsa una transacción"""
+    user = transaction.user
+    return do_transaction(user, -transaction.value, "Reembolso de transacción") is not None

@@ -1,15 +1,21 @@
 from django.http import JsonResponse
 from django.urls import reverse
+from django.views.decorators.http import require_GET, require_POST
 
+from api.decorators.api_decorators import require_authenticated
 from api.services.social_service import (get_comments_from_list, create_comment, get_awards_from_comments, get_comment,
                                          get_award, add_award_to_comment, check_user_award_in_comment, get_all_awards)
-from api.services.transaction_service import do_transaction
+from api.services.transaction_service import do_transaction, refund_transaction
 
 
+@require_GET
 def get_comments(request, share_code):
     """Función para obtener todos los comentarios de una lista"""
     mode = request.GET.get('mode')  # featured, recent
     comments = get_comments_from_list(share_code, mode)
+
+    if comments is None:
+        return JsonResponse({'status': 'error', 'message': 'Lista no encontrada'})
 
     json_comments = []
     comments_award = get_awards_from_comments(comments, True)
@@ -36,6 +42,8 @@ def get_comments(request, share_code):
     return JsonResponse({'comments': json_comments})
 
 
+@require_POST
+@require_authenticated
 def create_and_return_comment(request, share_code):
     """Función para crear un comentario"""
     content = request.POST.get('content')
@@ -76,6 +84,8 @@ def get_awards(request):
     return JsonResponse({'awards': json_awards})
 
 
+@require_GET
+@require_authenticated
 def add_award_to_comment_function(request, share_code, comment_id):  # skipcq: PYL-W0613
     """Función para añadir un premio a un comentario"""
     award_id = request.POST.get('id_award')
@@ -100,7 +110,7 @@ def add_award_to_comment_function(request, share_code, comment_id):  # skipcq: P
     transaction_received = do_transaction(selected_comment.user, final_price, "Premio recibido")
     if transaction_received is None:
         # Reembolsar al usuario si hay un error al recibir el premio
-        do_transaction(request.user, selected_award.price, "Premio reembolsado por error al otorgar el premio")
+        refund_transaction(transaction_paid)
         return JsonResponse({'status': 'Error', 'message': 'Error al otorgar el premio'})
 
     try:
@@ -110,7 +120,7 @@ def add_award_to_comment_function(request, share_code, comment_id):  # skipcq: P
 
     except Exception:
         # Reembolsar a los usuarios si hay un error al agregar el premio al comentario
-        do_transaction(request.user, selected_award.price, "Premio reembolsado por error al otorgar el premio")
-        do_transaction(selected_comment.user, -final_price, "Premio reembolsado por error al otorgar el premio")
+        refund_transaction(transaction_paid)
+        refund_transaction(transaction_received)
 
     return JsonResponse({'status': 'Error', 'message': 'Error al otorgar el premio'})

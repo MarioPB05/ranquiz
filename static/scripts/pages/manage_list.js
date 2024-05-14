@@ -601,6 +601,15 @@ function beforeSendForm(event) {
         return;
     }
 
+    // Verificar que si hay fecha de destacado, no sea una o las dos fechas sean iguales
+    const dates = $("#range_date_highlight").val().split(" hasta ");
+
+    if ((dates.length === 2 && dates[0] === dates[1]) || (dates.length === 1 && dates[0] !== "")) {
+        toastMessage('error', 'Las fechas del destacado no pueden ser iguales');
+        event.preventDefault();
+        return;
+    }
+
     // Eliminar el template
     $('#item_template').remove();
 
@@ -637,6 +646,15 @@ function onDocumentReady() {
             }
         }
     });
+
+    $(window).keydown((event) => {
+        if(event.keyCode === 13) {
+          event.preventDefault();
+          return false;
+        }
+
+        return true;
+      });
 
     const imageInput = KTImageInput.getInstance($('#kt_image_input')[0]); // skipcq: JS-0125
     const itemsContainer = $('#items_container');

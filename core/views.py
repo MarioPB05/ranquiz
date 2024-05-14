@@ -1,3 +1,4 @@
+
 import cloudinary
 from cloudinary import uploader  # skipcq: PY-W2000
 from django.contrib.auth import logout as django_logout
@@ -5,7 +6,8 @@ from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponseForbidden, HttpResponseNotFound
 from django.shortcuts import render, redirect, get_object_or_404
 
-from api.models import List, ListCategory, ListFavorite, ListLike, ListAnswer
+from api import sec_to_time
+from api.models import List, ListCategory, ListFavorite, ListLike, ListAnswer, User
 from api.services import PAGINATION_ITEMS_PER_PAGE
 from api.services.category_service import edit_list_categories, get_category, user_followed_category, \
     user_follow_category_and_receive_notifications
@@ -18,13 +20,14 @@ from api.services.item_service import (
 from api.services.list_service import (
     create_list_form,
     create_list,
-    get_list,
-    get_list_counts, get_lists, count_lists,
+    get_list_counts, get_lists, count_lists, get_user_lists_pagination, get_user_results, get_user_results_pagination
 )
+from api.services.list_service import get_user_lists
+from api.services.shop_service import highlight_list
 from api.services.user_service import (
     user_login,
     user_register,
-    get_user,
+    get_user_stats
 )
 from core.decorators.decorators import partial_login_required
 
@@ -52,7 +55,11 @@ def logout(request):
 
 def list_details(request, share_code):
     """Vista que permite a un usuario ver los detalles de una lista"""
-    list_data = get_list(share_code)
+    try:
+        list_data = List.get(share_code)
+    except List.DoesNotExist:
+        return HttpResponseNotFound()
+
     items_data = get_items(share_code)
 
     # Comprueba si la lista no ha sido eliminada
@@ -70,7 +77,7 @@ def list_details(request, share_code):
     categories = [list_category.category for list_category in list_categories]
 
     # Obtener la cantidad de favoritos, likes, partidas de la lista
-    favorites_count, likes_count, play_count = get_list_counts(list_data)
+    favorites_count, likes_count, play_count, comments_count = get_list_counts(list_data)  # skipcq: PYL-W0612
 
     # Verificar si el usuario ha dado like, favorito o jugado a la lista específica
     user_has_liked = False
@@ -101,6 +108,21 @@ def list_details(request, share_code):
     return render(request, 'pages/list_details.html', {'share_code': share_code, 'list': list_data, "data": data})
 
 
+def play_list(request, share_code):
+    """Vista que permite a un usuario jugar una lista"""
+    list_obj = List.get(share_code)
+
+    # Comprueba si la lista no ha sido eliminada
+    if list_obj is None or list_obj.deleted:
+        return HttpResponseNotFound()
+
+    # Comprueba si la lista es privada y si el usuario tiene permiso para verla
+    if list_obj.public == 0 and list_obj.owner != request.user:
+        return HttpResponseForbidden()
+
+    return render(request, 'pages/play_list.html', {'share_code': share_code, 'list': list_obj})
+
+
 @login_required
 def create_list_view(request):
     """Vista que permite a un usuario crear una lista"""
@@ -119,6 +141,13 @@ def create_list_view(request):
             list_obj.type = 0
             list_obj.save()
 
+            if request.POST.get('range_date_highlight') is not None:
+                dates = request.POST.get('range_date_highlight').split(' hasta ')
+                start_date = dates[0]
+                end_date = dates[0] if len(dates) == 1 else dates[1]
+
+                highlight_list(request.user, list_obj.share_code, start_date, end_date)
+
             for prefix in items_prefix:
                 item_form = create_item_form(request, prefix=prefix)
                 item = create_item(item_form)
@@ -128,6 +157,7 @@ def create_list_view(request):
                     item.save()
 
             edit_list_categories(categories_names, list_obj)
+            return redirect('list_details', share_code=list_obj.share_code)
 
     return render(request, 'pages/manage_list.html', {
         'list_form': list_form,
@@ -151,7 +181,7 @@ def edit_list_view(request, share_code):
 
     if request.method == 'POST' and list_form.is_valid():
         # Actualiza los datos de la lista con los datos del formulario
-        list_obj = get_list(share_code)
+        list_obj = List.get(share_code)
         list_obj.name = request.POST.get('name')
         list_obj.question = request.POST.get('question')
         list_obj.public = bool(request.POST.get('visibility') == 'public')
@@ -175,7 +205,7 @@ def edit_list_view(request, share_code):
             edit_list_items(items_prefix, list_obj, request)
             edit_list_categories(categories_names, list_obj)
 
-        return redirect("/", list_id=list_obj.id)
+        return redirect('list_details', share_code=list_obj.share_code)
 
     item_form_set = []
 
@@ -191,34 +221,131 @@ def edit_list_view(request, share_code):
     })
 
 
+def profile_resume(request, user_data, card_data):
+    """Vista que renderiza el resumen de un usuario"""
+    page_number = int(request.GET.get('page', 1))
+    user_lists = get_user_lists(user_data, False, 'public', None, page_number)
+
+    for user_list in user_lists:
+        card_data['data'].append({
+            'name': user_list['name'],
+            'highlighted': user_list['highlighted'] == 1,
+            'image': user_list['image'] if user_list['image'] else None,
+            'share_code': user_list['share_code'],
+            'plays': user_list['plays'],
+            'owner_username': user_list['owner_username'],
+            'owner_avatar': user_list['owner_avatar'],
+            'owner_share_code': user_list['owner_share_code'],
+            'liked': ListLike.objects.filter(user=request.user, list_id__exact=user_list['id']).exists()
+            if request.user.is_authenticated else False
+        })
+
+
+def profile_lists(request, user_data, card_data):
+    """Vista que renderiza las listas de un usuario"""
+    page_number = int(request.GET.get('page', 1))
+    search_query = request.GET.get('search', None)
+    visibility = request.GET.get('visibility', None)
+    show_deleted = request.GET.get('show_deleted', 'false') == 'true'
+
+    user_lists = get_user_lists(user_data, show_deleted, visibility, search_query, page_number)
+    count_user_lists = get_user_lists_pagination(user_data, show_deleted, visibility, search_query, page_number)
+
+    card_data['pagination'] = count_user_lists
+    card_data['searching'] = search_query is not None
+    card_data['visibility'] = visibility
+    card_data['show_deleted'] = show_deleted
+    card_data['search_query'] = search_query
+
+    for user_list in user_lists:
+        card_data['data'].append({
+            'name': user_list['name'],
+            'highlighted': user_list['highlighted'] == 1,
+            'image': f"https://res.cloudinary.com/dhewpzvg9/{user_list['image']}" if user_list['image'] else None,
+            'public': user_list['public'],
+            'deleted': user_list['deleted'],
+            'date': user_list['creation_date'],
+            'share_code': user_list['share_code'],
+            'play_count': user_list['plays'],
+            'likes_count': user_list['likes'],
+            'comments_count': user_list['comments'],
+            'favorites_count': user_list['favorites']
+        })
+
+
+def profile_results(request, user_data, card_data):
+    """Vista que renderiza los resultados de un usuario"""
+    page_number = int(request.GET.get('page', 1))
+    search_query = request.GET.get('search', None)
+    list_share_code = request.GET.get('list', None)
+    list_obj = None
+
+    if list_share_code is not None:
+        list_obj = List.get(list_share_code)
+        if list_obj is None:
+            raise Http404('List not found')
+
+    user_results = get_user_results(user_data, list_obj, page_number, search_query)
+    count_user_results = get_user_results_pagination(user_data, list_obj, page_number, search_query)
+
+    card_data['pagination'] = count_user_results
+    card_data['searching'] = search_query is not None
+    card_data['search_query'] = search_query
+    card_data['list'] = list_obj.share_code if list_obj is not None else None
+    card_data['selected_list'] = list_obj
+
+    for user_result in user_results:
+        card_data['data'].append({
+            'list_name': user_result['list_name'],
+            'list_image': f"https://res.cloudinary.com/dhewpzvg9/{user_result['list_image']}"
+            if user_result['list_image'] else None,
+            'start_date': user_result['start_date'],
+            'items': user_result['items'],
+            'duration': sec_to_time(user_result['duration']),
+        })
+
+
 @partial_login_required
 def profile(request, share_code=None):
     """Vista que renderiza el perfil de un usuario"""
     current_card = request.GET.get('card', 'resume')
     card_template = 'pages/profile/' + current_card + '.html'
-    cards_info = {
-        'resume': bool(current_card == 'resume'),
-        'lists': bool(current_card == 'lists'),
-        'quests': bool(current_card == 'quests'),
-        'notifications': bool(current_card == 'notifications'),
-        'settings': bool(current_card == 'settings'),
-    }
+    cards = ('resume', 'lists', 'quests', 'results', 'notifications', 'settings')
 
-    is_own_profile = share_code is None or request.user.share_code == share_code
-    user_data = request.user if is_own_profile else get_user(share_code=share_code)
+    user_share_code = request.user.share_code if request.user.is_authenticated else None
+    is_own_profile = share_code is None or user_share_code == share_code
+    user_data = request.user if is_own_profile else User.get(share_code=share_code)
 
     if user_data is None:
         raise Http404('User not found')
 
+    if current_card not in cards:
+        raise Http404('Page not found')
+
+    user_stats = get_user_stats(user_data)
+
+    card_data = {'data': []}
+    if current_card == 'resume':
+        profile_resume(request, user_data, card_data)
+    elif current_card == 'lists':
+        profile_lists(request, user_data, card_data)
+    elif current_card == 'results':
+        profile_results(request, user_data, card_data)
+
     return render(request, 'pages/profile.html', {
         'user_data': user_data,
-        'share_code': request.user.share_code if is_own_profile else share_code,
+        'user_stats': user_stats,
+        'share_code': user_share_code if is_own_profile else share_code,
         'is_own_profile': is_own_profile,
         'card_template': card_template,
-        'cards_info': cards_info,
+        'current_card': current_card,
+        'card_data': card_data,
+        'card_data_empty': len(card_data['data']) == 0,
+        'current_path': request.get_full_path_info(),
     })
 
 
+@login_required
 def shop(request):
     """Vista que renderiza la tienda de la aplicación"""
     return render(request, 'pages/shop.html')
@@ -245,19 +372,19 @@ def category_lists(request, share_code):
         page_numbers = page_numbers[:6]
 
     return render(request, 'pages/category_lists.html', {
-         'share_code': share_code,
-         'lists': lists,
-         'category': category_object,
-         'followed': user_followed_category(request.user, category_object),
-         'notifications': user_follow_category_and_receive_notifications(request.user, category_object),
-         'order': order,
-         'user': request.user,
-         'pagination': {
-             'total_pages': list_count // PAGINATION_ITEMS_PER_PAGE + 1,
-             'current_page': page,
-             'items_per_page': PAGINATION_ITEMS_PER_PAGE,
-             'page_numbers': page_numbers
-         }
+        'share_code': share_code,
+        'lists': lists,
+        'category': category_object,
+        'followed': user_followed_category(request.user, category_object),
+        'notifications': user_follow_category_and_receive_notifications(request.user, category_object),
+        'order': order,
+        'user': request.user,
+        'pagination': {
+            'total_pages': list_count // PAGINATION_ITEMS_PER_PAGE + 1,
+            'current_page': page,
+            'items_per_page': PAGINATION_ITEMS_PER_PAGE,
+            'page_numbers': page_numbers
+        }
     })
 
 def result(request, share_code, id):

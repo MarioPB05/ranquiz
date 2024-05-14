@@ -391,7 +391,7 @@ function onDocumentReady() {
 
     $("#duel_elements_selector").on("change", reloadPlaytime);
 
-    reloadPlaytime()
+    reloadPlaytime();
     removePageLoader();
 }
 

@@ -1,8 +1,5 @@
 import {promiseAjax, removePageLoader, toastMessage, toggleListLike, toggleUserFollow, toggleCategoryFollow} from "/static/assets/js/ranquiz/utils.js";
 
-const elementsPerPage = 30;
-let previousSearch = "";
-
 const searchInput = $("#search");
 const templateList = $("#template_list");
 const templateCategory = $("#template_category");
@@ -10,6 +7,9 @@ const templateUser = $("#template_user");
 const content = $("#content");
 const loadMore = $("#load_more");
 const allNavs = $("nav button");
+
+const elementsPerPage = 30;
+let previousSearch = searchInput.val();
 
 const blockcontent = new KTBlockUI(content[0], { // skipcq: JS-0125
     message: '<div class="blockui-message"><span class="spinner-border text-primary"></span> Cargando...</div>',
@@ -24,6 +24,9 @@ let elements = [];
  */
 function toggleNavs(selected) {
     const selectedNav = $(`#${selected}_nav`);
+
+    // Cambiar la busqueda anterior a esta
+    previousSearch = searchInput.val();
 
     // Bloquear todos los botones
     allNavs.attr("disabled", true);
@@ -322,6 +325,8 @@ function emptyContent() {
  * Función que se ejecuta cuando el documento está listo
  */
 function onDocumentReady() {
+    searchInput.val("");
+    allNavs.attr("disabled", true);
 
     // Evento para dar like a una lista
     content.on("click", ".list_like", toggleListLike);
@@ -329,15 +334,18 @@ function onDocumentReady() {
     // Evento para seguir a un usuario
     content.on("click", ".user_follow", (event) => {
         $(this).prop("disabled", true);
+        const icon = $(event.currentTarget).find('i');
+
+        icon.toggleClass("bi-person-plus-fill").toggleClass("bi-person-check-fill text-primary");
 
         toggleUserFollow(event).then((is_followed) => {
             const button = $(event.currentTarget);
-            const icon = button.find('i');
+            const iconButton = button.find('i');
 
             if (!is_followed) {
-                icon.removeClass("bi-person-plus-fill").addClass("bi-person-check-fill text-primary");
+                iconButton.removeClass("bi-person-plus-fill").addClass("bi-person-check-fill text-primary");
             } else {
-                icon.removeClass("bi-person-check-fill text-primary").addClass("bi-person-plus-fill");
+                iconButton.removeClass("bi-person-check-fill text-primary").addClass("bi-person-plus-fill");
             }
 
             $(this).prop("disabled", false);

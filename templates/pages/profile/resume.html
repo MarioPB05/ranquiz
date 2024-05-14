@@ -1,7 +1,8 @@
+{% load static %}
 <!--begin::Categories View-->
 <div class="card shadow mb-5 mb-xl-10" id="kt_profile_details_view">
     <!--begin::Card header-->
-    <div class="card-header cursor-pointer">
+    <div class="card-header">
         <!--begin::Card title-->
         <div class="card-title m-0">
             <h3 class="fw-bolder m-0">Categorías Seguidas</h3>
@@ -52,10 +53,10 @@
 <!--begin::Lists View-->
 <div class="card shadow mb-5 mb-xl-10" id="kt_profile_details_view">
     <!--begin::Card header-->
-    <div class="card-header cursor-pointer">
+    <div class="card-header">
         <!--begin::Card title-->
         <div class="card-title m-0">
-            <h3 class="fw-bolder m-0">Listas Favoritas</h3>
+            <h3 class="fw-bolder m-0">Listas Publicadas</h3>
         </div>
         <!--end::Card title-->
     </div>
@@ -63,33 +64,58 @@
 
     <!--begin::Card body-->
     <div class="card-body p-9">
-        <!--begin::Notice-->
-        <div class="notice d-flex bg-light-warning rounded border-warning border border-dashed p-6">
-            <!--begin::Icon-->
-            <span class="d-flex align-items-center me-4">
-                <i class="bi bi-exclamation-circle-fill text-warning fs-2tx"></i>
-            </span>
-            <!--end::Icon-->
+        {% if not card_data.data %}
+            <!--begin::Notice-->
+            <div class="notice d-flex bg-light-warning rounded border-warning border border-dashed p-6">
+                <!--begin::Icon-->
+                <span class="d-flex align-items-center me-4">
+                    <i class="bi bi-exclamation-circle-fill text-warning fs-2tx"></i>
+                </span>
+                <!--end::Icon-->
 
-            <!--begin::Wrapper-->
-            <div class="d-flex flex-stack flex-grow-1">
-                <!--begin::Content-->
-                <div class="fw-bold">
-                    <h4 class="text-gray-900 fw-bolder">No hay listas favoritas!</h4>
-                    <div class="fs-6 text-gray-700">
-                        {% if is_own_profile %}
-                            Aún no has seleccionado ninguna lista como favorita, comienza a seguir listas para tenerlas a mano.
-                        {% else %}
-                            Este usuario aún no ha seleccionado ninguna lista como favorita.
-                        {% endif %}
+                <!--begin::Wrapper-->
+                <div class="d-flex flex-stack flex-grow-1">
+                    <!--begin::Content-->
+                    <div class="fw-bold">
+                        <h4 class="text-gray-900 fw-bolder">No hay listas publicadas!</h4>
+                        <div class="fs-6 text-gray-700">
+                            {% if is_own_profile %}
+                                Aún no has creado ninguna lista, comienza a crear listas para ver tus gustos y preferencias.
+                            {% else %}
+                                Este usuario aún no ha creado ninguna lista.
+                            {% endif %}
+                        </div>
                     </div>
+                    <!--end::Content-->
                 </div>
-                <!--end::Content-->
+                <!--end::Wrapper-->
             </div>
-            <!--end::Wrapper-->
-        </div>
-        <!--end::Notice-->
+            <!--end::Notice-->
+
+        {% else %}
+            <div class="position-relative">
+                {% if card_data.data|length > 3 %}
+                    <div class="rounded-circle w-65px h-65px bg-white shadow position-absolute z-index-3 d-flex align-items-center justify-content-center border border-3 border-primary"
+                         style="top: 50%; right: 18px; transform: translate(0, -50%);" id="list_arrow_right">
+                        <svg width="35" height="31" viewBox="0 0 35 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M0.25 15.5C0.25 14.9282 0.477176 14.3797 0.881551 13.9753C1.28593 13.571 1.83438 13.3438 2.40625 13.3438H27.3886L18.1296 4.08916C17.7247 3.68428 17.4973 3.13513 17.4973 2.56254C17.4973 1.98994 17.7247 1.4408 18.1296 1.03591C18.5345 0.631028 19.0837 0.403564 19.6562 0.403564C20.2288 0.403564 20.778 0.631028 21.1829 1.03591L34.1204 13.9734C34.3212 14.1737 34.4805 14.4117 34.5892 14.6736C34.6979 14.9356 34.7539 15.2164 34.7539 15.5C34.7539 15.7837 34.6979 16.0645 34.5892 16.3265C34.4805 16.5884 34.3212 16.8264 34.1204 17.0267L21.1829 29.9642C20.778 30.3691 20.2288 30.5965 19.6562 30.5965C19.0837 30.5965 18.5345 30.3691 18.1296 29.9642C17.7247 29.5593 17.4973 29.0101 17.4973 28.4375C17.4973 27.8649 17.7247 27.3158 18.1296 26.9109L27.3886 17.6563H2.40625C1.83438 17.6563 1.28593 17.4291 0.881551 17.0247C0.477176 16.6204 0.25 16.0719 0.25 15.5Z" fill="#CE37FE"></path>
+                        </svg>
+                    </div>
+                {% endif %}
+
+                <div class="d-flex gap-4 pb-4 scroll">
+                    {% for list in card_data.data %}
+                        <div class="min-w-375px">
+                            {% include 'components/list_template.html' with data=list %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
     </div>
     <!--end::Card body-->
 </div>
 <!--end::Lists View-->
+
+<script>const share_code = '{{ share_code }}';</script>
+<script src="{% static 'scripts/pages/profile/resume.js' %}" type="module"></script>

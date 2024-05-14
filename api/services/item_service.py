@@ -1,8 +1,7 @@
 from cloudinary import uploader
 
 from api.forms.item_form import CreateItemForm
-from api.models import Item
-from api.services.list_service import get_list
+from api.models import List, Item
 
 
 def create_item_form(request, prefix=None, instance=None):
@@ -35,7 +34,7 @@ def edit_list_items(items_prefix, list_obj, request):
 
     # Itera sobre cada prefijo de elemento recibido del formulario
     for prefix in items_prefix:
-        item = get_item(prefix)
+        item = Item.get(prefix)
 
         # Verifica si corresponde a un elemento existente en la base de datos
         if item is not None and item.list == list_obj and item.id == int(prefix):
@@ -61,23 +60,18 @@ def edit_list_items(items_prefix, list_obj, request):
                 new_item.save()
 
 
-def get_item(item_id):
-    """Función para obtener un item"""
-    try:
-        return Item.objects.get(id=item_id)
-    except Item.DoesNotExist:
-        return None
-
-
-def get_items(share_code):
+def get_items(share_code, get_deleted=False):
     """Función para obtener los items de una lista"""
     # Obtenemos la lista
-    required_list = get_list(share_code)
+    list_obj = List.get(share_code)
 
-    if required_list is None:
+    if list_obj is None:
         return None
 
     # Obtenemos los items de la lista
-    items = Item.objects.filter(list=required_list)
+    if get_deleted:
+        items = Item.objects.filter(list=list_obj)
+    else:
+        items = Item.objects.filter(list=list_obj, deleted=False)
 
     return items
