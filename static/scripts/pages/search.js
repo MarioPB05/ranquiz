@@ -358,6 +358,12 @@ function onDocumentReady() {
         toggleCategoryFollow(event).then((is_followed) => {
             const button = $(event.currentTarget);
             $(this).prop("disabled", false);
+        }).catch(() => {
+            const button = $(event.currentTarget);
+            button.toggleClass("btn-primary").toggleClass("btn-outline-primary");
+            button.text("Seguir");
+            button.blur();
+            $(this).prop("disabled", false);
         });
     });
 
