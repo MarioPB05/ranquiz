@@ -146,7 +146,7 @@ def create_list_view(request):
                 start_date = dates[0]
                 end_date = dates[0] if len(dates) == 1 else dates[1]
 
-                result = highlight_list(request.user, list_obj.share_code, start_date, end_date)
+                highlight_list(request.user, list_obj.share_code, start_date, end_date)
 
             for prefix in items_prefix:
                 item_form = create_item_form(request, prefix=prefix)
