@@ -1,8 +1,5 @@
 import {promiseAjax, removePageLoader, toastMessage, toggleListLike, toggleUserFollow, toggleCategoryFollow} from "/static/assets/js/ranquiz/utils.js";
 
-const elementsPerPage = 30;
-let previousSearch = "";
-
 const searchInput = $("#search");
 const templateList = $("#template_list");
 const templateCategory = $("#template_category");
@@ -10,6 +7,9 @@ const templateUser = $("#template_user");
 const content = $("#content");
 const loadMore = $("#load_more");
 const allNavs = $("nav button");
+
+const elementsPerPage = 30;
+let previousSearch = searchInput.val();
 
 const blockcontent = new KTBlockUI(content[0], { // skipcq: JS-0125
     message: '<div class="blockui-message"><span class="spinner-border text-primary"></span> Cargando...</div>',
@@ -24,6 +24,9 @@ let elements = [];
  */
 function toggleNavs(selected) {
     const selectedNav = $(`#${selected}_nav`);
+
+    // Cambiar la busqueda anterior a esta
+    previousSearch = searchInput.val();
 
     // Bloquear todos los botones
     allNavs.attr("disabled", true);
@@ -322,6 +325,8 @@ function emptyContent() {
  * Función que se ejecuta cuando el documento está listo
  */
 function onDocumentReady() {
+    searchInput.val("");
+    allNavs.attr("disabled", true);
 
     // Evento para dar like a una lista
     content.on("click", ".list_like", toggleListLike);
