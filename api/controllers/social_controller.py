@@ -84,7 +84,7 @@ def get_awards(request):
     return JsonResponse({'awards': json_awards})
 
 
-@require_GET
+@require_POST
 @require_authenticated
 def add_award_to_comment_function(request, share_code, comment_id):  # skipcq: PYL-W0613
     """Función para añadir un premio a un comentario"""
