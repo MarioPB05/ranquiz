@@ -50,7 +50,7 @@
 </div>
 <!--end::Categories View-->
 
-<!--begin::Lists View-->
+<!--begin::Published Lists View-->
 <div class="card shadow mb-5 mb-xl-10" id="kt_profile_details_view">
     <!--begin::Card header-->
     <div class="card-header">
@@ -115,7 +115,161 @@
     </div>
     <!--end::Card body-->
 </div>
-<!--end::Lists View-->
+<!--end::Published Lists View-->
+
+<!--begin::Favourite list View-->
+<div class="card shadow mb-5 mb-xl-10" id="kt_profile_details_view">
+    <!--begin::Card header-->
+    <div class="card-header">
+        <!--begin::Card title-->
+        <div class="card-title m-0">
+            <h3 class="fw-bolder m-0">Listas Favoritas</h3>
+        </div>
+        <!--end::Card title-->
+    </div>
+    <!--begin::Card header-->
+
+    <!--begin::Card body-->
+    <div class="card-body p-9">
+        <!--begin::Notice-->
+        <div class="notice d-flex bg-light-warning rounded border-warning border border-dashed p-6">
+            <!--begin::Icon-->
+            <span class="d-flex align-items-center me-4">
+                <i class="bi bi-exclamation-circle-fill text-warning fs-2tx"></i>
+            </span>
+            <!--end::Icon-->
+
+            <!--begin::Wrapper-->
+            <div class="d-flex flex-stack flex-grow-1">
+                <!--begin::Content-->
+                <div class="fw-bold">
+                    <h4 class="text-gray-900 fw-bolder">
+                        {% if is_own_profile %}
+                            No tienes listas marcadas como favoritos.
+                        {% else %}
+                            Sin listas favoritas.
+                        {% endif %}
+                    </h4>
+                    <div class="fs-6 text-gray-700">
+                        {% if is_own_profile %}
+                            Aún no has marcado ninguna lista como favoritos, comienza a marcar listas como favoritos para poder acceder a ellas mas rápidamente.
+                        {% else %}
+                            Este usuario aún no marcado ninguna lista como favorito.
+                        {% endif %}
+                    </div>
+                </div>
+                <!--end::Content-->
+            </div>
+            <!--end::Wrapper-->
+        </div>
+        <!--end::Notice-->
+    </div>
+    <!--end::Card body-->
+</div>
+<!--end::Favourite list View-->
+
+<!--begin::Users you follow View-->
+<div class="card shadow mb-5 mb-xl-10" id="kt_profile_details_view">
+    <!--begin::Card header-->
+    <div class="card-header">
+        <!--begin::Card title-->
+        <div class="card-title m-0">
+            <h3 class="fw-bolder m-0">Usuarios seguidos</h3>
+        </div>
+        <!--end::Card title-->
+    </div>
+    <!--begin::Card header-->
+
+    <!--begin::Card body-->
+    <div class="card-body p-9">
+        <!--begin::Notice-->
+        <div class="notice d-flex bg-light-warning rounded border-warning border border-dashed p-6">
+            <!--begin::Icon-->
+            <span class="d-flex align-items-center me-4">
+                <i class="bi bi-exclamation-circle-fill text-warning fs-2tx"></i>
+            </span>
+            <!--end::Icon-->
+
+            <!--begin::Wrapper-->
+            <div class="d-flex flex-stack flex-grow-1">
+                <!--begin::Content-->
+                <div class="fw-bold">
+                    <h4 class="text-gray-900 fw-bolder">
+                        {% if is_own_profile %}
+                            No sigues ningún usuario.
+                        {% else %}
+                            Sin usuarios seguidos.
+                        {% endif %}
+                    </h4>
+                    <div class="fs-6 text-gray-700">
+                        {% if is_own_profile %}
+                            Empieza a seguir a otros usuarios para mantenerte al día con su contenido y conectarte con 
+                            la comunidad.
+                        {% else %}
+                            Este usuario aún no sigue a nadie.
+                        {% endif %}
+                    </div>
+                </div>
+                <!--end::Content-->
+            </div>
+            <!--end::Wrapper-->
+        </div>
+        <!--end::Notice-->
+    </div>
+    <!--end::Card body-->
+</div>
+<!--end::Users you follow View-->
+
+<!--begin::Followers View-->
+<div class="card shadow mb-5 mb-xl-10" id="kt_profile_details_view">
+    <!--begin::Card header-->
+    <div class="card-header">
+        <!--begin::Card title-->
+        <div class="card-title m-0">
+            <h3 class="fw-bolder m-0">Seguidores</h3>
+        </div>
+        <!--end::Card title-->
+    </div>
+    <!--begin::Card header-->
+
+    <!--begin::Card body-->
+    <div class="card-body p-9">
+        <!--begin::Notice-->
+        <div class="notice d-flex bg-light-warning rounded border-warning border border-dashed p-6">
+            <!--begin::Icon-->
+            <span class="d-flex align-items-center me-4">
+                <i class="bi bi-exclamation-circle-fill text-warning fs-2tx"></i>
+            </span>
+            <!--end::Icon-->
+
+            <!--begin::Wrapper-->
+            <div class="d-flex flex-stack flex-grow-1">
+                <!--begin::Content-->
+                <div class="fw-bold">
+                    <h4 class="text-gray-900 fw-bolder">
+                        {% if is_own_profile %}
+                            No tienes seguidores.
+                        {% else %}
+                            Sin seguidores.
+                        {% endif %}
+                    </h4>
+                    <div class="fs-6 text-gray-700">
+                        {% if is_own_profile %}
+                            Empieza a crear contenido para que otros usuarios te sigan y se mantengan al día con tus listas.
+                        {% else %}
+                            Este usuario aún no tiene seguidores, ¡Se el primero en seguirle!
+                        {% endif %}
+                    </div>
+                </div>
+                <!--end::Content-->
+            </div>
+            <!--end::Wrapper-->
+        </div>
+        <!--end::Notice-->
+    </div>
+    <!--end::Card body-->
+</div>
+<!--end::Followers View-->
 
 <script>const share_code = '{{ share_code }}';</script>
 <script src="{% static 'scripts/pages/profile/resume.js' %}" type="module"></script>
