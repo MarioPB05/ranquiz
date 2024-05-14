@@ -3,6 +3,7 @@ import json
 from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
 
+from api.models import User
 from api.services.social_service import get_following
 
 
@@ -191,9 +192,17 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
             # Es una notificación para los seguidores, el dueño también está en el grupo, pero no la debe recibir
             return
 
+        if event['target'] == 1:
+            notification_user = await sync_to_async(User.get)(share_code=event['share_code'])
+            title = event['title'].replace('[USUARIO]', notification_user.username)
+            desc = event['description'].replace('[USUARIO]', notification_user.username)
+        else:
+            title = event['title']
+            desc = event['description']
+
         await self.send(text_data=json.dumps({
             'icon': event['icon'],
-            'title': event['title'],
-            'description': event['description'],
+            'title': title,
+            'description': desc,
             'share_code': event['share_code']
         }))
