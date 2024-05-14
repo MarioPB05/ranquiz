@@ -192,7 +192,7 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
             # Es una notificación para los seguidores, el dueño también está en el grupo, pero no la debe recibir
             return
 
-        if event['target'] == 1:
+        if event['share_code'][0] == 'US':
             notification_user = await sync_to_async(User.get)(share_code=event['share_code'])
             title = event['title'].replace('[USUARIO]', notification_user.username)
             desc = event['description'].replace('[USUARIO]', notification_user.username)
