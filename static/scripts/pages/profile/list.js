@@ -230,6 +230,11 @@ function filterLists() {
     window.location.href = url.toString();
 }
 
+/**
+ * Función que permite cambiar de página sin perder los filtros actuales
+ *
+ * @param event
+ */
 function changePage(event) {
     event.preventDefault();
 
