@@ -29,7 +29,7 @@ function onMessage(event) {
     if (!message.icon) return;
 
     Toast.fire({
-        html: `<div class="d-flex align-items-center">
+        html: `<div class="d-flex align-items-center p-1">
                 <i class="bi ${message.icon} fs-2x text-primary me-4"></i> 
                 <span class="fw-bolder">${message.title}</span>
                </div>`
