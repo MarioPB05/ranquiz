@@ -335,14 +335,6 @@ function onDocumentReady() {
 
         toggleUserFollow(event).then((is_followed) => {
             const button = $(event.currentTarget);
-            const iconButton = button.find('i');
-
-            if (!is_followed) {
-                iconButton.removeClass("bi-person-plus-fill").addClass("bi-person-check-fill text-primary");
-            } else {
-                iconButton.removeClass("bi-person-check-fill text-primary").addClass("bi-person-plus-fill");
-            }
-
             $(this).prop("disabled", false);
         });
     });
