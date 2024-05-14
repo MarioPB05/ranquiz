@@ -1,4 +1,5 @@
-import {errorLog, infoLog, warningLog} from "/static/assets/js/ranquiz/utils.js";
+/*global Swal, performance*/
+import { Toast, errorLog, infoLog, warningLog } from "/static/assets/js/ranquiz/utils.js";
 
 const startTime = performance.now();
 
@@ -24,7 +25,15 @@ function onClose() {
  */
 function onMessage(event) {
     const message = JSON.parse(event.data);
-    console.log('Mensaje recibido del servidor WebSocket:', message); // skipcq: JS-0002
+
+    if (!message.icon) return;
+
+    Toast.fire({
+        html: `<div class="d-flex align-items-center">
+                <i class="bi ${message.icon} fs-2x text-primary me-4"></i> 
+                <span class="fw-bolder">${message.title}</span>
+               </div>`
+    })
 }
 
 /**
