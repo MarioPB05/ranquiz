@@ -75,7 +75,7 @@ def get_categories(limit=None, page=1, search='', user=None, order='default'):
                 ORDER BY {order_by}
                 LIMIT %s OFFSET %s;"""
 
-    params = [user.id if user is not None else 0, f"%{search}%", limit, (page - 1) * limit]
+    params = [user.id if user.id is not None else 0, f"%{search}%", limit, (page - 1) * limit]
 
     return execute_query(query, params)
 
