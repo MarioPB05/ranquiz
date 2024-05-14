@@ -1,5 +1,5 @@
 /*global Swal, performance*/
-import { Toast, errorLog, infoLog, warningLog } from "/static/assets/js/ranquiz/utils.js";
+import {Toast, errorLog, infoLog, warningLog, reloadUserData } from "/static/assets/js/ranquiz/utils.js";
 
 const startTime = performance.now();
 
@@ -33,7 +33,11 @@ function onMessage(event) {
                 <i class="bi ${message.icon} fs-2x text-primary me-4"></i> 
                 <span class="fw-bolder">${message.title}</span>
                </div>`
-    })
+    });
+
+    reloadUserData();
+
+    infoLog(`Notificación recibida: ${message.title}`);
 }
 
 /**
