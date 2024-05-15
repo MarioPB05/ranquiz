@@ -7,7 +7,8 @@ from django.http import Http404, HttpResponseForbidden, HttpResponseNotFound
 from django.shortcuts import render, redirect, get_object_or_404
 
 from api import sec_to_time
-from api.models import List, ListCategory, ListFavorite, ListLike, ListAnswer, User
+from api.models import List, ListCategory, ListFavorite, ListLike, ListAnswer, User, Notification
+from api.models.notification_type import NotificationTypes
 from api.services import PAGINATION_ITEMS_PER_PAGE
 from api.services.category_service import edit_list_categories, get_category, user_followed_category, \
     user_follow_category_and_receive_notifications
@@ -141,7 +142,10 @@ def create_list_view(request):
             list_obj.type = 0
             list_obj.save()
 
-            if request.POST.get('range_date_highlight') is not None:
+            if list_obj.public:
+                Notification.create(2, NotificationTypes.NEW_LIST.object, list_obj.owner, list_obj.share_code)
+
+            if request.POST.get('range_date_highlight') is not None and request.POST.get('range_date_highlight') != '':
                 dates = request.POST.get('range_date_highlight').split(' hasta ')
                 start_date = dates[0]
                 end_date = dates[0] if len(dates) == 1 else dates[1]
