@@ -11,6 +11,7 @@ from api.models import List, ListCategory, ListFavorite, ListLike, ListAnswer, U
 from api.services import PAGINATION_ITEMS_PER_PAGE
 from api.services.category_service import edit_list_categories, get_category, user_followed_category, \
     user_follow_category_and_receive_notifications
+from api.services.goal_service import get_user_active_daily_goals
 from api.services.item_service import (
     create_item_form,
     create_item,
@@ -305,6 +306,22 @@ def profile_results(request, user_data, card_data):
         })
 
 
+def profile_quests(request, user_data, card_data):
+    """Vista que renderiza las misiones de un usuario"""
+    goals = get_user_active_daily_goals(user_data)
+
+    for userGoal in goals:
+        card_data['data'].append({
+            'id': userGoal.goal.id,
+            'name': userGoal.goal.id_type.title,
+            'progress': userGoal.progress,
+            'goal': userGoal.goal.value,
+            'reward': userGoal.goal.reward,
+            'claimed': userGoal.claimed,
+            'percentage': str(round((userGoal.progress / userGoal.goal.value) * 100, 2)).replace(',', '.')
+        })
+
+
 @partial_login_required
 def profile(request, share_code=None):
     """Vista que renderiza el perfil de un usuario"""
@@ -331,6 +348,8 @@ def profile(request, share_code=None):
         profile_lists(request, user_data, card_data)
     elif current_card == 'results':
         profile_results(request, user_data, card_data)
+    elif current_card == 'quests':
+        profile_quests(request, user_data, card_data)
 
     return render(request, 'pages/profile.html', {
         'user_data': user_data,

@@ -75,3 +75,8 @@ def get_items(share_code, get_deleted=False):
         items = Item.objects.filter(list=list_obj, deleted=False)
 
     return items
+
+
+def count_list_items(list_obj):
+    """Función para contar los items de una lista"""
+    return Item.objects.filter(list=list_obj, deleted=False).count()
