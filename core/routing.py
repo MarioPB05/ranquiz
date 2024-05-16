@@ -17,5 +17,5 @@ urlpatterns = [
     path('search/', views.search, name='search'),
     path('category/<str:share_code>/view', views.category_lists, name='category_lists'),
     path('admin/', admin.site.urls),
-    path('list/<str:share_code>/result/<int:id>', views.result, name='list_result'),
+    path('list/<str:share_code>/result/<int:id_result>', views.result, name='list_result'),
 ]
