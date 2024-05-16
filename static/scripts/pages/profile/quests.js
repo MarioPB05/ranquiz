@@ -1,4 +1,4 @@
-import {promiseAjax, toastMessage, reloadUserData} from "/static/assets/js/ranquiz/utils.js";
+import {promiseAjax, toastMessage, reloadUserData, secondsToTime} from "/static/assets/js/ranquiz/utils.js";
 let confetti = [];
 
 function claimQuest(goal_id, element_id, event) {
@@ -16,6 +16,21 @@ function claimQuest(goal_id, element_id, event) {
         toastMessage("error", "Ha ocurrido un error al intentar reclamar la misión");
         $(`#${element_id}`).find(".claim_quest").removeClass("disabled");
     });
+}
+
+function updateCountdown() {
+    // Get the current time
+    const now = new Date();
+
+    // Get the time for the next midnight
+    const tomorrow = new Date();
+    tomorrow.setHours(24, 0, 0, 0); // Set to next midnight
+
+    // Calculate the difference in seconds
+    const secondsLeft = Math.floor((tomorrow - now) / 1000);
+
+    // Update the countdown element
+    $('#countdown').text(secondsToTime(secondsLeft));
 }
 
 $(document).ready(() => {
@@ -38,4 +53,10 @@ $(document).ready(() => {
         $(event.currentTarget).addClass("disabled");
         claimQuest(goal_id, id, event);
     });
+
+    // Update the countdown immediately
+    updateCountdown();
+
+    // Update the countdown every second
+    setInterval(updateCountdown, 1000);
 });
