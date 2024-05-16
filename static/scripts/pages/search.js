@@ -362,10 +362,10 @@ function onDocumentReady() {
         toggleCategoryFollow(event).then(() => {
             $(this).prop("disabled", false);
         }).catch(() => {
-            const button = $(event.currentTarget);
-            button.toggleClass("btn-primary").toggleClass("btn-outline-primary");
-            button.text("Seguir");
-            button.blur();
+            const buttonFollow   = $(event.currentTarget);
+            buttonFollow.toggleClass("btn-primary").toggleClass("btn-outline-primary");
+            buttonFollow.text("Seguir");
+            buttonFollow.blur();
             $(this).prop("disabled", false);
         });
     });
