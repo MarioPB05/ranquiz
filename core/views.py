@@ -21,7 +21,8 @@ from api.services.item_service import (
 from api.services.list_service import (
     create_list_form,
     create_list,
-    get_list_counts, get_lists, count_lists, get_user_lists_pagination, get_user_results, get_user_results_pagination
+    get_list_counts, get_lists, count_lists, get_user_lists_pagination, get_user_results, get_user_results_pagination,
+    get_result
 )
 from api.services.list_service import get_user_lists
 from api.services.shop_service import highlight_list
@@ -406,6 +407,17 @@ def category_lists(request, share_code):
         }
     })
 
-def result(request, share_code, id):
+def result(request, share_code, id_result):
     """Vista que renderiza los resultados de una búsqueda"""
-    return render(request, 'pages/list_result.html')
+    result = get_result(id_result)
+
+    items = result.itemorder_set.all()
+
+    return render(request, 'pages/list_result.html', {
+        'resultado': result,
+        'items': items,
+        'items_partials': result.itemorder_set.all()[3:],
+        'item_top1': result.itemorder_set.all()[0],
+        'item_top2': result.itemorder_set.all()[1],
+        'item_top3': result.itemorder_set.all()[2]
+    })
