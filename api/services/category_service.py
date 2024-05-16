@@ -63,15 +63,25 @@ def get_categories(limit=None, page=1, search='', user=None, order='default'):
     elif order == 'newest':
         order_by = "max(al.edit_date) DESC"
 
-    query = f"""SELECT c.id, c.name, c.share_code, COUNT(distinct lc.list_id) as lists,
-                COUNT(distinct cs.user_id) as followers,
-                if(cs.user_id = %s, TRUE, FALSE) as followed
+    query = f"""SELECT c.*,
+                (
+                    SELECT COUNT(scs.id)
+                    FROM api_categorysubscription scs
+                    WHERE scs.category_id = c.id
+                ) as followers,
+                (
+                    SELECT COUNT(slc.id)
+                    FROM api_listcategory slc
+                    JOIN api_list sal on slc.list_id = sal.id
+                    WHERE slc.category_id = c.id AND sal.public = TRUE
+                ) as lists,
+                (
+                    SELECT IF(COUNT(scs.id) > 0, TRUE, FALSE)
+                    FROM api_categorysubscription scs
+                    WHERE scs.category_id = c.id AND scs.user_id = %s
+                ) as followed
                 FROM api_category c
-                LEFT JOIN api_listcategory lc on c.id = lc.category_id
-                LEFT JOIN api_categorysubscription cs on c.id = cs.category_id
-                JOIN ranquiz.api_list al on lc.list_id = al.id and al.public = TRUE
                 WHERE c.name LIKE %s
-                GROUP BY c.id
                 ORDER BY {order_by}
                 LIMIT %s OFFSET %s;"""
 
