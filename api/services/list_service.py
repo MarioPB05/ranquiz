@@ -337,6 +337,20 @@ def add_result(user, list_obj, results, start_date):
 
     return list_answer
 
+def get_result(id_result):
+    """Servicio que devuelve un resultado de un usuario en una lista"""
+    try:
+        return ListAnswer.objects.get(id=id_result)
+    except ListAnswer.DoesNotExist:
+        return None
+
+
+def get_list_avg_top_items(list_obj):
+    """Función que devuelve la media de los mejores resultados de una lista"""
+    query = f"""SELECT * FROM api_itemorder where answer_id = %s"""
+
+    return execute_query(query, [list_obj.id])
+
 
 def count_list_results(user, list_obj):
     """Función que devuelve la cantidad de resultados de un usuario en una lista"""
