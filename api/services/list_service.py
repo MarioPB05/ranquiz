@@ -339,3 +339,8 @@ def add_result(user, list_obj, results, start_date):
             item_order.save()
 
     return list_answer
+
+
+def count_list_results(user, list_obj):
+    """Función que devuelve la cantidad de resultados de un usuario en una lista"""
+    return ListAnswer.objects.filter(user=user, list=list_obj).count()
