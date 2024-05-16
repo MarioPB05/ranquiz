@@ -1,6 +1,8 @@
+from django.db.models import F
 from django.utils import timezone
 
-from api.models import UserGoal, Goal
+from api.models import UserGoal, Goal, GoalType
+from api.services.transaction_service import do_transaction
 
 
 def get_goal(goal_id):
@@ -17,6 +19,12 @@ def get_active_user_goal(user, goal):
     return goals.filter(goal=goal).first()
 
 
+def get_active_user_goal_by_type(user, goal_type_id):
+    """Obtener misión del usuario por tipo"""
+    goals = get_user_active_daily_goals(user)
+    return goals.filter(goal__id_type__id=goal_type_id).first()
+
+
 def user_completed_goal(user, goal):
     """Comprobar si el usuario ha completado la misión"""
     return get_user_active_daily_goals(user).filter(user=user, goal=goal, progress__gte=goal.value).exists()
@@ -29,7 +37,8 @@ def user_claimed_goal(user, goal):
 
 def create_user_daily_goals(user):
     """Crear misiones diarias para el usuario"""
-    daily_goals = get_daily_goals()
+    claim_past_completed_goals(user)
+    daily_goals = get_daily_goals(user)
 
     for goal in daily_goals:
         UserGoal.objects.create(
@@ -42,9 +51,49 @@ def create_user_daily_goals(user):
         )
 
 
-def get_daily_goals():
+def get_daily_goals(user):
     """Obtener misiones diarias"""
-    return Goal.objects.all()
+    goal_types = GoalType.objects.all()
+    result = []
+
+    for goal_type in goal_types:
+        print(goal_type.id)
+        # Comprobar si el usuario ha completado la misión 2 veces seguidas las veces anteriores
+        num_completed = UserGoal.objects.filter(
+            goal__id_type=goal_type,
+            claimed=True,
+            user=user,
+            start_date__gte=timezone.now().replace(hour=0, minute=0, second=0) - timezone.timedelta(days=2)
+        ).count()
+
+        print(num_completed)
+
+        if num_completed >= 2:
+            # Ordenar por el valor más alto
+            result.append(Goal.objects.filter(id_type=goal_type).order_by('-value').first())
+        else:
+            # Ordenar por el valor más bajo
+            result.append(Goal.objects.filter(id_type=goal_type).order_by('value').first())
+
+    return result
+
+
+def claim_past_completed_goals(user):
+    """Comprobar si hay misiones no reclamadas"""
+    user_goals = UserGoal.objects.filter(
+        user=user,
+        claimed=False,
+        end_date__lt=timezone.now(),
+        progress__gte=F('goal__value')
+    )
+
+    for user_goal in user_goals:
+        transaction = do_transaction(user, user_goal.goal.reward, 'Recompensa de misión atrasada')
+
+        if transaction:
+            user_goal.claimed = True
+            user_goal.transaction = transaction
+            user_goal.save()
 
 
 def get_user_active_daily_goals(user):
@@ -58,9 +107,9 @@ def get_user_active_daily_goals(user):
     return daily_goals
 
 
-def sum_goal_progress(goal_id, user, value):
+def sum_goal_progress(goal_type_id, user, value):
     """Sumar progreso a la misión"""
-    goal = get_goal(goal_id)
+    goal = get_active_user_goal_by_type(user, goal_type_id)
     user_goal = get_active_user_goal(user, goal)
 
     if not user_goal:
