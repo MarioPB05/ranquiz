@@ -97,7 +97,6 @@ def add_result_to_list(request, share_code):
             sum_goal_progress(1, request.user, 1)
 
         sum_goal_progress(2, request.user, count_list_items(list_obj))
-        print(count_list_results(request.user, list_obj))
 
         return JsonResponse({'status': status, 'result_id': result.id})
 
