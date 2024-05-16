@@ -8,6 +8,9 @@ function claimQuest(goal_id, element_id, event) {
             reloadUserData();
             $(`#${element_id}`).find(".claim_quest").remove();
             $(`#${element_id}`).find(".quest_completed").removeClass("d-none");
+        }else {
+            toastMessage("error", response.message);
+            $(`#${element_id}`).find(".claim_quest").removeClass("disabled");
         }
     }).catch(() => {
         toastMessage("error", "Ha ocurrido un error al intentar reclamar la misión");
