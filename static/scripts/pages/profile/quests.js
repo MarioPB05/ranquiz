@@ -1,6 +1,13 @@
+/* globals $, Confetti */
 import {promiseAjax, toastMessage, reloadUserData, secondsToTime} from "/static/assets/js/ranquiz/utils.js";
-let confetti = [];
+const confetti = [];
 
+/**
+ * Claim a quest
+ * @param goal_id
+ * @param element_id
+ * @param event
+ */
 function claimQuest(goal_id, element_id, event) {
     promiseAjax(`/api/quest/claim?goal=${goal_id}`, "GET").then((response) => {
         if (response.status === "success") {
