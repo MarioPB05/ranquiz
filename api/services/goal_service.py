@@ -21,8 +21,8 @@ def get_active_user_goal(user, goal):
 
 def get_active_user_goal_by_type(user, goal_type_id):
     """Obtener misión del usuario por tipo"""
-    goals = get_user_active_daily_goals(user)
-    return goals.filter(goal__id_type__id=goal_type_id).first()
+    user_goals = get_user_active_daily_goals(user)
+    return user_goals.filter(goal__id_type__id=goal_type_id).first()
 
 
 def user_completed_goal(user, goal):
@@ -60,7 +60,7 @@ def get_daily_goals(user):
         print(goal_type.id)
         # Comprobar si el usuario ha completado la misión 2 veces seguidas las veces anteriores
         num_completed = UserGoal.objects.filter(
-            goal__id_type=goal_type,
+            goal__id_type__id=goal_type.id,
             claimed=True,
             user=user,
             start_date__gte=timezone.now().replace(hour=0, minute=0, second=0) - timezone.timedelta(days=2)
@@ -70,10 +70,10 @@ def get_daily_goals(user):
 
         if num_completed >= 2:
             # Ordenar por el valor más alto
-            result.append(Goal.objects.filter(id_type=goal_type).order_by('-value').first())
+            result.append(Goal.objects.filter(id_type__id=goal_type.id).order_by('-value').first())
         else:
             # Ordenar por el valor más bajo
-            result.append(Goal.objects.filter(id_type=goal_type).order_by('value').first())
+            result.append(Goal.objects.filter(id_type__id=goal_type.id).order_by('value').first())
 
     return result
 
@@ -109,8 +109,7 @@ def get_user_active_daily_goals(user):
 
 def sum_goal_progress(goal_type_id, user, value):
     """Sumar progreso a la misión"""
-    goal = get_active_user_goal_by_type(user, goal_type_id)
-    user_goal = get_active_user_goal(user, goal)
+    user_goal = get_active_user_goal_by_type(user, goal_type_id)
 
     if not user_goal:
         return
@@ -118,6 +117,6 @@ def sum_goal_progress(goal_type_id, user, value):
     user_goal.progress += value
     user_goal.save()
 
-    if user_completed_goal(user, goal):
+    if user_completed_goal(user, user_goal.goal):
         # TODO: Enviar notificación
         pass
