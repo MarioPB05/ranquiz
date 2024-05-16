@@ -1,4 +1,4 @@
-/* globals $, Confetti */
+/*global $, Confetti*/
 import {promiseAjax, toastMessage, reloadUserData, secondsToTime} from "/static/assets/js/ranquiz/utils.js";
 const confetti = [];
 
