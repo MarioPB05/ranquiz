@@ -338,8 +338,7 @@ function onDocumentReady() {
 
         icon.toggleClass("bi-person-plus-fill").toggleClass("bi-person-check-fill text-primary");
 
-        toggleUserFollow(event).then((is_followed) => {
-            const button = $(event.currentTarget);
+        toggleUserFollow(event).then(() => {
             $(this).prop("disabled", false);
         }).catch(() => {
             icon.toggleClass("bi-person-plus-fill").toggleClass("bi-person-check-fill text-primary");
@@ -360,8 +359,7 @@ function onDocumentReady() {
             button.text("Siguiendo");
         }
 
-        toggleCategoryFollow(event).then((is_followed) => {
-            const button = $(event.currentTarget);
+        toggleCategoryFollow(event).then(() => {
             $(this).prop("disabled", false);
         }).catch(() => {
             const button = $(event.currentTarget);
