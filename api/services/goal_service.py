@@ -57,7 +57,6 @@ def get_daily_goals(user):
     result = []
 
     for goal_type in goal_types:
-        print(goal_type.id)
         # Comprobar si el usuario ha completado la misión 2 veces seguidas las veces anteriores
         num_completed = UserGoal.objects.filter(
             goal__id_type__id=goal_type.id,
@@ -65,8 +64,6 @@ def get_daily_goals(user):
             user=user,
             start_date__gte=timezone.now().replace(hour=0, minute=0, second=0) - timezone.timedelta(days=2)
         ).count()
-
-        print(num_completed)
 
         if num_completed >= 2:
             # Ordenar por el valor más alto

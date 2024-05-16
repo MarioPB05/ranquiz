@@ -42,7 +42,6 @@ $(document).ready(() => {
         confetti[$(element).parent().attr("id")].setPower(25);
         confetti[$(element).parent().attr("id")].setFade(false);
         confetti[$(element).parent().attr("id")].destroyTarget(false);
-        console.log($(element).parent().attr("id"));
     });
 
     $(".claim_quest").on("click", (event) => {
