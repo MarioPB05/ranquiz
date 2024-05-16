@@ -8,8 +8,8 @@
             <div class="d-flex flex-row min-w-500px align-items-end w-100 justify-content-center p-20 pt-0">
                 <div class="col align-items-center justify-content-center">
                     <div class="d-flex justify-content-center align-items-center">
-                        <img src="https://static.wikia.nocookie.net/espokemon/images/4/43/Bulbasaur.png/revision/latest/thumbnail/width/360/height/360?cb=20170120032346"
-                         class="w-100 mw-175px p-3 min-h-125px mh-125px" style="object-fit: contain">
+                        <img src="{{ item_top2.item.image.url }}"
+                             class="w-100 mw-175px p-3 min-h-125px mh-125px" style="object-fit: contain">
                     </div>
                     <div class="d-flex flex-column align-items-center bg-primary-300 p-6 min-h-100px rounded-top">
                         <img src="{% static "assets/media/medals/silver_medal.png" %}" class="w-100 mw-45px">
@@ -17,8 +17,8 @@
                 </div>
                 <div class="col align-items-center justify-content-center">
                     <div class="d-flex justify-content-center align-items-center">
-                        <img src="https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/134.png"
-                         class="w-100 mw-175px p-3 min-h-125px mh-125px" style="object-fit: contain">
+                        <img src="{{ item_top1.item.image.url }}"
+                             class="w-100 mw-175px p-3 min-h-125px mh-125px" style="object-fit: contain">
                     </div>
                     <div class="d-flex flex-column align-items-center bg-primary-400 p-6 min-h-150px rounded-top">
                         <img src="{% static "assets/media/medals/gold_medal.png" %}" class="w-100 mw-45px">
@@ -26,48 +26,22 @@
                 </div>
                 <div class="col align-items-center justify-content-center align-content-center">
                     <div class="d-flex justify-content-center align-items-center">
-                         <img src="https://static.wikia.nocookie.net/brawlstars/images/1/1d/Pam_veraniega.png/revision/latest/scale-to-width-down/250?cb=20210925203101&path-prefix=es"
-                         class="w-100 mw-175px p-3 min-h-125px mh-125px" style="object-fit: contain">
+                        <img src="{{ item_top3.item.image.url }}"
+                             class="w-100 mw-175px p-3 min-h-125px mh-125px" style="object-fit: contain">
                     </div>
                     <div class="d-flex flex-column align-items-center bg-primary-300 p-6 min-h-50px rounded-top">
                         <img src="{% static "assets/media/medals/bronce_medal.png" %}" class="w-100 mw-45px">
                     </div>
                 </div>
             </div>
-            <div class="d-flex flex-column w-100 p-20 pt-0 overflow-hidden mh-425px">
-                <div class="d-flex flex-column h-100 gap-4 scrolleable">
-                    <div class="d-flex p-4 border border-2 border-dark w-100 rounded align-items-center gap-10">
-                        <span class="fs-2hx">4</span>
-                        <span class="fs-2">Shawn Frost</span>
-                    </div>
-                    <div class="d-flex p-4 border border-2 border-dark w-100 rounded align-items-center gap-10">
-                        <span class="fs-2hx">5</span>
-                        <span class="fs-2">Manuel Botellas</span>
-                    </div>
-                    <div class="d-flex p-4 border border-2 border-dark w-100 rounded align-items-center gap-10">
-                        <span class="fs-2hx">6</span>
-                        <span class="fs-2">Pecho frío</span>
-                    </div>
-                    <div class="d-flex p-4 border border-2 border-dark w-100 rounded align-items-center gap-10">
-                        <span class="fs-2hx">7</span>
-                        <span class="fs-2">El primo</span>
-                    </div>
-                    <div class="d-flex p-4 border border-2 border-dark w-100 rounded align-items-center gap-10">
-                        <span class="fs-2hx">8</span>
-                        <span class="fs-2">Locura</span>
-                    </div>
-                    <div class="d-flex p-4 border border-2 border-dark w-100 rounded align-items-center gap-10">
-                        <span class="fs-2hx">9</span>
-                        <span class="fs-2">Tetas</span>
-                    </div>
-                    <div class="d-flex p-4 border border-2 border-dark w-100 rounded align-items-center gap-10">
-                        <span class="fs-2hx">10</span>
-                        <span class="fs-2">Agua</span>
-                    </div>
-                    <div class="d-flex p-4 border border-2 border-dark w-100 rounded align-items-center gap-10">
-                        <span class="fs-2hx">11</span>
-                        <span class="fs-2">Ark</span>
-                    </div>
+            <div class="d-flex flex-column w-100 p-20 pt-0 ">
+                <div class="d-flex flex-column h-100 gap-4">
+                    {% for item in items_partials %}
+                        <div class="d-flex p-4 border border-2 border-dark w-100 rounded align-items-center gap-10">
+                            <span class="fs-2hx">{{ item.order }}</span>
+                            <span class="fs-2">{{ item.item.name }}</span>
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
@@ -78,7 +52,7 @@
                 <div class="col align-items-center justify-content-center">
                     <div class="d-flex justify-content-center align-items-center">
                         <img src="https://upload.wikimedia.org/wikipedia/en/1/18/Brawl_Stars_logo.png" alt="si"
-                         class="w-100 mw-175px p-3 min-h-125px mh-125px" style="object-fit: contain">
+                             class="w-100 mw-175px p-3 min-h-125px mh-125px" style="object-fit: contain">
                     </div>
                     <div class="d-flex flex-column align-items-center bg-primary-300 p-6 min-h-100px rounded-top shadow">
                         <img src="{% static "assets/media/medals/silver_medal.png" %}" class="w-100 mw-45px">
@@ -86,8 +60,8 @@
                 </div>
                 <div class="col align-items-center justify-content-center">
                     <div class="d-flex justify-content-center align-items-center">
-                         <img src="https://supercell.com/images/1a5b69311180a4a1c374e10556941f05/hero_bg_brawlstars.a385872a.jpg"
-                         alt="medal" class="w-100 mw-175px p-3 min-h-125px mh-125px" style="object-fit: contain">
+                        <img src="https://supercell.com/images/1a5b69311180a4a1c374e10556941f05/hero_bg_brawlstars.a385872a.jpg"
+                             alt="medal" class="w-100 mw-175px p-3 min-h-125px mh-125px" style="object-fit: contain">
                     </div>
                     <div class="d-flex flex-column align-items-center bg-primary-400 p-6 min-h-150px rounded-top shadow">
                         <img src="{% static "assets/media/medals/gold_medal.png" %}" class="w-100 mw-45px">
@@ -96,15 +70,15 @@
                 <div class="col align-items-center justify-content-center">
                     <div class="d-flex justify-content-center align-items-center">
                         <img src="https://thumbs.dreamstime.com/z/imagen-vertical-alargada-de-un-paisaje-invernal-matutino-invierno-215394745.jpg"
-                         alt="medal" class="w-100 mw-175px min-h-125px p-3 mh-125px" style="object-fit: contain">
+                             alt="medal" class="w-100 mw-175px min-h-125px p-3 mh-125px" style="object-fit: contain">
                     </div>
                     <div class="d-flex flex-column align-items-center bg-primary-300 p-6 min-h-50px rounded-top shadow">
                         <img src="{% static "assets/media/medals/bronce_medal.png" %}" class="w-100 mw-45px">
                     </div>
                 </div>
             </div>
-            <div class="d-flex flex-column w-100 p-20 pt-0 overflow-hidden mh-425px">
-                <div class="d-flex flex-column h-100 gap-4 scrolleable">
+            <div class="d-flex flex-column w-100 p-20 pt-0">
+                <div class="d-flex flex-column h-100 gap-4">
                     <div class="d-flex p-4 border border-2 border-dark w-100 rounded align-items-center gap-10">
                         <span class="fs-2hx">4</span>
                         <span class="fs-2">Shawn Frost</span>
