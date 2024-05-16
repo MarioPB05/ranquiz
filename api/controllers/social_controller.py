@@ -3,6 +3,8 @@ from django.urls import reverse
 from django.views.decorators.http import require_GET, require_POST
 
 from api.decorators.api_decorators import require_authenticated
+from api.models import List
+from api.services.goal_service import sum_goal_progress
 from api.services.social_service import (get_comments_from_list, create_comment, get_awards_from_comments, get_comment,
                                          get_award, add_award_to_comment, check_user_award_in_comment, get_all_awards)
 from api.services.transaction_service import do_transaction, refund_transaction
@@ -47,10 +49,17 @@ def get_comments(request, share_code):
 def create_and_return_comment(request, share_code):
     """Función para crear un comentario"""
     content = request.POST.get('content')
+    list_obj = List.get(share_code=share_code)
     author = request.user
 
     if author is not None:
         comment = create_comment(content, author, share_code)
+
+        if comment is None:
+            return JsonResponse({'status': 'error', 'message': 'Error al crear el comentario'})
+
+        if author.id != list_obj.owner.id:
+            sum_goal_progress(3, author, 1)
 
         return JsonResponse({"comment": {
             'id': comment.id,

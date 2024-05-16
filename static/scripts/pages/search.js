@@ -121,7 +121,7 @@ function addCategory(category) {
     newCategory.find(".category_list_number").text(category.lists);
     newCategory.attr("href", category.url);
 
-    if (category.followed) {
+    if (category.followed === 1) {
         newCategory.find(".category_follow").addClass("btn-primary");
         newCategory.find(".category_follow").removeClass("btn-outline-primary");
         newCategory.find(".category_follow").text("Siguiendo");
@@ -338,34 +338,35 @@ function onDocumentReady() {
 
         icon.toggleClass("bi-person-plus-fill").toggleClass("bi-person-check-fill text-primary");
 
-        toggleUserFollow(event).then((is_followed) => {
-            const button = $(event.currentTarget);
-            const iconButton = button.find('i');
-
-            if (!is_followed) {
-                iconButton.removeClass("bi-person-plus-fill").addClass("bi-person-check-fill text-primary");
-            } else {
-                iconButton.removeClass("bi-person-check-fill text-primary").addClass("bi-person-plus-fill");
-            }
-
+        toggleUserFollow(event).then(() => {
+            $(this).prop("disabled", false);
+        }).catch(() => {
+            icon.toggleClass("bi-person-plus-fill").toggleClass("bi-person-check-fill text-primary");
             $(this).prop("disabled", false);
         });
     });
 
     content.on("click", ".category_follow", (event) => {
         $(this).prop("disabled", true);
+        const button = $(event.currentTarget);
 
-        toggleCategoryFollow(event).then((is_followed) => {
-            const button = $(event.currentTarget);
+        if (button.hasClass("btn-primary")) {
+            button.removeClass("btn-primary").addClass("btn-outline-primary");
+            button.text("Seguir");
+            button.blur();
+        } else {
+            button.removeClass("btn-outline-primary").addClass("btn-primary");
+            button.text("Siguiendo");
+        }
 
-            if (!is_followed) {
-                button.removeClass("btn-primary").addClass("btn-outline-primary");
-                button.text("Seguir");
-                button.blur();
-            } else {
-                button.removeClass("btn-outline-primary").addClass("btn-primary");
-                button.text("Siguiendo");
-            }
+        toggleCategoryFollow(event).then(() => {
+            $(this).prop("disabled", false);
+        }).catch(() => {
+            const buttonFollow   = $(event.currentTarget);
+            buttonFollow.toggleClass("btn-primary").toggleClass("btn-outline-primary");
+            buttonFollow.text("Seguir");
+            buttonFollow.blur();
+            $(this).prop("disabled", false);
         });
     });
 
