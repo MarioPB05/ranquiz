@@ -29,6 +29,7 @@ def claim_quest_reward(request):
         return JsonResponse({'status': 'error', 'message': 'Error al reclamar la recompensa'})
 
     user_goal.claimed = True
+    user_goal.transaction = transaction
     user_goal.save()
 
     return JsonResponse({'status': 'success'})
