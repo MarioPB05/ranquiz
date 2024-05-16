@@ -19,17 +19,12 @@ def get_active_user_goal(user, goal):
 
 def user_completed_goal(user, goal):
     """Comprobar si el usuario ha completado la misión"""
-    return UserGoal.objects.filter(user=user, goal=goal, progress__gte=goal.value).exists()
+    return get_user_active_daily_goals(user).filter(user=user, goal=goal, progress__gte=goal.value).exists()
 
 
 def user_claimed_goal(user, goal):
     """Comprobar si el usuario ha reclamado la misión"""
-    return UserGoal.objects.filter(user=user, goal=goal, claimed=True).exists()
-
-
-def check_user_daily_goals(user):
-    """Comprobar si el usuario tiene misiónes diarias"""
-    return UserGoal.objects.filter(user=user, start_date__lte=timezone.now(), end_date__gte=timezone.now()).exists()
+    return get_user_active_daily_goals(user).filter(user=user, goal=goal, claimed=True).exists()
 
 
 def create_user_daily_goals(user):
@@ -61,3 +56,19 @@ def get_user_active_daily_goals(user):
         daily_goals = UserGoal.objects.filter(user=user, start_date__lte=timezone.now(), end_date__gte=timezone.now())
 
     return daily_goals
+
+
+def sum_goal_progress(goal_id, user, value):
+    """Sumar progreso a la misión"""
+    goal = get_goal(goal_id)
+    user_goal = get_active_user_goal(user, goal)
+
+    if not user_goal:
+        return
+
+    user_goal.progress += value
+    user_goal.save()
+
+    if user_completed_goal(user, goal):
+        # TODO: Enviar notificación
+        pass
