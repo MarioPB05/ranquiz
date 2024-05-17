@@ -120,7 +120,7 @@ def add_award_to_comment(comment_id, selected_user, award_id):
     if selected_comment is not None and selected_user is not None:
         CommentAward.objects.create(comment=selected_comment, user=selected_user, award=selected_award)
         Notification.create(1, NotificationTypes.NEW_COMMENT_AWARD.object, selected_comment.user,
-                            selected_user.share_code)
+                            selected_comment.list.share_code)
         return True
 
     return False
