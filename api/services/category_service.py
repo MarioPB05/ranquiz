@@ -80,9 +80,10 @@ def get_categories(limit=None, page=1, search='', user=None, order='default'):
 
     return execute_query(query, params)
 
+
 def get_user_categories(user, page=1):
     """Función para obtener todas las categorías de un usuario"""
-    query = f"""SELECT c.name, c.share_code, COUNT(distinct lc.list_id) as lists,
+    query = """SELECT c.name, c.share_code, COUNT(distinct lc.list_id) as lists,
                 COUNT(distinct cs.user_id) as followers,
                 if(cs.user_id = %s, TRUE, FALSE) as followed
                 FROM api_category c
@@ -96,6 +97,7 @@ def get_user_categories(user, page=1):
     params = [user.id, user.id, PAGINATION_ITEMS_PER_PAGE, (page - 1) * PAGINATION_ITEMS_PER_PAGE]
 
     return execute_query(query, params)
+
 
 def edit_distance(s1, s2):
     """Función para calcular la distancia de edición entre dos cadenas"""
