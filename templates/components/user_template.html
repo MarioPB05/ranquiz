@@ -36,9 +36,11 @@ Clases:
             </div>
         </div>
     </div>
-    
+
+    {% if not data or not data.user.share_code == data.share_code %}
     <button class="user_follow p-3 bg-white shadow position-absolute end-0 top-0 m-2 rounded-circle border border-1 border-secondary">
         <i class="bi {% if not data or not data.followed %}bi-person-plus-fill{% else %}bi-person-check-fill text-primary{% endif %} user_follow_icon fs-1 hover-text-primary-400"></i>
     </button>
+    {% endif %}
 </div>
 <!-- End user template -->
