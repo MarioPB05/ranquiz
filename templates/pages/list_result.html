@@ -63,8 +63,12 @@
             <div class="d-flex flex-row h-350px min-w-500px align-items-end w-100 justify-content-center p-20 pt-0">
                 <div class="col align-items-center justify-content-center">
                     <div class="d-flex justify-content-center align-items-center">
-                        <img src="{{ avg_top2.2 }}"
-                             class="w-100 mw-175px p-3 min-h-125px mh-125px" style="object-fit: contain">
+                        {% if not avg_top2.2 %}
+                            <span class="w-100 p-3 text-center fs-1 fw-bolder">{{ avg_top2.0 }}</span>
+                        {% else %}
+                            <img src="{{ avg_top2.2 }}"
+                                 class="w-100 mw-175px p-3 min-h-125px mh-125px" style="object-fit: contain">
+                        {% endif %}
                     </div>
                     <div class="d-flex flex-column align-items-center bg-primary-300 p-6 min-h-100px rounded-top shadow">
                         <img src="{% static "assets/media/medals/silver_medal.png" %}" class="w-100 mw-45px">
@@ -72,8 +76,12 @@
                 </div>
                 <div class="col align-items-center justify-content-center">
                     <div class="d-flex justify-content-center align-items-center">
-                        <img src="https://supercell.com/images/1a5b69311180a4a1c374e10556941f05/hero_bg_brawlstars.a385872a.jpg"
-                             alt="medal" class="w-100 mw-175px p-3 min-h-125px mh-125px" style="object-fit: contain">
+                        {% if not avg_top1.2 %}
+                            <span class="w-100 p-3 text-center fs-1 fw-bolder">{{ avg_top1.0 }}</span>
+                        {% else %}
+                            <img src="{{ avg_top1.2 }}"
+                                 class="w-100 mw-175px p-3 min-h-125px mh-125px" style="object-fit: contain">
+                        {% endif %}
                     </div>
                     <div class="d-flex flex-column align-items-center bg-primary-400 p-6 min-h-150px rounded-top shadow">
                         <img src="{% static "assets/media/medals/gold_medal.png" %}" class="w-100 mw-45px">
@@ -81,8 +89,12 @@
                 </div>
                 <div class="col align-items-center justify-content-center">
                     <div class="d-flex justify-content-center align-items-center">
-                        <img src="https://thumbs.dreamstime.com/z/imagen-vertical-alargada-de-un-paisaje-invernal-matutino-invierno-215394745.jpg"
-                             alt="medal" class="w-100 mw-175px min-h-125px p-3 mh-125px" style="object-fit: contain">
+                        {% if not avg_top3.2 %}
+                            <span class="w-100 p-3 text-center fs-1 fw-bolder">{{ avg_top3.0 }}</span>
+                        {% else %}
+                            <img src="{{ avg_top3.2 }}"
+                                 class="w-100 mw-175px p-3 min-h-125px mh-125px" style="object-fit: contain">
+                        {% endif %}
                     </div>
                     <div class="d-flex flex-column align-items-center bg-primary-300 p-6 min-h-50px rounded-top shadow">
                         <img src="{% static "assets/media/medals/bronce_medal.png" %}" class="w-100 mw-45px">
