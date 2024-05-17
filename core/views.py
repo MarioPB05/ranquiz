@@ -22,7 +22,8 @@ from api.services.item_service import (
 from api.services.list_service import (
     create_list_form,
     create_list,
-    get_list_counts, get_lists, count_lists, get_user_lists_pagination, get_user_results, get_user_results_pagination
+    get_list_counts, get_lists, count_lists, get_user_lists_pagination, get_user_results, get_user_results_pagination,
+    get_result, get_list_avg_top_items
 )
 from api.services.list_service import get_user_lists
 from api.services.shop_service import highlight_list
@@ -463,4 +464,29 @@ def category_lists(request, share_code):
             'items_per_page': PAGINATION_ITEMS_PER_PAGE,
             'page_numbers': page_numbers
         }
+    })
+
+
+def result(request, share_code, id_result):  # skipcq: PYL-W0613
+    """Vista que renderiza los resultados de una búsqueda"""
+    list_result = get_result(id_result)
+
+    items = list_result.itemorder_set.all()
+
+    list_obj = list_result.list
+
+    avg_top_items = get_list_avg_top_items(list_obj)
+
+    return render(request, 'pages/list_result.html', {
+        'resultado': list_result,
+        'items': items,
+        'items_partials': list_result.itemorder_set.all()[3:],
+        'item_top1': list_result.itemorder_set.all()[0],
+        'item_top2': list_result.itemorder_set.all()[1],
+        'item_top3': list_result.itemorder_set.all()[2],
+        'avg_top_items': avg_top_items,
+        'avg_top_items_partials': avg_top_items[3:],
+        'avg_top1': avg_top_items[0],
+        'avg_top2': avg_top_items[1],
+        'avg_top3': avg_top_items[2],
     })
