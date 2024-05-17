@@ -22,7 +22,6 @@ def create_item(item_form):
 
 def edit_list_items(items_prefix, list_obj, request):
     """Función para editar los items de una lista"""
-    # Obtén todos los elementos existentes en la base de datos que pertenecen a la lista actual
     existing_items = list_obj.item_set.all()
 
     for item in existing_items:
@@ -45,9 +44,7 @@ def edit_list_items(items_prefix, list_obj, request):
         # Verifica si corresponde a un elemento existente en la base de datos
         if item is not None and item.list == list_obj and item.id == int(prefix):
             # Compara los datos del formulario con los datos existentes en la base de datos
-            if item.name != request.POST[f'{prefix}-name'] or item.image != request.FILES.get(
-                    f'{prefix}-image'):
-                # Actualiza los datos del elemento existente en la base de datos
+            if item.name != request.POST[f'{prefix}-name'] or item.image != request.FILES.get(f'{prefix}-image'):
                 item.name = request.POST[f'{prefix}-name']
 
                 # Verifica si la imagen del elemento ha cambiado y la elimina de Cloudinary
@@ -57,7 +54,6 @@ def edit_list_items(items_prefix, list_obj, request):
                 item.image = request.FILES.get(f'{prefix}-image')
                 item.save()
         else:
-            # Si no existe un elemento correspondiente en la base de datos, crea un nuevo elemento en la lista
             item_form = create_item_form(request, prefix=prefix)
             new_item = create_item(item_form)
 
