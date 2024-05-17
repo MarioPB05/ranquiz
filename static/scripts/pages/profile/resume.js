@@ -8,18 +8,6 @@ let isLoadingData = false;
 const kt_content_container = $('#kt_content_container')
 
 /**
- * Redirige a la lista seleccionada
- *
- * @param event
- */
-function redirectTo(event) {
-    if (event.target.tagName === "A") return;
-
-    const url = $(event.currentTarget).attr("href");
-    if (url) window.location.href = url;
-}
-
-/**
  * Verifica si el scroll está cerca del final del contenedor
  *
  * @returns {boolean}
