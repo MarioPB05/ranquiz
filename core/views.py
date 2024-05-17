@@ -466,23 +466,23 @@ def category_lists(request, share_code):
         }
     })
 
-def result(request, share_code, id_result):
+def result(request, share_code, id_result):  # skipcq: PYL-W0613
     """Vista que renderiza los resultados de una búsqueda"""
-    result = get_result(id_result)
+    list_result = get_result(id_result)
 
-    items = result.itemorder_set.all()
+    items = list_result.itemorder_set.all()
 
-    list_obj = result.list
+    list_obj = list_result.list
 
     avg_top_items = get_list_avg_top_items(list_obj)
 
     return render(request, 'pages/list_result.html', {
-        'resultado': result,
+        'resultado': list_result,
         'items': items,
-        'items_partials': result.itemorder_set.all()[3:],
-        'item_top1': result.itemorder_set.all()[0],
-        'item_top2': result.itemorder_set.all()[1],
-        'item_top3': result.itemorder_set.all()[2],
+        'items_partials': list_result.itemorder_set.all()[3:],
+        'item_top1': list_result.itemorder_set.all()[0],
+        'item_top2': list_result.itemorder_set.all()[1],
+        'item_top3': list_result.itemorder_set.all()[2],
         'avg_top_items': avg_top_items,
         'avg_top_items_partials': avg_top_items[3:],
         'avg_top1': avg_top_items[0],
