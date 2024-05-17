@@ -91,20 +91,33 @@ def get_categories(limit=None, page=1, search='', user=None, order='default'):
     return execute_query(query, params)
 
 
-def get_user_categories(user, page=1):
+def get_user_categories(profile_user, current_user, page=1):
     """Función para obtener todas las categorías de un usuario"""
-    query = """SELECT c.name, c.share_code, COUNT(distinct lc.list_id) as lists,
-                COUNT(distinct cs.user_id) as followers,
-                if(cs.user_id = %s, TRUE, FALSE) as followed
+    query = """SELECT c.*,
+                (
+                    SELECT COUNT(scs.id)
+                    FROM api_categorysubscription scs
+                    WHERE scs.category_id = c.id
+                ) as followers,
+                (
+                    SELECT COUNT(slc.id)
+                    FROM api_listcategory slc
+                    JOIN api_list sal on slc.list_id = sal.id
+                    WHERE slc.category_id = c.id AND sal.public = TRUE
+                ) as lists,
+                (
+                    SELECT IF(COUNT(scs.id) > 0, TRUE, FALSE)
+                    FROM api_categorysubscription scs
+                    WHERE scs.category_id = c.id AND scs.user_id = %s
+                ) as followed
                 FROM api_category c
-                LEFT JOIN api_listcategory lc on c.id = lc.category_id
-                LEFT JOIN api_categorysubscription cs on c.id = cs.category_id
-                JOIN ranquiz.api_list al on lc.list_id = al.id and al.public = TRUE
-                WHERE cs.user_id = %s
-                GROUP BY c.id
+                LEFT JOIN ranquiz.api_categorysubscription ac on c.id = ac.category_id
+                WHERE ac.user_id = %s
                 LIMIT %s OFFSET %s;"""
 
-    params = [user.id, user.id, PAGINATION_ITEMS_PER_PAGE, (page - 1) * PAGINATION_ITEMS_PER_PAGE]
+    params = [current_user.id, profile_user.id, PAGINATION_ITEMS_PER_PAGE, (page - 1) * PAGINATION_ITEMS_PER_PAGE]
+
+    print(params)
 
     return execute_query(query, params)
 
