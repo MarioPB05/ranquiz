@@ -142,6 +142,12 @@ function insertOrUpdateObject(orden, nuevoObjeto) {
  * @returns {Promise<boolean>}
  */
 async function desempatarPares(opcion1, opcion2) {
+    contadorAutomatico++;
+
+    if (contadorAutomatico > 4) {
+        return false;
+    }
+
     // Buscar enfrentamientos en los que hayan participado
     const enfrentamientosComunes = enfrentamientos.filter(enfrentamiento => {
         return (enfrentamiento.opcion1 === opcion1 || enfrentamiento.opcion2 === opcion1 || enfrentamiento.opcion3 === opcion1 || enfrentamiento.opcion4 === opcion1)
@@ -160,7 +166,6 @@ async function desempatarPares(opcion1, opcion2) {
     if(ganadorEnfrentamientosComunes.length === 0) {
         // Si no hay ganadores, se enfrentan
         // await generarEnfrentamiento(opcion1, opcion2);
-        contadorAutomatico++;
 
         // Obtenemos los contrincantes
         const contrincantes = []; // Byron y Sprout
