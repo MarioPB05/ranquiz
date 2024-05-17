@@ -279,6 +279,7 @@ def profile_resume(request, user_data, card_data):
 
     for user_following in users_following:
         card_data['data']['following'].append({
+            'user': request.user,
             'name': user_following['username'],
             'image': user_following['avatar'],
             'share_code': user_following['share_code'],
@@ -289,6 +290,7 @@ def profile_resume(request, user_data, card_data):
 
     for user_follower in users_followers:
         card_data['data']['followers'].append({
+            'user': request.user,
             'name': user_follower['username'],
             'image': user_follower['avatar'],
             'share_code': user_follower['share_code'],
