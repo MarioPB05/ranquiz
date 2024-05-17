@@ -9,8 +9,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from api import sec_to_time
 from api.models import List, ListCategory, ListFavorite, ListLike, ListAnswer, User
 from api.services import PAGINATION_ITEMS_PER_PAGE
-from api.services.category_service import edit_list_categories, get_category, get_user_categories, user_followed_category, \
-    user_follow_category_and_receive_notifications
+from api.services.category_service import (edit_list_categories, get_category, get_user_categories,
+                                           user_followed_category, user_follow_category_and_receive_notifications)
 from api.services.item_service import (
     create_item_form,
     create_item,
