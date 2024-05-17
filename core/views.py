@@ -142,7 +142,7 @@ def create_list_view(request):
             list_obj.type = 0
             list_obj.save()
 
-            if request.POST.get('range_date_highlight') is not None:
+            if request.POST.get('range_date_highlight') is not None and request.POST.get('range_date_highlight') != '':
                 dates = request.POST.get('range_date_highlight').split(' hasta ')
                 start_date = dates[0]
                 end_date = dates[0] if len(dates) == 1 else dates[1]
