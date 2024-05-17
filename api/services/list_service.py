@@ -83,9 +83,6 @@ def get_user_favourite_list(limit=None, page=1, search='', user=None, order='def
     order_by += ("CASE WHEN "
                  "hl.id IS NOT NULL THEN hl.start_date ELSE l.creation_date END DESC")
 
-    if category is not None:
-        where = "AND lc.category_id = %s "
-
     query = f"""SELECT l.id, l.name, l.share_code, l.image,
                     (SELECT IF(COUNT(sll.id) > 0, TRUE, FALSE)
                      FROM api_listlike sll
@@ -115,6 +112,7 @@ def get_user_favourite_list(limit=None, page=1, search='', user=None, order='def
         params.insert(2, category.id)
 
     return execute_query(query, params)
+
 
 def get_user_lists(user, show_deleted, visibility, search_query, page_number):
     """Función que devuelve todas las listas de un usuario con paginación"""
