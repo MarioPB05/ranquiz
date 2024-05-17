@@ -28,10 +28,15 @@ function onMessage(event) {
 
     if (!message.icon) return;
 
+    let onClickAction = "";
+    if (message.url && message.url !== "") onClickAction = `onclick="window.location='${message.url}'"`;
     Toast.fire({
-        html: `<div class="d-flex align-items-center p-1">
+        html: `<div class="d-flex align-items-center gap-2 p-1 cursor-pointer" ${onClickAction}>
                 <i class="bi ${message.icon} fs-2x text-primary me-4"></i> 
-                <span class="fw-bolder">${message.title}</span>
+                <div class="d-flex flex-column">
+                    <span class="fw-bolder mb-2">${message.title}</span>
+                    <p class="text-muted mb-0">${message.description}</p>
+                </div>
                </div>`
     });
 
