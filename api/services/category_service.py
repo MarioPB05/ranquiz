@@ -1,5 +1,6 @@
 from api.forms.category_form import CreateCategoryForm
 from api.models import Category
+from api.services import PAGINATION_ITEMS_PER_PAGE
 from api.services.list_service import set_category
 from api.services.query_service import execute_query
 
@@ -86,6 +87,24 @@ def get_categories(limit=None, page=1, search='', user=None, order='default'):
                 LIMIT %s OFFSET %s;"""
 
     params = [user.id if user.id is not None else 0, f"%{search}%", limit, (page - 1) * limit]
+
+    return execute_query(query, params)
+
+
+def get_user_categories(user, page=1):
+    """Función para obtener todas las categorías de un usuario"""
+    query = """SELECT c.name, c.share_code, COUNT(distinct lc.list_id) as lists,
+                COUNT(distinct cs.user_id) as followers,
+                if(cs.user_id = %s, TRUE, FALSE) as followed
+                FROM api_category c
+                LEFT JOIN api_listcategory lc on c.id = lc.category_id
+                LEFT JOIN api_categorysubscription cs on c.id = cs.category_id
+                JOIN ranquiz.api_list al on lc.list_id = al.id and al.public = TRUE
+                WHERE cs.user_id = %s
+                GROUP BY c.id
+                LIMIT %s OFFSET %s;"""
+
+    params = [user.id, user.id, PAGINATION_ITEMS_PER_PAGE, (page - 1) * PAGINATION_ITEMS_PER_PAGE]
 
     return execute_query(query, params)
 

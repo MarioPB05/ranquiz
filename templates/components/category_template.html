@@ -9,7 +9,7 @@ Clases:
 
 <!-- Begin category template -->
 <div {% if not data %}id="template_category"{% endif %} class="bg-white {% if not data %}d-none{% endif %} category_element flex-column w-100 overflow-hidden bg-hover-light-dark h-225px p-5 cursor-pointer position-relative border-secondary-dark border-1 border rounded d-grid gap-2" style="grid-template-rows: 3fr 1fr auto">
-    <span class="text-primary fs-1 category_name fw-bolder text-center w-100 d-flex overflow-auto justify-content-center align-items-center text-break">{% if data %}{{ data.username }}{% endif %}</span>
+    <span class="text-primary fs-1 category_name fw-bolder text-center w-100 d-flex overflow-auto justify-content-center align-items-center text-break">{% if data %}{{ data.user }}{% endif %}</span>
     
     <div class="d-flex flex-column w-100 gap-1">
         <div class="d-flex align-items-center justify-content-center gap-3">
