@@ -141,8 +141,7 @@ def get_users(limit=None, page=1, search='', order='default', user=None):
 
 def get_users_following(user, selected_user, page=1):
     """Servicio que devuelve los usuarios que sigue un usuario"""
-
-    query = f"""SELECT u.username, u.share_code, a.image as avatar,
+    query = """SELECT u.username, u.share_code, a.image as avatar,
                     (SELECT COUNT(uf.user_followed_id)
                      FROM api_userfollow uf
                      WHERE uf.user_followed_id = u.id) AS followers,
@@ -167,8 +166,7 @@ def get_users_following(user, selected_user, page=1):
 
 def get_users_followers(user, selected_user, page=1):
     """Servicio que devuelve los usuarios que siguen a un usuario"""
-
-    query = f"""SELECT u.username, u.share_code, a.image as avatar,
+    query = """SELECT u.username, u.share_code, a.image as avatar,
                     (SELECT COUNT(uf.user_followed_id)
                      FROM api_userfollow uf
                      WHERE uf.user_followed_id = u.id) AS followers,
@@ -189,6 +187,7 @@ def get_users_followers(user, selected_user, page=1):
     params = [selected_user.id, user.id, user.id, PAGINATION_ITEMS_PER_PAGE, (page - 1) * PAGINATION_ITEMS_PER_PAGE]
 
     return execute_query(query, params)
+
 
 def toggle_user_follow(user, followed_user):
     """Función que permite seguir o dejar de seguir a un usuario"""
