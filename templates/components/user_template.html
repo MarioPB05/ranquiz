@@ -10,9 +10,9 @@ Clases:
 -->
 
 <!-- Begin user template -->
-<div {% if not data %}id="template_user"{% endif %} 
+<div {% if not data %}id="template_user" {% endif %} href="{% if data %}{% url 'user' share_code=data.share_code %}{% endif %}"
      class="bg-white {% if not data %}d-none{% endif %} user flex-column w-100 pb-2 overflow-hidden bg-hover-light-dark h-250px p-5 cursor-pointer position-relative border-secondary-dark border-1 border rounded d-grid gap-2" 
-     style="grid-template-rows: auto 1fr">
+     style="grid-template-rows: auto 1fr" data-share_code="{{ data.share_code }}">
 
     <div class="d-flex justify-content-center align-items-center">
         <img src="{% if data and data.image %}https://res.cloudinary.com/dhewpzvg9/{{ data.image }}{% else %}http://res.cloudinary.com/dhewpzvg9/image/upload/v1713118989/udmrxlavtwguxnbdyucw.png{% endif %}" 
