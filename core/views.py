@@ -226,7 +226,7 @@ def profile_resume(request, user_data, card_data):
     """Vista que renderiza el resumen de un usuario"""
     page_number = int(request.GET.get('page', 1))
     user_lists = get_user_lists(user_data, False, 'public', None, page_number)
-    user_categories = get_user_categories(user_data, page_number)
+    user_categories = get_user_categories(user_data, request.user, page_number)
     user_favourite_lists = get_user_lists(user_data, False, 'favourite', None, page_number)
     users_following = get_users_following(user_data, request.user, page_number)
     users_followers = get_users_followers(user_data, request.user, page_number)
@@ -244,7 +244,8 @@ def profile_resume(request, user_data, card_data):
             'user': user_category['name'],
             'share_code': user_category['share_code'],
             'lists': user_category['lists'],
-            'followers': user_category['followers']
+            'followers': user_category['followers'],
+            'followed': user_category['followed']
             if request.user.is_authenticated else False
         })
 
