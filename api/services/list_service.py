@@ -1,6 +1,6 @@
 import math
 
-from django.db.models import Q
+from django.db.models import Q, Avg
 
 from django.db import transaction
 
@@ -347,9 +347,27 @@ def get_result(id_result):
 
 def get_list_avg_top_items(list_obj):
     """Función que devuelve la media de los mejores resultados de una lista"""
-    query = f"""SELECT * FROM api_itemorder where answer_id = %s"""
+    # Filtrar todos los ListAnswer relacionados con la lista dada
+    list_answers = ListAnswer.objects.filter(list=list_obj)
 
-    return execute_query(query, [list_obj.id])
+    # Filtrar todos los ItemOrder relacionados con estos ListAnswer y agrupar por item para calcular la media del order
+    avg_order_items = ItemOrder.objects.filter(answer__in=list_answers) \
+                                       .values('item__name', 'item__image') \
+                                       .annotate(avg_order=Avg('order')) \
+                                       .order_by('avg_order')
+
+    # Construir la lista de ítems con números secuenciales únicos y URLs de imágenes
+    avg_top_items = []
+    current_number = 1
+    for item in avg_order_items:
+        # Obtener la URL de la imagen de Cloudinary
+        image_url = item['item__image'].url if item['item__image'] else None
+        avg_top_items.append((item['item__name'], current_number, image_url))
+        current_number += 1
+
+    return avg_top_items
+
+
 
 
 def count_list_results(user, list_obj):
