@@ -1,4 +1,5 @@
-import {errorLog, infoLog, warningLog} from "/static/assets/js/ranquiz/utils.js";
+/*global Swal, performance*/
+import {Toast, errorLog, infoLog, warningLog, reloadUserData } from "/static/assets/js/ranquiz/utils.js";
 
 const startTime = performance.now();
 
@@ -24,7 +25,24 @@ function onClose() {
  */
 function onMessage(event) {
     const message = JSON.parse(event.data);
-    console.log('Mensaje recibido del servidor WebSocket:', message); // skipcq: JS-0002
+
+    if (!message.icon) return;
+
+    let onClickAction = "";
+    if (message.url && message.url !== "") onClickAction = `onclick="window.location='${message.url}'"`;
+    Toast.fire({
+        html: `<div class="d-flex align-items-center gap-2 p-1 cursor-pointer" ${onClickAction}>
+                <i class="bi ${message.icon} fs-2x text-primary me-4"></i> 
+                <div class="d-flex flex-column">
+                    <span class="fw-bolder mb-2">${message.title}</span>
+                    <p class="text-muted mb-0">${message.description}</p>
+                </div>
+               </div>`
+    });
+
+    reloadUserData();
+
+    infoLog(`Notificación recibida: ${message.title}`);
 }
 
 /**

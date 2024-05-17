@@ -1,7 +1,8 @@
 from django.db.models import F
 from django.utils import timezone
 
-from api.models import UserGoal, Goal, GoalType
+from api.models import UserGoal, Goal, GoalType, Notification
+from api.models.notification_type import NotificationTypes
 from api.services.transaction_service import do_transaction
 
 
@@ -115,5 +116,4 @@ def sum_goal_progress(goal_type_id, user, value):
     user_goal.save()
 
     if user_completed_goal(user, user_goal.goal):
-        # TODO: Enviar notificación
-        pass
+        Notification.create(1, NotificationTypes.NEW_QUEST_COMPLETED.object, user, user.share_code)

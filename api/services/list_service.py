@@ -5,9 +5,11 @@ from django.db.models import Q, Avg
 from django.db import transaction
 
 from api.forms.list_form import CreateListForm
+from api.models.notification_type import NotificationTypes
 from api.services import PAGINATION_ITEMS_PER_PAGE
 from api.services.query_service import execute_query
-from api.models import ListCategory, ListFavorite, ListLike, ListAnswer, ItemOrder, ListComment, List, Item
+from api.models import ListCategory, ListFavorite, ListLike, ListAnswer, ItemOrder, ListComment, List, Item, \
+    Notification
 
 
 def create_list_form(request, instance=None):
@@ -59,6 +61,49 @@ def get_lists(limit=None, page=1, search='', user=None, order='default', categor
                     AND end_date >= NOW()
                 LEFT JOIN ranquiz.api_listcategory lc on l.id = lc.list_id
                 WHERE l.public = TRUE AND l.name LIKE %s {where}
+                GROUP BY l.id
+                ORDER BY {order_by}
+                LIMIT %s OFFSET %s;"""
+
+    params = [user.id if user is not None else 0, f"%{search}%", limit, (page - 1) * limit]
+
+    if category is not None:
+        params.insert(2, category.id)
+
+    return execute_query(query, params)
+
+
+def get_user_favourite_list(limit=None, page=1, search='', user=None, order='default', category=None):
+    """Función que devuelve las listas públicas con los filtros especificados"""
+    order_by = ""
+
+    if order == 'popular':
+        order_by = "plays DESC, "
+    elif order == 'newest':
+        order_by = "l.edit_date DESC, "
+
+    order_by += ("CASE WHEN "
+                 "hl.id IS NOT NULL THEN hl.start_date ELSE l.creation_date END DESC")
+
+    query = f"""SELECT l.id, l.name, l.share_code, l.image,
+                    (SELECT IF(COUNT(sll.id) > 0, TRUE, FALSE)
+                     FROM api_listlike sll
+                     WHERE sll.list_id = l.id AND sll.user_id = %s) AS liked,
+                    (SELECT COUNT(sla.id)
+                     FROM api_listanswer sla
+                     WHERE sla.list_id = l.id) AS plays,
+                    IF(hl.id IS NOT NULL, TRUE, FALSE)
+                    AS highlighted,
+                    au.username as owner_username, au.share_code as owner_share_code, aa.image as owner_avatar
+                FROM api_list l
+                JOIN ranquiz.api_user au on l.owner_id = au.id
+                JOIN ranquiz.api_avatar aa on au.avatar_id = aa.id
+                LEFT JOIN ranquiz.api_highlightedlist hl on l.id = hl.list_id AND start_date <= NOW()
+                    AND end_date >= NOW()
+                LEFT JOIN ranquiz.api_listcategory lc on l.id = lc.list_id
+                WHERE l.public = TRUE AND (SELECT IF(COUNT(sll.id) > 0, TRUE, FALSE)
+                     FROM api_listlike sll
+                     WHERE sll.list_id = l.id AND sll.user_id = %s) = TRUE
                 GROUP BY l.id
                 ORDER BY {order_by}
                 LIMIT %s OFFSET %s;"""
@@ -269,6 +314,7 @@ def toggle_like_list(user, share_code):
         like.delete()
     except ListLike.DoesNotExist:
         like = ListLike(user=user, list=list_obj)
+        Notification.create(1, NotificationTypes.NEW_LIST_LIKE.object, list_obj.owner, user.share_code)
         like.save()
 
     return True
@@ -286,6 +332,7 @@ def toggle_favorite_list(user, share_code):
         favorite.delete()
     except ListFavorite.DoesNotExist:
         favorite = ListFavorite(user=user, list=list_obj)
+        Notification.create(1, NotificationTypes.NEW_LIST_FAVORITE.object, list_obj.owner, user.share_code)
         favorite.save()
 
     return True
