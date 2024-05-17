@@ -384,6 +384,7 @@ def add_result(user, list_obj, results, start_date):
 
     return list_answer
 
+
 def get_result(id_result):
     """Servicio que devuelve un resultado de un usuario en una lista"""
     try:
@@ -413,8 +414,6 @@ def get_list_avg_top_items(list_obj):
         current_number += 1
 
     return avg_top_items
-
-
 
 
 def count_list_results(user, list_obj):
