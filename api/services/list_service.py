@@ -70,10 +70,10 @@ def get_lists(limit=None, page=1, search='', user=None, order='default', categor
 
     return execute_query(query, params)
 
+
 def get_user_favourite_list(limit=None, page=1, search='', user=None, order='default', category=None):
     """Función que devuelve las listas públicas con los filtros especificados"""
     order_by = ""
-    where = ""
 
     if order == 'popular':
         order_by = "plays DESC, "
@@ -115,6 +115,7 @@ def get_user_favourite_list(limit=None, page=1, search='', user=None, order='def
         params.insert(2, category.id)
 
     return execute_query(query, params)
+
 def get_user_lists(user, show_deleted, visibility, search_query, page_number):
     """Función que devuelve todas las listas de un usuario con paginación"""
     where_conditions = ["l.owner_id = %s"]
