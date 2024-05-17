@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 
 from api.models import Notification, UserFollow, List
 from api.models.notification_type import NotificationTypes
+from api.services import PAGINATION_ITEMS_PER_PAGE
 from api.services.email_service import send_register_email
 from api.services.query_service import execute_query
 from api.services.shop_service import get_avatar
@@ -134,6 +135,56 @@ def get_users(limit=None, page=1, search='', order='default', user=None):
 
     params = [user.id if user.id is not None else 0, f"%{search}%", user.id if user.id is not None else 0, limit,
               (page - 1) * limit]
+
+    return execute_query(query, params)
+
+
+def get_users_following(user, selected_user, page=1):
+    """Servicio que devuelve los usuarios que sigue un usuario"""
+    query = """SELECT u.username, u.share_code, a.image as avatar,
+                    (SELECT COUNT(uf.user_followed_id)
+                     FROM api_userfollow uf
+                     WHERE uf.user_followed_id = u.id) AS followers,
+                    (SELECT IF(COUNT(uf.user_followed_id) > 0, TRUE, FALSE)
+                     FROM api_userfollow uf
+                     WHERE uf.user_followed_id = u.id AND uf.follower_id = %s) AS followed,
+                    COUNT(l.id) AS lists
+                FROM api_user u
+                JOIN ranquiz.api_avatar a on u.avatar_id = a.id
+                LEFT JOIN api_list l on u.id = l.owner_id and l.public = TRUE
+                JOIN api_userfollow uf on u.id = uf.user_followed_id and uf.follower_id = %s
+                WHERE(SELECT IF(COUNT(uf.user_followed_id) > 0, TRUE, FALSE)
+                     FROM api_userfollow uf
+                     WHERE uf.user_followed_id = u.id AND uf.follower_id = %s) = TRUE
+                GROUP BY u.id
+                LIMIT %s OFFSET %s;"""
+
+    params = [selected_user.id, user.id, user.id, PAGINATION_ITEMS_PER_PAGE, (page - 1) * PAGINATION_ITEMS_PER_PAGE]
+
+    return execute_query(query, params)
+
+
+def get_users_followers(user, selected_user, page=1):
+    """Servicio que devuelve los usuarios que siguen a un usuario"""
+    query = """SELECT u.username, u.share_code, a.image as avatar,
+                    (SELECT COUNT(uf.user_followed_id)
+                     FROM api_userfollow uf
+                     WHERE uf.user_followed_id = u.id) AS followers,
+                    (SELECT IF(COUNT(uf.user_followed_id) > 0, TRUE, FALSE)
+                     FROM api_userfollow uf
+                     WHERE uf.user_followed_id = u.id AND uf.follower_id = %s) AS followed,
+                    COUNT(l.id) AS lists
+                FROM api_user u
+                JOIN ranquiz.api_avatar a on u.avatar_id = a.id
+                LEFT JOIN api_list l on u.id = l.owner_id and l.public = TRUE
+                JOIN api_userfollow uf on u.id = uf.follower_id and uf.user_followed_id = %s
+                WHERE(SELECT IF(COUNT(uf.user_followed_id) > 0, TRUE, FALSE)
+                     FROM api_userfollow uf
+                     WHERE uf.user_followed_id = u.id AND uf.follower_id = %s) = TRUE
+                GROUP BY u.id
+                LIMIT %s OFFSET %s;"""
+
+    params = [selected_user.id, user.id, user.id, PAGINATION_ITEMS_PER_PAGE, (page - 1) * PAGINATION_ITEMS_PER_PAGE]
 
     return execute_query(query, params)
 
