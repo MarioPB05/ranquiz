@@ -167,24 +167,22 @@ def get_users_following(user, selected_user, page=1):
 def get_users_followers(user, selected_user, page=1):
     """Servicio que devuelve los usuarios que siguen a un usuario"""
     query = """SELECT u.username, u.share_code, a.image as avatar,
-                    (SELECT COUNT(uf.user_followed_id)
-                     FROM api_userfollow uf
-                     WHERE uf.user_followed_id = u.id) AS followers,
-                    (SELECT IF(COUNT(uf.user_followed_id) > 0, TRUE, FALSE)
-                     FROM api_userfollow uf
-                     WHERE uf.user_followed_id = u.id AND uf.follower_id = %s) AS followed,
+                    (SELECT COUNT(uf1.user_followed_id)
+                     FROM api_userfollow uf1
+                     WHERE uf1.user_followed_id = u.id) AS followers,
+                    (SELECT IF(COUNT(uf2.user_followed_id) > 0, TRUE, FALSE)
+                     FROM api_userfollow uf2
+                     WHERE uf2.user_followed_id = u.id AND uf2.follower_id = %s) AS followed,
                     COUNT(l.id) AS lists
                 FROM api_user u
-                JOIN ranquiz.api_avatar a on u.avatar_id = a.id
-                LEFT JOIN api_list l on u.id = l.owner_id and l.public = TRUE
-                JOIN api_userfollow uf on u.id = uf.follower_id and uf.user_followed_id = %s
-                WHERE(SELECT IF(COUNT(uf.user_followed_id) > 0, TRUE, FALSE)
-                     FROM api_userfollow uf
-                     WHERE uf.user_followed_id = u.id AND uf.follower_id = %s) = TRUE
-                GROUP BY u.id
+                JOIN ranquiz.api_avatar a ON u.avatar_id = a.id
+                LEFT JOIN api_list l ON u.id = l.owner_id AND l.public = TRUE
+                JOIN api_userfollow uf ON u.id = uf.follower_id
+                WHERE uf.user_followed_id = %s
+                GROUP BY u.id, u.username, u.share_code, a.image
                 LIMIT %s OFFSET %s;"""
 
-    params = [selected_user.id, user.id, user.id, PAGINATION_ITEMS_PER_PAGE, (page - 1) * PAGINATION_ITEMS_PER_PAGE]
+    params = [user.id, selected_user.id, PAGINATION_ITEMS_PER_PAGE, (page - 1) * PAGINATION_ITEMS_PER_PAGE]
 
     return execute_query(query, params)
 
