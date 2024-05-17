@@ -620,7 +620,8 @@ function beforeSendForm(event) {
     }
 
     // Verificar que si hay fecha de destacado, no sea una o las dos fechas sean iguales
-    const dates = $("#range_date_highlight").val().split(" hasta ");
+    const dates_value = $("#range_date_highlight").val()
+    const dates = dates_value ? dates_value.split(" hasta ") : [];
 
     if ((dates.length === 2 && dates[0] === dates[1]) || (dates.length === 1 && dates[0] !== "")) {
         toastMessage('error', 'Las fechas del destacado no pueden ser iguales');

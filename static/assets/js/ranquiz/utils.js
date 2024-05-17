@@ -310,6 +310,7 @@ event.stopPropagation()
 }
 
 export {
+    Toast,
     removePageLoader,
     initializeFlatpickr,
     promiseAjax,

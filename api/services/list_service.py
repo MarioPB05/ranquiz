@@ -5,9 +5,11 @@ from django.db.models import Q
 from django.db import transaction
 
 from api.forms.list_form import CreateListForm
+from api.models.notification_type import NotificationTypes
 from api.services import PAGINATION_ITEMS_PER_PAGE
 from api.services.query_service import execute_query
-from api.models import ListCategory, ListFavorite, ListLike, ListAnswer, ItemOrder, ListComment, List, Item
+from api.models import ListCategory, ListFavorite, ListLike, ListAnswer, ItemOrder, ListComment, List, Item, \
+    Notification
 
 
 def create_list_form(request, instance=None):
@@ -312,6 +314,7 @@ def toggle_like_list(user, share_code):
         like.delete()
     except ListLike.DoesNotExist:
         like = ListLike(user=user, list=list_obj)
+        Notification.create(1, NotificationTypes.NEW_LIST_LIKE.object, list_obj.owner, user.share_code)
         like.save()
 
     return True
@@ -329,6 +332,7 @@ def toggle_favorite_list(user, share_code):
         favorite.delete()
     except ListFavorite.DoesNotExist:
         favorite = ListFavorite(user=user, list=list_obj)
+        Notification.create(1, NotificationTypes.NEW_LIST_FAVORITE.object, list_obj.owner, user.share_code)
         favorite.save()
 
     return True
