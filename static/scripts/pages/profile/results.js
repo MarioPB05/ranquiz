@@ -1,3 +1,4 @@
+/*global $, baseURL*/
 
 /**
  * Obtiene la URL actual
