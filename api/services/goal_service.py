@@ -117,4 +117,3 @@ def sum_goal_progress(goal_type_id, user, value):
 
     if user_completed_goal(user, user_goal.goal):
         Notification.create(1, NotificationTypes.NEW_QUEST_COMPLETED.object, user, user.share_code)
-        pass
