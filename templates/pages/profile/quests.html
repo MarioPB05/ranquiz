@@ -1,0 +1,76 @@
+{% load static %}
+<!--begin::Categories View-->
+<div class="card shadow mb-5 mb-xl-10" id="kt_profile_details_view">
+    <!--begin::Card header-->
+    <div class="card-header">
+        <!--begin::Card title-->
+        <div class="card-title m-0 d-flex justify-content-between w-100">
+            <h3 class="fw-bolder m-0">Misiones diarias</h3>
+            <h4 class="fw-bolder m-0 fs-5 text-muted" id="countdown"></h4>
+        </div>
+        <!--end::Card title-->
+    </div>
+    <!--begin::Card header-->
+
+    <!--begin::Card body-->
+    <div class="card-body p-9 row">
+        {% for goal in card_data.data %}
+            <div class="pe-5 ps-5 col-lg-4 pb-5 pb-lg-0 pt-5 pt-lg-0">
+                <div id="goal_{{ goal.id }}" class="p-5 goal_container border border-1 justify-content-between h-100 border-gray-400 rounded d-flex gap-5 flex-column justify-content-center">
+                    <div>
+                        <h3 class="m-0 text-center mb-6">{{ goal.name }}</h3>
+                        
+                        <div class="progress h-25px" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                          <div class="progress-bar" style="width: {{ goal.percentage }}%"></div>
+                        </div>
+                        <p class="{% if goal.progress >= goal.goal %}text-success{% else %}text-muted{% endif %} fs-5 fw-bolder m-0 mt-1">{{ goal.progress }} / {{ goal.goal }}</p>
+                    </div>
+                    
+                    {% if goal.claimed %}
+                        <div class="d-flex justify-content-center gap-3 w-100 align-items-center">
+                            <i class="bi bi-check-circle-fill fs-4 text-success"></i>
+                            <p class="m-0 fs-3 fw-bolder text-center text-success">Reclamado</p>
+                        </div>
+                    {% elif goal.progress >= goal.goal %}
+                        <button class="btn btn-outline claim_quest btn-outline-primary btn-active-color-white text-pr text-hover-white btn-active-primary">Reclamar {{ goal.reward }} <i class="bi bi-gem fw-bolder text-primary"></i></button>
+                        
+                        <div class="d-flex justify-content-center gap-3 w-100 align-items-center d-none quest_completed">
+                            <i class="bi bi-check-circle-fill fs-4 text-success"></i>
+                            <p class="m-0 fs-3 fw-bolder text-center text-success">Reclamado</p>
+                        </div>
+                    {% else %}
+                        <div>
+                            <p class="m-0 fs-5 fw-bolder text-center">Recompensa </p>
+                            <p class="text-info fw-bolder fs-2 text-center m-0">{{ goal.reward }} <i class="bi bi-gem fs-3 text-info fw-bolder "></i></p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <!--end::Card body-->
+
+    <!--begin::Alert-->
+    <div class="alert alert-primary d-flex align-items-center p-5 m-8 mt-0">
+        <!--begin::Icon-->
+        <i class="bi bi-info-circle-fill fs-2hx text-info me-4"><span class="path1"></span><span class="path2"></span></i>
+        <!--end::Icon-->
+    
+        <!--begin::Wrapper-->
+        <div class="d-flex flex-column">
+            <!--begin::Title-->
+            <h4 class="mb-1 text-dark">Aumento de recompensas por racha</h4>
+            <!--end::Title-->
+    
+            <!--begin::Content-->
+            <span>Si completas una misión dos días seguidos, al tercero la recompensa aumentará al doble, pero habrá un objetivo mayor ¡No pierdas la racha!</span>
+            <!--end::Content-->
+        </div>
+        <!--end::Wrapper-->
+    </div>
+    <!--end::Alert-->
+</div>
+<!--end::Categories View-->
+
+<script src="{% static 'assets/plugins/custom/confetti/confetti.min.js' %}"></script>
+<script src="{% static 'scripts/pages/profile/quests.js' %}" type="module"></script>
