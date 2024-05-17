@@ -23,6 +23,6 @@ Clases:
         </div>
     </div>
     
-    <button class="btn mt-2 {% if not data or not data.followed %}btn-outline btn-active-primary btn-outline-primary{% elif data %}btn-primary{% endif %} w-100 category_follow">{% if not data or not data.followed %}Seguir{% elif data %}Siguiendo{% endif %}</button>
+    <button class="btn mt-2 btn-outline {% if not data or not data.followed %}btn-outline-primary btn-active-primary{% elif data %}btn-primary{% endif %} w-100 category_follow">{% if not data or not data.followed %}Seguir{% elif data %}Siguiendo{% endif %}</button>
 </div>
 <!-- End category template -->
