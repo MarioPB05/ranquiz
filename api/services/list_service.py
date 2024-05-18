@@ -28,6 +28,16 @@ def create_list(list_form):
     return None
 
 
+def list_is_public(share_code):
+    """Función que comprueba si una lista es pública"""
+    list_obj = List.get(share_code)
+
+    if list_obj is None:
+        return False
+
+    return list_obj.public
+
+
 def get_lists(limit=None, page=1, search='', user=None, order='default', category=None):
     """Función que devuelve las listas públicas con los filtros especificados"""
     order_by = ""
