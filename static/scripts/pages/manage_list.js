@@ -14,14 +14,36 @@ const flatpickrInstance = initializeFlatpickr("#range_date_highlight", 'range', 
  * Cambiar la imagen de la lista
  */
 function changedListImage() {
-    $('label[for="id_image"]').hide();
+    const image = $("#image").prop('files')[0];
+
+    if (image) {
+        // Obtener la extensión del archivo
+        const fileExtension = image.name.split('.').pop().toLowerCase();
+
+        // Verificar si la extensión del archivo está permitida
+        if (allowedImageExtensions.includes(fileExtension)) {
+            $('label[for="image"]').hide();
+        } else {
+            toastMessage('error', 'Solo se pueden subir imágenes');
+            $("#image").val('');
+            removeListImage();
+        }
+    }
 }
 
 /**
  * Eliminar el label para subir la imagen de la lista
  */
 function removeListImage() {
-    $('label[for="id_image"]').show();
+    $('label[for="image"]').show();
+}
+
+/**
+ * Deshabilitar el destacado
+ */
+function disableHighlight() {
+    $('#range_date_highlight').prop('disabled', true);
+    cancelHighlight();
 }
 
 /**
@@ -31,6 +53,12 @@ function updateHighlightPrice() {
     const dates = $("#range_date_highlight").val().split(" hasta ");
 
     if (dates.length === 2) {
+        if ($("#range_date_highlight").prop('disabled')) {
+            toastMessage('error', 'No se puede destacar si la lista esta privada');
+            cancelHighlight();
+            return;
+        }
+
         promiseAjax(`/api/shop/highlight/calculator?start_date=${dates[0]}&end_date=${dates[1]}`)
             .then(response => {
                 $('#highlight_price').text(response.price);
@@ -702,6 +730,14 @@ function onDocumentReady() {
     });
 
     $("#categories_container").on('click', '.category', removeCategory);
+
+    $("#visibility").on('change', function () {
+        if ($(this).val() === 'public') {
+            $('#range_date_highlight').prop('disabled', false);
+        } else {
+            disableHighlight();
+        }
+    });
 
     if (!edit_mode) { // skipcq: JS-0125
         // Añadir los items mínimos
