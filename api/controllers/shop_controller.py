@@ -3,6 +3,7 @@ from django.views.decorators.http import require_GET
 
 from api.decorators.api_decorators import require_authenticated
 from api.services import shop_service
+from api.services.list_service import list_is_public
 from api.services.shop_service import calculate_highlight_price, get_all_avatars, get_avatars_by_popularity, \
     get_avatars_by_purchased, buy_avatar, equip_avatar
 
@@ -33,6 +34,9 @@ def highlight_list(request, share_code):
 
     if share_code is None or start_date is None or end_date is None:
         return JsonResponse({'status': 'error', 'message': 'Los parámetros son incorrectos'})
+
+    if list_is_public(share_code) is False:
+        return JsonResponse({'status': 'error', 'message': 'La lista no es pública'})
 
     result = shop_service.highlight_list(request.user, share_code, start_date, end_date)
 
