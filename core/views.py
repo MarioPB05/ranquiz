@@ -111,6 +111,7 @@ def list_details(request, share_code):
     return render(request, 'pages/list_details.html', {'share_code': share_code, 'list': list_data, "data": data})
 
 
+@login_required
 def play_list(request, share_code):
     """Vista que permite a un usuario jugar una lista"""
     list_obj = List.get(share_code)
@@ -469,6 +470,7 @@ def category_lists(request, share_code):
     })
 
 
+@login_required
 def result(request, share_code, id_result):  # skipcq: PYL-W0613
     """Vista que renderiza los resultados de una búsqueda"""
     list_result = get_result(id_result)

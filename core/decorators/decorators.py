@@ -12,7 +12,7 @@ def partial_login_required(function):
         user_share_code = request.user.share_code if request.user.is_authenticated else None
 
         if not request.user.is_authenticated and share_code is None:
-            return HttpResponseRedirect(reverse('homepage'))
+            return HttpResponseRedirect(reverse('login'))
 
         if card != 'resume' and share_code != user_share_code:
             if not request.user.is_authenticated:

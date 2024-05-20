@@ -39,6 +39,7 @@ def user_claimed_goal(user, goal):
 def create_user_daily_goals(user):
     """Crear misiones diarias para el usuario"""
     claim_past_completed_goals(user)
+    delete_user_no_completed_goals(user)
     daily_goals = get_daily_goals(user)
 
     for goal in daily_goals:
@@ -74,6 +75,11 @@ def get_daily_goals(user):
             result.append(Goal.objects.filter(id_type__id=goal_type.id).order_by('value').first())
 
     return result
+
+
+def delete_user_no_completed_goals(user):
+    """Eliminar misiones no completadas del usuario"""
+    UserGoal.objects.filter(user=user, claimed=False, end_date__lt=timezone.now()).delete()
 
 
 def claim_past_completed_goals(user):

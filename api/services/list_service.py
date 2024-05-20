@@ -28,6 +28,16 @@ def create_list(list_form):
     return None
 
 
+def list_is_public(share_code):
+    """Función que comprueba si una lista es pública"""
+    list_obj = List.get(share_code)
+
+    if list_obj is None:
+        return False
+
+    return list_obj.public
+
+
 def get_lists(limit=None, page=1, search='', user=None, order='default', category=None):
     """Función que devuelve las listas públicas con los filtros especificados"""
     order_by = ""
@@ -39,7 +49,7 @@ def get_lists(limit=None, page=1, search='', user=None, order='default', categor
         order_by = "l.edit_date DESC, "
 
     order_by += ("CASE WHEN "
-                 "hl.id IS NOT NULL THEN hl.start_date ELSE l.creation_date END DESC")
+                 "hl.id IS NOT NULL THEN hl.start_date ELSE -l.id END DESC")
 
     if category is not None:
         where = "AND lc.category_id = %s "
@@ -199,7 +209,7 @@ def get_user_lists_pagination(user, show_deleted, visibility, search_query, page
 
 def get_user_results_pagination(user, list_obj, page_number, search_query):
     """Función que devuelve la cantidad de resultados de un usuario"""
-    query = Q(list__owner=user)
+    query = Q(user=user)
 
     if search_query:
         query &= Q(list__name__icontains=search_query)
