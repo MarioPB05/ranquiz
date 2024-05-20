@@ -169,7 +169,7 @@ def get_users_followers(user, selected_user, page=1):
     query = """SELECT u.username, u.share_code, a.image as avatar,
                     (SELECT COUNT(uf1.user_followed_id)
                      FROM api_userfollow uf1
-                     WHERE uf1.user_followed_id = u.id) AS followers,
+                     WHERE uf1.follower_id = u.id) AS followers,
                     (SELECT IF(COUNT(uf2.user_followed_id) > 0, TRUE, FALSE)
                      FROM api_userfollow uf2
                      WHERE uf2.user_followed_id = u.id AND uf2.follower_id = %s) AS followed,
@@ -182,7 +182,7 @@ def get_users_followers(user, selected_user, page=1):
                 GROUP BY u.id, u.username, u.share_code, a.image
                 LIMIT %s OFFSET %s;"""
 
-    params = [user.id, selected_user.id, PAGINATION_ITEMS_PER_PAGE, (page - 1) * PAGINATION_ITEMS_PER_PAGE]
+    params = [selected_user.id, user.id, PAGINATION_ITEMS_PER_PAGE, (page - 1) * PAGINATION_ITEMS_PER_PAGE]
 
     return execute_query(query, params)
 
