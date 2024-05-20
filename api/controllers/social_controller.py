@@ -113,7 +113,7 @@ def add_award_to_comment_function(request, share_code, comment_id):  # skipcq: P
     # Realizar la transacción para pagar el premio
     transaction_paid = do_transaction(request.user, -selected_award.price, "Premio otorgado")
     if transaction_paid is None:
-        return JsonResponse({'status': 'Error', 'message': 'No tienes suficientes puntos para otorgar este premio'})
+        return JsonResponse({'status': 'Error', 'message': 'No tienes suficientes gemas para otorgar este premio'})
 
     # Realizar la transacción para recibir el premio
     transaction_received = do_transaction(selected_comment.user, final_price, "Premio recibido")
