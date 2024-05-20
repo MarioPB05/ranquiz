@@ -1,7 +1,8 @@
 from django.db.models import F
 from django.utils import timezone
 
-from api.models import UserGoal, Goal, GoalType
+from api.models import UserGoal, Goal, GoalType, Notification
+from api.models.notification_type import NotificationTypes
 from api.services.transaction_service import do_transaction
 
 
@@ -38,6 +39,7 @@ def user_claimed_goal(user, goal):
 def create_user_daily_goals(user):
     """Crear misiones diarias para el usuario"""
     claim_past_completed_goals(user)
+    delete_user_no_completed_goals(user)
     daily_goals = get_daily_goals(user)
 
     for goal in daily_goals:
@@ -73,6 +75,11 @@ def get_daily_goals(user):
             result.append(Goal.objects.filter(id_type__id=goal_type.id).order_by('value').first())
 
     return result
+
+
+def delete_user_no_completed_goals(user):
+    """Eliminar misiones no completadas del usuario"""
+    UserGoal.objects.filter(user=user, claimed=False, end_date__lt=timezone.now()).delete()
 
 
 def claim_past_completed_goals(user):
@@ -115,5 +122,4 @@ def sum_goal_progress(goal_type_id, user, value):
     user_goal.save()
 
     if user_completed_goal(user, user_goal.goal):
-        # TODO: Enviar notificación
-        pass
+        Notification.create(1, NotificationTypes.NEW_QUEST_COMPLETED.object, user, user.share_code)

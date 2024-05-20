@@ -132,19 +132,19 @@
                     <ul class="pagination">
                         {% if card_data.pagination.has_previous %}
                             <li class="page-item">
-                                <a class="page-link" href="?card=lists&page={{ card_data.pagination.previous_page_number }}">Anterior</a>
+                                <a class="page-link" href="{% url 'user' share_code=user_data.share_code %}?card=results&page={{ card_data.pagination.previous_page_number }}">Anterior</a>
                             </li>
                         {% endif %}
 
                         {% for i in card_data.pagination.page_range %}
                             <li class="page-item {% if card_data.pagination.number == i %}active{% endif %}">
-                                <a class="page-link" href="?card=lists&page={{ i }}">{{ i }}</a>
+                                <a class="page-link" href="{% url 'user' share_code=user_data.share_code %}?card=results&page={{ i }}">{{ i }}</a>
                             </li>
                         {% endfor %}
 
                         {% if card_data.pagination.has_next %}
                             <li class="page-item">
-                                <a class="page-link" href="?card=lists&page={{ card_data.pagination.next_page_number }}">Siguiente</a>
+                                <a class="page-link" href="{% url 'user' share_code=user_data.share_code %}?card=results&page={{ card_data.pagination.next_page_number }}">Siguiente</a>
                             </li>
                         {% endif %}
                     </ul>
@@ -157,4 +157,4 @@
 <!--end::Lists View-->
 
 <script>const baseURL = '{{ request.scheme }}://{{ request.get_host }}{{ current_path|safe }}';</script>
-<script src="{% static 'scripts/pages/profile/list.js' %}" type="module" defer></script>
+<script src="{% static 'scripts/pages/profile/results.js' %}" type="module" defer></script>

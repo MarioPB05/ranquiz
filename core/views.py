@@ -7,7 +7,8 @@ from django.http import Http404, HttpResponseForbidden, HttpResponseNotFound
 from django.shortcuts import render, redirect, get_object_or_404
 
 from api import sec_to_time
-from api.models import List, ListCategory, ListFavorite, ListLike, ListAnswer, User
+from api.models import List, ListCategory, ListFavorite, ListLike, ListAnswer, User, Notification
+from api.models.notification_type import NotificationTypes
 from api.services import PAGINATION_ITEMS_PER_PAGE
 from api.services.category_service import (edit_list_categories, get_category, get_user_categories,
                                            user_followed_category, user_follow_category_and_receive_notifications)
@@ -21,7 +22,8 @@ from api.services.item_service import (
 from api.services.list_service import (
     create_list_form,
     create_list,
-    get_list_counts, get_lists, count_lists, get_user_lists_pagination, get_user_results, get_user_results_pagination
+    get_list_counts, get_lists, count_lists, get_user_lists_pagination, get_user_results, get_user_results_pagination,
+    get_result, get_list_avg_top_items
 )
 from api.services.list_service import get_user_lists
 from api.services.shop_service import highlight_list
@@ -109,6 +111,7 @@ def list_details(request, share_code):
     return render(request, 'pages/list_details.html', {'share_code': share_code, 'list': list_data, "data": data})
 
 
+@login_required
 def play_list(request, share_code):
     """Vista que permite a un usuario jugar una lista"""
     list_obj = List.get(share_code)
@@ -142,7 +145,10 @@ def create_list_view(request):
             list_obj.type = 0
             list_obj.save()
 
-            if request.POST.get('range_date_highlight') is not None:
+            if list_obj.public:
+                Notification.create(2, NotificationTypes.NEW_LIST.object, list_obj.owner, list_obj.share_code)
+
+            if request.POST.get('range_date_highlight') is not None and request.POST.get('range_date_highlight') != '':
                 dates = request.POST.get('range_date_highlight').split(' hasta ')
                 start_date = dates[0]
                 end_date = dates[0] if len(dates) == 1 else dates[1]
@@ -462,4 +468,30 @@ def category_lists(request, share_code):
             'items_per_page': PAGINATION_ITEMS_PER_PAGE,
             'page_numbers': page_numbers
         }
+    })
+
+
+@login_required
+def result(request, share_code, id_result):  # skipcq: PYL-W0613
+    """Vista que renderiza los resultados de una búsqueda"""
+    list_result = get_result(id_result)
+
+    items = list_result.itemorder_set.all()
+
+    list_obj = list_result.list
+
+    avg_top_items = get_list_avg_top_items(list_obj)
+
+    return render(request, 'pages/list_result.html', {
+        'resultado': list_result,
+        'items': items,
+        'items_partials': list_result.itemorder_set.all()[3:],
+        'item_top1': list_result.itemorder_set.all()[0],
+        'item_top2': list_result.itemorder_set.all()[1],
+        'item_top3': list_result.itemorder_set.all()[2],
+        'avg_top_items': avg_top_items,
+        'avg_top_items_partials': avg_top_items[3:],
+        'avg_top1': avg_top_items[0],
+        'avg_top2': avg_top_items[1],
+        'avg_top3': avg_top_items[2],
     })

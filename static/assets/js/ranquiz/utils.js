@@ -171,7 +171,7 @@ function reloadUserData() {
          */
         .then((response) => {
             if (response.user) {
-                $('.user_avatar').attr('src', response.user.avatar);
+                $('.header_user_avatar').attr('src', response.user.avatar);
                 $('.user_money').text(response.user.money);
             }
         });
@@ -238,7 +238,7 @@ function toggleListLike(event) {
             } else {
                 icon.removeClass("bi-heart").addClass("bi-heart-fill text-danger");
             }
-        }
+       }
 
     }).catch(() => {
         toastMessage("error", "Error al dar like");
@@ -289,18 +289,18 @@ event.stopPropagation()
 
     // Obtener el botón y el estado actual
     const button = $(event.currentTarget);
-    const isFollowed = button.attr('data-is_followed') === 'true';
+    const follow = button.hasClass('btn-primary');
 
     // Llamar al backend
     const shareCode = button.parent().attr('data-share_code');
 
     return new Promise((resolve, reject) => {
-        promiseAjax(`/api/category/${shareCode}/follow?isFollowed=${!isFollowed}`, "GET").then(response => {
+        promiseAjax(`/api/category/${shareCode}/follow?follow=${follow}`, "GET").then(response => {
             if (response.status === "success") {
-                button.attr('data-is_followed', !isFollowed);
-                resolve(isFollowed);
+                resolve(follow);
             } else if (response.status === "error") {
                 toastMessage("error", response.message);
+                reject(new Error(response.message));
             }
         }).catch(() => {
             toastMessage("error", "Error al seguir categoría");
@@ -310,6 +310,7 @@ event.stopPropagation()
 }
 
 export {
+    Toast,
     removePageLoader,
     initializeFlatpickr,
     promiseAjax,

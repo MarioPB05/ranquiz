@@ -346,6 +346,7 @@ function onDocumentReady() {
         });
     });
 
+    // Evento para seguir una categoría
     content.on("click", ".category_follow", (event) => {
         $(this).prop("disabled", true);
         const button = $(event.currentTarget);

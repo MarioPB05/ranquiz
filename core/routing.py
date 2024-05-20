@@ -3,7 +3,7 @@ from django.urls import path
 from core import views
 
 urlpatterns = [
-    path('', views.homepage, name='homepage'),
+    path('', views.search, name='homepage'),
     path('login/', views.login, name='login'),
     path('register/', views.register, name='register'),
     path('list/<str:share_code>/play', views.play_list, name='play_list'),
@@ -17,4 +17,5 @@ urlpatterns = [
     path('search/', views.search, name='search'),
     path('category/<str:share_code>/view', views.category_lists, name='category_lists'),
     path('admin/', admin.site.urls),
+    path('list/<str:share_code>/result/<int:id_result>', views.result, name='list_result'),
 ]

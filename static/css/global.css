@@ -22,12 +22,16 @@
     background-color: var(--primary-300);
 }
 
+.bg-primary-400 {
+    background-color: var(--primary-400);
+}
+
 .text-primary-800 {
     color: var(--primary-800);
 }
 
 .hover-text-primary-400:hover {
-    color: var(--primary-400)!important;
+    color: var(--primary-400) !important;
 }
 
 .category {
@@ -129,7 +133,7 @@
 
 @media (min-width: 768px) {
     .fs-sm-60px {
-        font-size: 60px!important;
+        font-size: 60px !important;
     }
 
 }
@@ -252,5 +256,10 @@
 
 .btn-primary-500:hover {
     background-color: #d44bff !important;
+}
+
+.divider {
+    width: 1px;
+    background-color: black;
 }
 

@@ -16,6 +16,7 @@ class NotificationTypes(Enum):
     NEW_COMMENT_AWARD = 6
     NEW_FOLLOWER = 7
     NEW_LIST_FAVORITE = 8
+    NEW_QUEST_COMPLETED = 9
 
     @property
     def object(self):

@@ -62,7 +62,7 @@ def get_categories(limit=None, page=1, search='', user=None, order='default'):
     elif order == 'popular':
         order_by = "followers DESC"
     elif order == 'newest':
-        order_by = "max(al.edit_date) DESC"
+        order_by = "c.id DESC"
 
     query = f"""SELECT c.*,
                 (

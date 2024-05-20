@@ -2,7 +2,9 @@ import json
 
 from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
+from django.urls import reverse
 
+from api.models import User, List
 from api.services.social_service import get_following
 
 
@@ -191,9 +193,36 @@ class NotificationsConsumer(AsyncWebsocketConsumer):
             # Es una notificación para los seguidores, el dueño también está en el grupo, pero no la debe recibir
             return
 
+        if event['share_code'][0:2] == 'US':
+            notification_user = await sync_to_async(User.get)(share_code=event['share_code'])
+
+            title = event['title'].replace('[USUARIO]', notification_user.username)
+            desc = event['description'].replace('[USUARIO]', notification_user.username)
+            url = reverse('user', kwargs={'share_code': event['share_code']})
+
+            if 'misión' in title:
+                url += '?card=quests'
+        elif event['share_code'][0:2] == 'LS':
+            list_obj = await sync_to_async(List.get)(share_code=event['share_code'])
+            list_owner_username = await sync_to_async(lambda ls: ls.owner.username)(list_obj)
+            list_owner_share_code = await sync_to_async(lambda ls: ls.owner.share_code)(list_obj)
+
+            title = event['title'].replace('[USUARIO]', list_owner_username)
+            desc = event['description'].replace('[USUARIO]', list_owner_username)
+            url = reverse('list_details', kwargs={'share_code': event['share_code']})
+
+            if event['target'] == 2 and self.scope['user'].share_code == list_owner_share_code:
+                # Es una notificación para los seguidores, el dueño también está en el grupo, pero no la debe recibir
+                return
+        else:
+            title = event['title']
+            desc = event['description']
+            url = None
+
         await self.send(text_data=json.dumps({
             'icon': event['icon'],
-            'title': event['title'],
-            'description': event['description'],
-            'share_code': event['share_code']
+            'title': title,
+            'description': desc,
+            'share_code': event['share_code'],
+            'url': url
         }))

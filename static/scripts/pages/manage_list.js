@@ -1,6 +1,7 @@
 import {removePageLoader, initializeFlatpickr, promiseAjax, toastMessage, addPageLoader} from "/static/assets/js/ranquiz/utils.js";
 
 const minItems = 5;
+const allowedImageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff', 'svg', 'webp'];
 let items_prefix = [];
 let item_last_prefix = 0;
 const categories = [];
@@ -13,14 +14,36 @@ const flatpickrInstance = initializeFlatpickr("#range_date_highlight", 'range', 
  * Cambiar la imagen de la lista
  */
 function changedListImage() {
-    $('label[for="id_image"]').hide();
+    const image = $("#image").prop('files')[0];
+
+    if (image) {
+        // Obtener la extensión del archivo
+        const fileExtension = image.name.split('.').pop().toLowerCase();
+
+        // Verificar si la extensión del archivo está permitida
+        if (allowedImageExtensions.includes(fileExtension)) {
+            $('label[for="image"]').hide();
+        } else {
+            toastMessage('error', 'Solo se pueden subir imágenes');
+            $("#image").val('');
+            removeListImage();
+        }
+    }
 }
 
 /**
  * Eliminar el label para subir la imagen de la lista
  */
 function removeListImage() {
-    $('label[for="id_image"]').show();
+    $('label[for="image"]').show();
+}
+
+/**
+ * Deshabilitar el destacado
+ */
+function disableHighlight() {
+    $('#range_date_highlight').prop('disabled', true);
+    cancelHighlight();
 }
 
 /**
@@ -30,6 +53,12 @@ function updateHighlightPrice() {
     const dates = $("#range_date_highlight").val().split(" hasta ");
 
     if (dates.length === 2) {
+        if ($("#range_date_highlight").prop('disabled')) {
+            toastMessage('error', 'No se puede destacar si la lista esta privada');
+            cancelHighlight();
+            return;
+        }
+
         promiseAjax(`/api/shop/highlight/calculator?start_date=${dates[0]}&end_date=${dates[1]}`)
             .then(response => {
                 $('#highlight_price').text(response.price);
@@ -168,20 +197,29 @@ function itemImageChanged(event) {
 
     // Verificar si se seleccionó un archivo
     if (file) {
-        // Crear un objeto FileReader para leer el archivo
-        const reader = new FileReader();
+        // Obtener la extensión del archivo
+        const fileExtension = file.name.split('.').pop().toLowerCase();
 
-        // Cuando se termine de cargar el archivo
-        reader.onload = function () {
-            // Mostrar la imagen en el elemento img
-            $('#temp_image_preview').attr('src', reader.result);
+        // Verificar si la extensión del archivo está permitida
+        if (allowedImageExtensions.includes(fileExtension)) {
+            // Crear un objeto FileReader para leer el archivo
+            const reader = new FileReader();
+
+            // Cuando se termine de cargar el archivo
+            reader.onload = function () {
+                // Mostrar la imagen en el elemento img
+                $('#temp_image_preview').attr('src', reader.result);
+            }
+
+            // Leer el archivo como una URL de datos
+            reader.readAsDataURL(file);
+
+            showItemPreviewModal(event.target);
+        } else {
+            toastMessage('error', 'Solo se pueden subir imágenes');
+            cancelItemImage($(event.target));
         }
-
-        // Leer el archivo como una URL de datos
-        reader.readAsDataURL(file);
     }
-
-    showItemPreviewModal(event.target);
 }
 
 /**
@@ -228,18 +266,26 @@ function setItemImage(event) {
 
 /**
  * Cancelar la selección de la imagen del item
- * @param event
+ * @param input
  */
-function cancelItemImage(event) {
-    // Obtener el target (Input)
-    const input = getModalInputTarget(event);
-
+function cancelItemImage(input) {
     // Cambiar la clase para indicarle al usuario que la imagen no se ha seleccionado
     input.parent().find('label>i')
         .removeClass('text-white').addClass('text-primary-800');
 
     // Limpiar el input
     input.val('');
+}
+
+/**
+ * Cancelar la selección de la imagen del item
+ * @param event
+ */
+function cancelItemImageEvent(event) {
+    // Obtener el target (Input)
+    const input = getModalInputTarget(event);
+
+    cancelItemImage(input);
 }
 
 /**
@@ -602,7 +648,8 @@ function beforeSendForm(event) {
     }
 
     // Verificar que si hay fecha de destacado, no sea una o las dos fechas sean iguales
-    const dates = $("#range_date_highlight").val().split(" hasta ");
+    const dates_value = $("#range_date_highlight").val()
+    const dates = dates_value ? dates_value.split(" hasta ") : [];
 
     if ((dates.length === 2 && dates[0] === dates[1]) || (dates.length === 1 && dates[0] !== "")) {
         toastMessage('error', 'Las fechas del destacado no pueden ser iguales');
@@ -672,7 +719,7 @@ function onDocumentReady() {
 
     $('#change_item_img').on('click', changeItemImage);
     $('#set_item_img').on('click', setItemImage);
-    $('#cancel_item_img').on('click', cancelItemImage);
+    $('#cancel_item_img').on('click', cancelItemImageEvent);
 
     $("#range_date_highlight").on("change", updateHighlightPrice);
     $("#cancel_highlight").on("click", cancelHighlight);
@@ -683,6 +730,14 @@ function onDocumentReady() {
     });
 
     $("#categories_container").on('click', '.category', removeCategory);
+
+    $("#visibility").on('change', function () {
+        if ($(this).val() === 'public') {
+            $('#range_date_highlight').prop('disabled', false);
+        } else {
+            disableHighlight();
+        }
+    });
 
     if (!edit_mode) { // skipcq: JS-0125
         // Añadir los items mínimos

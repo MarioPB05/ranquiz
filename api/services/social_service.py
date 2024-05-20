@@ -1,6 +1,7 @@
 from django.db.models import Count
 
-from api.models import List, ListComment, CommentAward, Award, UserFollow
+from api.models import List, ListComment, CommentAward, Award, UserFollow, Notification
+from api.models.notification_type import NotificationTypes
 from api.services.query_service import execute_query
 
 
@@ -44,7 +45,10 @@ def create_comment(content, author, share_code):
     list_element = List.get(share_code)
 
     if list_element is not None and content is not None and author is not None:
-        return ListComment.objects.create(list=list_element, user=author, comment=content)
+        comment = ListComment.objects.create(list=list_element, user=author, comment=content)
+        Notification.create(1, NotificationTypes.NEW_LIST_COMMENT.object, list_element.owner,
+                            list_element.share_code)
+        return comment
 
     return None
 
@@ -115,6 +119,8 @@ def add_award_to_comment(comment_id, selected_user, award_id):
 
     if selected_comment is not None and selected_user is not None:
         CommentAward.objects.create(comment=selected_comment, user=selected_user, award=selected_award)
+        Notification.create(1, NotificationTypes.NEW_COMMENT_AWARD.object, selected_comment.user,
+                            selected_comment.list.share_code)
         return True
 
     return False

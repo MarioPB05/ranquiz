@@ -188,8 +188,8 @@ def get_users_followers(user, selected_user, page=1):
 
 
 def toggle_user_follow(user, followed_user):
-    """Función que permite seguir o dejar de seguir a un usuario"""
-    if followed_user is None:
+    """Servicio que permite seguir o dejar de seguir a un usuario"""
+    if followed_user is None or user is None or followed_user == user:
         return False
 
     is_following = user.following_set.filter(user_followed=followed_user).exists()
