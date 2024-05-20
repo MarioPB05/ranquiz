@@ -39,6 +39,9 @@ def highlight_list(request, share_code):
     if list_is_public(share_code) is False:
         return JsonResponse({'status': 'error', 'message': 'La lista no es pública'})
 
+    if validate_transaction(request.user, -calculate_highlight_price(start_date, end_date)) is False:
+        return JsonResponse({'status': 'error', 'message': 'No tienes suficientes gemas'})
+
     result = shop_service.highlight_list(request.user, share_code, start_date, end_date)
 
     if result is False:
