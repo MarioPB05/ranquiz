@@ -135,7 +135,6 @@ def get_user_favourite_list(user, page_number):
     return execute_query(query, params)
 
 
-
 def get_user_lists(user, show_deleted, visibility, search_query, page_number):
     """Función que devuelve todas las listas de un usuario con paginación"""
     where_conditions = ["l.owner_id = %s"]
