@@ -10,6 +10,13 @@ function getCurrentURL() {
 }
 
 /**
+ * Redirige a la lista seleccionada
+ */
+function redirectToResult() {
+    window.location.href = $(this).data('url');
+}
+
+/**
  * Busca listas por el nombre de la lista sin quitar los filtros actuales
  *
  * @param event
@@ -36,6 +43,7 @@ function searchList(event) {
  * Función que se ejecuta cuando el documento está listo
  */
 function onDocumentReady() {
+    $('.list_result').on('click', redirectToResult);
     $('#search_input').on('keypress', searchList);
     $('#search_btn').on('click', searchList);
 }

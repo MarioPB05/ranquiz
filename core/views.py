@@ -367,6 +367,8 @@ def profile_results(request, user_data, card_data):
             'start_date': user_result['start_date'],
             'items': user_result['items'],
             'duration': sec_to_time(user_result['duration']),
+            'share_code': user_result['share_code'],
+            'result_id': user_result['id']
         })
 
 
@@ -475,11 +477,8 @@ def category_lists(request, share_code):
 def result(request, share_code, id_result):  # skipcq: PYL-W0613
     """Vista que renderiza los resultados de una búsqueda"""
     list_result = get_result(id_result)
-
     items = list_result.itemorder_set.all()
-
     list_obj = list_result.list
-
     avg_top_items = get_list_avg_top_items(list_obj)
 
     return render(request, 'pages/list_result.html', {
@@ -494,4 +493,5 @@ def result(request, share_code, id_result):  # skipcq: PYL-W0613
         'avg_top1': avg_top_items[0],
         'avg_top2': avg_top_items[1],
         'avg_top3': avg_top_items[2],
+        'list_name': list_obj.name,
     })
