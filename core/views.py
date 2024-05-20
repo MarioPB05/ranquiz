@@ -473,8 +473,6 @@ def category_lists(request, share_code):
 @login_required
 def result(request, share_code, id_result):  # skipcq: PYL-W0613
     """Vista que renderiza los resultados de una búsqueda"""
-
-
     list_result = get_result(id_result)
 
     items = list_result.itemorder_set.all()
