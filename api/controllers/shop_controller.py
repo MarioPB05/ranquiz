@@ -3,9 +3,10 @@ from django.views.decorators.http import require_GET
 
 from api.decorators.api_decorators import require_authenticated
 from api.services import shop_service
+from api.services.list_service import list_is_public
 from api.services.shop_service import calculate_highlight_price, get_all_avatars, get_avatars_by_popularity, \
-    get_avatars_by_purchased, buy_avatar, equip_avatar
-from api.services.transaction_service import do_transaction, refund_transaction
+    get_avatars_by_purchased, buy_avatar, equip_avatar, get_avatar
+from api.services.transaction_service import validate_transaction
 
 
 @require_GET
@@ -33,26 +34,20 @@ def highlight_list(request, share_code):
     end_date = request.GET.get('end_date')
 
     if share_code is None or start_date is None or end_date is None:
-        return JsonResponse({'status': 'error', 'message': 'Comprueba que la lista sea pública'})
+        return JsonResponse({'status': 'error', 'message': 'Los parámetros son incorrectos'})
 
-    value = calculate_highlight_price(start_date, end_date)
+    if list_is_public(share_code) is False:
+        return JsonResponse({'status': 'error', 'message': 'La lista no es pública'})
 
-    if value <= 0:
-        return JsonResponse({'status': 'error', 'message': 'El precio de destacar la lista es incorrecto'})
+    if validate_transaction(request.user, -calculate_highlight_price(start_date, end_date)) is False:
+        return JsonResponse({'status': 'error', 'message': 'No tienes suficientes gemas'})
 
-    transaction_paid = do_transaction(request.user, -value, "Destacar lista")
+    result = shop_service.highlight_list(request.user, share_code, start_date, end_date)
 
-    if transaction_paid is None:
-        return JsonResponse({'status': 'error', 'message': 'No tienes suficientes diamantes para destacar la lista'})
+    if result is False:
+        return JsonResponse({'status': 'error', 'message': 'Hubo un error al destacar la lista'})
 
-    result = shop_service.highlight_list(share_code, start_date, end_date, transaction_paid)
-
-    if result is not None:
-        return JsonResponse({'status': 'success', 'message': 'La lista ha sido destacada'})
-
-    refund_transaction(transaction_paid)
-
-    return JsonResponse({'status': 'error', 'message': 'Error al destacar la lista'})
+    return JsonResponse({'status': 'success', 'message': 'La lista ha sido destacada'})
 
 
 @require_GET
@@ -88,6 +83,10 @@ def get_avatars(request):
 def buy_a_avatar(request, avatar_id):
     """Controlador que compra un avatar"""
     user = request.user
+    avatar = get_avatar(avatar_id)
+
+    if validate_transaction(user, -avatar.rarity.price) is False:
+        return JsonResponse({'status': 'error', 'message': 'No tienes suficientes gemas'})
 
     if buy_avatar(user, avatar_id) is None:
         return JsonResponse({'status': 'error', 'message': 'Ha ocurrido un error al comprar el avatar'})

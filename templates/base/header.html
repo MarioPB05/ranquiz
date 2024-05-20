@@ -34,7 +34,7 @@
                         </div>
 
                         <div class="menu-item menu-lg-down-accordion me-lg-1">
-                            <a href="#" class="menu-link scroll-btn align-items-start py-3">
+                            <a href="{% url 'user' %}?card=quests" class="menu-link scroll-btn align-items-start py-3">
                                 <span class="menu-icon">
                                     <i class="bi bi-award-fill fs-2"></i>
                                 </span>
@@ -71,10 +71,10 @@
                 {% endif %}
 
                 <!--begin::Menu wrapper-->
-                <div class="cursor-pointer symbol symbol-30px symbol-md-40px user-avatar" data-kt-menu-trigger="click" data-kt-menu-attach=".{% if user.is_authenticated %}user_avatar{% else %}user-avatar{% endif %}" data-kt-menu-placement="bottom-end" data-kt-menu-offset="0,05">
+                <div class="cursor-pointer symbol symbol-30px symbol-md-40px user-avatar" data-kt-menu-trigger="click" data-kt-menu-attach=".{% if user.is_authenticated %}header_user_avatar{% else %}user-avatar{% endif %}" data-kt-menu-placement="bottom-end" data-kt-menu-offset="0,05">
                     <div class="symbol symbol-30px symbol-md-40px symbol-circle">
                         {% if user.is_authenticated %}
-                            {% cloudinary user.avatar.image class="user_avatar" %}
+                            {% cloudinary user.avatar.image class="header_user_avatar" %}
                         {% else %}
                             <i class="bi bi-person-circle text-white fs-2qx user-avatar"></i>
                         {% endif %}

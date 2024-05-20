@@ -22,12 +22,24 @@
     background-color: var(--primary-300);
 }
 
+.bg-primary-400 {
+    background-color: var(--primary-400);
+}
+
+.text-primary-400 {
+    color: var(--primary-400);
+}
+
+.text-primary-600 {
+    color: var(--primary-600);
+}
+
 .text-primary-800 {
     color: var(--primary-800);
 }
 
 .hover-text-primary-400:hover {
-    color: var(--primary-400)!important;
+    color: var(--primary-400) !important;
 }
 
 .category {
@@ -129,7 +141,7 @@
 
 @media (min-width: 768px) {
     .fs-sm-60px {
-        font-size: 60px!important;
+        font-size: 60px !important;
     }
 
 }
@@ -231,17 +243,17 @@
 /*}*/
 
 .ellipsis-two-lines {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2; /* número de líneas que deseas mostrar */
-  -webkit-box-orient: vertical;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important; /* número de líneas que deseas mostrar */
+  -webkit-box-orient: vertical !important;
 }
 
 .ellipsis {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
 }
 
 .btn-primary-500 {
@@ -252,5 +264,10 @@
 
 .btn-primary-500:hover {
     background-color: #d44bff !important;
+}
+
+.divider {
+    width: 1px;
+    background-color: black;
 }
 

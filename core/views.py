@@ -7,10 +7,12 @@ from django.http import Http404, HttpResponseForbidden, HttpResponseNotFound
 from django.shortcuts import render, redirect, get_object_or_404
 
 from api import sec_to_time
-from api.models import List, ListCategory, ListFavorite, ListLike, ListAnswer, User
+from api.models import List, ListCategory, ListFavorite, ListLike, ListAnswer, User, Notification
+from api.models.notification_type import NotificationTypes
 from api.services import PAGINATION_ITEMS_PER_PAGE
-from api.services.category_service import edit_list_categories, get_category, user_followed_category, \
-    user_follow_category_and_receive_notifications
+from api.services.category_service import (edit_list_categories, get_category, get_user_categories,
+                                           user_followed_category, user_follow_category_and_receive_notifications)
+from api.services.goal_service import get_user_active_daily_goals
 from api.services.item_service import (
     create_item_form,
     create_item,
@@ -20,13 +22,15 @@ from api.services.item_service import (
 from api.services.list_service import (
     create_list_form,
     create_list,
-    get_list_counts, get_lists, count_lists, get_user_lists_pagination, get_user_results, get_user_results_pagination
+    get_list_counts, get_lists, count_lists, get_user_lists_pagination, get_user_results, get_user_results_pagination,
+    get_result, get_list_avg_top_items
 )
 from api.services.list_service import get_user_lists
+from api.services.shop_service import highlight_list
 from api.services.user_service import (
     user_login,
     user_register,
-    get_user_stats
+    get_user_stats, get_users_following, get_users_followers
 )
 from core.decorators.decorators import partial_login_required
 
@@ -107,6 +111,7 @@ def list_details(request, share_code):
     return render(request, 'pages/list_details.html', {'share_code': share_code, 'list': list_data, "data": data})
 
 
+@login_required
 def play_list(request, share_code):
     """Vista que permite a un usuario jugar una lista"""
     list_obj = List.get(share_code)
@@ -139,6 +144,16 @@ def create_list_view(request):
         if list_obj is not None and len(items_prefix) > 0:
             list_obj.type = 0
             list_obj.save()
+
+            if list_obj.public:
+                Notification.create(2, NotificationTypes.NEW_LIST.object, list_obj.owner, list_obj.share_code)
+
+            if request.POST.get('range_date_highlight') is not None and request.POST.get('range_date_highlight') != '':
+                dates = request.POST.get('range_date_highlight').split(' hasta ')
+                start_date = dates[0]
+                end_date = dates[0] if len(dates) == 1 else dates[1]
+
+                highlight_list(request.user, list_obj.share_code, start_date, end_date)
 
             for prefix in items_prefix:
                 item_form = create_item_form(request, prefix=prefix)
@@ -217,9 +232,31 @@ def profile_resume(request, user_data, card_data):
     """Vista que renderiza el resumen de un usuario"""
     page_number = int(request.GET.get('page', 1))
     user_lists = get_user_lists(user_data, False, 'public', None, page_number)
+    user_categories = get_user_categories(user_data, request.user, page_number)
+    user_favourite_lists = get_user_lists(user_data, False, 'favourite', None, page_number)
+    users_following = get_users_following(user_data, request.user, page_number)
+    users_followers = get_users_followers(user_data, request.user, page_number)
+
+    card_data['data'] = {
+        'categories': [],
+        'published': [],
+        'favorites': [],
+        'following': [],
+        'followers': [],
+    }
+
+    for user_category in user_categories:
+        card_data['data']['categories'].append({
+            'user': user_category['name'],
+            'share_code': user_category['share_code'],
+            'lists': user_category['lists'],
+            'followers': user_category['followers'],
+            'followed': user_category['followed']
+            if request.user.is_authenticated else False
+        })
 
     for user_list in user_lists:
-        card_data['data'].append({
+        card_data['data']['published'].append({
             'name': user_list['name'],
             'highlighted': user_list['highlighted'] == 1,
             'image': user_list['image'] if user_list['image'] else None,
@@ -230,6 +267,42 @@ def profile_resume(request, user_data, card_data):
             'owner_share_code': user_list['owner_share_code'],
             'liked': ListLike.objects.filter(user=request.user, list_id__exact=user_list['id']).exists()
             if request.user.is_authenticated else False
+        })
+
+    for user_favourite_list in user_favourite_lists:
+        card_data['data']['favorites'].append({
+            'name': user_favourite_list['name'],
+            'highlighted': user_favourite_list['highlighted'] == 1,
+            'image': user_favourite_list['image'] if user_favourite_list['image'] else None,
+            'share_code': user_favourite_list['share_code'],
+            'plays': user_favourite_list['plays'],
+            'owner_username': user_favourite_list['owner_username'],
+            'owner_avatar': user_favourite_list['owner_avatar'],
+            'owner_share_code': user_favourite_list['owner_share_code'],
+            'liked': ListLike.objects.filter(user=request.user, list_id__exact=user_favourite_list['id']).exists()
+            if request.user.is_authenticated else False
+        })
+
+    for user_following in users_following:
+        card_data['data']['following'].append({
+            'user': request.user,
+            'name': user_following['username'],
+            'image': user_following['avatar'],
+            'share_code': user_following['share_code'],
+            'followers': user_following['followers'],
+            'followed': user_following['followed'],
+            'lists': user_following['lists']
+        })
+
+    for user_follower in users_followers:
+        card_data['data']['followers'].append({
+            'user': request.user,
+            'name': user_follower['username'],
+            'image': user_follower['avatar'],
+            'share_code': user_follower['share_code'],
+            'followers': user_follower['followers'],
+            'followed': user_follower['followed'],
+            'lists': user_follower['lists']
         })
 
 
@@ -294,6 +367,24 @@ def profile_results(request, user_data, card_data):
             'start_date': user_result['start_date'],
             'items': user_result['items'],
             'duration': sec_to_time(user_result['duration']),
+            'share_code': user_result['share_code'],
+            'result_id': user_result['id']
+        })
+
+
+def profile_quests(request, user_data, card_data):
+    """Vista que renderiza las misiones de un usuario"""
+    goals = get_user_active_daily_goals(user_data)
+
+    for userGoal in goals:
+        card_data['data'].append({
+            'id': userGoal.goal.id,
+            'name': userGoal.goal.id_type.title,
+            'progress': userGoal.progress,
+            'goal': userGoal.goal.value,
+            'reward': userGoal.goal.reward,
+            'claimed': userGoal.claimed,
+            'percentage': str(round((userGoal.progress / userGoal.goal.value) * 100, 2)).replace(',', '.')
         })
 
 
@@ -307,13 +398,14 @@ def profile(request, share_code=None):
     user_share_code = request.user.share_code if request.user.is_authenticated else None
     is_own_profile = share_code is None or user_share_code == share_code
     user_data = request.user if is_own_profile else User.get(share_code=share_code)
-    user_stats = get_user_stats(user_data)
 
     if user_data is None:
         raise Http404('User not found')
 
     if current_card not in cards:
         raise Http404('Page not found')
+
+    user_stats = get_user_stats(user_data)
 
     card_data = {'data': []}
     if current_card == 'resume':
@@ -322,6 +414,8 @@ def profile(request, share_code=None):
         profile_lists(request, user_data, card_data)
     elif current_card == 'results':
         profile_results(request, user_data, card_data)
+    elif current_card == 'quests':
+        profile_quests(request, user_data, card_data)
 
     return render(request, 'pages/profile.html', {
         'user_data': user_data,
@@ -376,4 +470,28 @@ def category_lists(request, share_code):
             'items_per_page': PAGINATION_ITEMS_PER_PAGE,
             'page_numbers': page_numbers
         }
+    })
+
+
+@login_required
+def result(request, share_code, id_result):  # skipcq: PYL-W0613
+    """Vista que renderiza los resultados de una búsqueda"""
+    list_result = get_result(id_result)
+    items = list_result.itemorder_set.all()
+    list_obj = list_result.list
+    avg_top_items = get_list_avg_top_items(list_obj)
+
+    return render(request, 'pages/list_result.html', {
+        'resultado': list_result,
+        'items': items,
+        'items_partials': list_result.itemorder_set.all()[3:],
+        'item_top1': list_result.itemorder_set.all()[0],
+        'item_top2': list_result.itemorder_set.all()[1],
+        'item_top3': list_result.itemorder_set.all()[2],
+        'avg_top_items': avg_top_items,
+        'avg_top_items_partials': avg_top_items[3:],
+        'avg_top1': avg_top_items[0],
+        'avg_top2': avg_top_items[1],
+        'avg_top3': avg_top_items[2],
+        'list_name': list_obj.name,
     })

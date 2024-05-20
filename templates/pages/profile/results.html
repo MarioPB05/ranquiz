@@ -85,7 +85,7 @@
                 <div class="d-flex flex-stack flex-grow-1">
                     <!--begin::Content-->
                     <div class="fw-bold">
-                        <h4 class="text-gray-900 fw-bolder">No se han encontrado resultados!</h4>
+                        <h4 class="text-gray-900 fw-bolder">¡No se han encontrado resultados!</h4>
                         <div class="fs-6 text-gray-700">
                             No se han encontrado listas con el término de búsqueda '{{ card_data.search_query }}'.
                         </div>
@@ -98,8 +98,8 @@
         {% else %}
             <div id="result_container" class="d-md-grid d-flex flex-column gap-10" style="grid-template-columns: repeat(auto-fill, minmax(300px, 1fr))">
                 {% for result in card_data.data %}
-                    <div class="d-flex justify-content-between align-items-center flex-column gap-7 border border-1 border-gray-400 rounded p-4 cursor-pointer list_item"
-                        data-url=""> <!-- TODO: Poner URL de la pantalla de resultados -->
+                    <div class="d-flex justify-content-between align-items-center flex-column gap-7 border border-1 border-gray-400 rounded p-4 cursor-pointer list_result"
+                        data-url="{% url 'list_result' share_code=result.share_code id_result=result.result_id %}">
                         <img class="w-100 mh-100px h-100 rounded" alt="image" style="object-fit:cover"
                             src="{% if result.list_image %}{{ result.list_image }}{% else %}{% static 'assets/media/placeholders/list_mix2.png' %}{% endif %}">
 
@@ -128,23 +128,23 @@
             </div>
 
             {% if card_data.pagination.has_other_pages %}
-                <div class="text-center">
+                <div class="text-center mt-10">
                     <ul class="pagination">
                         {% if card_data.pagination.has_previous %}
                             <li class="page-item">
-                                <a class="page-link" href="?card=lists&page={{ card_data.pagination.previous_page_number }}">Anterior</a>
+                                <a class="page-link" href="{% url 'user' share_code=user_data.share_code %}?card=results&page={{ card_data.pagination.previous_page_number }}">Anterior</a>
                             </li>
                         {% endif %}
 
                         {% for i in card_data.pagination.page_range %}
                             <li class="page-item {% if card_data.pagination.number == i %}active{% endif %}">
-                                <a class="page-link" href="?card=lists&page={{ i }}">{{ i }}</a>
+                                <a class="page-link" href="{% url 'user' share_code=user_data.share_code %}?card=results&page={{ i }}">{{ i }}</a>
                             </li>
                         {% endfor %}
 
                         {% if card_data.pagination.has_next %}
                             <li class="page-item">
-                                <a class="page-link" href="?card=lists&page={{ card_data.pagination.next_page_number }}">Siguiente</a>
+                                <a class="page-link" href="{% url 'user' share_code=user_data.share_code %}?card=results&page={{ card_data.pagination.next_page_number }}">Siguiente</a>
                             </li>
                         {% endif %}
                     </ul>
@@ -157,4 +157,4 @@
 <!--end::Lists View-->
 
 <script>const baseURL = '{{ request.scheme }}://{{ request.get_host }}{{ current_path|safe }}';</script>
-<script src="{% static 'scripts/pages/profile/list.js' %}" type="module" defer></script>
+<script src="{% static 'scripts/pages/profile/results.js' %}" type="module" defer></script>

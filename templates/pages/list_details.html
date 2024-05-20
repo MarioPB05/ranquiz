@@ -25,14 +25,10 @@
                                  ">
                     <div class="position-absolute bottom-0 p-2 w-100 d-flex justify-content-between flex-wrap gap-2">
                         {% if data.user_has_played %}
-                            <a href="{% url 'user' share_code=list.owner.share_code %}?card=results&list={{ list.share_code }}" class="h-25 btn btn-outline btn-outline-primary btn-active-primary bg-white w-25 min-w-150px text-center">
+                            <a href="{% url 'user' share_code=user.share_code %}?card=results&list={{ list.share_code }}" class="h-25 btn btn-outline btn-outline-primary btn-active-primary bg-white w-25 min-w-150px text-center">
                                 Ver resultados
                             </a>
                         {% endif %}
-                        <a href="/" class="h-25 btn btn-outline btn-outline-primary btn-active-primary bg-white w-25 min-w-150px text-center">
-                            <i class="bi bi-bar-chart-fill"></i>
-                            Estadísticas
-                        </a>
                     </div>
 
                     </div>
@@ -132,7 +128,6 @@
                                         </div>
 
                                         <div class="modal-footer d-flex justify-content-around">
-                                            <!--TODO: Cambiar url por play_list -->
                                             <a  href="{% url 'user' share_code=list.share_code %}" class="btn btn-primary px-16" id="play_button">Jugar ahora</a>
                                         </div>
                                     </div>

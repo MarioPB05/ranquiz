@@ -1,13 +1,15 @@
 import math
 
-from django.db.models import Q
+from django.db.models import Q, Avg
 
 from django.db import transaction
 
 from api.forms.list_form import CreateListForm
+from api.models.notification_type import NotificationTypes
 from api.services import PAGINATION_ITEMS_PER_PAGE
 from api.services.query_service import execute_query
-from api.models import ListCategory, ListFavorite, ListLike, ListAnswer, ItemOrder, ListComment, List, Item
+from api.models import ListCategory, ListFavorite, ListLike, ListAnswer, ItemOrder, ListComment, List, Item, \
+    Notification
 
 
 def create_list_form(request, instance=None):
@@ -26,6 +28,16 @@ def create_list(list_form):
     return None
 
 
+def list_is_public(share_code):
+    """Función que comprueba si una lista es pública"""
+    list_obj = List.get(share_code)
+
+    if list_obj is None:
+        return False
+
+    return list_obj.public
+
+
 def get_lists(limit=None, page=1, search='', user=None, order='default', category=None):
     """Función que devuelve las listas públicas con los filtros especificados"""
     order_by = ""
@@ -37,7 +49,7 @@ def get_lists(limit=None, page=1, search='', user=None, order='default', categor
         order_by = "l.edit_date DESC, "
 
     order_by += ("CASE WHEN "
-                 "hl.id IS NOT NULL THEN hl.start_date ELSE l.creation_date END DESC")
+                 "hl.id IS NOT NULL THEN hl.start_date ELSE -l.id END DESC")
 
     if category is not None:
         where = "AND lc.category_id = %s "
@@ -60,13 +72,65 @@ def get_lists(limit=None, page=1, search='', user=None, order='default', categor
                 LEFT JOIN ranquiz.api_listcategory lc on l.id = lc.list_id
                 WHERE l.public = TRUE AND l.name LIKE %s {where}
                 GROUP BY l.id
-                ORDER BY %s
+                ORDER BY {order_by}
                 LIMIT %s OFFSET %s;"""
 
-    params = [user.id if user is not None else 0, f"%{search}%", order_by, limit, (page - 1) * limit]
+    params = [user.id if user is not None else 0, f"%{search}%", limit, (page - 1) * limit]
 
     if category is not None:
         params.insert(2, category.id)
+
+    return execute_query(query, params)
+
+
+def get_user_favourite_list(user, page_number):
+    """Función que devuelve todas las listas de un usuario con paginación"""
+    query = """SELECT l.id, l.name, l.share_code, l.image, l.public, l.edit_date, l.creation_date, l.deleted,
+                    (
+                        SELECT COUNT(*)
+                        FROM api_listlike sll
+                        WHERE sll.list_id = l.id
+                    ) AS likes,
+                    (
+                        SELECT COUNT(*)
+                        FROM api_listfavorite slf
+                        WHERE slf.list_id = l.id
+                    ) AS favorites,
+                    (
+                        SELECT COUNT(*)
+                        FROM api_listanswer sla
+                        WHERE sla.list_id = l.id
+                    ) AS plays,
+                    (
+                        SELECT COUNT(*)
+                        FROM api_listcomment slc
+                        WHERE slc.list_id = l.id
+                    ) AS comments,
+                    (
+                        SELECT IF(COUNT(sll.id) > 0, TRUE, FALSE)
+                        FROM api_listlike sll
+                        WHERE sll.list_id = l.id AND sll.user_id = %s
+                    ) AS liked,
+                    IF(hl.id IS NOT NULL, TRUE, FALSE)
+                    AS highlighted, au.share_code as owner_share_code, aa.image as owner_avatar,
+                    au.username as owner_username
+                FROM api_list l
+                JOIN ranquiz.api_user au on l.owner_id = au.id
+                JOIN ranquiz.api_avatar aa on au.avatar_id = aa.id
+                LEFT JOIN ranquiz.api_highlightedlist hl on l.id = hl.list_id AND start_date <= NOW()
+                    AND end_date >= NOW()
+                LEFT JOIN ranquiz.api_listcategory lc on l.id = lc.list_id
+                WHERE l.owner_id = %s AND l.public = 1 AND l.deleted = 0 AND (
+                        SELECT IF(COUNT(sll.id) > 0, TRUE, FALSE)
+                        FROM api_listlike sll
+                        WHERE sll.list_id = l.id AND sll.user_id = %s
+                    ) = 1
+                GROUP BY l.id, l.edit_date, l.creation_date
+                ORDER BY l.edit_date DESC, l.creation_date DESC
+                LIMIT %s OFFSET %s;"""
+
+    items_per_page = PAGINATION_ITEMS_PER_PAGE / 2
+    params = [user.id, user.id, user.id, int(items_per_page), int((page_number - 1) * items_per_page)]
 
     return execute_query(query, params)
 
@@ -154,7 +218,7 @@ def get_user_lists_pagination(user, show_deleted, visibility, search_query, page
 
 def get_user_results_pagination(user, list_obj, page_number, search_query):
     """Función que devuelve la cantidad de resultados de un usuario"""
-    query = Q(list__owner=user)
+    query = Q(user=user)
 
     if search_query:
         query &= Q(list__name__icontains=search_query)
@@ -269,6 +333,7 @@ def toggle_like_list(user, share_code):
         like.delete()
     except ListLike.DoesNotExist:
         like = ListLike(user=user, list=list_obj)
+        Notification.create(1, NotificationTypes.NEW_LIST_LIKE.object, list_obj.owner, user.share_code)
         like.save()
 
     return True
@@ -286,6 +351,7 @@ def toggle_favorite_list(user, share_code):
         favorite.delete()
     except ListFavorite.DoesNotExist:
         favorite = ListFavorite(user=user, list=list_obj)
+        Notification.create(1, NotificationTypes.NEW_LIST_FAVORITE.object, list_obj.owner, user.share_code)
         favorite.save()
 
     return True
@@ -336,3 +402,39 @@ def add_result(user, list_obj, results, start_date):
             item_order.save()
 
     return list_answer
+
+
+def get_result(id_result):
+    """Servicio que devuelve un resultado de un usuario en una lista"""
+    try:
+        return ListAnswer.objects.get(id=id_result)
+    except ListAnswer.DoesNotExist:
+        return None
+
+
+def get_list_avg_top_items(list_obj):
+    """Función que devuelve la media de los mejores resultados de una lista"""
+    # Filtrar todos los ListAnswer relacionados con la lista dada
+    list_answers = ListAnswer.objects.filter(list=list_obj)
+
+    # Filtrar todos los ItemOrder relacionados con estos ListAnswer y agrupar por item para calcular la media del order
+    avg_order_items = ItemOrder.objects.filter(answer__in=list_answers) \
+                                       .values('item__name', 'item__image') \
+                                       .annotate(avg_order=Avg('order')) \
+                                       .order_by('avg_order')
+
+    # Construir la lista de ítems con números secuenciales únicos y URLs de imágenes
+    avg_top_items = []
+    current_number = 1
+    for item in avg_order_items:
+        # Obtener la URL de la imagen de Cloudinary
+        image_url = item['item__image'].url if item['item__image'] else None
+        avg_top_items.append((item['item__name'], current_number, image_url))
+        current_number += 1
+
+    return avg_top_items
+
+
+def count_list_results(user, list_obj):
+    """Función que devuelve la cantidad de resultados de un usuario en una lista"""
+    return ListAnswer.objects.filter(user=user, list=list_obj).count()

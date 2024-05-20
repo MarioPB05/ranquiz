@@ -4,13 +4,15 @@ from datetime import datetime
 from django.http import JsonResponse
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_GET
+from django.views.decorators.http import require_GET, require_POST
 
 from api.decorators.api_decorators import require_authenticated
 from api.models.list import List
 from api.services import PAGINATION_ITEMS_PER_PAGE
+from api.services.goal_service import sum_goal_progress
+from api.services.item_service import count_list_items
 from api.services.list_service import (get_lists, toggle_like_list, toggle_favorite_list, toggle_visibility_list,
-                                       add_result, delete_list, recover_list)
+                                       add_result, delete_list, recover_list, count_list_results)
 
 
 @require_GET
@@ -73,6 +75,7 @@ def favorite_list(request, share_code):
 
 
 @csrf_exempt
+@require_POST
 @require_authenticated
 def add_result_to_list(request, share_code):
     """Controlador que permite añadir un resultado a una lista"""
@@ -90,6 +93,11 @@ def add_result_to_list(request, share_code):
     status = 'success' if result else 'error'
 
     if result:
+        if count_list_results(request.user, list_obj) == 1:
+            sum_goal_progress(1, request.user, 1)
+
+        sum_goal_progress(2, request.user, count_list_items(list_obj))
+
         return JsonResponse({'status': status, 'result_id': result.id})
 
     return JsonResponse({'status': status})
