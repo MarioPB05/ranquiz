@@ -49,7 +49,7 @@ def get_lists(limit=None, page=1, search='', user=None, order='default', categor
         order_by = "l.edit_date DESC, "
 
     order_by += ("CASE WHEN "
-                 "hl.id IS NOT NULL THEN hl.start_date ELSE l.creation_date END DESC")
+                 "hl.id IS NOT NULL THEN hl.start_date ELSE -l.id END DESC")
 
     if category is not None:
         where = "AND lc.category_id = %s "
