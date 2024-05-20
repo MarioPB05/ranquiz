@@ -9,6 +9,9 @@ function getCurrentURL() {
     return new URL(baseURL);
 }
 
+/**
+ * Redirige a la lista seleccionada
+ */
 function redirectToResult() {
     window.location.href = $(this).data('url');
 }
