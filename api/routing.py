@@ -5,7 +5,7 @@ from api.controllers.category_controller import validate_category, get_categorie
     get_categories_filtered, follow_category
 from api.controllers.list_controller import get_list_types, like_list, favorite_list, get_lists_filtered, \
     visibility_list, delete_or_recover_list, recover_list_eliminated, add_result_to_list
-from api.controllers.quest_controller import claim_quest_reward
+from api.controllers.goal_controller import claim_quest_reward
 from api.controllers.social_controller import get_comments, create_and_return_comment, add_award_to_comment_function, \
     get_awards
 from api.controllers.shop_controller import highlight_calculator, get_avatars, buy_a_avatar, equip_a_avatar, \
