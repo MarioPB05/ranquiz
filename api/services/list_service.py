@@ -85,7 +85,7 @@ def get_lists(limit=None, page=1, search='', user=None, order='default', categor
 
 def get_user_favourite_list(user, page_number):
     """Función que devuelve todas las listas de un usuario con paginación"""
-    query = f"""SELECT l.id, l.name, l.share_code, l.image, l.public, l.edit_date, l.creation_date, l.deleted,
+    query = """SELECT l.id, l.name, l.share_code, l.image, l.public, l.edit_date, l.creation_date, l.deleted,
                     (
                         SELECT COUNT(*)
                         FROM api_listlike sll
