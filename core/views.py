@@ -474,11 +474,8 @@ def category_lists(request, share_code):
 def result(request, share_code, id_result):  # skipcq: PYL-W0613
     """Vista que renderiza los resultados de una búsqueda"""
     list_result = get_result(id_result)
-
     items = list_result.itemorder_set.all()
-
     list_obj = list_result.list
-
     avg_top_items = get_list_avg_top_items(list_obj)
 
     return render(request, 'pages/list_result.html', {
