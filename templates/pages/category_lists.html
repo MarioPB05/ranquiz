@@ -55,35 +55,33 @@
                     <!--end::Wrapper-->
                 </div>
             {% else %}
-                    <div id="list_container"  class="w-100 align-items-center d-md-grid d-flex flex-column rounded p-1 p-sm-5 gap-7 min-h-250px" id="content" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr))">
+                <div id="list_container"  class="w-100 align-items-center d-md-grid d-flex flex-column rounded p-1 p-sm-5 gap-7 min-h-250px" id="content" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr))">
+                    {% for list in lists %}
+                        {% include 'components/list_template.html' with data=list %}
+                    {% endfor %}
+                </div>
 
-
-                {% for list in lists %}
-                    {% include 'components/list_template.html' with data=list %}
-                {% endfor %}
-
-        </div>
-
-            
-            <ul class="pagination mt-5">
-                {% if pagination.current_page < pagination.total_pages %}
-                    <li class="page-item previous {% if pagination.current_page == 1 %}disabled{% endif %}">
-                        <a class="page-link page-text" href="{% url 'category_lists' share_code=share_code %}?page={{ pagination.current_page|add:"-1" }}&order={{ order }}">Anterior</a>
-                    </li>
+                {% if pagination.total_pages > 1 %}
+                    <ul class="pagination mt-5">
+                        {% if pagination.current_page < pagination.total_pages %}
+                            <li class="page-item previous {% if pagination.current_page == 1 %}disabled{% endif %}">
+                                <a class="page-link page-text" href="{% url 'category_lists' share_code=share_code %}?page={{ pagination.current_page|add:"-1" }}&order={{ order }}">Anterior</a>
+                            </li>
+                        {% endif %}
+                        {% for page in pagination.page_numbers %}
+                            <li class="page-item {% if page == pagination.current_page %}active{% endif %}">
+                                <a class="page-link page-text" href="{% url 'category_lists' share_code=share_code %}?page={{ page }}&order={{ order }}">{{ page }}</a>
+                            </li>
+                        {% endfor %}
+                         {% if pagination.current_page < pagination.total_pages %}
+                             <li class="page-item next">
+                                <a class="page-link page-text" href="{% url 'category_lists' share_code=share_code %}?page={{ pagination.current_page|add:"1" }}&order={{ order }}">Siguiente</a>
+                             </li>
+                         {% endif %}
+                    </ul>
                 {% endif %}
-                {% for page in pagination.page_numbers %}
-                    <li class="page-item {% if page == pagination.current_page %}active{% endif %}">
-                        <a class="page-link page-text" href="{% url 'category_lists' share_code=share_code %}?page={{ page }}&order={{ order }}">{{ page }}</a>
-                    </li>
-                {% endfor %}
-                 {% if pagination.current_page < pagination.total_pages %}
-                     <li class="page-item next">
-                        <a class="page-link page-text" href="{% url 'category_lists' share_code=share_code %}?page={{ pagination.current_page|add:"1" }}&order={{ order }}">Siguiente</a>
-                     </li>
-                 {% endif %}
-            </ul>
+            {% endif %}
         </div>
-    {% endif %}
     </div>
 {% endblock %}
 
