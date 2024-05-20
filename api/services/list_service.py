@@ -209,7 +209,7 @@ def get_user_lists_pagination(user, show_deleted, visibility, search_query, page
 
 def get_user_results_pagination(user, list_obj, page_number, search_query):
     """Función que devuelve la cantidad de resultados de un usuario"""
-    query = Q(list__owner=user)
+    query = Q(user=user)
 
     if search_query:
         query &= Q(list__name__icontains=search_query)
