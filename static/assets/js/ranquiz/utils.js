@@ -171,7 +171,7 @@ function reloadUserData() {
          */
         .then((response) => {
             if (response.user) {
-                $('.user_avatar').attr('src', response.user.avatar);
+                $('.header_user_avatar').attr('src', response.user.avatar);
                 $('.user_money').text(response.user.money);
             }
         });
