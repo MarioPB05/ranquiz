@@ -355,7 +355,6 @@ def profile_results(request, user_data, card_data):
     card_data['list'] = list_obj.share_code if list_obj is not None else None
     card_data['selected_list'] = list_obj
 
-
     for user_result in user_results:
         card_data['data'].append({
             'list_name': user_result['list_name'],
