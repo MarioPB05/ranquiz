@@ -238,7 +238,7 @@ function toggleListLike(event) {
             } else {
                 icon.removeClass("bi-heart").addClass("bi-heart-fill text-danger");
             }
-        }
+       }
 
     }).catch(() => {
         toastMessage("error", "Error al dar like");
