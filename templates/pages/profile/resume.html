@@ -28,7 +28,7 @@
                     <div class="fw-bold">
                         <h4 class="text-gray-900 fw-bolder">
                             {% if is_own_profile %}
-                                No has seguido ninguna categoría!
+                                ¡No has seguido ninguna categoría!
                             {% else %}
                                 Sin categorías.
                             {% endif %}
@@ -48,7 +48,7 @@
             <!--end::Notice-->
         {% else %}
             <div class="position-relative">
-                {% if card_data.data.categories|length > 3 %}
+                {% if card_data.data.categories|length > 5 %}
                     <div class="rounded-circle w-65px h-65px bg-white shadow position-absolute z-index-3 d-flex align-items-center justify-content-center border border-2 border-primary"
                          style="top: 50%; right: 18px; transform: translate(0, -50%);" id="list_arrow_right">
                         <svg width="35" height="31" viewBox="0 0 35 31" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -58,9 +58,9 @@
                 {% endif %}
 
                 <div class="d-flex gap-4 pb-4 scroll">
-                    {% for list in card_data.data.categories %}
+                    {% for category in card_data.data.categories %}
                         <div class="min-w-250px">
-                            {% include 'components/category_template.html' with data=list %}
+                            {% include 'components/category_template.html' with data=category %}
                         </div>
                     {% endfor %}
                 </div>
@@ -98,7 +98,7 @@
                 <div class="d-flex flex-stack flex-grow-1">
                     <!--begin::Content-->
                     <div class="fw-bold">
-                        <h4 class="text-gray-900 fw-bolder">No hay listas publicadas!</h4>
+                        <h4 class="text-gray-900 fw-bolder">¡No hay listas publicadas!</h4>
                         <div class="fs-6 text-gray-700">
                             {% if is_own_profile %}
                                 Aún no has creado ninguna lista, comienza a crear listas para ver tus gustos y preferencias.
@@ -262,7 +262,7 @@
         <!--end::Notice-->
     {% else %}
             <div class="position-relative">
-                {% if card_data.data.following|length > 3 %}
+                {% if card_data.data.following|length > 6 %}
                     <div class="rounded-circle w-65px h-65px bg-white shadow position-absolute z-index-3 d-flex align-items-center justify-content-center border border-2 border-primary"
                          style="top: 50%; right: 18px; transform: translate(0, -50%);" id="list_arrow_right">
                         <svg width="35" height="31" viewBox="0 0 35 31" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -272,9 +272,9 @@
                 {% endif %}
 
                 <div class="d-flex gap-4 pb-4 scroll">
-                    {% for list in card_data.data.following %}
+                    {% for user in card_data.data.following %}
                         <div class="min-w-200px">
-                            {% include 'components/user_template.html' with data=list %}
+                            {% include 'components/user_template.html' with data=user %}
                         </div>
                     {% endfor %}
                 </div>
@@ -334,7 +334,7 @@
         <!--end::Notice-->
     {% else %}
             <div class="position-relative">
-                {% if card_data.data.followers|length > 3 %}
+                {% if card_data.data.followers|length > 6 %}
                     <div class="rounded-circle w-65px h-65px bg-white shadow position-absolute z-index-3 d-flex align-items-center justify-content-center border border-2 border-primary"
                          style="top: 50%; right: 18px; transform: translate(0, -50%);" id="list_arrow_right">
                         <svg width="35" height="31" viewBox="0 0 35 31" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -344,9 +344,9 @@
                 {% endif %}
 
                 <div class="d-flex gap-4 pb-4 scroll">
-                    {% for list in card_data.data.followers %}
+                    {% for user in card_data.data.followers %}
                         <div class="min-w-200px">
-                            {% include 'components/user_template.html' with data=list %}
+                            {% include 'components/user_template.html' with data=user %}
                         </div>
                     {% endfor %}
                 </div>
@@ -354,9 +354,8 @@
         {% endif %}
     </div>
     <!--end::Card body-->
-    </div>
-    <!--end::Card body-->
 </div>
+<!--end::Card body-->
 <!--end::Followers View-->
 
 <script>const share_code = '{{ share_code }}';</script>

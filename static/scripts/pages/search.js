@@ -353,6 +353,7 @@ function onDocumentReady() {
 
         if (button.hasClass("btn-primary")) {
             button.removeClass("btn-primary").addClass("btn-outline-primary");
+            button.addClass("btn-active-primary");
             button.text("Seguir");
             button.blur();
         } else {
@@ -365,6 +366,7 @@ function onDocumentReady() {
         }).catch(() => {
             const buttonFollow   = $(event.currentTarget);
             buttonFollow.toggleClass("btn-primary").toggleClass("btn-outline-primary");
+            buttonFollow.toggleClass("btn-active-primary");
             buttonFollow.text("Seguir");
             buttonFollow.blur();
             $(this).prop("disabled", false);

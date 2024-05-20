@@ -85,7 +85,7 @@
                 <div class="d-flex flex-stack flex-grow-1">
                     <!--begin::Content-->
                     <div class="fw-bold">
-                        <h4 class="text-gray-900 fw-bolder">No se han encontrado resultados!</h4>
+                        <h4 class="text-gray-900 fw-bolder">¡No se han encontrado resultados!</h4>
                         <div class="fs-6 text-gray-700">
                             No se han encontrado listas con el término de búsqueda '{{ card_data.search_query }}'.
                         </div>
@@ -128,7 +128,7 @@
             </div>
 
             {% if card_data.pagination.has_other_pages %}
-                <div class="text-center">
+                <div class="text-center mt-10">
                     <ul class="pagination">
                         {% if card_data.pagination.has_previous %}
                             <li class="page-item">

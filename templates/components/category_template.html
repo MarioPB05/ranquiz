@@ -8,9 +8,9 @@ Clases:
 -->
 
 <!-- Begin category template -->
-<div {% if not data %}id="template_category"{% endif %} class="bg-white {% if not data %}d-none{% endif %} category_element flex-column w-100 overflow-hidden bg-hover-light-dark h-225px p-5 cursor-pointer position-relative border-secondary-dark border-1 border rounded d-grid gap-2" style="grid-template-rows: 3fr 1fr auto">
+<div {% if not data %}id="template_category"{% endif %} class="bg-white {% if not data %}d-none{% endif %} category_element flex-column w-100 overflow-hidden bg-hover-light-dark h-225px p-5 cursor-pointer position-relative border-secondary-dark border-1 border rounded d-grid gap-2" style="grid-template-rows: 3fr 1fr auto" href="{% if data %}{% url 'category_lists' share_code=data.share_code %}{% endif %}" data-share_code="{{ data.share_code }}">
     <span class="text-primary fs-1 category_name fw-bolder text-center w-100 d-flex overflow-auto justify-content-center align-items-center text-break">{% if data %}{{ data.user }}{% endif %}</span>
-    
+
     <div class="d-flex flex-column w-100 gap-1">
         <div class="d-flex align-items-center justify-content-center gap-3">
             <span class="category_list_number text-secondary-dark fs-3">{% if data %}{{ data.lists }}{% endif %}</span>
@@ -23,6 +23,6 @@ Clases:
         </div>
     </div>
     
-    <button class="btn mt-2 {% if not data or not data.followed %}btn-outline btn-active-primary btn-outline-primary{% elif data %}btn-primary{% endif %} w-100 category_follow">{% if not data or not data.followed %}Seguir{% elif data %}Siguiendo{% endif %}</button>
+    <button class="btn mt-2 btn-outline {% if not data or not data.followed %}btn-outline-primary btn-active-primary{% elif data %}btn-primary{% endif %} w-100 category_follow">{% if not data or not data.followed %}Seguir{% elif data %}Siguiendo{% endif %}</button>
 </div>
 <!-- End category template -->
