@@ -26,7 +26,8 @@ from api.services.list_service import (
     get_result, get_list_avg_top_items
 )
 from api.services.list_service import get_user_lists
-from api.services.notification_service import get_notifications, read_notification
+from api.services.notification_service import get_notifications, read_notification, get_notifications_pagination, \
+    count_unread_notifications
 from api.services.shop_service import highlight_list
 from api.services.user_service import (
     user_login,
@@ -391,7 +392,14 @@ def profile_quests(request, user_data, card_data):
 
 def profile_notifications(request, user_data, card_data):
     """Vista que renderiza las notificaciones de un usuario"""
-    notifications = get_notifications(user_data)
+    page_number = int(request.GET.get('page', 1))
+
+    notifications = get_notifications(user_data, page_number)
+    pagination = get_notifications_pagination(user_data, page_number)
+    unread_notifications = count_unread_notifications(user_data)
+
+    card_data['pagination'] = pagination
+    card_data['unread_notifications'] = unread_notifications
 
     for notification in notifications:
         target = notification['target']
