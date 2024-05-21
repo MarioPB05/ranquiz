@@ -1,5 +1,8 @@
 import {promiseAjax, toastMessage} from "/static/assets/js/ranquiz/utils.js";
 
+/**
+ * Función que limpia las notificaciones
+ */
 function clear_notifications() {
     promiseAjax('/api/notification/clear', 'GET').then(response => {
         if (response.status === 'success') {
@@ -12,6 +15,9 @@ function clear_notifications() {
     });
 }
 
+/**
+ * Función que se ejecuta cuando el documento está listo
+ */
 function onDocumentReady() {
     $('#clear_notifications').on("click",  () => {
         Swal.fire({ // skipcq: JS-0125
