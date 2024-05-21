@@ -1,57 +1,8 @@
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.db.models import OuterRef, Exists, Q
-
 from api.models import Notification, NotificationRead
 from api.services import PAGINATION_ITEMS_PER_PAGE
 from api.services.list_service import get_pagination_data
 from api.services.query_service import execute_query
-from api.services.social_service import get_following
 from core import format_elapsed_time
-
-
-# def get_notifications(user, page_number=1):
-#     """Obtiene las notificaciones de un usuario"""
-#     own_notifications = Notification.objects.filter(
-#         user=user, target=Notification.TARGET_CHOICES[0][0]
-#     ).annotate(
-#         read=Exists(
-#             NotificationRead.objects.filter(user=user, notification=OuterRef('pk'))
-#         )
-#     )
-#
-#     for notification in own_notifications:
-#         notification.ellapsed_time = format_elapsed_time(notification.date)
-#
-#     # Obtener los usuarios que sigue el usuario
-#     temp = get_following(user)
-#     following_users = [user_follow.user_followed for user_follow in temp]
-#
-#     following_notifications = Notification.objects.filter(
-#         user__in=following_users,
-#         target=Notification.TARGET_CHOICES[1][0]
-#     ).annotate(
-#         read=Exists(
-#             NotificationRead.objects.filter(user=user, notification=OuterRef('pk'))
-#         )
-#     )
-#
-#     for notification in following_notifications:
-#         notification.ellapsed_time = format_elapsed_time(notification.date)
-#
-#     all_notifications = own_notifications.union(following_notifications).order_by('-date')
-#
-#     paginator = Paginator(all_notifications, PAGINATION_ITEMS_PER_PAGE/2)
-#
-#     try:
-#         notifications_page = paginator.page(page_number)
-#     except PageNotAnInteger:
-#         # If page is not an integer, deliver first page.
-#         notifications_page = paginator.page(1)
-#     except EmptyPage:
-#         # If page is out of range (e.g. 9999), deliver last page of results.
-#         notifications_page = paginator.page(paginator.num_pages)
-#
-#     return notifications_page
 
 
 def get_notifications(user, page_number=1):
@@ -99,11 +50,7 @@ def get_notifications(user, page_number=1):
 
 def get_notifications_pagination(user, page_number):
     """Servicio que devuelve la cantidad de notificaciones"""
-    query = Q(user=user, target=Notification.TARGET_CHOICES[0][0]) | Q(
-        user__in=get_following(user), target=Notification.TARGET_CHOICES[1][0]
-    )
-
-    notifications = Notification.objects.filter(query).count()
+    notifications = Notification.objects.filter(user=user).count()
 
     return get_pagination_data(notifications, page_number)
 
@@ -116,3 +63,17 @@ def read_notification(user, notification_id):
     notification = Notification.objects.get(id=notification_id)
     notification_read = NotificationRead.objects.create(user=user, notification=notification)
     notification_read.save()
+
+
+def count_unread_notifications(user):
+    """Servicio que devuelve la cantidad de notificaciones no leídas"""
+    notifications = Notification.objects.filter(user=user).count()
+    notifications_read = NotificationRead.objects.filter(user=user).count()
+
+    return notifications - notifications_read
+
+
+def clear_notifications(user):
+    """Servicio que marca todas las notificaciones como leídas"""
+    NotificationRead.objects.filter(user=user).delete()
+    Notification.objects.filter(user=user).delete()
