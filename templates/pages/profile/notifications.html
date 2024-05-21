@@ -1,10 +1,10 @@
 {% load static %}
 <!--begin::Categories View-->
-<div class="card shadow shadow-sm mb-5 mb-xl-10" id="kt_profile_details_view">
+<div class="card shadow shadow-sm mb-5 mb-xl-10" id="">
     <!--begin::Card body-->
     <div class="card-body p-9 d-flex gap-10 align-items-center justify-content-between">
-        <h1 class="fs-3 fw-bolder m-0">5 notificaciones nuevas</h1>
-        <button class="btn btn-primary fs-7">Limpiar notificaciones</button>
+        <h1 class="fs-3 fw-bolder m-0">{{ card_data.unread_notifications }} notificaciones nuevas</h1>
+        <button class="btn btn-primary fs-7" id="clear_notifications">Limpiar notificaciones</button>
     </div>
     <!--end::Card body-->
 </div>
@@ -12,7 +12,7 @@
 
 {% for notification in card_data.data %}
     <!--begin::Categories View-->
-    <a href="{{ notification.url }}" class="card shadow {% if not notification.read %}bg-primary-50{% endif %} shadow-sm mb-5 mb-xl-10 border border-1 position-relative border-gray-300" id="kt_profile_details_view">
+    <a href="{{ notification.url }}" class="card shadow {% if not notification.read %}bg-primary-50{% endif %} shadow-sm mb-5 mb-xl-10 border border-1 position-relative border-gray-300">
         <!--begin::Card body-->
         <div class="card-body p-9 d-flex gap-10 align-items-center">
             <i class="bi {{ notification.icon }} fs-40px text-primary"></i>
@@ -33,3 +33,32 @@
     <!--end::Categories View-->
 {% endfor %}
 
+{% if card_data.pagination.has_other_pages %}
+    <div class="card shadow shadow-sm mb-5 mb-xl-10">
+        <div class="card-body">
+            <div class="text-center">
+                <ul class="pagination">
+                    {% if card_data.pagination.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="{% url 'user' share_code=user_data.share_code %}?card=notifications&page={{ card_data.pagination.previous_page_number }}">Anterior</a>
+                        </li>
+                    {% endif %}
+
+                    {% for i in card_data.pagination.page_range %}
+                        <li class="page-item {% if card_data.pagination.number == i %}active{% endif %}">
+                            <a class="page-link" href="{% url 'user' share_code=user_data.share_code %}?card=notifications&page={{ i }}">{{ i }}</a>
+                        </li>
+                    {% endfor %}
+
+                    {% if card_data.pagination.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="{% url 'user' share_code=user_data.share_code %}?card=notifications&page={{ card_data.pagination.next_page_number }}">Siguiente</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+<script src="{% static 'scripts/pages/profile/notifications.js' %}" type="module"></script>
