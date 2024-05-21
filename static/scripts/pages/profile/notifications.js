@@ -13,7 +13,7 @@ function clear_notifications() {
 }
 
 function onDocumentReady() {
-    $('#clear_notifications').on("click", function () {
+    $('#clear_notifications').on("click",  () => {
         Swal.fire({ // skipcq: JS-0125
             title: "¿Estás seguro?",
             icon: "warning",
