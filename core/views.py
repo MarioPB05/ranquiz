@@ -26,6 +26,7 @@ from api.services.list_service import (
     get_result, get_list_avg_top_items
 )
 from api.services.list_service import get_user_lists
+from api.services.notification_service import get_notifications, read_notification
 from api.services.shop_service import highlight_list
 from api.services.user_service import (
     user_login,
@@ -388,6 +389,39 @@ def profile_quests(request, user_data, card_data):
         })
 
 
+def profile_notifications(request, user_data, card_data):
+    """Vista que renderiza las notificaciones de un usuario"""
+    notifications = get_notifications(user_data)
+
+    for notification in notifications:
+        target = notification['target']
+        url = None
+
+        if notification['share_code'].__contains__('LS'):
+            target = List.get(share_code=notification['share_code']).owner
+            url = f'/list/{notification["share_code"]}/view'
+        elif notification['share_code'].__contains__('US'):
+            target = User.get(share_code=notification['share_code'])
+            url = f'/user/{notification["share_code"]}'
+
+            if notification['type_id'] == 9:
+                url = f'/user/{notification["share_code"]}/?card=quests'
+
+        card_data['data'].append({
+            'icon': notification['icon'],
+            'title': notification['title'].replace('[USUARIO]', target.username),
+            'description': notification['description'].replace('[USUARIO]', target.username),
+            'date': notification['date'],
+            'share_code': notification['share_code'],
+            'read': notification['userRead'],
+            'url': url,
+            'ellapsed_time': notification['ellapsed_time']
+        })
+
+        if not notification['userRead']:
+            read_notification(user_data, notification['notification_id'])
+
+
 @partial_login_required
 def profile(request, share_code=None):
     """Vista que renderiza el perfil de un usuario"""
@@ -416,6 +450,8 @@ def profile(request, share_code=None):
         profile_results(request, user_data, card_data)
     elif current_card == 'quests':
         profile_quests(request, user_data, card_data)
+    elif current_card == 'notifications':
+        profile_notifications(request, user_data, card_data)
 
     return render(request, 'pages/profile.html', {
         'user_data': user_data,
