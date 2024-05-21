@@ -1,0 +1,35 @@
+{% load static %}
+<!--begin::Categories View-->
+<div class="card shadow shadow-sm mb-5 mb-xl-10" id="kt_profile_details_view">
+    <!--begin::Card body-->
+    <div class="card-body p-9 d-flex gap-10 align-items-center justify-content-between">
+        <h1 class="fs-3 fw-bolder m-0">5 notificaciones nuevas</h1>
+        <button class="btn btn-primary fs-7">Limpiar notificaciones</button>
+    </div>
+    <!--end::Card body-->
+</div>
+<!--end::Categories View-->
+
+{% for notification in card_data.data %}
+    <!--begin::Categories View-->
+    <a href="{{ notification.url }}" class="card shadow {% if not notification.read %}bg-primary-50{% endif %} shadow-sm mb-5 mb-xl-10 border border-1 position-relative border-gray-300" id="kt_profile_details_view">
+        <!--begin::Card body-->
+        <div class="card-body p-9 d-flex gap-10 align-items-center">
+            <i class="bi {{ notification.icon }} fs-40px text-primary"></i>
+    
+            <div>
+                <div class="fs-4 fw-bolder mb-1">{{ notification.title }}</div>
+                <div class="fs-6 fw-bold text-gray-400">{{ notification.description }}</div>
+            </div>
+        </div>
+        <!--end::Card body-->
+        {% if not notification.read %}
+            <span class="badge badge-primary position-absolute" style="right: -5px; top: -5px">Nuevo</span>
+        {% else %}
+            <p class="m-0 text-muted position-absolute top-0 end-0 m-4">{{ notification.ellapsed_time }}</p>
+        {% endif %}
+        
+    </a>
+    <!--end::Categories View-->
+{% endfor %}
+
