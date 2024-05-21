@@ -6,6 +6,7 @@ from core import format_elapsed_time
 
 
 def get_notifications(user, page_number=1):
+    """Servicio que devuelve las notificaciones de un usuario paginadas"""
     query = """
     WITH own_notifications AS (
         SELECT n.*, EXISTS(
