@@ -37,7 +37,8 @@ def get_notifications(user, page_number=1):
     target_own = Notification.TARGET_CHOICES[0][0]
     target_following = Notification.TARGET_CHOICES[1][0]
     offset = int((page_number - 1) * PAGINATION_ITEMS_PER_PAGE/2)
-    params = [user.id, user.id, target_own, user.id, user.id, target_following, int(PAGINATION_ITEMS_PER_PAGE/2), offset]
+    params = [user.id, user.id, target_own, user.id, user.id, target_following, int(PAGINATION_ITEMS_PER_PAGE/2),
+              offset]
 
     notifications = execute_query(query, params)
 
