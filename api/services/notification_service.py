@@ -9,7 +9,7 @@ def get_notifications(user, page_number=1):
     query = """
     WITH own_notifications AS (
         SELECT n.*, EXISTS(
-            SELECT 1 FROM api_notificationread r 
+            SELECT 1 FROM api_notificationread r
             WHERE r.user_id = %s AND r.notification_id = n.id
         ) AS userRead
         FROM api_notification n
@@ -17,7 +17,7 @@ def get_notifications(user, page_number=1):
     ),
     following_notifications AS (
         SELECT n.*, EXISTS(
-            SELECT 1 FROM api_notificationread r 
+            SELECT 1 FROM api_notificationread r
             WHERE r.user_id = %s AND r.notification_id = n.id
         ) AS userRead
         FROM api_notification n
