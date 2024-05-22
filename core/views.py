@@ -393,13 +393,16 @@ def profile_quests(request, user_data, card_data):
 def profile_notifications(request, user_data, card_data):
     """Vista que renderiza las notificaciones de un usuario"""
     page_number = int(request.GET.get('page', 1))
+    show_all = request.GET.get('show_all', 'false') == 'true'
 
-    notifications = get_notifications(user_data, page_number)
-    pagination = get_notifications_pagination(user_data, page_number)
+    notifications = get_notifications(user_data, page_number, show_all)
+    pagination = get_notifications_pagination(user_data, page_number, show_all)
     unread_notifications = count_unread_notifications(user_data)
 
+    card_data['show_all'] = show_all
     card_data['pagination'] = pagination
     card_data['unread_notifications'] = unread_notifications
+
 
     for notification in notifications:
         target = notification['target']

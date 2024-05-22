@@ -5,35 +5,70 @@ from api.services.query_service import execute_query
 from core import format_elapsed_time
 
 
-def get_notifications(user, page_number=1):
+def get_notifications(user, page_number=1, show_all=False):
     """Servicio que devuelve las notificaciones de un usuario paginadas"""
-    query = """
-    WITH own_notifications AS (
-        SELECT n.*, EXISTS(
-            SELECT 1 FROM api_notificationread r
-            WHERE r.user_id = %s AND r.notification_id = n.id
-        ) AS userRead
-        FROM api_notification n
-        WHERE n.user_id = %s AND n.target = %s
-    ),
-    following_notifications AS (
-        SELECT n.*, EXISTS(
-            SELECT 1 FROM api_notificationread r
-            WHERE r.user_id = %s AND r.notification_id = n.id
-        ) AS userRead
-        FROM api_notification n
-        WHERE n.user_id IN (
-            SELECT user_followed_id FROM ranquiz.api_userfollow WHERE user_id = %s
-        ) AND n.target = %s
-    )
-    SELECT *, nt.id as type_id, own.id as notification_id FROM own_notifications own
-    JOIN api_notificationtype nt ON own.type_id = nt.id
-    UNION ALL
-    SELECT *, nt.id as type_id, flw.id as notification_id FROM following_notifications flw
-    JOIN api_notificationtype nt ON flw.type_id = nt.id
-    ORDER BY date DESC
-    LIMIT %s OFFSET %s;
-    """
+    query = ""
+
+    if show_all:
+        query = """
+        WITH own_notifications AS (
+            SELECT n.*, EXISTS(
+                SELECT 1 FROM api_notificationread r
+                WHERE r.user_id = %s AND r.notification_id = n.id
+            ) AS userRead
+            FROM api_notification n
+            WHERE n.user_id = %s AND n.target = %s
+        ),
+        following_notifications AS (
+            SELECT n.*, EXISTS(
+                SELECT 1 FROM api_notificationread r
+                WHERE r.user_id = %s AND r.notification_id = n.id
+            ) AS userRead
+            FROM api_notification n
+            WHERE n.user_id IN (
+                SELECT user_followed_id FROM ranquiz.api_userfollow WHERE user_id = %s
+            ) AND n.target = %s
+        )
+        SELECT *, nt.id as type_id, own.id as notification_id FROM own_notifications own
+        JOIN api_notificationtype nt ON own.type_id = nt.id
+        UNION ALL
+        SELECT *, nt.id as type_id, flw.id as notification_id FROM following_notifications flw
+        JOIN api_notificationtype nt ON flw.type_id = nt.id
+        ORDER BY date DESC
+        LIMIT %s OFFSET %s;
+        """
+    else:
+        query = """
+        WITH own_notifications AS (
+            SELECT n.*, EXISTS(
+                SELECT 1 FROM api_notificationread r
+                WHERE r.user_id = %s AND r.notification_id = n.id
+            ) AS userRead
+            FROM api_notification n
+            WHERE n.user_id = %s AND n.target = %s
+        ),
+        following_notifications AS (
+            SELECT n.*, EXISTS(
+                SELECT 1 FROM api_notificationread r
+                WHERE r.user_id = %s AND r.notification_id = n.id
+            ) AS userRead
+            FROM api_notification n
+            WHERE n.user_id IN (
+                SELECT user_followed_id FROM ranquiz.api_userfollow WHERE user_id = %s
+            ) AND n.target = %s
+        )
+        SELECT own.*, nt.id as type_id, nt.*, own.id as notification_id FROM own_notifications own
+        JOIN api_notificationtype nt ON own.type_id = nt.id
+        LEFT JOIN api_notificationread r1 ON own.id = r1.notification_id
+        WHERE r1.user_id IS NULL
+        UNION ALL
+        SELECT flw.*, nt.id as type_id, nt.*, flw.id as notification_id FROM following_notifications flw
+        JOIN api_notificationtype nt ON flw.type_id = nt.id
+        LEFT JOIN api_notificationread r2 ON flw.id = r2.notification_id
+        WHERE r2.user_id IS NULL
+        ORDER BY date DESC
+        LIMIT %s OFFSET %s;
+        """
 
     target_own = Notification.TARGET_CHOICES[0][0]
     target_following = Notification.TARGET_CHOICES[1][0]
@@ -50,9 +85,14 @@ def get_notifications(user, page_number=1):
     return notifications
 
 
-def get_notifications_pagination(user, page_number):
+def get_notifications_pagination(user, page_number, show_all=False):
     """Servicio que devuelve la cantidad de notificaciones"""
-    notifications = Notification.objects.filter(user=user).count()
+    notifications = None
+
+    if show_all:
+        notifications = Notification.objects.filter(user=user).count()
+    else:
+        notifications = Notification.objects.filter(user=user).exclude(notificationread__user=user).count()
 
     return get_pagination_data(notifications, page_number)
 
