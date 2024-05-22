@@ -403,7 +403,6 @@ def profile_notifications(request, user_data, card_data):
     card_data['pagination'] = pagination
     card_data['unread_notifications'] = unread_notifications
 
-
     for notification in notifications:
         target = notification['target']
         url = None
