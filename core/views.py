@@ -26,7 +26,7 @@ from api.services.list_service import (
     get_result, get_list_avg_top_items
 )
 from api.services.list_service import get_user_lists
-from api.services.notification_service import get_notifications, read_notification, get_notifications_pagination, \
+from api.services.notification_service import get_notifications, get_notifications_pagination, \
     count_unread_notifications, read_notifications
 from api.services.shop_service import highlight_list
 from api.services.user_service import (
