@@ -22,9 +22,10 @@ function removePageLoader() {
 /**
  * Esta función se encarga de volver a añadir el loader de la página
  */
-function addPageLoader() {
+function addPageLoader(text= "Cargando...") {
     $('body').css("overflow-y", "hidden");
     $('#loading_indicator').addClass("d-flex");
+    $('#text-loading').text(text);
 }
 
 /**
