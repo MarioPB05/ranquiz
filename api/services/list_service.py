@@ -1,9 +1,8 @@
-import math
-
 from django.db.models import Q, Avg
 
 from django.db import transaction
 
+from api import get_pagination_data
 from api.forms.list_form import CreateListForm
 from api.models.notification_type import NotificationTypes
 from api.services import PAGINATION_ITEMS_PER_PAGE
@@ -229,22 +228,6 @@ def get_user_results_pagination(user, list_obj, page_number, search_query):
     count = ListAnswer.objects.filter(query).count()
 
     return get_pagination_data(count, page_number)
-
-
-def get_pagination_data(count, page_number):
-    """Función que devuelve los datos de paginación"""
-    pages = math.ceil(count / (PAGINATION_ITEMS_PER_PAGE / 2))
-    return {
-        'total': count,
-        'pages': pages,
-        'number': page_number,
-        'page_range': list(range(1, int(pages) + 1)),
-        'has_previous': page_number > 1,
-        'has_next': page_number < pages,
-        'has_other_pages': pages > 1,
-        'previous_page_number': page_number - 1,
-        'next_page_number': page_number + 1,
-    }
 
 
 def set_category(list_obj, category):
