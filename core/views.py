@@ -395,6 +395,9 @@ def profile_notifications(request, user_data, card_data):
     page_number = int(request.GET.get('page', 1))
     show_all = request.GET.get('show_all', 'False') == 'True'
 
+    if not show_all and page_number != 1:
+        page_number -= 1
+
     # Obtener todas las notificaciones relevantes en una sola consulta
     notifications = get_notifications(user_data, page_number, show_all)
     unread_notification_ids = [n['notification_id'] for n in notifications if not n['userRead']]
