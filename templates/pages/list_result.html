@@ -4,16 +4,13 @@
 {% block content %}
     <div class="d-flex flex-column w-100 align-center align-items-center gap-10">
         <div class="container">
-            <div class="row-cols-xxl column align-items-center">
-                <!-- Columna izquierda -->
+            <div class="row-cols-xxl row align-items-center">
                 <div class="col text-center text-xxl-start ps-xxl-20 ps-0">
-                    <a href="" class="btn btn-outline btn-outline-primary btn-active-primary">Ir a la lista</a>
+                    <a href="{% url 'list_details' share_code=share_code %}" class="btn btn-outline btn-outline-primary btn-active-primary d-sm-inline d-none">Ir a la lista</a>
                 </div>
-                <!-- Columna central -->
                 <div class="col text-center pe-xxl-20 pe-0 pt-5">
                     <h1 class="text-primary-600 fs-30px fw-boldest">{{ list_name }}</h1>
                 </div>
-                <!-- Columna derecha (vacía) -->
                 <div class="col">
                     <!-- Espacio vacío -->
                 </div>
@@ -23,15 +20,16 @@
         <div class="d-flex flex-column flex-xxl-row w-100 justify-content-around mw-xxl-100 mw-1000px">
             <div class="d-flex flex-column w-100 align-items-center">
                 <h1>Tus resultados</h1>
-                <div class="d-flex flex-row h-350px min-w-500px align-items-end w-100 justify-content-center p-20 pt-0 ">
-                    <div class="d-flex flex-row h-350px ps-5 pe-5 min-w-500px align-items-end w-100 justify-content-center border-bottom border-1 border-dark">
+                <div class="d-flex flex-row h-350px min-w-300px align-items-end w-100 justify-content-center p-20 pt-0 ">
+                    <div class="d-flex flex-row h-350px ps-5 pe-5 min-w-300px align-items-end w-100 justify-content-center border-bottom border-1 border-dark">
                         <div class="col align-items-center justify-content-center">
-                            <div class="d-flex justify-content-center align-items-center ellipsis-two-lines">
+                            <div class="d-flex justify-content-center align-items-center align-content-center">
                                 {% if not item_top2.item.image.url %}
-                                    <span class="w-100 p-3 text-center fs-1 fw-bolder text-break ellipsis-two-lines">{{ item_top2.item.name }}</span>
+                                    <span class="w-100 p-3 text-center fs-1 fs-sm-2 fw-bolder text-break ellipsis-two-lines">{{ item_top2.item.name }}</span>
                                 {% else %}
                                     <img src="{{ item_top2.item.image.url }}"
-                                         class="w-100 mw-175px p-3 min-h-125px mh-125px" style="object-fit: contain">
+                                         class="w-100 mw-175px mw-sm-125px p-3 min-h-125px mh-125px"
+                                         style="object-fit: contain">
                                 {% endif %}
                             </div>
                             <div class="d-flex flex-column align-items-center bg-primary-300 p-6 min-h-100px rounded-top">
@@ -39,7 +37,7 @@
                             </div>
                         </div>
                         <div class="col align-items-center justify-content-center">
-                            <div class="d-flex justify-content-center align-items-center ellipsis-two-lines">
+                            <div class="d-flex justify-content-center align-items-center ">
                                 {% if not item_top1.item.image.url %}
                                     <span class="w-100 p-3 text-center fs-1 fw-bolder text-break ellipsis-two-lines">{{ item_top1.item.name }}</span>
                                 {% else %}
@@ -52,7 +50,7 @@
                             </div>
                         </div>
                         <div class="col align-items-center justify-content-center align-content-center">
-                            <div class="d-flex justify-content-center align-items-center ellipsis-two-lines">
+                            <div class="d-flex justify-content-center align-items-center">
                                 {% if not item_top3.item.image.url %}
                                     <span class="w-100 p-3 text-center fs-1 fw-bolder text-break ellipsis-two-lines">{{ item_top3.item.name }}</span>
                                 {% else %}
@@ -80,10 +78,10 @@
             <div class="divider d-none d-xxl-flex"></div>
             <div class="d-flex flex-column w-100 align-items-center">
                 <h1>Promedio de {{ num_results }} resultados</h1>
-                <div class="d-flex flex-row h-350px min-w-500px align-items-end w-100 justify-content-center p-20 pt-0">
-                    <div class="d-flex flex-row h-350px ps-5 pe-5 min-w-500px align-items-end w-100 justify-content-center border-bottom border-1 border-dark">
+                <div class="d-flex flex-row h-350px min-w-300px align-items-end w-100 justify-content-center p-20 pt-0">
+                    <div class="d-flex flex-row h-350px ps-5 pe-5 min-w-300px align-items-end w-100 justify-content-center border-bottom border-1 border-dark">
                         <div class="col align-items-center justify-content-center">
-                            <div class="d-flex justify-content-center align-items-center ellipsis-two-lines">
+                            <div class="d-flex justify-content-center align-items-center">
                                 {% if not avg_top2.2 %}
                                     <span class="w-100 p-3 text-center fs-1 fw-bolder text-break ellipsis-two-lines">{{ avg_top2.0 }}</span>
                                 {% else %}
@@ -96,7 +94,7 @@
                             </div>
                         </div>
                         <div class="col align-items-center justify-content-center">
-                            <div class="d-flex justify-content-center align-items-center ellipsis-two-lines">
+                            <div class="d-flex justify-content-center align-items-center">
                                 {% if not avg_top1.2 %}
                                     <span class="w-100 p-3 text-center fs-1 fw-bolder text-break ellipsis-two-lines">{{ avg_top1.0 }}</span>
                                 {% else %}
@@ -109,7 +107,7 @@
                             </div>
                         </div>
                         <div class="col align-items-center justify-content-center">
-                            <div class="d-flex justify-content-center align-items-center ellipsis-two-lines">
+                            <div class="d-flex justify-content-center align-items-center">
                                 {% if not avg_top3.2 %}
                                     <p class="w-100 m-0 p-3 text-center fs-1 fw-bolder text-break ellipsis-two-lines">{{ avg_top3.0 }}</p>
                                 {% else %}
