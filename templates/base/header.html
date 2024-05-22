@@ -65,7 +65,7 @@
                         <span class="fw-bolder ms-2 user_money">{{ user.money }}</span>
                     </a>
 
-                    <a class="btn btn-icon btn-icon-muted btn-active-light btn-active-color-primary w-30px h-30px w-md-40px h-md-40px text-hover-primary me-4" href="#">
+                    <a class="btn btn-icon btn-icon-muted btn-active-light btn-active-color-primary w-30px h-30px w-md-40px h-md-40px text-hover-primary me-4" href="{% url 'user' share_code=user.share_code %}?card=notifications">
                         <i class="bi bi-envelope fs-2x text-white"></i>
                     </a>
                 {% endif %}
