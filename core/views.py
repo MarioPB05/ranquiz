@@ -549,7 +549,7 @@ def result(request, share_code, id_result):  # skipcq: PYL-W0613
     list_result = get_result(id_result)
     items = list_result.itemorder_set.all()
     list_obj = list_result.list
-    avg_top_items = get_list_avg_top_items(list_obj)
+    avg_top_items, num_results = get_list_avg_top_items(list_obj)
 
     return render(request, 'pages/list_result.html', {
         'resultado': list_result,
@@ -564,4 +564,6 @@ def result(request, share_code, id_result):  # skipcq: PYL-W0613
         'avg_top2': avg_top_items[1],
         'avg_top3': avg_top_items[2],
         'list_name': list_obj.name,
+        'num_results': num_results,
+        'share_code': share_code,
     })
