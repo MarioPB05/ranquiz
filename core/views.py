@@ -393,7 +393,7 @@ def profile_quests(request, user_data, card_data):
 def profile_notifications(request, user_data, card_data):
     """Vista que renderiza las notificaciones de un usuario"""
     page_number = int(request.GET.get('page', 1))
-    show_all = request.GET.get('show_all', 'false') == 'true'
+    show_all = request.GET.get('show_all', 'False') == 'True'
 
     # Obtener todas las notificaciones relevantes en una sola consulta
     notifications = get_notifications(user_data, page_number, show_all)
