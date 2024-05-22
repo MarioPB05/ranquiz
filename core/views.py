@@ -27,7 +27,7 @@ from api.services.list_service import (
 )
 from api.services.list_service import get_user_lists
 from api.services.notification_service import get_notifications, read_notification, get_notifications_pagination, \
-    count_unread_notifications
+    count_unread_notifications, read_notifications
 from api.services.shop_service import highlight_list
 from api.services.user_service import (
     user_login,
@@ -395,7 +395,11 @@ def profile_notifications(request, user_data, card_data):
     page_number = int(request.GET.get('page', 1))
     show_all = request.GET.get('show_all', 'false') == 'true'
 
+    # Obtener todas las notificaciones relevantes en una sola consulta
     notifications = get_notifications(user_data, page_number, show_all)
+    unread_notification_ids = [n['notification_id'] for n in notifications if not n['userRead']]
+
+    # Obtener datos de paginación y notificaciones no leídas
     pagination = get_notifications_pagination(user_data, page_number, show_all)
     unread_notifications = count_unread_notifications(user_data)
 
@@ -403,24 +407,41 @@ def profile_notifications(request, user_data, card_data):
     card_data['pagination'] = pagination
     card_data['unread_notifications'] = unread_notifications
 
+    # Diccionarios para cachear objetos List y User
+    list_cache = {}
+    user_cache = {}
+
+    notification_data = []
+
     for notification in notifications:
-        target = notification['target']
+        share_code = notification['share_code']
+        target = None
         url = None
 
-        if notification['share_code'].__contains__('LS'):
-            target = List.get(share_code=notification['share_code']).owner
-            url = f'/list/{notification["share_code"]}/view'
-        elif notification['share_code'].__contains__('US'):
-            target = User.get(share_code=notification['share_code'])
-            url = f'/user/{notification["share_code"]}'
-
+        if 'LS' in share_code:
+            if share_code not in list_cache:
+                list_cache[share_code] = List.get(share_code=share_code).owner
+            target = list_cache[share_code]
+            url = f'/list/{share_code}/view'
+        elif 'US' in share_code:
+            if share_code not in user_cache:
+                user_cache[share_code] = User.get(share_code=share_code)
+            target = user_cache[share_code]
+            url = f'/user/{share_code}'
             if notification['type_id'] == 9:
-                url = f'/user/{notification["share_code"]}/?card=quests'
+                url = f'/user/{share_code}/?card=quests'
 
-        card_data['data'].append({
+        if target:
+            title = notification['title'].replace('[USUARIO]', target.username)
+            description = notification['description'].replace('[USUARIO]', target.username)
+        else:
+            title = notification['title']
+            description = notification['description']
+
+        notification_data.append({
             'icon': notification['icon'],
-            'title': notification['title'].replace('[USUARIO]', target.username),
-            'description': notification['description'].replace('[USUARIO]', target.username),
+            'title': title,
+            'description': description,
             'date': notification['date'],
             'share_code': notification['share_code'],
             'read': notification['userRead'],
@@ -428,8 +449,11 @@ def profile_notifications(request, user_data, card_data):
             'ellapsed_time': notification['ellapsed_time']
         })
 
-        if not notification['userRead']:
-            read_notification(user_data, notification['notification_id'])
+    card_data['data'] = notification_data
+
+    # Marcar todas las notificaciones no leídas como leídas en un solo batch
+    if unread_notification_ids:
+        read_notifications(user_data, unread_notification_ids)
 
 
 @partial_login_required

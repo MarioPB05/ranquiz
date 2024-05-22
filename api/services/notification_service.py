@@ -119,3 +119,11 @@ def clear_notifications(user):
     """Servicio que marca todas las notificaciones como leídas"""
     NotificationRead.objects.filter(user=user).delete()
     Notification.objects.filter(user=user).delete()
+
+
+def read_notifications(user, notification_ids):
+    """Servicio que marca varias notificaciones como leídas"""
+    notifications = Notification.objects.filter(id__in=notification_ids)
+
+    for notification in notifications:
+        read_notification(user, notification.id)
