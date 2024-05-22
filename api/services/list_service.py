@@ -417,7 +417,7 @@ def get_list_avg_top_items(list_obj):
     # Filtrar todos los ListAnswer relacionados con la lista dada
     list_answers = ListAnswer.objects.filter(list=list_obj)
 
-    # Sacar le numero de resultados que tiene esa lista relacionada
+    # Sacar el número de resultados que tiene esa lista relacionada
     num_results = list_answers.count()
 
     # Filtrar todos los ItemOrder relacionados con estos ListAnswer y agrupar por item para calcular la media del order
