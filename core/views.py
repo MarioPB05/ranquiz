@@ -550,10 +550,6 @@ def result(request, share_code, id_result):  # skipcq: PYL-W0613
     items = list_result.itemorder_set.all()
     list_obj = list_result.list
     avg_top_items, num_results = get_list_avg_top_items(list_obj)
-    # Variable para saber de cuantos resultados se esta haciendo el promedio
-    total_results = avg_top_items[:len(items)]
-
-
 
     return render(request, 'pages/list_result.html', {
         'resultado': list_result,
