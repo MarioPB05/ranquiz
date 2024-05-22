@@ -461,7 +461,7 @@ def profile(request, share_code=None):
     """Vista que renderiza el perfil de un usuario"""
     current_card = request.GET.get('card', 'resume')
     card_template = 'pages/profile/' + current_card + '.html'
-    cards = ('resume', 'lists', 'quests', 'results', 'notifications', 'settings')
+    cards = ('resume', 'lists', 'quests', 'results', 'notifications')
 
     user_share_code = request.user.share_code if request.user.is_authenticated else None
     is_own_profile = share_code is None or user_share_code == share_code
