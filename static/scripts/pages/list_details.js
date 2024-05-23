@@ -226,6 +226,11 @@ function actualizeCommentCounter() {
 function writeComment() {
     const content = $("#comment_input").val();
 
+    if (content.length > $("#comment_input").attr("maxlength")) {
+        toastMessage("error", "El comentario es demasiado largo");
+        return;
+    }
+
     if (!content.trim()) {
         return;
     }
