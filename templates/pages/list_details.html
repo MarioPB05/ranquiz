@@ -169,11 +169,11 @@
 
                     <div class="d-flex flex-row gap-3 mt-2 award_container flex-wrap">
                         <!-- Begin template award -->
-                        <div class="d-none gap-2 award rounded-pill text-white p-1 ps-3 pe-3 align-items-center"
+                        <div data-bs-toggle="tooltip" data-bs-custom-class="tooltip-dark" data-bs-placement="top" class="d-none gap-3 award rounded-pill text-white p-1 ps-3 pe-3 align-items-center"
                              id="template_award" data-award-id="0">
                             <i class="fs-5 text-white award_icon"></i>
-                            <label class="award_name">Útil</label>
-                            <label class="ms-2 award_amount">3</label>
+{#                            <label class="award_name">Útil</label>#}
+                            <label class="award_amount">3</label>
                         </div>
                         <!-- End template award -->
                         {% if user.is_authenticated %}
@@ -202,7 +202,6 @@
                                                 <span class="award_price me-1">2</span>
                                                 <i class="bi bi-gem text-white"></i>
                                             </div>
-
                                         </div>
                                     </div>
                                     <!--end template buyable award-->

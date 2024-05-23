@@ -63,9 +63,12 @@ function addAwardToComment(award_id, comment) {
         const award_element = templateAward.clone();
         award_element.removeAttr("id");
         award_element.removeClass("d-none").addClass("d-flex");
+        award_element.attr("title", found_award.title);
+
+        let tooltip = new bootstrap.Tooltip(award_element); // skipcq: JS-0125
 
         award_element.find(".award_icon").addClass(found_award.icon);
-        award_element.find(".award_name").text(found_award.title);
+        // award_element.find(".award_name").text(found_award.title);
         award_element.find(".award_amount").text(1);
         award_element.css("background-color", found_award.color);
 
