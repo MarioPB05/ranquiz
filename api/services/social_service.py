@@ -25,7 +25,7 @@ def get_comments_from_list(share_code, order='featured'):
     if list_element is None:
         return None
 
-    query = """SELECT lc.id, lc.comment, lc.date, lc.user_id, au.username, aa.image as avatar, au.share_code,
+    query = f"""SELECT lc.id, lc.comment, lc.date, lc.user_id, au.username, aa.image as avatar, au.share_code,
                     (SELECT SUM(a.price) FROM api_commentaward ca
                     JOIN ranquiz.api_award a on a.id = ca.award_id
                     WHERE ca.comment_id = lc.id) as awards
@@ -33,9 +33,9 @@ def get_comments_from_list(share_code, order='featured'):
                 JOIN ranquiz.api_user au on lc.user_id = au.id
                 JOIN ranquiz.api_avatar aa on au.avatar_id = aa.id
                 WHERE lc.list_id = %s
-                ORDER BY %s;"""  # skipcq: BAN-B608
+                ORDER BY {order_by}"""  # skipcq: BAN-B608
 
-    params = [list_element.id, order_by]
+    params = [list_element.id]
 
     return execute_query(query, params)
 
