@@ -10,6 +10,7 @@ from api.services.query_service import execute_query
 from api.services.shop_service import get_avatar
 from api.forms.user_form import LoginUserForm, CreateUserForm
 from api.services.client_service import create_client, get_client_form
+from api.services.transaction_service import do_transaction
 
 
 def user_login(request):
@@ -51,6 +52,7 @@ def create_user(user_form, avatar, client):
         user = user_form.save(commit=False)
         user.client = client
         user.avatar = avatar
+        user.money = 0
 
         return user
 
@@ -78,6 +80,9 @@ def user_register(request):
 
                 # Guardamos el usuario
                 user.save()
+
+                # Creamos la transacción
+                do_transaction(user, 50, 'Registro en Ranquiz')
 
                 # Enviar correo de registro exitoso
                 send_register_email(client)
