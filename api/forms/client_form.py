@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django import forms
 from django.forms import ModelForm
 
@@ -26,6 +28,15 @@ class CreateClientForm(ModelForm):
             raise forms.ValidationError('El email ya está en uso')
 
         return email
+
+    def clean_birthdate(self):
+        """Comprueba que el usuario no ingrese una fecha de nacimiento futura"""
+        birthdate = self.cleaned_data['birthdate']
+
+        if birthdate > datetime.date(datetime.now()):
+            raise forms.ValidationError('La fecha de nacimiento no puede ser futura')
+
+        return birthdate
 
     def clean(self):
         """Comprueba que el nombre y apellidos no sean iguales"""
