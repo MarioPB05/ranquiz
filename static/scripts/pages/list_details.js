@@ -68,7 +68,6 @@ function addAwardToComment(award_id, comment) {
         let tooltip = new bootstrap.Tooltip(award_element); // skipcq: JS-0125
 
         award_element.find(".award_icon").addClass(found_award.icon);
-        // award_element.find(".award_name").text(found_award.title);
         award_element.find(".award_amount").text(1);
         award_element.css("background-color", found_award.color);
 
@@ -132,6 +131,7 @@ function addComment(comment, new_comment = false) {
 
     if (user_is_athor === true) {
         element.find(".add_award").parent().remove();
+        element.find(".own_comment_badge").removeClass("d-none");
     }
 
     element.find(".comment_content").text(content);
