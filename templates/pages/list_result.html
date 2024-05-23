@@ -25,9 +25,10 @@
                         <div class="col align-items-center justify-content-center">
                             <div class="d-flex justify-content-center align-items-center align-content-center">
                                 {% if not item_top2.item.image.url %}
-                                    <span class="w-100 p-3 text-center fs-1 fs-sm-2 fw-bolder text-break ellipsis-two-lines">{{ item_top2.item.name }}</span>
+                                    <span class="w-100 m-3 border-bottom border-2 border-white text-center fs-2 fs-sm-2 fw-bolder text-break ellipsis-two-lines">{{ item_top2.item.name }}</span>
                                 {% else %}
                                     <img src="{{ item_top2.item.image.url }}"
+                                         data-bs-toggle="tooltip" data-bs-custom-class="tooltip-dark" data-bs-placement="left" title="{{ item_top2.item.name }}"
                                          class="w-100 mw-175px mw-sm-125px p-3 min-h-125px mh-125px"
                                          style="object-fit: contain">
                                 {% endif %}
@@ -39,9 +40,10 @@
                         <div class="col align-items-center justify-content-center">
                             <div class="d-flex justify-content-center align-items-center ">
                                 {% if not item_top1.item.image.url %}
-                                    <span class="w-100 p-3 text-center fs-1 fw-bolder text-break ellipsis-two-lines">{{ item_top1.item.name }}</span>
+                                    <span class="w-100 m-3 border-bottom border-2 border-white text-center fs-2 fw-bolder text-break ellipsis-two-lines">{{ item_top1.item.name }}</span>
                                 {% else %}
                                     <img src="{{ item_top1.item.image.url }}"
+                                         data-bs-toggle="tooltip" data-bs-custom-class="tooltip-dark" data-bs-placement="top" title="{{ item_top1.item.name }}"
                                          class="w-100 mw-175px p-3 min-h-125px mh-125px" style="object-fit: contain">
                                 {% endif %}
                             </div>
@@ -52,9 +54,10 @@
                         <div class="col align-items-center justify-content-center align-content-center">
                             <div class="d-flex justify-content-center align-items-center">
                                 {% if not item_top3.item.image.url %}
-                                    <span class="w-100 p-3 text-center fs-1 fw-bolder text-break ellipsis-two-lines">{{ item_top3.item.name }}</span>
+                                    <span class="w-100 m-3 border-bottom border-2 border-white text-center fs-2 fw-bolder text-break ellipsis-two-lines">{{ item_top3.item.name }}</span>
                                 {% else %}
                                     <img src="{{ item_top3.item.image.url }}"
+                                         data-bs-toggle="tooltip" data-bs-custom-class="tooltip-dark" data-bs-placement="right" title="{{ item_top3.item.name }}"
                                          class="w-100 mw-175px p-3 min-h-125px mh-125px" style="object-fit: contain">
                                 {% endif %}
                             </div>
@@ -64,12 +67,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="d-flex flex-column w-100 p-20 pt-0 ">
+                <div class="d-flex flex-column w-100 p-xxl-20 pt-xxl-0 p-10 pt-0 ">
                     <div class="d-flex flex-column h-100 gap-4">
                         {% for item in items_partials %}
-                            <div class="d-flex p-4 border border-2 border-dark w-100 rounded align-items-center gap-10">
+                            <div class="d-flex p-4 border border-2 border-dark w-100 rounded align-items-center gap-10" {% if item.item.deleted %} style=" background-color: #ffd4d4 " data-bs-toggle="tooltip" data-bs-custom-class="tooltip-dark" data-bs-placement="left" title="Este item a sido eliminado por el autor" {% endif %}>
                                 <span class="fs-2hx">{{ item.order }}</span>
-                                <span class="fs-2">{{ item.item.name }}</span>
+                                <span class="fs-2 text-break ellipsis-two-lines">{{ item.item.name }}</span>
                             </div>
                         {% endfor %}
                     </div>
@@ -83,9 +86,10 @@
                         <div class="col align-items-center justify-content-center">
                             <div class="d-flex justify-content-center align-items-center">
                                 {% if not avg_top2.2 %}
-                                    <span class="w-100 p-3 text-center fs-1 fw-bolder text-break ellipsis-two-lines">{{ avg_top2.0 }}</span>
+                                    <span class="w-100 m-3 border-bottom border-2 border-white text-center fs-2 fw-bolder text-break ellipsis-two-lines">{{ avg_top2.0 }}</span>
                                 {% else %}
                                     <img src="{{ avg_top2.2 }}"
+                                         data-bs-toggle="tooltip" data-bs-custom-class="tooltip-dark" data-bs-placement="left" title="{{ avg_top2.0 }}"
                                          class="w-100 mw-175px p-3 min-h-125px mh-125px" style="object-fit: contain">
                                 {% endif %}
                             </div>
@@ -96,9 +100,10 @@
                         <div class="col align-items-center justify-content-center">
                             <div class="d-flex justify-content-center align-items-center">
                                 {% if not avg_top1.2 %}
-                                    <span class="w-100 p-3 text-center fs-1 fw-bolder text-break ellipsis-two-lines">{{ avg_top1.0 }}</span>
+                                    <span class="w-100 m-3 border-bottom border-2 border-white text-center fs-2 fw-bolder text-break ellipsis-two-lines">{{ avg_top1.0 }}</span>
                                 {% else %}
                                     <img src="{{ avg_top1.2 }}"
+                                         data-bs-toggle="tooltip" data-bs-custom-class="tooltip-dark" data-bs-placement="top" title="{{ avg_top1.0 }}"
                                          class="w-100 mw-175px p-3 min-h-125px mh-125px" style="object-fit: contain">
                                 {% endif %}
                             </div>
@@ -109,9 +114,10 @@
                         <div class="col align-items-center justify-content-center">
                             <div class="d-flex justify-content-center align-items-center">
                                 {% if not avg_top3.2 %}
-                                    <p class="w-100 m-0 p-3 text-center fs-1 fw-bolder text-break ellipsis-two-lines">{{ avg_top3.0 }}</p>
+                                    <span class="w-100 m-0  text-center fs-2 fw-bolder text-break ellipsis-two-lines m-3 border-bottom border-2 border-white">{{ avg_top3.0 }}</span>
                                 {% else %}
                                     <img src="{{ avg_top3.2 }}"
+                                         data-bs-toggle="tooltip" data-bs-custom-class="tooltip-dark" data-bs-placement="right" title="{{ avg_top3.0 }}"
                                          class="w-100 mw-175px p-3 min-h-125px mh-125px" style="object-fit: contain">
                                 {% endif %}
                             </div>
@@ -121,7 +127,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="d-flex flex-column w-100 p-20 pt-0">
+                <div class="d-flex flex-column w-100 p-xxl-20 pt-xxl-0 p-10 pt-0">
                     <div class="d-flex flex-column h-100 gap-4">
                         {% for item_name, avg_order, image_url in avg_top_items_partials %}
                             <div class="d-flex p-4 border border-2 border-dark w-100 rounded align-items-center gap-10">
