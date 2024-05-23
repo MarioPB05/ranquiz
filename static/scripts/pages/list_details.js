@@ -246,12 +246,12 @@ function writeComment() {
 /**
  * Cambia entre comentarios recientes y destacados
  */
-function toggleFeaturedComments() {
-    if ($("#featuredComments").hasClass("badge-outline-primary-selected")) {
-        $("#featuredComments").removeClass("badge-outline-primary-selected");
-        getComments("recent")
+function toggleSort(event) {
+    if (event.currentTarget.hasClass("badge-outline-primary-selected")) {
+        event.currentTarget.removeClass("badge-outline-primary-selected");
+        getComments("recent");
     } else {
-        $("#featuredComments").addClass("badge-outline-primary-selected");
+        event.currentTarget.addClass("badge-outline-primary-selected");
         getComments("featured");
     }
 }
@@ -383,7 +383,7 @@ function onDocumentReady() {
 
     });
 
-    $("#featuredComments").click(toggleFeaturedComments)
+    $(".sort_button").click(toggleSort)
 
     commentsContainer.on("click", ".buyable_award", function () {
         const award_id = $(this).data("award-id");
