@@ -13,8 +13,8 @@ from api.services.transaction_service import do_transaction, refund_transaction
 @require_GET
 def get_comments(request, share_code):
     """Función para obtener todos los comentarios de una lista"""
-    mode = request.GET.get('mode')  # featured, recent
-    comments = get_comments_from_list(share_code, mode)
+    mode = request.GET.get('mode')  # featured, recent, own
+    comments = get_comments_from_list(share_code, request.user, mode)
 
     if comments is None:
         return JsonResponse({'status': 'error', 'message': 'Lista no encontrada'})
@@ -39,6 +39,7 @@ def get_comments(request, share_code):
                 'url': request.build_absolute_uri(reverse('user', args=[comment['share_code']]))
             },
             'awards': awards_in_comment if awards_in_comment is not None else [],
+            'user_is_list_author': comment['user_is_list_author'] == '1'
         })
 
     return JsonResponse({'comments': json_comments})
