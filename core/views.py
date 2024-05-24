@@ -7,7 +7,7 @@ from django.http import Http404, HttpResponseForbidden, HttpResponseNotFound
 from django.shortcuts import render, redirect, get_object_or_404
 
 from api import sec_to_time
-from api.models import List, ListCategory, ListFavorite, ListLike, ListAnswer, User, Notification
+from api.models import List, ListCategory, ListFavorite, ListLike, ListAnswer, User, Notification, UserFollow
 from api.models.notification_type import NotificationTypes
 from api.services import PAGINATION_ITEMS_PER_PAGE
 from api.services.category_service import (edit_list_categories, get_category, get_user_categories,
@@ -489,6 +489,9 @@ def profile(request, share_code=None):
         profile_quests(request, user_data, card_data)
     elif current_card == 'notifications':
         profile_notifications(request, user_data, card_data)
+
+    if request.user.is_authenticated and not is_own_profile:
+        user_data.followed = UserFollow.objects.filter(follower=request.user, user_followed=user_data).exists()
 
     return render(request, 'pages/profile.html', {
         'user_data': user_data,
