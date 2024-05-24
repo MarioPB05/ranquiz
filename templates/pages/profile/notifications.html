@@ -33,6 +33,31 @@
     <!--end::Categories View-->
 {% endfor %}
 
+{% if not card_data.data %}
+    <!--begin::Notice-->
+    <div class="notice d-flex bg-light-warning rounded border-warning border border-dashed p-6">
+        <!--begin::Icon-->
+        <span class="d-flex align-items-center me-4">
+            <i class="bi bi-exclamation-circle-fill text-warning fs-2tx"></i>
+        </span>
+        <!--end::Icon-->
+    
+        <!--begin::Wrapper-->
+        <div class="d-flex flex-stack flex-grow-1">
+            <!--begin::Content-->
+            <div class="fw-bold">
+                <h4 class="text-gray-900 fw-bolder">¡No hay notificaciones nuevas!</h4>
+                <div class="fs-6 text-gray-700">
+                    No tienes notificaciones por el momento. ¡Vuelve más tarde!
+                </div>
+            </div>
+            <!--end::Content-->
+        </div>
+        <!--end::Wrapper-->
+    </div>
+    <!--end::Notice-->
+{% endif %}
+
 {% if card_data.pagination.has_other_pages %}
     <div class="card shadow shadow-sm mb-5 mb-xl-10">
         <div class="card-body">
