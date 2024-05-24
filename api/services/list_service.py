@@ -312,8 +312,7 @@ def toggle_like_list(user, share_code):
         return False
 
     try:
-        like = ListLike.objects.get(user=user, list=list_obj)
-        like.delete()
+        ListLike.objects.filter(user=user, list=list_obj).delete()
     except ListLike.DoesNotExist:
         like = ListLike(user=user, list=list_obj)
         Notification.create(1, NotificationTypes.NEW_LIST_LIKE.object, list_obj.owner, user.share_code)
