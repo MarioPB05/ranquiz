@@ -218,7 +218,7 @@ def edit_list_view(request, share_code):
 
     item_form_set = []
 
-    for item in list_obj.item_set.all():
+    for item in list_obj.item_set.filter(deleted=False):
         item_form = create_item_form(request, prefix=item.id, instance=item)
         item_form_set.append(item_form)
 
