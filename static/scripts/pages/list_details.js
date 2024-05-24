@@ -53,7 +53,7 @@ function getAwards() {
  * @param award_id
  * @param comment
  */
-function addAwardToComment(award_id, comment) {
+function addAwardToComment(award_id, comment, amount=1) {
     const found_award = awards.find(award => award.id === award_id);
 
     if (comment.find(`div.award[data-award-id=${award_id}]`).length > 0) {
@@ -63,10 +63,12 @@ function addAwardToComment(award_id, comment) {
         const award_element = templateAward.clone();
         award_element.removeAttr("id");
         award_element.removeClass("d-none").addClass("d-flex");
+        award_element.attr("title", found_award.title);
+
+        const tooltip = new bootstrap.Tooltip(award_element); // skipcq: JS-0125, JS-0128
 
         award_element.find(".award_icon").addClass(found_award.icon);
-        award_element.find(".award_name").text(found_award.title);
-        award_element.find(".award_amount").text(1);
+        award_element.find(".award_amount").text(amount);
         award_element.css("background-color", found_award.color);
 
         award_element.attr("data-award-id", award_id);
@@ -120,6 +122,7 @@ function addComment(comment, new_comment = false) {
     const comment_awards = comment.awards;
     const id = comment.id;
     const user_is_athor = comment.user_is_author;
+    const user_is_list_author = comment.user_is_list_author;
 
     const element = templateComment.clone();
 
@@ -129,6 +132,9 @@ function addComment(comment, new_comment = false) {
 
     if (user_is_athor === true) {
         element.find(".add_award").parent().remove();
+        element.find(".own_comment_badge").removeClass("d-none");
+    }else if (user_is_list_author === true) {
+        element.find(".creator_comment_badge").removeClass("d-none");
     }
 
     element.find(".comment_content").text(content);
@@ -143,7 +149,7 @@ function addComment(comment, new_comment = false) {
 
     if (comment_awards) {
         $.each(comment_awards, (index, award) => {
-            addAwardToComment(award.id_award, element);
+            addAwardToComment(award.id_award, element, award.amount);
         });
     }
 
@@ -223,6 +229,11 @@ function actualizeCommentCounter() {
 function writeComment() {
     const content = $("#comment_input").val();
 
+    if (content.length > $("#comment_input").attr("maxlength")) {
+        toastMessage("error", "El comentario es demasiado largo");
+        return;
+    }
+
     if (!content.trim()) {
         return;
     }
@@ -238,14 +249,25 @@ function writeComment() {
 /**
  * Cambia entre comentarios recientes y destacados
  */
-function toggleFeaturedComments() {
-    if ($("#featuredComments").hasClass("badge-outline-primary-selected")) {
-        $("#featuredComments").removeClass("badge-outline-primary-selected");
-        getComments("recent")
+function toggleSort(event) {
+    const all = $(".sort_button");
+    const element = $(event.currentTarget);
+
+    if (element.hasClass("badge-outline-primary-selected")) {
+        element.removeClass("badge-outline-primary-selected");
     } else {
-        $("#featuredComments").addClass("badge-outline-primary-selected");
-        getComments("featured");
+        all.removeClass("badge-outline-primary-selected");
+       element.addClass("badge-outline-primary-selected");
     }
+
+    if (!all.hasClass("badge-outline-primary-selected")) {
+        getComments("recent");
+    }else if (element.data("mode") === "featured") {
+        getComments("featured");
+    }else if (element.data("mode") === "own") {
+        getComments("own");
+    }
+
 }
 
 /**
@@ -375,7 +397,7 @@ function onDocumentReady() {
 
     });
 
-    $("#featuredComments").click(toggleFeaturedComments)
+    $(".sort_button").click(toggleSort)
 
     commentsContainer.on("click", ".buyable_award", function () {
         const award_id = $(this).data("award-id");
