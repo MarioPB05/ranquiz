@@ -144,10 +144,10 @@
             <div class="d-flex justify-content-between align-items-center">
                 <h3>Comentarios</h3>
                 <div class="d-flex gap-3">
-                    <button class="btn sort_button btn-outline-primary border-primary border border-1 fs-8 cursor-pointer p-1 ps-2 pe-2 rounded-pill hover-color-white"
+                    <button data-mode="featured" class="btn sort_button btn-outline-primary border-primary border border-1 fs-8 cursor-pointer p-1 ps-2 pe-2 rounded-pill hover-color-white"
                         id="featuredComments">Destacados
                     </button>
-                    <button class="btn sort_button btn-outline-primary border-primary border border-1 fs-8 cursor-pointer p-1 ps-2 pe-2 rounded-pill hover-color-white"
+                    <button data-mode="own" class="btn sort_button btn-outline-primary border-primary border border-1 fs-8 cursor-pointer p-1 ps-2 pe-2 rounded-pill hover-color-white"
                             id="ownComments">Propios
                     </button>
                 </div>
@@ -160,6 +160,7 @@
                 <div class="d-none position-relative flex-column border border-1 border-gray-400 rounded p-5 gap-4 comment mb-1"
                      id="template_comment">
                     <div class="badge badge-primary position-absolute own_comment_badge top-0 end-0 d-none">Propio</div>
+                    <div class="badge badge-success position-absolute creator_comment_badge top-0 end-0 d-none">Creador</div>
                     <div class="d-flex flex-row align-items-center justify-content-between">
                         <a href="" class="d-flex flex-row gap-3 align-items-center justify-content-center author_group">
                             <img class="author_avatar w-40px" alt="Imagen del usuario"/>
