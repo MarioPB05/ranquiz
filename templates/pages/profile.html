@@ -20,7 +20,7 @@
                     <!--begin::Title-->
                     <div class="d-flex justify-content-between align-items-start flex-wrap mb-2">
                         <!--begin::User-->
-                        <div class="d-flex flex-column">
+                        <div class="d-flex flex-column" data-share_code="{{ user_data.share_code }}">
                             <!--begin::Name-->
                             <div class="d-flex align-items-center mb-2">
                                 <a href="#" class="text-gray-900 text-hover-primary fs-1 fw-boldest me-1">{{ user_data.username }}</a>
@@ -30,7 +30,11 @@
                             <p class="fw-bolder">Code: <label id="share_code" data-clipboard-text="{{ share_code }}" data-bs-toggle="tooltip" data-bs-custom-class="tooltip-dark" data-bs-placement="right" title="Copiar el Share Code" class="fw-normal cursor-pointer text-muted text-hover-info">{{ share_code }}</label></p>
 
                             {% if not is_own_profile and user.is_authenticated %}
-                                <a href="#" class="btn btn-sm btn-primary me-2 mb-4">Seguir</a>
+                                {% if user_data.followed %}
+                                    <button data-is_followed="true" class="btn btn-sm btn-primary me-2 mb-4 cursor-pointer btn_toggle_follow">Siguiendo</button>
+                                {% else %}
+                                    <button data-is_followed="false" class="btn btn-sm btn-outline btn-outline-primary text-hover-white me-2 mb-4 cursor-pointer btn_toggle_follow">Seguir</button>
+                                {% endif %}
                             {% endif %}
                         </div>
                         <!--end::User-->
