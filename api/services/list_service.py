@@ -122,7 +122,7 @@ def get_user_favourite_lists(user, selected_user,  page_number):
                 LEFT JOIN ranquiz.api_listcategory lc on l.id = lc.list_id
                 WHERE l.public = 1 AND l.deleted = 0 AND (
                         SELECT IF(COUNT(sll.id) > 0, TRUE, FALSE)
-                        FROM api_listlike sll
+                        FROM api_listfavorite sll
                         WHERE sll.list_id = l.id AND sll.user_id = %s
                     ) = 1
                 GROUP BY l.id, l.edit_date, l.creation_date
