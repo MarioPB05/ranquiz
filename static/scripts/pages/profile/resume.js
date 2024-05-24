@@ -20,7 +20,7 @@ function isScrollNearEnd() {
 /**
  * Carga más datos en la sección de listas del perfil
  */
-function loadMoreData() {
+function loadMoreList() {
     if (isLoadingData) return;
     isLoadingData = true;
 
@@ -51,15 +51,78 @@ function loadMoreData() {
 }
 
 /**
+ * Carga más datos en la sección de categorías del perfil
+ */
+function loadMoreCategories() {
+    if (isLoadingData) return;
+    isLoadingData = true;
+
+    $.ajax({
+        url: `/api/user/${share_code}/categories?page=${page}`,
+        type: 'GET',
+        /**
+         * Función que se ejecuta si la petición AJAX fue exitosa
+         *
+         * @param data
+         * @param {Array} data.categories
+         */
+        success(data) {
+            if (data.categories.length === 0) return;
+
+            page++;
+            isLoadingData = false;
+            const newData = data.categories;
+
+            newData.forEach((item) => {
+                const listItem = $('<div class="min-w-375px"></div>').html(item);
+                $('.scroll').append(listItem);
+            });
+        }
+    });
+}
+
+/**
+ * Carga más datos en la sección de usuarios del perfil
+ */
+function loadMoreUsers() {
+    if (isLoadingData) return;
+    isLoadingData = true;
+
+    $.ajax({
+        url: `/api/user/${share_code}/users?page=${page}`,
+        type: 'GET',
+        /**
+         * Función que se ejecuta si la petición AJAX fue exitosa
+         *
+         * @param data
+         * @param {Array} data.users
+         */
+        success(data) {
+            if (data.users.length === 0) return;
+
+            page++;
+            isLoadingData = false;
+            const newData = data.users;
+
+            newData.forEach((item) => {
+                const listItem = $('<div class="min-w-375px"></div>').html(item);
+                $('.scroll').append(listItem);
+            });
+        }
+    });
+}
+
+/**
  * Realiza un scroll infinito en la sección de listas del perfil
  *
  * @param scroll
  */
-function infiniteScroll(scroll = false) {
-    if (isScrollNearEnd()) loadMoreData();
+function infiniteScroll(scroll = false, event) {
+    if (isScrollNearEnd()) console.log()
 
-    if (scroll) {
-        const element = $('.scroll');
+    if (scroll || true) {
+        const element = $(event.target).parent().find('.scroll');
+        console.log(element)
         element.animate({scrollLeft: element.scrollLeft() + 500}, 500);
     }
 }
@@ -123,8 +186,9 @@ function loadEvents() {
     });
 
 
-    $('.scroll').scroll(() => infiniteScroll());
-    $('#list_arrow_right').on('click', () => infiniteScroll(true));
+    $('.scroll').scroll((event) => infiniteScroll(event));
+    $('.scroll_arrow').on('click', (event) => infiniteScroll(true, event));
+
 }
 
 $(document).ready(loadEvents);
