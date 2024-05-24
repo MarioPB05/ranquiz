@@ -30,8 +30,9 @@ def edit_list_items(items_prefix, list_obj, request):
             # Si el elemento existe en la base de datos pero no en la lista actual, elimínalo
             if item.image is not None:
                 uploader.destroy(item.image.public_id, invalidate=True)
-                item.deleted = True
-                item.save()
+
+            item.deleted = True
+            item.save()
 
     if len(existing_items) != len(items_prefix) and len(items_prefix) > len(existing_items):
         # Se crearon nuevos elementos en la lista
