@@ -7,6 +7,7 @@ from api.decorators.api_decorators import require_authenticated
 from api.models import ListLike, User
 from api.services import PAGINATION_ITEMS_PER_PAGE
 from api.services.list_service import get_user_lists
+from api.services.notification_service import count_unread_notifications
 from api.services.user_service import get_users, toggle_user_follow
 
 
@@ -19,6 +20,7 @@ def get_user_data(request):
     return JsonResponse({'user': {
         'money': user.money,
         'avatar': f"https://res.cloudinary.com/dhewpzvg9/{user.avatar.image}",
+        'unread_notifications': count_unread_notifications(request.user),
     }})
 
 

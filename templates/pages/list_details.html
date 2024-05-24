@@ -34,7 +34,7 @@
                     </div>
                     <div class="d-flex flex-wrap align-center justify-content-center gap-lg-20 gap-10">
                         <div class="d-flex flex-column gap-3 align-items-center">
-                            <div class="bg-white p-4 rounded-circle">
+                            <div class="bg-white p-4 rounded-circle" data-bs-toggle="tooltip" data-bs-custom-class="tooltip-dark" data-bs-placement="top" title="{% if data.user_has_played %}Ya has jugado a esta lista{% else %}Todavia no has jugado{% endif %}">
                                 {% if data.user_has_played %}
                                     <i class="fs-2x bi bi-controller text-info"></i>
                                 {% else %}
