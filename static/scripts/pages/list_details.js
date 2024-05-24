@@ -122,6 +122,7 @@ function addComment(comment, new_comment = false) {
     const comment_awards = comment.awards;
     const id = comment.id;
     const user_is_athor = comment.user_is_author;
+    const user_is_list_author = comment.user_is_list_author;
 
     const element = templateComment.clone();
 
@@ -132,6 +133,8 @@ function addComment(comment, new_comment = false) {
     if (user_is_athor === true) {
         element.find(".add_award").parent().remove();
         element.find(".own_comment_badge").removeClass("d-none");
+    }else if (user_is_list_author === true) {
+        element.find(".creator_comment_badge").removeClass("d-none");
     }
 
     element.find(".comment_content").text(content);
@@ -247,13 +250,24 @@ function writeComment() {
  * Cambia entre comentarios recientes y destacados
  */
 function toggleSort(event) {
-    if (event.currentTarget.hasClass("badge-outline-primary-selected")) {
-        event.currentTarget.removeClass("badge-outline-primary-selected");
-        getComments("recent");
+    const all = $(".sort_button");
+    const element = $(event.currentTarget);
+
+    if (element.hasClass("badge-outline-primary-selected")) {
+        element.removeClass("badge-outline-primary-selected");
     } else {
-        event.currentTarget.addClass("badge-outline-primary-selected");
-        getComments("featured");
+        all.removeClass("badge-outline-primary-selected");
+       element.addClass("badge-outline-primary-selected");
     }
+
+    if (!all.hasClass("badge-outline-primary-selected")) {
+        getComments("recent");
+    }else if (element.data("mode") === "featured") {
+        getComments("featured");
+    }else if (element.data("mode") === "own") {
+        getComments("own");
+    }
+
 }
 
 /**
