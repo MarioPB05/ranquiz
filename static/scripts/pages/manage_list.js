@@ -667,7 +667,11 @@ function beforeSendForm(event) {
     $('#categories').val(categories);
 
     // Mostrar el loader
-    addPageLoader();
+    if (edit_mode) { // skipcq: JS-0125
+        addPageLoader("Guardando cambios...");
+    } else {
+        addPageLoader("Creando lista...");
+    }
 }
 
 /**

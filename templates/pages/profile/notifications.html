@@ -1,0 +1,68 @@
+{% load static %}
+<!--begin::Categories View-->
+<div class="card shadow shadow-sm mb-5 mb-xl-10" id="">
+    <!--begin::Card body-->
+    <div class="card-body p-9 d-flex gap-10 align-items-center justify-content-between">
+        <h1 class="fs-3 fw-bolder m-0">{{ card_data.unread_notifications }} notificaciones nuevas</h1>
+        <button class="btn btn-primary fs-7" id="show_all">Mostrar notificaciones leídas</button>
+    </div>
+    <!--end::Card body-->
+</div>
+<!--end::Categories View-->
+
+{% for notification in card_data.data %}
+    <!--begin::Categories View-->
+    <a href="{{ notification.url }}" class="card shadow {% if not notification.read %}bg-primary-50{% endif %} shadow-sm mb-5 mb-xl-10 border border-1 position-relative border-gray-300">
+        <!--begin::Card body-->
+        <div class="card-body p-9 d-flex gap-10 align-items-center">
+            <i class="bi {{ notification.icon }} fs-40px text-primary"></i>
+    
+            <div>
+                <div class="fs-4 fw-bolder mb-1">{{ notification.title }}</div>
+                <div class="fs-6 fw-bold text-gray-400">{{ notification.description }}</div>
+            </div>
+        </div>
+        <!--end::Card body-->
+        {% if not notification.read %}
+            <span class="badge badge-primary position-absolute" style="right: -5px; top: -5px">Nuevo</span>
+        {% else %}
+            <p class="m-0 text-muted position-absolute top-0 end-0 m-4">{{ notification.ellapsed_time }}</p>
+        {% endif %}
+        
+    </a>
+    <!--end::Categories View-->
+{% endfor %}
+
+{% if card_data.pagination.has_other_pages %}
+    <div class="card shadow shadow-sm mb-5 mb-xl-10">
+        <div class="card-body">
+            <div class="text-center">
+                <ul class="pagination">
+                    {% if card_data.pagination.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="{% url 'user' share_code=user_data.share_code %}?card=notifications&page={{ card_data.pagination.previous_page_number }}&show_all={{ card_data.show_all }}">Anterior</a>
+                        </li>
+                    {% endif %}
+
+                    {% for i in card_data.pagination.page_range %}
+                        <li class="page-item {% if card_data.pagination.number == i %}active{% endif %}">
+                            <a class="page-link" href="{% url 'user' share_code=user_data.share_code %}?card=notifications&page={{ i }}&show_all={{ card_data.show_all }}">{{ i }}</a>
+                        </li>
+                    {% endfor %}
+
+                    {% if card_data.pagination.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="{% url 'user' share_code=user_data.share_code %}?card=notifications&page={{ card_data.pagination.next_page_number }}&show_all={{ card_data.show_all }}">Siguiente</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+<script>
+    const share_code = "{{ user_data.share_code }}";
+</script>
+
+<script src="{% static 'scripts/pages/profile/notifications.js' %}" type="module"></script>

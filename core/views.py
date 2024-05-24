@@ -26,6 +26,8 @@ from api.services.list_service import (
     get_result, get_list_avg_top_items, get_user_favourite_lists
 )
 from api.services.list_service import get_user_lists
+from api.services.notification_service import get_notifications, get_notifications_pagination, \
+    count_unread_notifications, read_notifications
 from api.services.shop_service import highlight_list
 from api.services.user_service import (
     user_login,
@@ -216,7 +218,7 @@ def edit_list_view(request, share_code):
 
     item_form_set = []
 
-    for item in list_obj.item_set.all():
+    for item in list_obj.item_set.filter(deleted=False):
         item_form = create_item_form(request, prefix=item.id, instance=item)
         item_form_set.append(item_form)
 
@@ -388,12 +390,81 @@ def profile_quests(request, user_data, card_data):
         })
 
 
+def profile_notifications(request, user_data, card_data):
+    """Vista que renderiza las notificaciones de un usuario"""
+    page_number = int(request.GET.get('page', 1))
+    show_all = request.GET.get('show_all', 'False') == 'True'
+
+    if not show_all and page_number != 1:
+        page_number -= 1
+
+    # Obtener todas las notificaciones relevantes en una sola consulta
+    notifications = get_notifications(user_data, page_number, show_all)
+    unread_notification_ids = [n['notification_id'] for n in notifications if not n['userRead']]
+
+    # Obtener datos de paginación y notificaciones no leídas
+    pagination = get_notifications_pagination(user_data, page_number, show_all)
+    unread_notifications = count_unread_notifications(user_data)
+
+    card_data['show_all'] = show_all
+    card_data['pagination'] = pagination
+    card_data['unread_notifications'] = unread_notifications
+
+    # Diccionarios para cachear objetos List y User
+    list_cache = {}
+    user_cache = {}
+
+    notification_data = []
+
+    for notification in notifications:
+        share_code = notification['share_code']
+        target = None
+        url = None
+
+        if 'LS' in share_code:
+            if share_code not in list_cache:
+                list_cache[share_code] = List.get(share_code=share_code).owner
+            target = list_cache[share_code]
+            url = f'/list/{share_code}/view'
+        elif 'US' in share_code:
+            if share_code not in user_cache:
+                user_cache[share_code] = User.get(share_code=share_code)
+            target = user_cache[share_code]
+            url = f'/user/{share_code}'
+            if notification['type_id'] == 9:
+                url = f'/user/{share_code}/?card=quests'
+
+        if target:
+            title = notification['title'].replace('[USUARIO]', target.username)
+            description = notification['description'].replace('[USUARIO]', target.username)
+        else:
+            title = notification['title']
+            description = notification['description']
+
+        notification_data.append({
+            'icon': notification['icon'],
+            'title': title,
+            'description': description,
+            'date': notification['date'],
+            'share_code': notification['share_code'],
+            'read': notification['userRead'],
+            'url': url,
+            'ellapsed_time': notification['ellapsed_time']
+        })
+
+    card_data['data'] = notification_data
+
+    # Marcar todas las notificaciones no leídas como leídas en un solo batch
+    if unread_notification_ids:
+        read_notifications(user_data, unread_notification_ids)
+
+
 @partial_login_required
 def profile(request, share_code=None):
     """Vista que renderiza el perfil de un usuario"""
     current_card = request.GET.get('card', 'resume')
     card_template = 'pages/profile/' + current_card + '.html'
-    cards = ('resume', 'lists', 'quests', 'results', 'notifications', 'settings')
+    cards = ('resume', 'lists', 'quests', 'results', 'notifications')
 
     user_share_code = request.user.share_code if request.user.is_authenticated else None
     is_own_profile = share_code is None or user_share_code == share_code
@@ -416,6 +487,8 @@ def profile(request, share_code=None):
         profile_results(request, user_data, card_data)
     elif current_card == 'quests':
         profile_quests(request, user_data, card_data)
+    elif current_card == 'notifications':
+        profile_notifications(request, user_data, card_data)
 
     return render(request, 'pages/profile.html', {
         'user_data': user_data,
@@ -479,7 +552,7 @@ def result(request, share_code, id_result):  # skipcq: PYL-W0613
     list_result = get_result(id_result)
     items = list_result.itemorder_set.all()
     list_obj = list_result.list
-    avg_top_items = get_list_avg_top_items(list_obj)
+    avg_top_items, num_results = get_list_avg_top_items(list_obj)
 
     return render(request, 'pages/list_result.html', {
         'resultado': list_result,
@@ -494,4 +567,6 @@ def result(request, share_code, id_result):  # skipcq: PYL-W0613
         'avg_top2': avg_top_items[1],
         'avg_top3': avg_top_items[2],
         'list_name': list_obj.name,
+        'num_results': num_results,
+        'share_code': share_code,
     })

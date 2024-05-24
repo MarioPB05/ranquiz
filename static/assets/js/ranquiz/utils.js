@@ -22,9 +22,10 @@ function removePageLoader() {
 /**
  * Esta función se encarga de volver a añadir el loader de la página
  */
-function addPageLoader() {
+function addPageLoader(text= "Cargando...") {
     $('body').css("overflow-y", "hidden");
     $('#loading_indicator').addClass("d-flex");
+    $('#text-loading').text(text);
 }
 
 /**
@@ -173,6 +174,12 @@ function reloadUserData() {
             if (response.user) {
                 $('.header_user_avatar').attr('src', response.user.avatar);
                 $('.user_money').text(response.user.money);
+
+                if (response.user.unread_notifications > 0) {
+                    $('#notifications_button i').removeClass('bi-envelope').addClass('bi-envelope-fill');
+                    $('#notifications_badge').text(response.user.unread_notifications);
+                    $('#notifications_badge').removeClass('d-none');
+                }
             }
         });
 }

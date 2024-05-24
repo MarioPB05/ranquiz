@@ -45,5 +45,5 @@ urlpatterns = [
     path('list/<str:share_code>/visibility', visibility_list, name='api_visibility_list'),
     path('list/<str:share_code>/delete', delete_or_recover_list, name='api_delete_list'),
     path('list/<str:share_code>/recover', recover_list_eliminated, name='api_recover_list'),
-    path('quest/claim', claim_quest_reward, name='api_claim_quest_reward')
+    path('quest/claim', claim_quest_reward, name='api_claim_quest_reward'),
 ]

@@ -1,9 +1,8 @@
-import math
-
 from django.db.models import Q, Avg
 
 from django.db import transaction
 
+from api import get_pagination_data
 from api.forms.list_form import CreateListForm
 from api.models.notification_type import NotificationTypes
 from api.services import PAGINATION_ITEMS_PER_PAGE
@@ -232,22 +231,6 @@ def get_user_results_pagination(user, list_obj, page_number, search_query):
     return get_pagination_data(count, page_number)
 
 
-def get_pagination_data(count, page_number):
-    """Función que devuelve los datos de paginación"""
-    pages = math.ceil(count / (PAGINATION_ITEMS_PER_PAGE / 2))
-    return {
-        'total': count,
-        'pages': pages,
-        'number': page_number,
-        'page_range': list(range(1, int(pages) + 1)),
-        'has_previous': page_number > 1,
-        'has_next': page_number < pages,
-        'has_other_pages': pages > 1,
-        'previous_page_number': page_number - 1,
-        'next_page_number': page_number + 1,
-    }
-
-
 def set_category(list_obj, category):
     """Función que añade una categoría a una lista"""
     list_category = ListCategory(list=list_obj, category=category)
@@ -418,8 +401,11 @@ def get_list_avg_top_items(list_obj):
     # Filtrar todos los ListAnswer relacionados con la lista dada
     list_answers = ListAnswer.objects.filter(list=list_obj)
 
-    # Filtrar todos los ItemOrder relacionados con estos ListAnswer y agrupar por item para calcular la media del order
-    avg_order_items = ItemOrder.objects.filter(answer__in=list_answers) \
+    # Sacar el número de resultados que tiene esa lista relacionada
+    num_results = list_answers.count()
+
+    # Filtrar todos los ItemOrder relacionados con estos ListAnswer
+    avg_order_items = ItemOrder.objects.filter(answer__in=list_answers, item__deleted=False) \
                                        .values('item__name', 'item__image') \
                                        .annotate(avg_order=Avg('order')) \
                                        .order_by('avg_order')
@@ -433,7 +419,7 @@ def get_list_avg_top_items(list_obj):
         avg_top_items.append((item['item__name'], current_number, image_url))
         current_number += 1
 
-    return avg_top_items
+    return avg_top_items, num_results
 
 
 def count_list_results(user, list_obj):

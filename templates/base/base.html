@@ -85,6 +85,13 @@
 
     <!-- Notificaciones -->
     <script src="{% static 'assets/js/ranquiz/notify.js' %}" type="module"></script>
+    
+    <!-- Header Scripts -->
+    <script type="module">
+        import {reloadUserData} from "/static/assets/js/ranquiz/utils.js";
+
+        reloadUserData();
+    </script>
 
     <script>
         console.log(

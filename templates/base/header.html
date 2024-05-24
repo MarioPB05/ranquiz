@@ -65,8 +65,9 @@
                         <span class="fw-bolder ms-2 user_money">{{ user.money }}</span>
                     </a>
 
-                    <a class="btn btn-icon btn-icon-muted btn-active-light btn-active-color-primary w-30px h-30px w-md-40px h-md-40px text-hover-primary me-4" href="#">
+                    <a class="btn btn-icon btn-icon-muted btn-active-light position-relative btn-active-color-primary w-30px h-30px w-md-40px h-md-40px text-hover-primary me-4" href="{% url 'user' share_code=user.share_code %}?card=notifications" id="notifications_button">
                         <i class="bi bi-envelope fs-2x text-white"></i>
+                        <span class="badge-sm badge badge-circle badge-light-primary fs-9 position-absolute top-50 bottom-0 p-1 end-0 d-none" id="notifications_badge">0</span>
                     </a>
                 {% endif %}
 
@@ -89,7 +90,7 @@
                             {% if user.is_authenticated %}
                                 <!--begin::Avatar-->
                                 <div class="symbol symbol-75px me-5">
-                                    {% cloudinary user.avatar.image class="user_avatar" %}
+                                    {% cloudinary user.avatar.image class="header_user_avatar" %}
                                 </div>
                                 <!--end::Avatar-->
 
@@ -138,14 +139,14 @@
                         <!--end::Menu item-->
 
                         <!--begin::Menu item-->
-                        <div class="menu-item px-5">
-                            <a href="{% url 'user' share_code=user.share_code %}?card=settings" class="menu-link px-5">
-                                <span class="menu-icon">
-                                    <i class="bi bi-gear"></i>
-                                </span>
-                                Ajustes
-                            </a>
-                        </div>
+{#                        <div class="menu-item px-5">#}
+{#                            <a href="{% url 'user' share_code=user.share_code %}?card=settings" class="menu-link px-5">#}
+{#                                <span class="menu-icon">#}
+{#                                    <i class="bi bi-gear"></i>#}
+{#                                </span>#}
+{#                                Ajustes#}
+{#                            </a>#}
+{#                        </div>#}
                         <!--end::Menu item-->
 
                         <!--begin::Menu item-->

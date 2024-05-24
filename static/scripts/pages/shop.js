@@ -102,7 +102,6 @@ function equipAvatar(avatarId) {
         if (response.status === "success") {
             changeButtonToBought($(".equipped_avatar").parent().parent());
             changeButtonToEquipped($(`div[data-id=${avatarId}]`));
-            toastMessage("success", response.message);
             reloadUserData();
         } else {
             toastMessage("error", response.message);
