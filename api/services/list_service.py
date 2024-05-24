@@ -317,8 +317,10 @@ def toggle_like_list(user, share_code):
         ListLike.objects.filter(user=user, list=list_obj).delete()
     else:
         like = ListLike(user=user, list=list_obj)
-        Notification.create(1, NotificationTypes.NEW_LIST_LIKE.object, list_obj.owner, user.share_code)
         like.save()
+
+        if user != list_obj.owner:
+            Notification.create(1, NotificationTypes.NEW_LIST_LIKE.object, list_obj.owner, user.share_code)
 
     return True
 
@@ -335,8 +337,10 @@ def toggle_favorite_list(user, share_code):
         favorite.delete()
     except ListFavorite.DoesNotExist:
         favorite = ListFavorite(user=user, list=list_obj)
-        Notification.create(1, NotificationTypes.NEW_LIST_FAVORITE.object, list_obj.owner, user.share_code)
         favorite.save()
+
+        if user != list_obj.owner:
+            Notification.create(1, NotificationTypes.NEW_LIST_FAVORITE.object, list_obj.owner, user.share_code)
 
     return True
 

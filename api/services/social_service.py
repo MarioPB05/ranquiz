@@ -55,8 +55,10 @@ def create_comment(content, author, share_code):
 
     if list_element is not None and content is not None and author is not None:
         comment = ListComment.objects.create(list=list_element, user=author, comment=content)
-        Notification.create(1, NotificationTypes.NEW_LIST_COMMENT.object, list_element.owner,
-                            list_element.share_code)
+
+        if author != list_element.owner:
+            Notification.create(1, NotificationTypes.NEW_LIST_COMMENT.object, list_element.owner,
+                                list_element.share_code)
         return comment
 
     return None
