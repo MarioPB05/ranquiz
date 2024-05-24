@@ -16,6 +16,7 @@ const blockFavoriteBtn = new KTBlockUI($("#star-btn")[0]);  // skipcq: JS-0125
 const templateComment = $("#template_comment");
 const templateAward = $("#template_award");
 const templateBuyableAward = $("#template_buyable_award");
+const commentAlert = $("#comment_alert");
 
 let comments = [];
 let awards = [];
@@ -179,6 +180,10 @@ function getComments(mode = "recent") {
             addComment(comment);
         });
 
+        if (comments.length === 0) {
+            commentAlert.appendTo("#comments_container");
+        }
+
         blockUI.release();
 
         actualizeCommentCounter();
@@ -201,6 +206,10 @@ function uploadComment(comment) {
         addComment(response.comment, true);
         comments.push(response.comment);
         actualizeCommentCounter();
+
+        if (comments.length === 1) {
+            commentAlert.remove();
+        }
 
         // Animación de scroll
         commentsContainer.animate({ scrollTop: 0 }, "slow");
