@@ -178,6 +178,9 @@ function showItemPreviewModal(target) {
     if (name) {
         // Mostrar el nombre en el modal
         $('#temp_item_name').text(name).show();
+    }else {
+        // Ocultar el nombre en el modal
+        $('#temp_item_name').hide();
     }
 
     // Configurar el target para posterior uso
