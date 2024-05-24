@@ -53,7 +53,7 @@ function getAwards() {
  * @param award_id
  * @param comment
  */
-function addAwardToComment(award_id, comment) {
+function addAwardToComment(award_id, comment, amount=1) {
     const found_award = awards.find(award => award.id === award_id);
 
     if (comment.find(`div.award[data-award-id=${award_id}]`).length > 0) {
@@ -68,7 +68,7 @@ function addAwardToComment(award_id, comment) {
         let tooltip = new bootstrap.Tooltip(award_element); // skipcq: JS-0125
 
         award_element.find(".award_icon").addClass(found_award.icon);
-        award_element.find(".award_amount").text(1);
+        award_element.find(".award_amount").text(amount);
         award_element.css("background-color", found_award.color);
 
         award_element.attr("data-award-id", award_id);
@@ -149,7 +149,7 @@ function addComment(comment, new_comment = false) {
 
     if (comment_awards) {
         $.each(comment_awards, (index, award) => {
-            addAwardToComment(award.id_award, element);
+            addAwardToComment(award.id_award, element, award.amount);
         });
     }
 
