@@ -65,7 +65,7 @@ function addAwardToComment(award_id, comment, amount=1) {
         award_element.removeClass("d-none").addClass("d-flex");
         award_element.attr("title", found_award.title);
 
-        let tooltip = new bootstrap.Tooltip(award_element); // skipcq: JS-0125, JS-0128
+        const tooltip = new bootstrap.Tooltip(award_element); // skipcq: JS-0125, JS-0128
 
         award_element.find(".award_icon").addClass(found_award.icon);
         award_element.find(".award_amount").text(amount);
