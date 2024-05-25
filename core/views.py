@@ -23,7 +23,7 @@ from api.services.list_service import (
     create_list_form,
     create_list,
     get_list_counts, get_lists, count_lists, get_user_lists_pagination, get_user_results, get_user_results_pagination,
-    get_result, get_list_avg_top_items
+    get_result, get_list_avg_top_items, get_user_favourite_lists
 )
 from api.services.list_service import get_user_lists
 from api.services.notification_service import get_notifications, get_notifications_pagination, \
@@ -235,7 +235,7 @@ def profile_resume(request, user_data, card_data):
     page_number = int(request.GET.get('page', 1))
     user_lists = get_user_lists(user_data, False, 'public', None, page_number)
     user_categories = get_user_categories(user_data, request.user, page_number)
-    user_favourite_lists = get_user_lists(user_data, False, 'favourite', None, page_number)
+    user_favourite_lists = get_user_favourite_lists(user_data, request.user, page_number)
     users_following = get_users_following(user_data, request.user, page_number)
     users_followers = get_users_followers(user_data, request.user, page_number)
 

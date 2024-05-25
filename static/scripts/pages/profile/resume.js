@@ -12,56 +12,57 @@ const kt_content_container = $('#kt_content_container')
  *
  * @returns {boolean}
  */
-function isScrollNearEnd() {
-    const element = $('.scroll');
-    return element.scrollLeft() + element.outerWidth() >= element[0].scrollWidth - 100;
+function isScrollNearEnd(element) {
+    return element.scrollLeft() + element.outerWidth() >= element[0].scrollWidth - 500;
 }
 
 /**
- * Carga más datos en la sección de listas del perfil
+ * Carga más datos en la sección correspondiente
  */
-function loadMoreData() {
+function loadMoreData(element) {
     if (isLoadingData) return;
     isLoadingData = true;
 
+    let url = element.data('url');
+    url += url.includes('?') ? `&page=${page}` : `?page=${page}`;
+
     $.ajax({
-        url: `/api/user/${share_code}/lists?page=${page}`,
+        url,
         type: 'GET',
         /**
          * Función que se ejecuta si la petición AJAX fue exitosa
          *
          * @param data
-         * @param {Array} data.lists
+         * @param {Array} data.results
          */
         success(data) {
-            if (data.lists.length === 0) return;
+            isLoadingData = false;
+
+            if (data.results.length === 0) return;
 
             page++;
-            isLoadingData = false;
-            const newData = data.lists;
+            const newData = data.results;
 
             newData.forEach((item) => {
-                const listItem = $('<div class="min-w-375px"></div>').html(item);
-                $('.scroll').append(listItem);
+                const listItem = $(`<div class="${element.data('custom-class')}"></div>`).html(item);
+                element.append(listItem);
             });
         }
     });
-
-
 }
 
 /**
  * Realiza un scroll infinito en la sección de listas del perfil
  *
  * @param scroll
+ * @param event
  */
-function infiniteScroll(scroll = false) {
-    if (isScrollNearEnd()) loadMoreData();
+function infiniteScroll(scroll = false, event) {
+    const element = $(event.target).closest('.position-relative').find('.scroll');
 
-    if (scroll) {
-        const element = $('.scroll');
-        element.animate({scrollLeft: element.scrollLeft() + 500}, 500);
-    }
+    if (isScrollNearEnd(element)) loadMoreData(element);
+
+    if (scroll) element.animate({scrollLeft: element.scrollLeft() + 500}, 500);
 }
 
 /**
@@ -123,8 +124,8 @@ function loadEvents() {
     });
 
 
-    $('.scroll').scroll(() => infiniteScroll());
-    $('#list_arrow_right').on('click', () => infiniteScroll(true));
+    $('.scroll').scroll((event) => infiniteScroll(false, event));
+    $('.scroll_arrow').on('click', (event) => infiniteScroll(true, event));
 }
 
 $(document).ready(loadEvents);

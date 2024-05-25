@@ -122,8 +122,6 @@ def get_user_categories(profile_user, current_user, page=1):
 
     params = [current_user.id, profile_user.id, PAGINATION_ITEMS_PER_PAGE, (page - 1) * PAGINATION_ITEMS_PER_PAGE]
 
-    print(params)
-
     return execute_query(query, params)
 
 

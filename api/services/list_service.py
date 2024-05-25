@@ -82,7 +82,7 @@ def get_lists(limit=None, page=1, search='', user=None, order='default', categor
     return execute_query(query, params)
 
 
-def get_user_favourite_list(user, page_number):
+def get_user_favourite_lists(user, selected_user,  page_number):
     """Función que devuelve todas las listas de un usuario con paginación"""
     query = """SELECT l.id, l.name, l.share_code, l.image, l.public, l.edit_date, l.creation_date, l.deleted,
                     (
@@ -116,12 +116,13 @@ def get_user_favourite_list(user, page_number):
                 FROM api_list l
                 JOIN ranquiz.api_user au on l.owner_id = au.id
                 JOIN ranquiz.api_avatar aa on au.avatar_id = aa.id
+                JOIN ranquiz.api_avatarrarity a on aa.rarity_id = a.id
                 LEFT JOIN ranquiz.api_highlightedlist hl on l.id = hl.list_id AND start_date <= NOW()
                     AND end_date >= NOW()
                 LEFT JOIN ranquiz.api_listcategory lc on l.id = lc.list_id
-                WHERE l.owner_id = %s AND l.public = 1 AND l.deleted = 0 AND (
+                WHERE l.public = 1 AND l.deleted = 0 AND (
                         SELECT IF(COUNT(sll.id) > 0, TRUE, FALSE)
-                        FROM api_listlike sll
+                        FROM api_listfavorite sll
                         WHERE sll.list_id = l.id AND sll.user_id = %s
                     ) = 1
                 GROUP BY l.id, l.edit_date, l.creation_date
@@ -129,7 +130,7 @@ def get_user_favourite_list(user, page_number):
                 LIMIT %s OFFSET %s;"""
 
     items_per_page = PAGINATION_ITEMS_PER_PAGE / 2
-    params = [user.id, user.id, user.id, int(items_per_page), int((page_number - 1) * items_per_page)]
+    params = [selected_user.id, user.id, int(items_per_page), int((page_number - 1) * items_per_page)]
 
     return execute_query(query, params)
 
