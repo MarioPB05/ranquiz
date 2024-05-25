@@ -18,7 +18,7 @@ const flatpickrInstance = initializeFlatpickr("#range_date_highlight", 'range', 
 function changedListImage() {
     const image = $("#image").prop('files')[0];
 
-    if (image) {
+    if (image && image.name) {
         // Obtener la extensión del archivo
         const fileExtension = image.name.split('.').pop().toLowerCase();
 
