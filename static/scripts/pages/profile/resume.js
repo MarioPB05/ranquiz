@@ -26,10 +26,8 @@ function loadMoreData(element) {
     let url = element.data('url');
     url += url.includes('?') ? `&page=${page}` : `?page=${page}`;
 
-    console.log(url)
-
     $.ajax({
-        url: url,
+        url,
         type: 'GET',
         /**
          * Función que se ejecuta si la petición AJAX fue exitosa
