@@ -7,7 +7,9 @@ let item_last_prefix = 0;
 const categories = [];
 const maxCategories = 5;
 const maxCategoryLength = 25;
+let editCreateItems = 0;
 let allCategories = [];
+const edit_mode = window.location.pathname.includes('edit');
 const flatpickrInstance = initializeFlatpickr("#range_date_highlight", 'range', moment().format('YYYY-MM-DD')); // skipcq: JS-0125
 
 /**
@@ -16,7 +18,7 @@ const flatpickrInstance = initializeFlatpickr("#range_date_highlight", 'range', 
 function changedListImage() {
     const image = $("#image").prop('files')[0];
 
-    if (image) {
+    if (image && image.name) {
         // Obtener la extensión del archivo
         const fileExtension = image.name.split('.').pop().toLowerCase();
 
@@ -81,10 +83,12 @@ function cancelHighlight() {
  * Crear un item
  */
 function createItem() {
-    // Verificar que no haya ningun item vacio
-    if (anyItemInputEmpty() && items_prefix.length > minItems - 1) {
-        focusOnFirstEmptyItem();
-        toastMessage('error', 'Hay elementos vacíos, rellénelos todos antes de añadir uno nuevo.');
+    // Comprobar que no se haya llegado al límite de items
+    if (!edit_mode && items_prefix.length >= 20) {
+        toastMessage('error', 'El máximo de elementos es 20 en la creación, edita la lista si necesitas más');
+        return;
+    }else if (edit_mode && editCreateItems > 20) {
+        toastMessage('error', 'Guarda los cambios para añadir más elementos');
         return;
     }
 
@@ -131,6 +135,9 @@ function createItem() {
 
     // Actualizar el número de items
     actualizeItemNumber();
+    if (editCreateItems === 0) {
+        editCreateItems++;
+    }
 
     // Enfocar en el input del nombre
     focusOnFirstEmptyItem();
@@ -161,6 +168,10 @@ function removeItem(event) {
 
     // Actualizar el número de items
     actualizeItemNumber();
+
+    if (editCreateItems > 0) {
+        editCreateItems--;
+    }
 }
 
 /**
