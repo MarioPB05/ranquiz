@@ -109,10 +109,43 @@ def read_notification(user, notification_id):
 
 def count_unread_notifications(user):
     """Servicio que devuelve la cantidad de notificaciones no leídas"""
-    notifications = Notification.objects.filter(user=user).count()
-    notifications_read = NotificationRead.objects.filter(user=user).count()
+    query = """
+        WITH own_notifications AS (
+            SELECT n.*, EXISTS(
+                SELECT 1 FROM api_notificationread r
+                WHERE r.user_id = %s AND r.notification_id = n.id
+            ) AS userRead
+            FROM api_notification n
+            WHERE n.user_id = %s AND n.target = %s
+        ),
+        following_notifications AS (
+            SELECT n.*, EXISTS(
+                SELECT 1 FROM api_notificationread r
+                WHERE r.user_id = %s AND r.notification_id = n.id
+            ) AS userRead
+            FROM api_notification n
+            WHERE n.user_id IN (
+                SELECT user_followed_id FROM ranquiz.api_userfollow WHERE user_id = %s
+            ) AND n.target = %s
+        )
+        SELECT COUNT(*) as count FROM own_notifications own
+        JOIN api_notificationtype nt ON own.type_id = nt.id
+        LEFT JOIN api_notificationread r1 ON own.id = r1.notification_id
+        WHERE r1.user_id IS NULL
+        UNION ALL
+        SELECT COUNT(*) as count FROM following_notifications flw
+        JOIN api_notificationtype nt ON flw.type_id = nt.id
+        LEFT JOIN api_notificationread r2 ON flw.id = r2.notification_id
+        WHERE r2.user_id IS NULL
+            """
 
-    return notifications - notifications_read
+    target_own = Notification.TARGET_CHOICES[0][0]
+    target_following = Notification.TARGET_CHOICES[1][0]
+    params = [user.id, user.id, target_own, user.id, user.id, target_following]
+
+    notifications = execute_query(query, params)
+
+    return notifications[0]['count'] + notifications[1]['count']
 
 
 def clear_notifications(user):

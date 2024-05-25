@@ -82,7 +82,12 @@ def get_categories(limit=None, page=1, search='', user=None, order='default'):
                     WHERE scs.category_id = c.id AND scs.user_id = %s
                 ) as followed
                 FROM api_category c
-                WHERE c.name LIKE %s
+                WHERE c.name LIKE %s and (
+                    SELECT COUNT(slc.id)
+                    FROM api_listcategory slc
+                    JOIN api_list sal on slc.list_id = sal.id
+                    WHERE slc.category_id = c.id AND sal.public = TRUE
+                ) > 0
                 ORDER BY {order_by}
                 LIMIT %s OFFSET %s;"""
 
