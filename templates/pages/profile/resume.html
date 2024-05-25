@@ -57,7 +57,7 @@
                     </div>
                 {% endif %}
 
-                <div class="d-flex gap-4 pb-4 scroll">
+                <div data-custom-class="min-w-250px" data-url="{% url 'api_user_categories' share_code=user_data.share_code %}" class="d-flex gap-4 pb-4 scroll">
                     {% for category in card_data.data.categories %}
                         <div class="min-w-250px">
                             {% include 'components/category_template.html' with data=category %}
@@ -124,7 +124,7 @@
                     </div>
                 {% endif %}
 
-                <div class="d-flex gap-4 pb-4 scroll">
+                <div data-custom-class="min-w-375px" data-url="{% url 'api_user_lists' share_code=user_data.share_code %}" class="d-flex gap-4 pb-4 scroll">
                     {% for list in card_data.data.published %}
                         <div class="min-w-375px">
                             {% include 'components/list_template.html' with data=list %}
@@ -197,7 +197,7 @@
                         </div>
                     {% endif %}
 
-                    <div class="d-flex gap-4 pb-4 scroll">
+                    <div data-custom-class="min-w-375px" data-url="{% url 'api_user_lists' share_code=user_data.share_code %}?filter=favorites" class="d-flex gap-4 pb-4 scroll">
                         {% for list in card_data.data.favorites %}
                             <div class="min-w-375px">
                                 {% include 'components/list_template.html' with data=list %}
@@ -271,7 +271,7 @@
                     </div>
                 {% endif %}
 
-                <div class="d-flex gap-4 pb-4 scroll">
+                <div data-custom-class="min-w-200px" data-url="{% url 'api_following_user' share_code=user_data.share_code %}" class="d-flex gap-4 pb-4 scroll">
                     {% for user in card_data.data.following %}
                         <div class="min-w-200px">
                             {% include 'components/user_template.html' with data=user %}
@@ -343,7 +343,7 @@
                     </div>
                 {% endif %}
 
-                <div class="d-flex gap-4 pb-4 scroll">
+                <div data-custom-class="min-w-200px" data-url="{% url 'api_following_user' share_code=user_data.share_code %}" class="d-flex gap-4 pb-4 scroll">
                     {% for user in card_data.data.followers %}
                         <div class="min-w-200px">
                             {% include 'components/user_template.html' with data=user %}
