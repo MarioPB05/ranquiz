@@ -228,7 +228,7 @@
                                         <i class="bi bi-pencil-square fs-4"></i>
                                     </a>
 
-                                    <button class="btn btn-icon btn-primary toggle_visibility_list"
+                                    <button class="btn btn-icon btn-primary toggle_visibility_list {% if not list.public %} disabled {% endif %}"
                                             data-share_code="{{ list.share_code }}" style="background-color: #E06DFF;"
                                             data-bs-toggle="tooltip" data-bs-custom-class="tooltip-dark"
                                             data-bs-placement="bottom" title="Cambiar Visibilidad">
