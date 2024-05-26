@@ -18,6 +18,10 @@
     box-shadow: 0 0 40px 0 var(--primary-600);
 }
 
+.bg-primary-50 {
+    background-color: var(--primary-50);
+}
+
 .bg-primary-300 {
     background-color: var(--primary-300);
 }
@@ -267,7 +271,10 @@
 }
 
 .divider {
-    width: 1px;
+    width: 2px !important;
+    height: 70vh;
     background-color: black;
+    position: fixed;
 }
+
 

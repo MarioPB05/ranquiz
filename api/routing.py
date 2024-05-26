@@ -10,7 +10,8 @@ from api.controllers.social_controller import get_comments, create_and_return_co
     get_awards
 from api.controllers.shop_controller import highlight_calculator, get_avatars, buy_a_avatar, equip_a_avatar, \
     highlight_list, list_is_highlighted
-from api.controllers.user_controller import get_user_data, get_users_filtered, follow_user, user_lists
+from api.controllers.user_controller import (get_user_data, get_users_filtered, follow_user, user_lists,
+                                             user_categories, user_following)
 
 urlpatterns = [
     path('list/filter', get_lists_filtered, name='api_lists_filtered'),
@@ -38,12 +39,14 @@ urlpatterns = [
     path('shop/highlight/<str:share_code>', highlight_list, name='api_shop_highlight_list'),
     path('user/', get_user_data, name='api_user'),
     path('user/filter', get_users_filtered, name='api_users_filtered'),
-    path('user/<str:share_code>/lists', user_lists, name='api_follow_user'),
+    path('user/<str:share_code>/lists', user_lists, name='api_user_lists'),
+    path('user/<str:share_code>/categories', user_categories, name='api_user_categories'),
+    path('user/<str:share_code>/following', user_following, name='api_following_user'),
     path('user/<str:share_code>/follow', follow_user, name='api_follow_user'),
     path('list/<str:share_code>/like', like_list, name='api_like_list'),
     path('list/<str:share_code>/favorite', favorite_list, name='api_favorite_list'),
     path('list/<str:share_code>/visibility', visibility_list, name='api_visibility_list'),
     path('list/<str:share_code>/delete', delete_or_recover_list, name='api_delete_list'),
     path('list/<str:share_code>/recover', recover_list_eliminated, name='api_recover_list'),
-    path('quest/claim', claim_quest_reward, name='api_claim_quest_reward')
+    path('quest/claim', claim_quest_reward, name='api_claim_quest_reward'),
 ]

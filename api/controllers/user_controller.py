@@ -6,8 +6,10 @@ from django.views.decorators.http import require_GET
 from api.decorators.api_decorators import require_authenticated
 from api.models import ListLike, User
 from api.services import PAGINATION_ITEMS_PER_PAGE
-from api.services.list_service import get_user_lists
-from api.services.user_service import get_users, toggle_user_follow
+from api.services.category_service import get_user_categories
+from api.services.list_service import get_user_lists, get_user_favourite_lists
+from api.services.notification_service import count_unread_notifications
+from api.services.user_service import get_users, toggle_user_follow, get_users_following, get_users_followers
 
 
 @require_GET
@@ -19,6 +21,7 @@ def get_user_data(request):
     return JsonResponse({'user': {
         'money': user.money,
         'avatar': f"https://res.cloudinary.com/dhewpzvg9/{user.avatar.image}",
+        'unread_notifications': count_unread_notifications(request.user),
     }})
 
 
@@ -63,7 +66,15 @@ def user_lists(request, share_code):
     """Controlador que devuelve las listas de un usuario"""
     user_data = User.get(share_code=share_code)
     page_number = int(request.GET.get('page', 1))
-    lists = get_user_lists(user_data, False, 'public', None, page_number)
+    current_filter = request.GET.get('filter', 'default')
+
+    if current_filter == 'default':
+        lists = get_user_lists(user_data, False, 'public', None, page_number)
+    elif current_filter == 'favorites':
+        lists = get_user_favourite_lists(user_data, request.user, page_number)
+    else:
+        return JsonResponse({'lists': []})
+
     lists_html = []
 
     for user_list in lists:
@@ -82,4 +93,57 @@ def user_lists(request, share_code):
 
         lists_html.append(render_to_string('components/list_template.html', {'data': list_data}))
 
-    return JsonResponse({'lists': lists_html})
+    return JsonResponse({'results': lists_html})
+
+
+def user_categories(request, share_code):
+    """Controlador que devuelve las categorías de un usuario"""
+    user_data = User.get(share_code=share_code)
+    page_number = int(request.GET.get('page', 1))
+    categories = get_user_categories(user_data, request.user, page_number)
+    categories_html = []
+
+    for category in categories:
+        categories = {
+            'user': category['name'],
+            'share_code': category['share_code'],
+            'lists': category['lists'],
+            'followers': category['followers'],
+            'followed': category['followed']
+            if request.user.is_authenticated else False
+        }
+
+        categories_html.append(render_to_string('components/category_template.html', {'data': categories}))
+
+    return JsonResponse({'results': categories_html})
+
+
+def user_following(request, share_code):
+    """Controlador que devuelve los seguidores de un usuario"""
+    user_data = User.get(share_code=share_code)
+    page_number = int(request.GET.get('page', 1))
+    current_filter = request.GET.get('filter', 'followers')
+
+    if current_filter == 'followers':
+        followings = get_users_followers(user_data, request.user, page_number)
+    elif current_filter == 'following':
+        followings = get_users_following(user_data, request.user, page_number)
+    else:
+        return JsonResponse({'results': []})
+
+    following_html = []
+
+    for user in followings:
+        follower_data = {
+            'user': request.user,
+            'name': user['username'],
+            'image': user['avatar'],
+            'share_code': user['share_code'],
+            'followers': user['followers'],
+            'followed': user['followed'],
+            'lists': user['lists']
+        }
+
+        following_html.append(render_to_string('components/user_template.html', {'data': follower_data}))
+
+    return JsonResponse({'results': following_html})

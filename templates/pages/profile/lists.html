@@ -19,7 +19,7 @@
 
     <!--begin::Card body-->
     <div class="card-body p-9">
-        <div class="d-flex flex-stack mb-10">
+        <div class="d-flex flex-column flex-sm-row flex-sm-stack mb-10">
             <div class="d-flex gap-4">
                 <div class="d-flex align-items-center position-relative my-1">
                     <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
@@ -33,13 +33,17 @@
                     </span>
                     <!--end::Svg Icon-->
 
-                    <input id="search_input" type="text" class="form-control form-control-solid w-250px ps-14"
+                    <input id="search_input" type="text" class="form-control form-control-solid mw-250px w-100 ps-14"
                            placeholder="Buscar Listas..." value="{% if card_data.searching %}{{ card_data.search_query }}{% endif %}"
                             {% if card_data.searching %}autofocus{% endif %}
                             onfocus="this.selectionStart = this.selectionEnd = this.value.length;">
                 </div>
+            
 
-                <button id="search_btn" class="btn btn-sm btn-primary my-4">Buscar</button>
+                <button id="search_btn" class="btn btn-sm btn-primary my-4">
+                    <span class="d-none d-sm-flex">Buscar</span>
+                    <i class="bi bi-search d-flex d-sm-none fs-3"></i>
+                </button>
             </div>
 
             <!--begin::Filter menu-->
@@ -127,7 +131,7 @@
                 <div class="d-flex flex-stack flex-grow-1">
                     <!--begin::Content-->
                     <div class="fw-bold">
-                        <h4 class="text-gray-900 fw-bolder">No has creado listas!</h4>
+                        <h4 class="text-gray-900 fw-bolder">¡No has creado listas!</h4>
                         <div class="fs-6 text-gray-700">
                             Aún no has creado ninguna lista, empieza creando tu primera lista para que otros usuarios
                             jueguen.
@@ -166,17 +170,17 @@
         {% else %}
             <div id="list_container">
                 {% for list in card_data.data %}
-                    <div class="d-flex gap-10 border border-2 border-gray-400 shadow-sm rounded p-4 mb-6 cursor-pointer list_item"
+                    <div class="d-flex flex-column position-relative flex-lg-row gap-5 gap-lg-10 border border-2 border-gray-400 shadow-sm rounded p-4 mb-6 cursor-pointer list_item"
                         data-url="{% url 'list_details' share_code=list.share_code %}">
-                        <img class="mw-200px w-100 mh-100px h-100 rounded" alt="image" style="object-fit:cover"
+                        <img class="mw-lg-200px mw-auto w-100 mh-100px h-100 rounded" alt="image" style="object-fit:cover"
                             src="{% if list.image %}{{ list.image }}{% else %}{% static 'assets/media/placeholders/list_mix2.png' %}{% endif %}">
 
                         <div class="w-100">
-                            <h1 class="fw-boldest text-primary mw-400px overflow-hidden text-nowrap"
+                            <h1 class="fw-boldest text-primary mw-lg-400px mw-auto text-center text-lg-start overflow-hidden text-nowrap"
                                 style="text-overflow: ellipsis;">{{ list.name }}</h1>
-                            <span class="fw-bolder text-muted">{{ list.date|date:"d/m/Y" }}</span>
+                            <span class="fw-bolder text-muted d-flex justify-content-center justify-content-lg-start w-100">{{ list.date|date:"d/m/Y" }}</span>
 
-                            <div class="d-flex gap-3 mt-4">
+                            <div class="d-flex gap-3 mt-2 mt-lg-4 position-absolute position-lg-relative top-0 start-0 m-2 m-lg-0">
                                 {% if list.public %}
                                     <span class="badge badge-success list_visibility">Público</span>
                                 {% else %}
@@ -193,8 +197,8 @@
                             </div>
                         </div>
 
-                        <div class="d-flex">
-                            <div class="d-flex flex-column h-100 justify-content-between">
+                        <div class="d-flex flex-column flex-lg-row align-items-center gap-5 gap-lg-0">
+                            <div class="d-flex flex-lg-column h-100 justify-content-between mw-350px">
                                 <span class="d-flex justify-content-end fw-bolder text-muted min-w-60px gap-4">
                                     {{ list.play_count }}
                                     <i class="bi bi-controller fs-4"></i>
@@ -217,14 +221,14 @@
                             </div>
 
                             <div class="d-flex gap-2 ms-8">
-                                <div class="d-flex flex-column justify-content-center gap-2">
+                                <div class="d-flex flex-lg-column justify-content-center gap-2">
                                     <a href="{% url 'edit_list' share_code=list.share_code %}" class="btn btn-icon btn-primary" style="background-color: #E06DFF;"
                                         data-bs-toggle="tooltip" data-bs-custom-class="tooltip-dark"
                                         data-bs-placement="top" title="Editar Lista">
                                         <i class="bi bi-pencil-square fs-4"></i>
                                     </a>
 
-                                    <button class="btn btn-icon btn-primary toggle_visibility_list"
+                                    <button class="btn btn-icon btn-primary toggle_visibility_list {% if not list.public %} disabled {% endif %}"
                                             data-share_code="{{ list.share_code }}" style="background-color: #E06DFF;"
                                             data-bs-toggle="tooltip" data-bs-custom-class="tooltip-dark"
                                             data-bs-placement="bottom" title="Cambiar Visibilidad">
@@ -232,7 +236,7 @@
                                     </button>
                                 </div>
 
-                                <div class="d-flex flex-column justify-content-center gap-2 delete_list">
+                                <div class="d-flex flex-lg-column justify-content-center gap-2 delete_list">
                                     {% if list.deleted %}
                                         <button class="btn btn-icon btn-primary restore_list" style="background-color: #E06DFF;"
                                                 data-bs-toggle="tooltip" data-bs-custom-class="tooltip-dark"

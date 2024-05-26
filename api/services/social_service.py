@@ -13,29 +13,38 @@ def get_comment(comment_id):
         return None
 
 
-def get_comments_from_list(share_code, order='featured'):
+def get_comments_from_list(share_code, user, order='featured'):
     """Servicio para obtener todos los comentarios de una lista"""
     list_element = List.get(share_code)
+    order_by = ""
+    where = ""
 
     if order == 'recent':
         order_by = "lc.date DESC"
-    else:
+    elif order == 'featured':
         order_by = "awards DESC, lc.date DESC"
+    elif order == 'own':
+        order_by = "lc.date DESC"
+        where = "AND lc.user_id = %s"
 
     if list_element is None:
         return None
 
-    query = """SELECT lc.id, lc.comment, lc.date, lc.user_id, au.username, aa.image as avatar, au.share_code,
+    query = f"""SELECT lc.id, lc.comment, lc.date, lc.user_id, au.username, aa.image as avatar, au.share_code,
+                    CASE WHEN lc.user_id = {list_element.owner.id} THEN '1' ELSE '0' END as user_is_list_author,
                     (SELECT SUM(a.price) FROM api_commentaward ca
                     JOIN ranquiz.api_award a on a.id = ca.award_id
                     WHERE ca.comment_id = lc.id) as awards
                 FROM api_listcomment lc
                 JOIN ranquiz.api_user au on lc.user_id = au.id
                 JOIN ranquiz.api_avatar aa on au.avatar_id = aa.id
-                WHERE lc.list_id = %s
-                ORDER BY %s;"""  # skipcq: BAN-B608
+                WHERE lc.list_id = %s {where}
+                ORDER BY {order_by}"""  # skipcq: BAN-B608
 
-    params = [list_element.id, order_by]
+    params = [list_element.id]
+
+    if where:
+        params.append(user.id)
 
     return execute_query(query, params)
 
@@ -46,8 +55,10 @@ def create_comment(content, author, share_code):
 
     if list_element is not None and content is not None and author is not None:
         comment = ListComment.objects.create(list=list_element, user=author, comment=content)
-        Notification.create(1, NotificationTypes.NEW_LIST_COMMENT.object, list_element.owner,
-                            list_element.share_code)
+
+        if author != list_element.owner:
+            Notification.create(1, NotificationTypes.NEW_LIST_COMMENT.object, list_element.owner,
+                                list_element.share_code)
         return comment
 
     return None
