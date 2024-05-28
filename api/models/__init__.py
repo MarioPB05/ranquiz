@@ -27,6 +27,7 @@ from .user_avatar import UserAvatar
 from .user_follow import UserFollow
 from .user_goal import UserGoal
 from .user_transaction import UserTransaction
+from .david_register_code import DavidRegisterCode
 
 __all__ = [
     'Avatar',
@@ -58,4 +59,5 @@ __all__ = [
     'UserFollow',
     'UserGoal',
     'UserTransaction',
+    'DavidRegisterCode',
 ]

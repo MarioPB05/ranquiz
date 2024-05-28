@@ -9,7 +9,8 @@ from api.services import PAGINATION_ITEMS_PER_PAGE
 from api.services.category_service import get_user_categories
 from api.services.list_service import get_user_lists, get_user_favourite_lists
 from api.services.notification_service import count_unread_notifications
-from api.services.user_service import get_users, toggle_user_follow, get_users_following, get_users_followers
+from api.services.user_service import get_users, toggle_user_follow, get_users_following, get_users_followers, \
+    generate_invitation_code
 
 
 @require_GET
@@ -147,3 +148,8 @@ def user_following(request, share_code):
         following_html.append(render_to_string('components/user_template.html', {'data': follower_data}))
 
     return JsonResponse({'results': following_html})
+
+
+def generate_user_invitation_code(request):
+    """Controlador que genera un código de invitación para un usuario"""
+    return JsonResponse({'code': generate_invitation_code(request.user)})

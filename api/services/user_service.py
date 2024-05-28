@@ -2,7 +2,8 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 
-from api.models import Notification, UserFollow, List
+from api.forms.code_form import DavidRegisterCodeForm
+from api.models import Notification, UserFollow, List, DavidRegisterCode
 from api.models.notification_type import NotificationTypes
 from api.services import PAGINATION_ITEMS_PER_PAGE
 from api.services.email_service import send_register_email
@@ -59,10 +60,29 @@ def create_user(user_form, avatar, client):
     return None
 
 
+def get_code_form(request):
+    """Obtiene el formulario para el código de invitación"""
+    return DavidRegisterCodeForm(request.POST) if request.method == 'POST' else DavidRegisterCodeForm()
+
+
+def use_invitation_code(code, user):
+    """Función que permite a un usuario utilizar un código de invitación"""
+    if code is not None and user is not None:
+        david_code = DavidRegisterCode.objects.filter(code=code).first()
+
+        if david_code is not None:
+            do_transaction(user, 10, 'Código de invitación')
+            do_transaction(david_code.user, 10, 'Código de invitación')
+            return True
+
+    return False
+
+
 def user_register(request):
     """Función que permite a un usuario crear una cuenta en la aplicación"""
     client_form = get_client_form(request)
     user_form = get_user_form(request)
+    code = request.POST.get('code', None)
 
     if request.method == 'POST':
         client = create_client(client_form)
@@ -80,6 +100,9 @@ def user_register(request):
 
                 # Guardamos el usuario
                 user.save()
+
+                # Usamos el código de invitación
+                use_invitation_code(code, user)
 
                 # Creamos la transacción
                 do_transaction(user, 50, 'Registro en Ranquiz')
@@ -99,7 +122,7 @@ def user_register(request):
 
     return render(request, 'pages/register.html', {'forms': {
         'client_form': client_form,
-        'user_form': user_form
+        'user_form': user_form,
     }})
 
 
@@ -206,3 +229,19 @@ def toggle_user_follow(user, followed_user):
         Notification.create(1, NotificationTypes.NEW_FOLLOWER.object, followed_user, user.share_code)
 
     return True
+
+
+def generate_invitation_code(user):
+    """Genera un código de invitación para un usuario"""
+    if user is None:
+        return None
+
+    if user.davidregistercode_set.count() == 0:
+        DavidRegisterCode.objects.create(user=user)
+
+    return user.davidregistercode_set.first().code
+
+
+def invitation_code_exists(code):
+    """Función que verifica si un código de invitación existe"""
+    return DavidRegisterCode.objects.filter(code=code).exists()

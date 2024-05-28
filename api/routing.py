@@ -11,7 +11,7 @@ from api.controllers.social_controller import get_comments, create_and_return_co
 from api.controllers.shop_controller import highlight_calculator, get_avatars, buy_a_avatar, equip_a_avatar, \
     highlight_list, list_is_highlighted
 from api.controllers.user_controller import (get_user_data, get_users_filtered, follow_user, user_lists,
-                                             user_categories, user_following)
+                                             user_categories, user_following, generate_user_invitation_code)
 
 urlpatterns = [
     path('list/filter', get_lists_filtered, name='api_lists_filtered'),
@@ -49,4 +49,5 @@ urlpatterns = [
     path('list/<str:share_code>/delete', delete_or_recover_list, name='api_delete_list'),
     path('list/<str:share_code>/recover', recover_list_eliminated, name='api_recover_list'),
     path('quest/claim', claim_quest_reward, name='api_claim_quest_reward'),
+    path('user/invitation_code/', generate_user_invitation_code, name='generate_user_invitation_code'),
 ]

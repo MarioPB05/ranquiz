@@ -32,6 +32,20 @@
                 </div>
                 <div class="stepper-line h-40px"></div>
             </div>
+            <div class="stepper-item mx-8 my-4" data-kt-stepper-element="nav">
+                <div class="stepper-wrapper d-flex align-items-center">
+                    <div class="stepper-icon w-40px h-40px">
+                        <i class=" stepper-check bi bi-check-lg"></i>
+                        <span class="stepper-number">3</span>
+                    </div>
+                    <div class="stepper-label">
+                        <h3 class="stepper-title">
+                            Código de invitación
+                        </h3>
+                    </div>
+                </div>
+                <div class="stepper-line h-40px"></div>
+            </div>
         </div>
         <form method="post" class="form mx-auto mw-500px bg-white primary-shadow p-8 rounded" novalidate="novalidate"
               id="register_stepper_form" onkeydown="return event.key !== 'Enter';">
@@ -136,6 +150,12 @@
                                 {% endfor %}
                             {% endif %}
                         </div>
+                    </div>
+                </div>
+                <div class="flex-column align-items-center" data-kt-stepper-element="content">
+                    <div class="fv-row mb-10 w-100">
+                        <label class="form-label">Código</label>
+                        <input class="form-control form-control-solid" name="code" id="code">
                     </div>
                 </div>
             </div>

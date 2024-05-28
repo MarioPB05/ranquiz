@@ -1,6 +1,12 @@
 /*global $, share_code*/
 
-import {toggleCategoryFollow, toggleListLike, toggleUserFollow} from "/static/assets/js/ranquiz/utils.js";
+import {
+    promiseAjax,
+    toastMessage,
+    toggleCategoryFollow,
+    toggleListLike,
+    toggleUserFollow
+} from "/static/assets/js/ranquiz/utils.js";
 
 let page = 2;
 let isLoadingData = false;
@@ -65,6 +71,22 @@ function infiniteScroll(scroll = false, event) {
     if (scroll) element.animate({scrollLeft: element.scrollLeft() + 500}, 500);
 }
 
+function copyToClipboard(text) {
+    const el = document.createElement('textarea');
+    el.value = text;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+}
+
+function generate_invitation_code() {
+    promiseAjax('/api/user/invitation_code/', "GET").then((response) => {
+        copyToClipboard(response.code);
+        toastMessage("success", "Código de invitación copiado al portapapeles");
+    });
+}
+
 /**
  * Carga los eventos de la página
  */
@@ -126,6 +148,8 @@ function loadEvents() {
 
     $('.scroll').scroll((event) => infiniteScroll(false, event));
     $('.scroll_arrow').on('click', (event) => infiniteScroll(true, event));
+
+    $("#generate_invitation_code").on("click", generate_invitation_code);
 }
 
 $(document).ready(loadEvents);
