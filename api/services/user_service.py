@@ -2,7 +2,6 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 
-from api.forms.code_form import DavidRegisterCodeForm
 from api.models import Notification, UserFollow, List, DavidRegisterCode
 from api.models.notification_type import NotificationTypes
 from api.services import PAGINATION_ITEMS_PER_PAGE
